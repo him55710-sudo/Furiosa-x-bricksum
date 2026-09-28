@@ -1,5 +1,7 @@
 # 3분 데모와 재현
 
+> 현재 구현으로 실행 가능한 시연입니다. 공개 테스트넷·문서 결과 수령·서버 없이 감사하는 다음 버전은 [목표 스토리보드](DEMO-STORYBOARD.ko.md)의 계획이며 아직 구현되지 않았습니다.
+
 준비: pnpm contracts:build, pnpm build, pnpm start를 실행하고 http://127.0.0.1:3400 을 엽니다. .env.local에 Kiln 키가 있어야 합니다. 먼저 pnpm verify:system을 확인합니다. API는 새 응답을 내므로 성공·지연·출력 잘림을 미리 고정하지 않습니다.
 
 | 시간 | 조작 | 관찰과 설명 |
