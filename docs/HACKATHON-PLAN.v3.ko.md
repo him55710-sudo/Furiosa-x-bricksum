@@ -1,6 +1,6 @@
 # Control Memory v3 — 한 번 허락한 자료, 한 번만 결제
 
-2026-09-28 / **기획 결정, 신규 기능 미구현**. 사용자가 지정한 대화의 최근 5개 턴을 읽고, 공개 프로토콜·SDK·사용 사례를 다시 확인했다. 현재 제품 기준 커밋은 `8bf91bd`이며 [현재 구현](CURRENT-IMPLEMENTATION.ko.md)과 아래 목표를 구분한다. [v2 문서 작업안](HACKATHON-PLAN.ko.md)은 보존하되 PDF→CSV 개발은 보류한다.
+2026-09-28 / **로컬 devnet 핵심 구현·실제 Kiln 검증 완료, 공개 Sepolia 실증 대기**. 아래는 기획 결정 당시의 설계와 완료 gate다. 최신 결과는 [v3 구현·검증](PURCHASE-IMPLEMENTATION.ko.md)과 [실행 증빙](../artifacts/purchase/README.md)을 따른다. 기획 수립 당시 제품은 `8bf91bd`이며 [기존 구현](CURRENT-IMPLEMENTATION.ko.md)과 구분한다. [v2 문서 작업안](HACKATHON-PLAN.ko.md)은 보존하되 PDF→CSV 개발은 보류한다.
 
 ## 1. 이번에는 사용자보다 ‘사고 순간’을 더 좁힌다
 

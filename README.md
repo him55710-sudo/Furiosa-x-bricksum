@@ -1,12 +1,29 @@
 # Control Memory — GWDC Challenge B
 
-**Declared function:** Control Memory lets a small team's budget owner delegate API-credit purchasing to a Kiln-powered agent, enforces the signed spending boundaries, and lets another person reconstruct each payment from approval, quote, history, and blockchain records.
+**Declared function:** Control Memory helps developers of paid research agents recover one owner-approved resource purchase after response loss or worker restart, enforces at most one payment for that purchase, and lets another person verify its approval, payment, and received content.
 
-소규모 개발팀의 AI Platform·Finance 담당자를 위한 **실행 가능한 Agent Finance Console**입니다. 검증된 수수료 초과 실패를 같은 소유자·목적·판매자의 다음 거래에서 **더 이른 확정 총액 검사**로 전환합니다.
+**“돈은 나갔는데 자료는 없다. 봇을 다시 켜도 되는가?”**에 집중한 실행 가능한 프로토타입입니다. Kiln **Qwen3-32B**가 자료 필요성을 판단하고 근거 답변을 만들며, 코드는 복구와 인용 원문 복사를, `PurchaseVault`는 서명된 구매 1건당 지급 최대 1회를 집행합니다.
 
-[기획 v3](docs/HACKATHON-PLAN.v3.ko.md)는 **유료 자료 조회의 결제 직후 응답 유실·재시작**으로 문제를 좁힙니다. 사용자가 승인한 구매 1건에 최대 한 번만 지급하고, 기존 자료를 회수하는 [목표 데모](docs/DEMO-STORYBOARD.v3.ko.md)와 [실제 사용자 조사 근거](docs/USER-DISCOVERY.v3.ko.md)를 정리했습니다. **추가 기능은 계획 상태**이며 아래는 현재 구현 설명입니다.
+[구현·재현 문서](docs/PURCHASE-IMPLEMENTATION.ko.md) · [실제 실행·거래·flow별 토큰](artifacts/purchase/README.md) · [좁힌 문제와 설계](docs/HACKATHON-PLAN.v3.ko.md) · [사용자 조사 근거](docs/USER-DISCOVERY.v3.ko.md)
 
-![실제 API와 devnet 결제의 증빙 검증](artifacts/demo/08-final-verified.png)
+**로컬 devnet 관통 실행 완료:** 지급 뒤 실제 HTTP 응답 연결을 끊고 worker를 새 PID로 재시작한 뒤 같은 자료를 회수했습니다. 실행 3회에도 지급 1회, 수수료 초과·허용 밖 판매자·만료는 각각 LLM 0회·지급 0회로 중지했습니다. 구매 관련 검증 19개 통과. 공개 Sepolia 실증은 테스트 ETH 부족으로 대기 중입니다. 합성 자료·테스트 자산이며 상용 x402 연결이나 실자산 서비스가 아닙니다.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm contracts:build
+pnpm purchase:build
+pnpm build
+# .env.local에 KILN_API_KEY 설정 후
+pnpm purchase:start
+```
+
+[구매 복구 콘솔 열기](http://127.0.0.1:3500/purchase). 서명 승인 → ‘지급 후 결과 응답 끊기’ 실행 → worker 재시작 → 다시 실행 → 증빙 받기 순서로 시연합니다. `pnpm purchase:test`로 핵심 검증, 실행 중 `pnpm purchase:verify`로 실제 Kiln 관통 검증을 수행합니다.
+
+![복구 후 실제 콘솔](artifacts/purchase/06-final-recovered.png)
+
+## 기존 협상·Control Memory 실험
+
+아래는 보존된 기존 3400 콘솔과 협상 실험의 설명입니다. 검증된 수수료 초과 실패를 같은 소유자·목적·판매자의 다음 거래에서 더 이른 확정 총액 검사로 전환합니다. v3 자료 구매 복구의 증거와 구별합니다.
 
 ## 실행
 
