@@ -1,5 +1,7 @@
 # Control Memory 실험 사전등록 초안
 
+> 구현 이후 안내 (2026-09-28): 아래는 초기 설계/실험 계획을 보존한 문서입니다. 실행 가능한 최종 스택·범위·명령은 [현재 구현](CURRENT-IMPLEMENTATION.ko.md)과 [README](../README.md), 시연은 [데모 실행서](DEMO-RUNBOOK.ko.md)를 따릅니다. 48-run calibration pilot는 전체 연구 계획을 대체하는 정식 대규모 평가가 아니며, 실제 결과와 변경 기록은 artifacts/experiments에 보존합니다.
+
 상태: **실행 전 초안, 결과 없음**. Grok 2회 비판과 연구 자료를 검토하여 2026-09-28 작성. 실행 전에 fixture JSON·prompt·commit·정책 버전·반복 횟수를 manifest로 고정해야 정식 사전등록이 됩니다. 좋은 결과가 나온 뒤 조건을 선택하지 않습니다.
 
 ## 비교할 것

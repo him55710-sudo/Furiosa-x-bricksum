@@ -1,5 +1,7 @@
 # 심사용 데모와 검증 계획
 
+> 구현 이후 안내 (2026-09-28): 아래는 초기 설계/실험 계획을 보존한 문서입니다. 실행 가능한 최종 스택·범위·명령은 [현재 구현](CURRENT-IMPLEMENTATION.ko.md)과 [README](../README.md), 시연은 [데모 실행서](DEMO-RUNBOOK.ko.md)를 따릅니다. 48-run calibration pilot는 전체 연구 계획을 대체하는 정식 대규모 평가가 아니며, 실제 결과와 변경 기록은 artifacts/experiments에 보존합니다.
+
 현재 문서는 실행할 계획입니다. 아래 결과는 아직 실측하거나 체결한 결과가 아닙니다.
 
 ## 4분 데모
