@@ -120,12 +120,13 @@ export class DealEngine {
   async reconcileBuyerRefund(id:string){
     const r=this.store.get(id),fund=this.store.operation(id,'fund');
     if(!this.chain.observeBuyerRefund||r.state!=='ESCROW_FUNDED'||fund?.status!=='CONFIRMED'||this.store.operation(id,'release')||this.store.operation(id,'refund'))return false;
-    const observed=await this.chain.observeBuyerRefund(r.dealHash,fund);if(!observed)return false;
+    const observed=await this.chain.observeBuyerRefund(r.dealHash,fund,{cursor:this.store.scan(id,'buyer-refund'),onProgress:(cursor:unknown)=>this.store.saveScan(id,'buyer-refund',cursor)});if(!observed)return false;
     ensure(observed.proof.amount_wei===(BigInt(r.deal.price_minor)*BigInt(this.chain.deployment.unitWei)).toString(),'BUYER_REFUND_AMOUNT_MISMATCH');
     this.store.transaction(()=>{
       ensure(this.store.get(id).state==='ESCROW_FUNDED'&&!this.store.operation(id,'refund'),'STATE_CONFLICT');
       const {escrow,proof,...operation}=observed;
       this.store.saveOperation(id,'refund',operation);
+      this.store.saveScan(id,'buyer-refund',null);
       this.store.details(id,{escrow,buyer_refund:proof,refund_tx:observed.txHash,settlement_reason:'BUYER_DEADLINE_REFUND',attestation_hash:proof.reason_hash});
       this.store.event(id,'BUYER_REFUND_OBSERVED',proof,'buyer',proof.buyer);
       this.store.move(id,'REFUNDED');

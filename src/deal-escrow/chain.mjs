@@ -115,7 +115,7 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
     }
     return {status:'PENDING',reason:'REPLACEMENT_NOT_FOUND'};
   }
-  return {provider,contract,wallet,sellers,deployment,finalityPolicy,prepare,broadcast,inspect,revertedReceipt,reconcile,verifyStoredReceipt,observeBuyerRefund:(dealHash,funding)=>observeBuyerRefund({provider,contract,deployment,finalityPolicy,confirmReceipt,normalizeReceipt},dealHash,funding),async close(){try{provider.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}}};
+  return {provider,contract,wallet,sellers,deployment,finalityPolicy,prepare,broadcast,inspect,revertedReceipt,reconcile,verifyStoredReceipt,observeBuyerRefund:(dealHash,funding,search)=>observeBuyerRefund({provider,contract,deployment,finalityPolicy,confirmReceipt,normalizeReceipt},dealHash,funding,search),async close(){try{provider.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}}};
   }catch(error){try{provider?.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}throw error;}
 }
 export function normalizeReceipt(r){return {transactionHash:r.hash,blockNumber:r.blockNumber,blockHash:r.blockHash,status:r.status,from:r.from,to:r.to,logs:r.logs.map(l=>({address:l.address,topics:[...l.topics],data:l.data}))};}

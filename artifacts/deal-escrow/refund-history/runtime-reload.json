@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-09-28T18:29:44.348Z",
+  "network": "local-devnet",
+  "purpose": "Post-restart compatibility check for paginated buyer-refund history recovery; no new inference or settlement",
+  "source_fingerprint": "3a83792f786445f08c5fa8b7096f2f1d256cffcbae5d8f273e5177a78eaa97ed",
+  "health": {
+    "status": "ok",
+    "block": 5,
+    "pending_operations": 0,
+    "attention_deals": [],
+    "last_recovery_at": "2026-09-28T18:29:35.600Z",
+    "last_recovery_error": null
+  },
+  "tests": {
+    "passed": 86,
+    "failed": 0,
+    "stale": false
+  },
+  "receipts": [
+    {
+      "deal_id": "e06c6f70-1895-43d0-bb3d-0c13be2ede58",
+      "state": "SETTLED",
+      "tx_hash": "0xb12eec9b23b6d747094dc9263e85aad69aca2aa1ac1bb5931a53b8a850d2d7a5",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "preview raw content revalidated and bound to the immutable Deal",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "e06c6f70-1895-43d0-bb3d-0c13be2ede58",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": true,
+            "semantic_truth_verified": false
+          },
+          {
+            "deal_id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T18:29:44.195Z"
+      }
+    },
+    {
+      "deal_id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+      "state": "REFUNDED",
+      "tx_hash": "0xe1f186096f8e2f56f25a868fa873314ca666eee1f750e026d6efb85de11a6e71",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T18:29:44.347Z"
+      }
+    }
+  ],
+  "usage": {
+    "generated_at": "2026-09-28T18:29:43.645Z",
+    "flows": [
+      {
+        "flow_name": "Buyer offer comparison",
+        "calls": 1,
+        "prompt_tokens": 879,
+        "completion_tokens": 602,
+        "total_tokens": 1481,
+        "latency_ms": 8703,
+        "missing_usage": false
+      }
+    ],
+    "calls": 1,
+    "deterministic_operations": [
+      {
+        "operation": "schema validation",
+        "llm_calls": 0
+      },
+      {
+        "operation": "policy checks",
+        "llm_calls": 0
+      },
+      {
+        "operation": "delivery validation",
+        "llm_calls": 0
+      },
+      {
+        "operation": "escrow authorization",
+        "llm_calls": 0
+      }
+    ],
+    "ttft": null,
+    "ttft_note": "Non-streaming API used; TTFT was not measured.",
+    "energy": {
+      "measured": false,
+      "joules": null,
+      "label": "Energy Estimate — Assumption Based",
+      "method": "If organizer supplies application-attributable average watts P, estimate E=P×sum(latency_ms)/1000. API latency includes queue/network; this is not hardware active time.",
+      "power_assumption_watts": null,
+      "source": "No organizer power assumption or application power telemetry supplied; no numerical estimate is presented.",
+      "limitations": "No application-measured energy, utilization, batching attribution, or verified baseline. Token/call totals are measured; reduction relative to another design is not yet measured."
+    }
+  },
+  "limitations": [
+    "Historical workbench transactions only; long-history recovery is covered by the separate local EVM regression.",
+    "Not a new public-chain run or a controller-settlement-race test."
+  ]
+}
