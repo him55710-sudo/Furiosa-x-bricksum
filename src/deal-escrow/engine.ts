@@ -20,12 +20,12 @@ export class DealEngine {
       if(name==='accept_deal'&&this.gate(r))this.store.move(args.deal_id,'PREVIEW_REQUIRED');return this.store.get(args.deal_id);});
   }
   gate(r:any){return this.store.control(this.store.mandate(r.mandateId).company_id,r.deal.seller_id);}
-  checks(id:string){const r=this.store.get(id),m=this.store.mandate(r.mandateId);return policy(m,r.deal,{time:this.clock(),...this.store.accounting(r.mandateId,id),dealHash:r.dealHash,previewRequired:!!this.gate(r),previewVerified:r.details.preview?.verified===true&&r.details.preview?.deal_hash===r.dealHash});}
+  checks(id:string,time=this.clock()){const r=this.store.get(id),m=this.store.mandate(r.mandateId);return policy(m,r.deal,{time,...this.store.accounting(r.mandateId,id),dealHash:r.dealHash,previewRequired:!!this.gate(r),previewVerified:r.details.preview?.verified===true&&r.details.preview?.deal_hash===r.dealHash});}
   preview(id:string,raw:string){ensure(typeof raw==='string'&&Buffer.byteLength(raw)<=2_000_000,'DELIVERY_SIZE');return this.store.transaction(()=>{const r=this.store.get(id);ensure(r.state==='PREVIEW_REQUIRED','INVALID_STATE_TRANSITION');const requirement={...r.deal.requirements,minimum_rows:r.deal.requirements.reference_dataset_id?Math.min(5,r.deal.requirements.minimum_rows):5};const result=validateDelivery(raw,requirement,this.clock(),r.deal.expires_at);this.store.event(id,'PREVIEW_VALIDATED',result);this.store.details(id,{preview_attempt:result});
     if(result.verified){this.store.details(id,{preview:{...result,raw,deal_hash:r.dealHash}});this.store.move(id,'PREVIEW_VERIFIED');}return this.store.get(id);});}
   approve(id:string){return this.store.transaction(()=>{
     const r=this.store.get(id);ensure(['DEAL_ACCEPTED','PREVIEW_REQUIRED','PREVIEW_VERIFIED','POLICY_APPROVED'].includes(r.state),'INVALID_STATE_TRANSITION');
-    const checks=this.checks(id);this.store.details(id,{policy:checks});this.store.event(id,'POLICY_CHECKED',{checks,mandate:this.store.mandate(r.mandateId),accounting:this.store.accounting(r.mandateId,id),time:this.clock()});const failed=checks.find(c=>!c.pass);
+    const time=this.clock(),checks=this.checks(id,time);this.store.details(id,{policy:checks});this.store.event(id,'POLICY_CHECKED',{checks,mandate:this.store.mandate(r.mandateId),accounting:this.store.accounting(r.mandateId,id),time});const failed=checks.find(c=>!c.pass);
     if(failed){if(failed.name==='PREVIEW_REQUIRED'){if(r.state!=='PREVIEW_REQUIRED')this.store.move(id,'PREVIEW_REQUIRED');}else this.store.move(id,failed.name.includes('EXPIRED')?'EXPIRED':'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:failed.name});return false;}
     this.store.ensureIntentFunding(id);
     if(r.state!=='POLICY_APPROVED')this.store.move(id,'POLICY_APPROVED');return true;
@@ -95,14 +95,14 @@ export class DealEngine {
   });}
   async settle(id:string){
     const r=this.store.get(id);ensure(['DELIVERY_SUBMITTED','DELIVERY_VERIFIED','ESCROW_FUNDED'].includes(r.state),'INVALID_STATE_TRANSITION');
-    const checks=this.checks(id),failed=checks.find(c=>!c.pass);const expired=this.clock()>=r.details.escrow.deadline;
+    const time=this.clock(),checks=this.checks(id,time),failed=checks.find(c=>!c.pass);const expired=time>=r.details.escrow.deadline;
     ensure(r.details.validation||expired,'DELIVERY_REQUIRED');
     const releaseFailed=['REVERTED','CANCELLED'].includes(this.store.operation(id,'release')?.status);
     const kind=r.details.validation?.verified&&!failed&&!expired&&!releaseFailed?'release':'refund';
     const opposite=this.store.operation(id,kind==='release'?'refund':'release');ensure(!opposite||['CANCELLED','REVERTED'].includes(opposite.status),'SETTLEMENT_ALREADY_CLAIMED');
     const reason=kind==='release'?'DELIVERY_VERIFIED':releaseFailed?(this.store.operation(id,'release')?.status==='REVERTED'?'ESCROW_RELEASE_REVERTED':'ESCROW_RELEASE_CANCELLED'):r.details.validation?.failure_reason_code??failed?.name??'DELIVERY_DEADLINE_EXPIRED';
     if(!this.store.operation(id,kind))this.store.transaction(()=>{
-      this.store.event(id,'FINAL_AUTHORIZATION',{checks,time:this.clock(),mandate:this.store.mandate(r.mandateId),accounting:this.store.accounting(r.mandateId,id)});
+      this.store.event(id,'FINAL_AUTHORIZATION',{checks,time,mandate:this.store.mandate(r.mandateId),accounting:this.store.accounting(r.mandateId,id)});
       const attestation={deal:r.deal,deal_hash:r.dealHash,mandate:this.store.mandate(r.mandateId),delivery:r.details.delivery??null,validation:r.details.validation??null,final_checks:checks,reason,outcome:kind,prior_event_hash:this.store.events(id).at(-1)?.event_hash,preview:r.details.preview??null};
       this.store.details(id,{settlement_reason:reason,attestation,attestation_hash:hash(attestation)});this.store.saveOperation(id,kind,{status:'PENDING',created_at:this.clock()});
     });

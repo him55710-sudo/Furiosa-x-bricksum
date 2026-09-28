@@ -16,6 +16,8 @@ A separate [application-off recovery run](docs/BUYER-RECOVERY-PROOF.ko.md) termi
 
 The buyer refund independently verified VALID at finalized block 11,801,738. The [local participant questionnaire](docs/USER-STUDY.ko.md) now binds answers to the exact evidence and rendered demo version, preserves that snapshot privately, and separates automated QA from self-reported human responses. Run `pnpm ade:source:study` after building the replay, then open `http://127.0.0.1:3414/?study=1`. Actual customer and human-review evidence is still required.
 
+Policy and final-authorization records now retain the exact timestamp used for their checks. A clock-boundary regression previously reproduced a completed payment whose receipt failed with `POLICY_CHECK_MISMATCH`; the fix keeps that receipt reconstructable while preserving a fresh expiry check before signing. Historical records are not rewritten.
+
 ```sh
 pnpm ade:replay:build
 pnpm ade:source:replay
