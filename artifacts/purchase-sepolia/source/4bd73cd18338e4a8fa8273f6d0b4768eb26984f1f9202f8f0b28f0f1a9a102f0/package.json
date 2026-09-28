@@ -1,0 +1,61 @@
+{
+  "name": "gwdc-control-memory",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "kiln:check": "node --env-file-if-exists=.env.local scripts/kiln-probe.mjs --check-only",
+    "kiln:probe": "node --env-file-if-exists=.env.local scripts/kiln-probe.mjs",
+    "kiln:route": "node --env-file-if-exists=.env.local scripts/kiln-probe.mjs --verify-route",
+    "kiln:preview": "node scripts/kiln-probe.mjs --preview",
+    "review:packet": "node scripts/review-packet.mjs",
+    "contracts:build": "node scripts/compile-contracts.mjs",
+    "purchase:build": "node scripts/compile-purchase.mjs",
+    "purchase:start": "node --env-file-if-exists=.env.local src/purchase-server.mjs",
+    "purchase:test": "node --test tests/purchase.test.mjs tests/purchase-model.test.mjs",
+    "purchase:verify": "node scripts/verify-purchase-system.mjs",
+    "purchase:sepolia": "node --env-file-if-exists=.env.local scripts/purchase-sepolia.mjs",
+    "purchase:web": "tsc --noEmit --project tsconfig.purchase.json && vite build",
+    "purchase:verify-public": "node --env-file-if-exists=.env.local scripts/verify-purchase-public.mjs",
+    "build": "tsc --noEmit && vite build",
+    "start": "node --env-file-if-exists=.env.local src/server.mjs",
+    "dev": "node --env-file-if-exists=.env.local src/server.mjs",
+    "verify": "node scripts/verify-evidence.mjs",
+    "verify:system": "node scripts/verify-system.mjs",
+    "verify:live": "node --env-file-if-exists=.env.local scripts/verify-system.mjs --suite=live",
+    "verify:browser": "node scripts/verify-system.mjs --suite=browser",
+    "verify:personas": "node scripts/verify-system.mjs --suite=personas",
+    "ade:contracts": "node scripts/compile-deal-escrow.mjs",
+    "ade:check": "tsc --project tsconfig.deal-escrow.json",
+    "ade:build": "tsc --project tsconfig.deal-escrow.json && vite build --config vite.deal-escrow.config.ts",
+    "ade:test": "node scripts/test-deal-escrow.mjs",
+    "ade:demo": "node --env-file-if-exists=.env.local scripts/demo-deal-escrow.mjs",
+    "ade:start": "node --env-file-if-exists=.env.local src/deal-escrow/server.mjs",
+    "ade:record": "node scripts/record-deal-escrow.mjs",
+    "ade:sepolia": "node --env-file-if-exists=.env.local scripts/demo-deal-escrow.mjs --sepolia",
+    "ade:browser": "node scripts/check-deal-escrow-browser.mjs",
+    "ade:verify": "node scripts/verify-deal-escrow.mjs"
+  },
+  "dependencies": {
+    "ethers": "^6.17.0",
+    "express": "^5.2.1",
+    "lucide-react": "0.468.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "5.4.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "ganache": "7.9.2",
+    "playwright": "1.62.1",
+    "solc": "0.8.30",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.6"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

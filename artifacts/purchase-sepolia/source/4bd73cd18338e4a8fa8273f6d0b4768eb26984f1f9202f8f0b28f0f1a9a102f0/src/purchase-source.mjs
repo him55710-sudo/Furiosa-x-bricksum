@@ -1,0 +1,7 @@
+import {createHash} from 'node:crypto';
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import {hash} from '../shared/schema.mjs';
+export const PURCHASE_SOURCE_FILES=['contracts/PurchaseVault.sol','contracts/ControlMemory.sol','shared/purchase.mjs','shared/schema.mjs','src/purchase-engine.mjs','src/purchase-chain.mjs','src/purchase-model.mjs','src/purchase-seller.mjs','src/purchase-verifier.mjs','src/purchase-server.mjs','src/purchase-worker.mjs','src/purchase-worker-control.mjs','src/purchase-public-chain.mjs','src/purchase-source.mjs','src/store.mjs','src/chain.mjs','web/PurchaseApp.tsx','web/purchase.css','web/main.tsx','package.json','pnpm-lock.yaml','scripts/compile-purchase.mjs','artifacts/contracts/PurchaseVault.json','artifacts/contracts/TestCredit.json'];
+export async function sourceManifest(){const files={};for(const file of PURCHASE_SOURCE_FILES)files[file]=createHash('sha256').update(await readFile(file)).digest('hex');return {schemaVersion:1,hash:hash(files),files};}
+export async function saveSourceSnapshot(directory){const manifest=await sourceManifest();const destination=path.join(directory,'source',manifest.hash.slice(2));for(const file of PURCHASE_SOURCE_FILES){const output=path.join(destination,file);await mkdir(path.dirname(output),{recursive:true});await writeFile(output,await readFile(file));}await writeFile(path.join(destination,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');return manifest;}

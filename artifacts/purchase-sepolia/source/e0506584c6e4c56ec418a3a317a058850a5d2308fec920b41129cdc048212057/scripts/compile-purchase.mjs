@@ -1,0 +1,12 @@
+import solc from 'solc';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
+const source=readFileSync('contracts/PurchaseVault.sol','utf8');
+const settings={optimizer:{enabled:true,runs:200},viaIR:true,evmVersion:'shanghai',outputSelection:{'*':{'*':['abi','evm.bytecode.object','evm.deployedBytecode.object','evm.deployedBytecode.immutableReferences']}}};
+const output=JSON.parse(solc.compile(JSON.stringify({language:'Solidity',sources:{'PurchaseVault.sol':{content:source}},settings}),{import:p=>p.startsWith('@openzeppelin/contracts/')&&!p.includes('..')?{contents:readFileSync(path.join('node_modules',p),'utf8')}:{error:'Import not allowed'}}));
+const errors=output.errors?.filter(e=>e.severity==='error')??[];if(errors.length)throw new Error(errors.map(e=>e.formattedMessage).join('\n'));
+const c=output.contracts['PurchaseVault.sol'].PurchaseVault;
+mkdirSync('artifacts/contracts',{recursive:true});
+writeFileSync('artifacts/contracts/PurchaseVault.json',JSON.stringify({contractName:'PurchaseVault',compiler:solc.version(),settings,sourceSha256:createHash('sha256').update(source).digest('hex'),abi:c.abi,bytecode:'0x'+c.evm.bytecode.object,runtimeTemplate:'0x'+c.evm.deployedBytecode.object,immutableReferences:c.evm.deployedBytecode.immutableReferences},null,2)+'\n');
+console.log('Compiled PurchaseVault v3.');

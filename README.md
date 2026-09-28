@@ -6,13 +6,13 @@
 
 [구현·재현 문서](docs/PURCHASE-IMPLEMENTATION.ko.md) · [실제 실행·거래·flow별 토큰](artifacts/purchase/README.md) · [좁힌 문제와 설계](docs/HACKATHON-PLAN.v3.ko.md) · [사용자 조사 근거](docs/USER-DISCOVERY.v3.ko.md)
 
-**로컬 devnet 관통 실행 완료:** 지급 뒤 실제 HTTP 응답 연결을 끊고 worker를 새 PID로 재시작한 뒤 같은 자료를 회수했습니다. 실행 3회에도 지급 1회, 수수료 초과·허용 밖 판매자·만료는 각각 LLM 0회·지급 0회로 중지했습니다. 구매 관련 검증 19개 통과. 공개 Sepolia 실증은 테스트 ETH 부족으로 대기 중입니다. 합성 자료·테스트 자산이며 상용 x402 연결이나 실자산 서비스가 아닙니다.
+**구매 복구 P0·공개 Sepolia 관통 검증 완료:** 6 TC 지급 후 실제 HTTP 응답을 끊고 worker를 재시작해 같은 자료를 회수했습니다. 복구까지 실행 3회·지급 1회. 수수료 초과·허용 밖 판매자·만료와 새 견적 중복 지급이 거부됐습니다. 구매 테스트 21개와 공개 8개 검사가 통과했고, 앱 전체 종료 중 독립 RPC 검증도 VALID입니다. [공개 거래·영수증·토큰 1,765개 증빙](artifacts/purchase-sepolia/README.md) · [완료 감사](docs/PURCHASE-COMPLETION-AUDIT.ko.md). 합성 자료·테스트 자산이며 상용 x402 연결이나 실자산 서비스가 아닙니다.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm contracts:build
 pnpm purchase:build
-pnpm build
+pnpm purchase:web
 # .env.local에 KILN_API_KEY 설정 후
 pnpm purchase:start
 ```

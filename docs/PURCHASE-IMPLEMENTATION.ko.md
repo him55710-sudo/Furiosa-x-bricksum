@@ -1,6 +1,6 @@
 # 구매 복구 v3 — 구현과 검증
 
-2026-09-28. **로컬 devnet 구현·실제 Kiln 검증 완료. 공개 Sepolia 실증은 테스트 ETH 부족으로 미완료.**
+2026-09-28. **구매 복구 P0 구현·실제 Kiln·공개 Sepolia 관통 검증 완료.** 정상 지급과 중지, 응답 유실·프로세스 재시작 복구, 전체 앱 종료 중 독립 검증을 통과했다. 별도 Agent Deal Escrow의 release/refund 검증과 구별한다.
 
 기능은 유료 자료 조회 한 건으로 제한한다. 사용자의 서명은 `purchaseId + resourceSpecHash + maxSettlements=1`에 묶인다. 다시 실행하거나 새 견적을 받아도 같은 승인은 두 번째 지급을 허용하지 않는다. `contracts/PurchaseVault.sol`이 이를 토큰 전송과 한 트랜잭션에서 집행한다.
 
@@ -33,7 +33,7 @@ flowchart LR
 
 ## 불확실한 지급을 다루는 방법
 
-지급 전에 서명된 tx의 payload·hash·nonce와 증빙을 저장한다. 방송 확인이 끊겨도 `UNKNOWN`을 시간만으로 실패 처리하지 않는다. 재시작 후 같은 tx를 확인·재전송한다. 대체 거래가 있을 때에는 확정 블록의 nonce 소비와 미지급 상태를 확인한 후에만 최초 지급을 다시 준비한다. 공개 체인은 `finalized`, 로컬 체인은 1블록을 사용한다.
+지급 전에 서명된 tx의 payload·hash·nonce와 증빙을 저장한다. 확정 전 receipt가 체인 재편성으로 사라지면 `PAYMENT_CONFIRMATION_LOST`를 기록하고 기존 예약과 서명 payload를 유지한 채 `UNKNOWN`으로 돌아간다. 방송 확인이 끊겨도 `UNKNOWN`을 시간만으로 실패 처리하지 않는다. 재시작 후 같은 tx를 확인·재전송한다. 대체 거래가 있을 때에는 확정 블록의 nonce 소비와 미지급 상태를 확인한 후에만 최초 지급을 다시 준비한다. 공개 체인은 `finalized`, 로컬 체인은 1블록을 사용한다.
 
 `SETTLED/PENDING`은 돈은 나갔지만 자료는 없다는 뜻이다. 판매자가 기존 결과를 제공하면 추가 지급 없이 받는다. 판매자가 결과를 잃었으면 `SETTLED/UNRECOVERABLE`로 남는다. 자동 환불·배송 강제는 구현하지 않았다. 중지 요청보다 먼저 체인에 포함된 지급도 되돌리지 않는다.
 
@@ -45,7 +45,7 @@ flowchart LR
 pnpm install --frozen-lockfile
 pnpm contracts:build
 pnpm purchase:build
-pnpm build
+pnpm purchase:web
 # .env.local에 KILN_API_KEY 설정
 pnpm purchase:start
 ```
@@ -78,19 +78,33 @@ node scripts/verify-purchase.mjs bundle.json trusted-deployment.json http://127.
 
 통합 검증은 HTTP listener를 8초 닫고 별도 CLI 프로세스 검증과 owner 직접 취소를 실행한다. 부모 프로세스 전체를 끈 실험으로 표현하지 않는다. 그 프로세스가 로컬 RPC도 호스팅하기 때문이다.
 
-## 공개 Sepolia 준비 및 남은 gate
+## 공개 Sepolia 실행
+
+배포된 금고는 `0x9f23337bE15CEEda2ae65172A3dc0aD5622D94D3`, 체인 ID는 11155111이다. [고정 배포 manifest](../artifacts/purchase-sepolia/deployment.json)를 별도로 신뢰하고 사용한다. `SEPOLIA_RPC_URL`은 선택 설정이며 API key가 있는 RPC URL은 공개 증빙에서 제거한다. 스크립트는 Ethereum Sepolia만 허용한다.
 
 ```sh
+# 별도 상태 디렉터리를 만든 최초 실행만 무료 test ETH 수령 후 배포
 pnpm purchase:sepolia
 pnpm purchase:sepolia --deploy
-# PowerShell
-$env:PURCHASE_NETWORK = 'sepolia'
-pnpm purchase:start
 ```
 
-`--deploy` 전에 무료 테스트 ETH가 필요하다. 스크립트는 Ethereum Sepolia(11155111)만 허용한다. 전용 주소는 `0x6E4DE4126F057A9334c3fBDD0dd9e26c40534327`이며 2026-09-28 확인 잔액은 0이다. 실제 ETH를 구매할 필요가 없다. `SEPOLIA_RPC_URL`은 선택 설정이며 API key가 있는 RPC URL은 공개 증빙에서 제거한다.
+```powershell
+# 기존 배포를 검증할 때. 실제 Kiln 호출·Sepolia 테스트 자산 거래가 생긴다.
+$env:PURCHASE_VERIFY_RPC_URL = 'https://sepolia.gateway.tenderly.co'
+pnpm purchase:verify-public
+```
 
-자금 준비 후 계약 배포, 실제 지급, 두 경계 이탈, 직접 취소, 새 견적 중복 공격을 공개 체인에 남겨야 한다. 별도 RPC에서 최종 확정과 explorer tx hash를 검증하기 전에는 공개 실증 완료가 아니다. 현재 `purchase:verify` harness는 로컬 devnet만 실행하도록 제한되어 있다.
+`purchase:verify-public`은 3600/3601의 전용 앱과 worker를 소유하고 SQLite journal로 진행을 보존한다. 공개 체인의 `finalized`가 지급·거부·취소 거래 블록을 모두 지난 뒤 복구 검사를 한다. 정상 실행은 마지막에 앱을 종료한다. 종료 후 별도 CLI 프로세스가 운영자 RPC와 다른 호스트의 RPC로 검증한다. owner 직접 취소도 **앱·worker·판매자 서버 전체가 종료된 동안** 실행한다. 로컬 devnet의 listener 일시 중단 실험과 구별한다.
+
+오래 걸리는 공개 체인 확정은 실패가 아니다. 실행 도중에는 같은 프로세스와 journal을 관찰하고 새 구매를 만들지 않는다. 재실행이 필요한 경우 기존 지급과 진행 상태를 먼저 대조한다. API 서버를 띄우지 않고 기존 증빙을 읽기 전용으로 재검증할 수 있다.
+
+```sh
+node scripts/verify-purchase.mjs artifacts/purchase-sepolia/runs/2026-09-28T13-47-16-518Z/recovered.json artifacts/purchase-sepolia/deployment.json https://sepolia.gateway.tenderly.co
+# 검증된 영수증을 로컬에서 보기만 할 때
+node src/purchase-receipt-server.mjs
+```
+
+공개 실행의 최종 상태·거래·flow별 토큰은 [공개 실행 증빙](../artifacts/purchase-sepolia/README.md), 요구사항별 판정은 [완료 감사](PURCHASE-COMPLETION-AUDIT.ko.md)를 따른다. 과거 로컬 결과를 Sepolia 증거로 재사용하지 않는다.
 
 ## 현재 한계
 

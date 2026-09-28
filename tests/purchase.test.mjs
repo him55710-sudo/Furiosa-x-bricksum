@@ -32,3 +32,24 @@ test('concurrent executions on separate engine instances cannot acquire two leas
 test('stop during inference prevents money movement',async()=>{const c=await setup();let enter,release;const entered=new Promise(r=>enter=r),wait=new Promise(r=>release=r);const original=c.model.invoke.bind(c.model);c.model.invoke=async(...args)=>{enter();await wait;return original(...args);};const running=c.engine.run(c.id);await entered;await c.engine.stop(c.id,await c.owner.signTypedData(chain.domain,PURCHASE_REVOKE_TYPES,{purchaseId:c.id,owner:c.owner.address}));release();assert.equal((await running).reason,'USER_STOPPED');assert.equal((await chain.state(c.owner.address,c.id)).spent,'0');c.store.close();});
 test('result retrieval rejects a stranger and reused challenge, permits buyer after app shutdown',async()=>{const c=await setup();await c.engine.run(c.id,{scenario:'drop-response'});const p=c.engine.get(c.id);const challenge=await seller.post('/challenge',{owner:c.owner.address,purchaseId:c.id});const bad=await Wallet.createRandom().signTypedData(chain.domain,ACCESS_TYPES,challenge);await assert.rejects(()=>seller.post('/retrieve',{challenge,signature:bad}),/ACCESS_SIGNATURE/);const signature=await c.owner.signTypedData(chain.domain,ACCESS_TYPES,challenge);const result=await seller.post('/retrieve',{challenge,signature});assert.equal(result.delivery.paymentTx,p.receipt.hash);await assert.rejects(()=>seller.post('/retrieve',{challenge,signature}),/ACCESS_CHALLENGE_INVALID/);c.store.close();});
 test('verifier rejects altered consent, source, amount, approval and anchored history',async()=>{const c=await setup();await c.engine.run(c.id);const original=c.engine.bundle(c.id);for(const mutate of [b=>b.purchase.consent.perTxCap='9999',b=>b.purchase.result.document.paragraphs[1].text='altered',b=>b.purchase.quote.quote.total='1',b=>b.preEvidence.question='altered',b=>b.events[0].data.resource.version='altered']){const b=structuredClone(original);mutate(b);assert.equal((await verifyPurchaseBundle(b,verifier())).status,'INVALID');}const missing=structuredClone(original);delete missing.preEvidence;assert.equal((await verifyPurchaseBundle(missing,verifier())).status,'INCOMPLETE');assert.equal((await verifyPurchaseBundle(original)).status,'INCOMPLETE');c.store.close();});
+
+test('unfinalized settlement waits without delivery or extra inference, then resumes the same payment',async()=>{
+  const c=await setup(),original=chain.state;
+  try{
+    chain.state=async(...args)=>({...await original(...args),finalized:false});
+    const pending=await c.engine.run(c.id);assert.equal(pending.payment,'CONFIRMING');assert.equal(c.model.calls,1);assert.equal(pending.result,undefined);
+    chain.state=original;
+    const done=await c.engine.run(c.id);assert.equal(done.workflow,'COMPLETE');assert.equal(done.receipt.hash,pending.receipt.hash);assert.equal(c.model.calls,2);
+  }finally{chain.state=original;c.store.close();}
+});
+
+test('an unfinalized payment removed by a real local chain reorg reuses its durable transaction',async()=>{
+  const c=await setup(),original=chain.state,snapshot=await chain.provider.send('evm_snapshot',[]);
+  try{
+    chain.state=async(...args)=>({...await original(...args),finalized:false});
+    const pending=await c.engine.run(c.id);assert.equal(pending.payment,'CONFIRMING');
+    assert.equal(await chain.provider.send('evm_revert',[snapshot]),true);chain.state=original;
+    assert.equal((await chain.state(c.owner.address,c.id)).settled,false);
+    const recovered=await c.engine.run(c.id);assert.equal(recovered.workflow,'COMPLETE',recovered.reason);assert.equal(recovered.receipt.hash,pending.tx.hash);assert.equal((await chain.state(c.owner.address,c.id)).spent,'600');assert.equal(c.model.calls,2);
+  }finally{chain.state=original;c.store.close();}
+});

@@ -18,6 +18,8 @@
     "purchase:test": "node --test tests/purchase.test.mjs tests/purchase-model.test.mjs",
     "purchase:verify": "node scripts/verify-purchase-system.mjs",
     "purchase:sepolia": "node --env-file-if-exists=.env.local scripts/purchase-sepolia.mjs",
+    "purchase:web": "tsc --noEmit --project tsconfig.purchase.json && vite build",
+    "purchase:verify-public": "node --env-file-if-exists=.env.local scripts/verify-purchase-public.mjs",
     "build": "tsc --noEmit && vite build",
     "start": "node --env-file-if-exists=.env.local src/server.mjs",
     "dev": "node --env-file-if-exists=.env.local src/server.mjs",

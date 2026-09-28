@@ -1,6 +1,6 @@
 # Purchase v3 evidence
 
-2026-09-28. 실제 Kiln Qwen3-32B와 **로컬 EVM devnet(31337)**을 사용한 증빙이다. 공개 Sepolia 거래는 아직 없다. 공개 explorer 링크를 로컬 hash에 붙이지 않는다.
+2026-09-28. 실제 Kiln Qwen3-32B와 **로컬 EVM devnet(31337)**을 사용한 증빙이다. 공개 Sepolia의 후속 검증도 [별도 증빙](../purchase-sepolia/README.md)으로 완료했다. 이 문서의 과거 로컬 hash·측정 수치는 보존하며 두 실행을 섞지 않는다.
 
 ## 최종 관통 실행
 
@@ -46,4 +46,4 @@ NPU 전력과 실제 추론 시간은 미계측이다. 다음은 **실측 에너
 
 `runs/2026-09-28T13-20-52-308Z/report.json`은 harness의 Host 헤더 전송 문제로 실패한 기록이다. 제품 우회 성공으로 판정하지 않는다. Node fetch 대신 native HTTP로 검사한 후 13:21·13:29 실행이 통과했다. 13:21 실행은 인용 방식 변경 전이고 별도 소스 사본과 함께 보존한다.
 
-로컬 체인은 운영자 원장 파일에 의존한다. Git만 clone한 다른 PC에서 이 과거 거래의 RPC를 조회할 수는 없다. 새 devnet 실행은 새 tx와 증빙을 생성한다. 공개 Sepolia 실증이 필요한 이유이며 현재 잔액 0으로 대기 중이다. [구현·재현 문서](../../docs/PURCHASE-IMPLEMENTATION.ko.md).
+로컬 체인은 운영자 원장 파일에 의존한다. Git만 clone한 다른 PC에서 이 과거 거래의 RPC를 조회할 수는 없다. 새 devnet 실행은 새 tx와 증빙을 생성한다. 공개 Sepolia의 후속 실증은 [별도 공개 증빙](../purchase-sepolia/README.md)에서 조회할 수 있다. [구현·재현 문서](../../docs/PURCHASE-IMPLEMENTATION.ko.md).
