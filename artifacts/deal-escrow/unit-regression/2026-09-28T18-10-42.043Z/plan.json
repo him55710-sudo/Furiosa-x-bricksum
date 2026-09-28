@@ -1,0 +1,81 @@
+{
+  "id": "2026-09-28T18-10-42.043Z",
+  "created_at": "2026-09-28T18:10:42.044Z",
+  "maximum_inference_calls": 1,
+  "maximum_output_tokens": 2400,
+  "payments": false,
+  "scope": "Known-case development regression with a synthetic mandate; not a newly approved purchase, model benchmark or energy measurement.",
+  "input": {
+    "human_task": "Extract the four 2025 quarterly Investment in Facilities cash outflows for LG Energy Solution from the approved PDF. Provide positive magnitudes in billion KRW and the original signed value, document hash, page and exact source_cell_id. No annual total or investing-activities substitution.",
+    "offers": [
+      {
+        "offer_id": "primary-reports",
+        "seller_id": "seller-a",
+        "price_minor": 210,
+        "floor_price_minor": 180,
+        "minimum_rows": 4,
+        "minimum_source_coverage": 1,
+        "deadline": 120,
+        "description": "Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included."
+      },
+      {
+        "offer_id": "outlook-summary",
+        "seller_id": "seller-b",
+        "price_minor": 120,
+        "floor_price_minor": 100,
+        "minimum_rows": 4,
+        "minimum_source_coverage": 1,
+        "deadline": 60,
+        "description": "Annual investment outlook for 2026 divided into four equal quarterly estimates. Includes the issuer URL. This is not historical cash expenditure."
+      },
+      {
+        "offer_id": "archive-service",
+        "seller_id": "seller-b",
+        "price_minor": 170,
+        "floor_price_minor": 160,
+        "minimum_rows": 4,
+        "minimum_source_coverage": 1,
+        "deadline": 300,
+        "description": "Historical actual quarterly facility cash expenditures from the original presentation. Archive verification takes 300 seconds."
+      }
+    ],
+    "mandate": {
+      "mandate_id": "unit-regression-6d1b1544-a72c-4f5f-a376-f06e0d0ae9c2",
+      "company_id": "demo-research-company",
+      "buyer_id": "research-agent-07",
+      "task_budget_minor": 300,
+      "max_single_minor": 200,
+      "category": "RESEARCH_DATA",
+      "status": "ACTIVE",
+      "allowed_sellers": [
+        "seller-a",
+        "seller-b"
+      ],
+      "created_at": 1790619042,
+      "expires_at": 1790620842,
+      "task_requirements": {
+        "version": 1,
+        "minimum_rows": 4,
+        "required_columns": [
+          "company",
+          "quarter",
+          "capex",
+          "currency",
+          "unit",
+          "source_url",
+          "source_page",
+          "source_sha256",
+          "source_label",
+          "source_value",
+          "source_cell_id"
+        ],
+        "minimum_source_coverage": 1,
+        "format": "JSON",
+        "max_delivery_seconds": 180,
+        "source_document_id": "lges-2025-pdf",
+        "source_policy_hash": "0x694f7d1aa57c2516d6226c3ee3e99c7af29ea5d53da05d53610a8bae25fc7b23"
+      }
+    }
+  },
+  "source_fingerprint": "0172d1ee94a1cf4a34629df24ab887e1bd28261ae5ecd721f2d8cd3f725326a2"
+}
