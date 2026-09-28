@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-09-28T18:13:11.482Z",
+  "scope": "Read-only reconciliation of earlier primary-checkout authored-case development reports; no new model call or EVM execution.",
+  "originals": [
+    {
+      "source": "primary checkout / artifacts/deal-escrow/research/benchmark-2026-09-28T17-02-12-526Z-holdout-reviewed-live/report.json",
+      "destination": "ai-report.json",
+      "sha256": "f894ab977f4eb406d407862aa9ffe39d58b9606d6d04167f7fedfb6c9b480fcd"
+    },
+    {
+      "source": "primary checkout / artifacts/deal-escrow/research/benchmark-2026-09-28T17-02-12-526Z-holdout-reviewed-live/manifest.json",
+      "destination": "ai-manifest.json",
+      "sha256": "5cc179b670435ffaecc73f6a4f778b219bb8f33d3cc3980eaa82c9747822d08a"
+    },
+    {
+      "source": "primary checkout / artifacts/deal-escrow/research/benchmark-2026-09-28T17-26-49-975Z-holdout-strong-fixed-offline/report.json",
+      "destination": "rules-report.json",
+      "sha256": "b1303389cdf322c7d4b62d359f7ba637dd7445d19d2ab4cab19b812c34ea08ba"
+    },
+    {
+      "source": "primary checkout / artifacts/deal-escrow/research/benchmark-2026-09-28T17-26-49-975Z-holdout-strong-fixed-offline/manifest.json",
+      "destination": "rules-manifest.json",
+      "sha256": "de8e69b7c9b1912350b11475f8a5f66831531b04381cdacd67617070c8b43bb6"
+    }
+  ],
+  "comparison_inputs": {
+    "same_case_bytes": true,
+    "cases_sha256": "c323fa1bad3cdb6896384b5e2da396a6ef2e67c6bd12e05363e15ca266259bd6",
+    "reference_digest": "0xe5abea757c0c3ef71914da9e65e1207c8a11bee6555634f50650d2ba3fedffe6"
+  },
+  "aggregates": [
+    {
+      "source": "ai",
+      "variant": "fixed",
+      "tasks": 16,
+      "correct_outcomes": 10,
+      "delivered": 8,
+      "false_blocks": 4,
+      "wrong_releases": 0,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "paid_minor": 1340
+    },
+    {
+      "source": "ai",
+      "variant": "ai",
+      "tasks": 16,
+      "correct_outcomes": 16,
+      "delivered": 12,
+      "false_blocks": 0,
+      "wrong_releases": 0,
+      "model_calls": 18,
+      "total_tokens": 22072,
+      "latency_ms": 124128,
+      "paid_minor": 2040
+    },
+    {
+      "source": "ai",
+      "variant": "ai-memory",
+      "tasks": 16,
+      "correct_outcomes": 16,
+      "delivered": 12,
+      "false_blocks": 0,
+      "wrong_releases": 0,
+      "model_calls": 16,
+      "total_tokens": 19312,
+      "latency_ms": 102332,
+      "paid_minor": 2040
+    },
+    {
+      "source": "rules",
+      "variant": "fixed",
+      "tasks": 16,
+      "correct_outcomes": 16,
+      "delivered": 12,
+      "false_blocks": 0,
+      "wrong_releases": 0,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "paid_minor": 2040
+    }
+  ],
+  "claims": {
+    "reported_aggregates_recomputed": true,
+    "independent_holdout": false,
+    "ai_advantage_established": false,
+    "current_worktree_model_retested_by_this_comparison": false
+  },
+  "limitations": [
+    "Two repeats of eight authored cases, not independent real-user tasks.",
+    "Strong rules were developed after the cases had been inspected.",
+    "AI and rules executions occurred at different times.",
+    "The primary-checkout AI used a separate reviewed-selection implementation; this is historical evidence, not a benchmark of the current worktree select_offer adapter.",
+    "Raw receipts and historical runtime are not independently re-executed by this reconciliation.",
+    "The report snapshots are retained with their original source manifests, not relabeled as current-source runs."
+  ]
+}

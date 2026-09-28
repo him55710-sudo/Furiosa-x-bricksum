@@ -19,6 +19,7 @@ export class DealStore {
       CREATE TRIGGER IF NOT EXISTS no_control_delete BEFORE DELETE ON controls BEGIN SELECT RAISE(ABORT,'MONOTONIC_CONTROL');END;
       CREATE TRIGGER IF NOT EXISTS no_control_update BEFORE UPDATE ON controls BEGIN SELECT RAISE(ABORT,'MONOTONIC_CONTROL');END;
       CREATE TABLE IF NOT EXISTS operations(deal_id TEXT NOT NULL,kind TEXT NOT NULL,body TEXT NOT NULL,PRIMARY KEY(deal_id,kind));
+      CREATE TABLE IF NOT EXISTS reconciliation_scans(deal_id TEXT NOT NULL REFERENCES deals(id),kind TEXT NOT NULL,body TEXT NOT NULL,PRIMARY KEY(deal_id,kind));
       CREATE TABLE IF NOT EXISTS telemetry(id TEXT PRIMARY KEY,deal_id TEXT NOT NULL,body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS purchase_intents(id TEXT PRIMARY KEY,mandate_id TEXT NOT NULL REFERENCES mandates(id),dedup_key TEXT NOT NULL,seller_id TEXT NOT NULL,deal_id TEXT UNIQUE NOT NULL,body TEXT NOT NULL,UNIQUE(mandate_id,dedup_key));
       CREATE TABLE IF NOT EXISTS research_requests(mandate_id TEXT PRIMARY KEY REFERENCES mandates(id),body TEXT NOT NULL);
@@ -57,6 +58,9 @@ export class DealStore {
   }return {spent,reserved};}
   operation(id:string,kind:string){const r=this.db.prepare('SELECT body FROM operations WHERE deal_id=? AND kind=?').get(id,kind) as any;return r?JSON.parse(r.body):null;}
   saveOperation(id:string,kind:string,body:any){this.db.prepare('INSERT INTO operations VALUES(?,?,?) ON CONFLICT(deal_id,kind) DO UPDATE SET body=excluded.body').run(id,kind,JSON.stringify(body));}
+  archiveControllerOperation(id:string,kind:string){const op=this.operation(id,kind);ensure(['release','refund'].includes(kind)&&op&&['REVERTED','CANCELLED'].includes(op.status)&&!this.operation(id,'controller_'+kind),'CONTROLLER_OPERATION_NOT_RESOLVED');this.saveOperation(id,'controller_'+kind,op);this.db.prepare('DELETE FROM operations WHERE deal_id=? AND kind=?').run(id,kind);}
+  scan(id:string,kind:string){const r=this.db.prepare('SELECT body FROM reconciliation_scans WHERE deal_id=? AND kind=?').get(id,kind) as any;return r?JSON.parse(r.body):null;}
+  saveScan(id:string,kind:string,body:any){if(body===null)this.db.prepare('DELETE FROM reconciliation_scans WHERE deal_id=? AND kind=?').run(id,kind);else this.db.prepare('INSERT INTO reconciliation_scans VALUES(?,?,?) ON CONFLICT(deal_id,kind) DO UPDATE SET body=excluded.body').run(id,kind,JSON.stringify(body));}
   telemetry(id:string,body:any){this.db.prepare('INSERT INTO telemetry VALUES(?,?,?)').run(randomUUID(),id,JSON.stringify(body));}
   usage(id?:string){const rows=id?this.db.prepare('SELECT body FROM telemetry WHERE deal_id=?').all(id):this.db.prepare('SELECT body FROM telemetry').all();return (rows as any[]).map(x=>JSON.parse(x.body));}
   intent(id:string){const row=this.db.prepare('SELECT * FROM purchase_intents WHERE id=?').get(id) as any;return row?{...JSON.parse(row.body),id:row.id,mandate_id:row.mandate_id,seller_id:row.seller_id,deal_id:row.deal_id}:null;}

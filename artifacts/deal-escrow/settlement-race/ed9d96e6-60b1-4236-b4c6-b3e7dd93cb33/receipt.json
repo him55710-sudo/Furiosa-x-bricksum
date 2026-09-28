@@ -1,0 +1,1222 @@
+{
+  "schema_version": 4,
+  "product": "Agent Deal Escrow",
+  "exported_at": "2026-09-28T18:42:27.579Z",
+  "network": {
+    "schemaVersion": 1,
+    "chainId": 31338,
+    "network": "local-devnet",
+    "contract": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+    "controller": "0x495f106e65fa3595949f13384ca6EB140245DA83",
+    "buyer": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+    "sellers": {
+      "seller-a": "0x8325422E8A813c9dDb4ffF68C8853a45C42A5C48",
+      "seller-b": "0xE02fa0C2241BdBa451eDfc31eD5a15e7564Fefa3"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "58bd05598942562583f68e8a272989489a0580d3b68bb41ad0e93fb2511c359d",
+    "runtimeHash": "0x6ea4a322bcfe715640fbc44c21f30db3b9329f15f6e6225291357f287dcd2af3",
+    "deploymentTx": "0x8de2c254c8e100eb981167823946856a8a9595d6cb18b63055e010a3d638b8c5",
+    "createdAt": "2026-09-28T18:42:25.316Z",
+    "finality": {
+      "mode": "confirmations",
+      "confirmations": 1
+    }
+  },
+  "mandate": {
+    "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+    "company_id": "local-race-regression",
+    "buyer_id": "recovery-test-agent",
+    "task_budget_minor": 300,
+    "max_single_minor": 200,
+    "allowed_sellers": [
+      "seller-a"
+    ],
+    "category": "RESEARCH_DATA",
+    "status": "ACTIVE",
+    "created_at": 1790620945,
+    "expires_at": 1790622145
+  },
+  "mandate_history": [
+    {
+      "event_id": "a432b7ca-e46e-4b08-b622-6876e8578519",
+      "deal_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+      "event_type": "MANDATE_CREATED",
+      "timestamp": "2026-09-28T18:42:25.391Z",
+      "actor_type": "human",
+      "actor_id": "local-race-regression",
+      "structured_payload": {
+        "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+        "company_id": "local-race-regression",
+        "buyer_id": "recovery-test-agent",
+        "task_budget_minor": 300,
+        "max_single_minor": 200,
+        "allowed_sellers": [
+          "seller-a"
+        ],
+        "category": "RESEARCH_DATA",
+        "status": "ACTIVE",
+        "created_at": 1790620945,
+        "expires_at": 1790622145
+      },
+      "previous_event_hash": null,
+      "event_hash": "0xe1565d432c639ea579005f4f41b903244d9a6dc8c15fc777bcd8d16ff448a5a4"
+    }
+  ],
+  "deal": {
+    "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+    "buyer_id": "recovery-test-agent",
+    "seller_id": "seller-a",
+    "price_minor": 180,
+    "currency_or_demo_asset": "DEMO",
+    "deliverable_type": "CAPEX_DATASET",
+    "requirements": {
+      "minimum_rows": 40,
+      "required_columns": [
+        "company",
+        "quarter",
+        "capex",
+        "currency",
+        "source_url"
+      ],
+      "minimum_source_coverage": 0.9,
+      "format": "JSON"
+    },
+    "deadline": 60,
+    "created_at": 1790620945,
+    "expires_at": 1790621545,
+    "supersedes_deal_id": null
+  },
+  "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+  "state": "REFUNDED",
+  "evidence": {
+    "policy": [
+      {
+        "name": "MANDATE_ACTIVE",
+        "pass": true,
+        "actual": "ACTIVE",
+        "expected": "ACTIVE"
+      },
+      {
+        "name": "MANDATE_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790620945,
+        "expected": 1790622145
+      },
+      {
+        "name": "DEAL_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790620945,
+        "expected": 1790621545
+      },
+      {
+        "name": "BUYER_ALLOWED",
+        "pass": true,
+        "actual": "recovery-test-agent",
+        "expected": "recovery-test-agent"
+      },
+      {
+        "name": "SELLER_ALLOWED",
+        "pass": true,
+        "actual": "seller-a",
+        "expected": [
+          "seller-a"
+        ]
+      },
+      {
+        "name": "MAX_SINGLE",
+        "pass": true,
+        "actual": 180,
+        "expected": 200
+      },
+      {
+        "name": "TASK_BUDGET",
+        "pass": true,
+        "actual": 180,
+        "expected": 300
+      },
+      {
+        "name": "DEAL_HASH",
+        "pass": true,
+        "actual": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "expected": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+      },
+      {
+        "name": "PREVIEW_REQUIRED",
+        "pass": true,
+        "actual": false,
+        "expected": false
+      }
+    ],
+    "escrow": {
+      "buyer": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+      "seller": "0x8325422E8A813c9dDb4ffF68C8853a45C42A5C48",
+      "amount": "180000000000",
+      "deadline": 1790621005,
+      "status": 3
+    },
+    "fund_tx": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+    "delivery": "[{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":100,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/0\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q2\",\"capex\":101,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/1\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":102,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/2\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q4\",\"capex\":103,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/3\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q1\",\"capex\":104,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/4\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q2\",\"capex\":105,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/5\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q3\",\"capex\":106,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/6\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q4\",\"capex\":107,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/7\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q1\",\"capex\":108,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/8\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":109,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/9\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q3\",\"capex\":110,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/10\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":111,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/11\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q1\",\"capex\":112,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/12\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q2\",\"capex\":113,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/13\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q3\",\"capex\":114,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/14\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q4\",\"capex\":115,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/15\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":116,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/16\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q2\",\"capex\":117,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/17\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":118,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/18\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q4\",\"capex\":119,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/19\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q1\",\"capex\":120,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/20\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q2\",\"capex\":121,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/21\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q3\",\"capex\":122,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/22\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q4\",\"capex\":123,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/23\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q1\",\"capex\":124,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/24\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":125,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/25\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q3\",\"capex\":126,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/26\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":127,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/27\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q1\",\"capex\":128,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/28\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q2\",\"capex\":129,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/29\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q3\",\"capex\":130,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/30\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q4\",\"capex\":131,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/31\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":132,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/32\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q2\",\"capex\":133,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/33\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":134,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/34\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q4\",\"capex\":135,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/35\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q1\",\"capex\":136,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/36\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q2\",\"capex\":137,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/37\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q3\",\"capex\":138,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/38\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q4\",\"capex\":139,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/39\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q1\",\"capex\":140,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/40\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":141,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/41\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q3\",\"capex\":142,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/42\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":143,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/43\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q1\",\"capex\":144,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/44\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q2\",\"capex\":145,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/45\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q3\",\"capex\":146,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/46\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q4\",\"capex\":147,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/47\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":148,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/48\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q2\",\"capex\":149,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/49\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":150,\"currency\":\"KRW\",\"source_url\":\"\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q4\",\"capex\":151,\"currency\":\"KRW\",\"source_url\":\"\"}]",
+    "validation": {
+      "validator_version": "delivery-v2",
+      "url_validation_scope": "HTTP(S) syntax only; no retrieval or factual verification",
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 52,
+          "expected": 40
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 0.9615384615384616,
+          "expected": 0.9
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790620945,
+          "expected": 1790621005
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "2025-Q1 through 2026-Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 52,
+          "expected": 52
+        }
+      ],
+      "failure_reason_code": null,
+      "evidence_hash": "0x5aaf9d8ffd4aa8c91dfa811304bae8dcb8762f08d8087a2c32bcef602a4c6c25",
+      "content_hash": "0x6053840c37e9e0f796444b7c5c53542df8b72b48a8fe503f840a9e08de471d1b",
+      "row_count": 52,
+      "source_count": 50,
+      "source_coverage": 0.9615384615384616,
+      "submitted_at": 1790620945,
+      "deadline": 1790621005,
+      "semantic_truth_verified": false
+    },
+    "settlement_reason": "BUYER_DEADLINE_REFUND",
+    "attestation": null,
+    "attestation_hash": "0xfa9d972d66729da7b7dae41db38eb8af8e2c90e3b84588af7b3afb475c357bd6",
+    "controller_settlement": {
+      "prior_state": "DELIVERY_VERIFIED",
+      "attestation": {
+        "deal": {
+          "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+          "buyer_id": "recovery-test-agent",
+          "seller_id": "seller-a",
+          "price_minor": 180,
+          "currency_or_demo_asset": "DEMO",
+          "deliverable_type": "CAPEX_DATASET",
+          "requirements": {
+            "minimum_rows": 40,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ],
+            "minimum_source_coverage": 0.9,
+            "format": "JSON"
+          },
+          "deadline": 60,
+          "created_at": 1790620945,
+          "expires_at": 1790621545,
+          "supersedes_deal_id": null
+        },
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "mandate": {
+          "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+          "company_id": "local-race-regression",
+          "buyer_id": "recovery-test-agent",
+          "task_budget_minor": 300,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790620945,
+          "expires_at": 1790622145
+        },
+        "delivery": "[{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":100,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/0\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q2\",\"capex\":101,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/1\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":102,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/2\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q4\",\"capex\":103,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/3\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q1\",\"capex\":104,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/4\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q2\",\"capex\":105,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/5\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q3\",\"capex\":106,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/6\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q4\",\"capex\":107,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/7\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q1\",\"capex\":108,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/8\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":109,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/9\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q3\",\"capex\":110,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/10\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":111,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/11\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q1\",\"capex\":112,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/12\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q2\",\"capex\":113,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/13\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q3\",\"capex\":114,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/14\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q4\",\"capex\":115,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/15\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":116,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/16\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q2\",\"capex\":117,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/17\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":118,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/18\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q4\",\"capex\":119,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/19\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q1\",\"capex\":120,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/20\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q2\",\"capex\":121,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/21\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q3\",\"capex\":122,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/22\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q4\",\"capex\":123,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/23\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q1\",\"capex\":124,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/24\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":125,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/25\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q3\",\"capex\":126,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/26\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":127,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/27\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q1\",\"capex\":128,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/28\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q2\",\"capex\":129,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/29\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q3\",\"capex\":130,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/30\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q4\",\"capex\":131,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/31\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":132,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/32\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q2\",\"capex\":133,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/33\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":134,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/34\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q4\",\"capex\":135,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/35\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q1\",\"capex\":136,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/36\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q2\",\"capex\":137,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/37\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q3\",\"capex\":138,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/38\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q4\",\"capex\":139,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/39\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q1\",\"capex\":140,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/40\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":141,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/41\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q3\",\"capex\":142,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/42\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":143,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/43\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q1\",\"capex\":144,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/44\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q2\",\"capex\":145,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/45\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q3\",\"capex\":146,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/46\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q4\",\"capex\":147,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/47\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":148,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/48\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q2\",\"capex\":149,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/49\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":150,\"currency\":\"KRW\",\"source_url\":\"\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q4\",\"capex\":151,\"currency\":\"KRW\",\"source_url\":\"\"}]",
+        "validation": {
+          "validator_version": "delivery-v2",
+          "url_validation_scope": "HTTP(S) syntax only; no retrieval or factual verification",
+          "verified": true,
+          "checks": [
+            {
+              "name": "VALID_JSON_ARRAY",
+              "pass": true,
+              "actual": true,
+              "expected": true
+            },
+            {
+              "name": "MINIMUM_ROWS",
+              "pass": true,
+              "actual": 52,
+              "expected": 40
+            },
+            {
+              "name": "REQUIRED_COLUMNS",
+              "pass": true,
+              "actual": true,
+              "expected": [
+                "company",
+                "quarter",
+                "capex",
+                "currency",
+                "source_url"
+              ]
+            },
+            {
+              "name": "SOURCE_URL_COVERAGE",
+              "pass": true,
+              "actual": 0.9615384615384616,
+              "expected": 0.9
+            },
+            {
+              "name": "DELIVERY_DEADLINE",
+              "pass": true,
+              "actual": 1790620945,
+              "expected": 1790621005
+            },
+            {
+              "name": "CAPEX_VALUE_TYPES",
+              "pass": true,
+              "actual": true,
+              "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+            },
+            {
+              "name": "CAPEX_QUARTER_RANGE",
+              "pass": true,
+              "actual": true,
+              "expected": "2025-Q1 through 2026-Q4"
+            },
+            {
+              "name": "CURRENCY_FORMAT",
+              "pass": true,
+              "actual": true,
+              "expected": "three uppercase letters; currency authenticity is not verified"
+            },
+            {
+              "name": "UNIQUE_ECONOMIC_ROWS",
+              "pass": true,
+              "actual": 52,
+              "expected": 52
+            }
+          ],
+          "failure_reason_code": null,
+          "evidence_hash": "0x5aaf9d8ffd4aa8c91dfa811304bae8dcb8762f08d8087a2c32bcef602a4c6c25",
+          "content_hash": "0x6053840c37e9e0f796444b7c5c53542df8b72b48a8fe503f840a9e08de471d1b",
+          "row_count": 52,
+          "source_count": 50,
+          "source_coverage": 0.9615384615384616,
+          "submitted_at": 1790620945,
+          "deadline": 1790621005,
+          "semantic_truth_verified": false
+        },
+        "final_checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790622145
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790621545
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "recovery-test-agent",
+            "expected": "recovery-test-agent"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 180,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 180,
+            "expected": 300
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+            "expected": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "reason": "DELIVERY_VERIFIED",
+        "outcome": "release",
+        "prior_event_hash": "0x23923b9ef5e5cfecf8a0df6c499098afa99b03dafb63c6f4b82abc1a552bc49d",
+        "preview": null
+      },
+      "attestation_hash": "0x03436b17cd4546182e58364eeb1b8c54ab4b03c14708e91c368595a9d395fdf4",
+      "settlement_reason": "DELIVERY_VERIFIED"
+    },
+    "buyer_refund": {
+      "schema_version": 1,
+      "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+      "funding_tx_hash": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+      "refund_tx_hash": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+      "buyer": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+      "seller": "0x8325422E8A813c9dDb4ffF68C8853a45C42A5C48",
+      "amount_wei": "180000000000",
+      "deadline": 1790621005,
+      "refund_block_timestamp": 1790621007,
+      "reason_hash": "0xfa9d972d66729da7b7dae41db38eb8af8e2c90e3b84588af7b3afb475c357bd6"
+    },
+    "refund_tx": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99"
+  },
+  "events": [
+    {
+      "event_id": "bca219d9-a546-4d18-a9f6-b138887ff802",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "NEGOTIATION_STARTED",
+      "timestamp": "2026-09-28T18:42:25.395Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65"
+      },
+      "previous_event_hash": null,
+      "event_hash": "0xd805e7893d68553a4b45c609bd5d3dc2772d7110f1f04d0e4c30cbc6c7a4e102"
+    },
+    {
+      "event_id": "6b232e8f-6166-455e-a6e7-6116ec5ff57b",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "DEAL_PROPOSED",
+      "timestamp": "2026-09-28T18:42:25.396Z",
+      "actor_type": "agent",
+      "actor_id": "recovery-test-agent",
+      "structured_payload": {
+        "deal": {
+          "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+          "buyer_id": "recovery-test-agent",
+          "seller_id": "seller-a",
+          "price_minor": 180,
+          "currency_or_demo_asset": "DEMO",
+          "deliverable_type": "CAPEX_DATASET",
+          "requirements": {
+            "minimum_rows": 40,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ],
+            "minimum_source_coverage": 0.9,
+            "format": "JSON"
+          },
+          "deadline": 60,
+          "created_at": 1790620945,
+          "expires_at": 1790621545,
+          "supersedes_deal_id": null
+        },
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+      },
+      "previous_event_hash": "0xd805e7893d68553a4b45c609bd5d3dc2772d7110f1f04d0e4c30cbc6c7a4e102",
+      "event_hash": "0x30e82b0d236aca53db5b7fc6059241988745f0a514b8ccf1a929356bd1602dc7"
+    },
+    {
+      "event_id": "876cdd1c-6a79-4cca-b48f-4d1235e65d6f",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "DEAL_ACCEPTED",
+      "timestamp": "2026-09-28T18:42:25.400Z",
+      "actor_type": "agent",
+      "actor_id": "recovery-test-agent",
+      "structured_payload": {
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+      },
+      "previous_event_hash": "0x30e82b0d236aca53db5b7fc6059241988745f0a514b8ccf1a929356bd1602dc7",
+      "event_hash": "0xe92b95cee0d48ccc0e2b321cb7ca683152bb2ce697e9ecbb1a32b41c74138acf"
+    },
+    {
+      "event_id": "a62f3e5a-aa10-4a81-864a-986c340738c2",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "POLICY_CHECKED",
+      "timestamp": "2026-09-28T18:42:25.405Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790622145
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790621545
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "recovery-test-agent",
+            "expected": "recovery-test-agent"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 180,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 180,
+            "expected": 300
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+            "expected": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "mandate": {
+          "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+          "company_id": "local-race-regression",
+          "buyer_id": "recovery-test-agent",
+          "task_budget_minor": 300,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790620945,
+          "expires_at": 1790622145
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        },
+        "time": 1790620945
+      },
+      "previous_event_hash": "0xe92b95cee0d48ccc0e2b321cb7ca683152bb2ce697e9ecbb1a32b41c74138acf",
+      "event_hash": "0x49812522437c0d53465d4be2e2bf5a7c66070d195c66c66d719fea517ad08b9e"
+    },
+    {
+      "event_id": "d2495736-e5bc-4b73-9017-ae4496ad0396",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "ESCROW_FUNDED",
+      "timestamp": "2026-09-28T18:42:25.756Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "amount_minor": 180,
+        "tx_hash": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+        "chain_id": 31338,
+        "contract": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "reason": "POLICY_APPROVED",
+        "attestation_hash": null
+      },
+      "previous_event_hash": "0x49812522437c0d53465d4be2e2bf5a7c66070d195c66c66d719fea517ad08b9e",
+      "event_hash": "0x0502a749bf766b8dd8334b239958620ae3e2944a320a517862e68f090187ab07"
+    },
+    {
+      "event_id": "c33a0df1-771f-4c79-a2c4-d231c861d212",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "DELIVERY_SUBMITTED",
+      "timestamp": "2026-09-28T18:42:25.771Z",
+      "actor_type": "seller",
+      "actor_id": "seller-a",
+      "structured_payload": {
+        "content_hash": "0x6053840c37e9e0f796444b7c5c53542df8b72b48a8fe503f840a9e08de471d1b",
+        "submitted_at": 1790620945
+      },
+      "previous_event_hash": "0x0502a749bf766b8dd8334b239958620ae3e2944a320a517862e68f090187ab07",
+      "event_hash": "0x5b429c0ce1274c429160c54359bc05f15d3ab350a92eb817f681a52e988b8613"
+    },
+    {
+      "event_id": "3fd5b083-f1ca-4691-868e-55ff8c86124d",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "DELIVERY_VALIDATED",
+      "timestamp": "2026-09-28T18:42:25.771Z",
+      "actor_type": "system",
+      "actor_id": "delivery-validator",
+      "structured_payload": {
+        "validator_version": "delivery-v2",
+        "url_validation_scope": "HTTP(S) syntax only; no retrieval or factual verification",
+        "verified": true,
+        "checks": [
+          {
+            "name": "VALID_JSON_ARRAY",
+            "pass": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "name": "MINIMUM_ROWS",
+            "pass": true,
+            "actual": 52,
+            "expected": 40
+          },
+          {
+            "name": "REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": true,
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ]
+          },
+          {
+            "name": "SOURCE_URL_COVERAGE",
+            "pass": true,
+            "actual": 0.9615384615384616,
+            "expected": 0.9
+          },
+          {
+            "name": "DELIVERY_DEADLINE",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790621005
+          },
+          {
+            "name": "CAPEX_VALUE_TYPES",
+            "pass": true,
+            "actual": true,
+            "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+          },
+          {
+            "name": "CAPEX_QUARTER_RANGE",
+            "pass": true,
+            "actual": true,
+            "expected": "2025-Q1 through 2026-Q4"
+          },
+          {
+            "name": "CURRENCY_FORMAT",
+            "pass": true,
+            "actual": true,
+            "expected": "three uppercase letters; currency authenticity is not verified"
+          },
+          {
+            "name": "UNIQUE_ECONOMIC_ROWS",
+            "pass": true,
+            "actual": 52,
+            "expected": 52
+          }
+        ],
+        "failure_reason_code": null,
+        "evidence_hash": "0x5aaf9d8ffd4aa8c91dfa811304bae8dcb8762f08d8087a2c32bcef602a4c6c25",
+        "content_hash": "0x6053840c37e9e0f796444b7c5c53542df8b72b48a8fe503f840a9e08de471d1b",
+        "row_count": 52,
+        "source_count": 50,
+        "source_coverage": 0.9615384615384616,
+        "submitted_at": 1790620945,
+        "deadline": 1790621005,
+        "semantic_truth_verified": false
+      },
+      "previous_event_hash": "0x5b429c0ce1274c429160c54359bc05f15d3ab350a92eb817f681a52e988b8613",
+      "event_hash": "0x77cf020aea1d1104e8109f72687dd60a57aac7273808b8765e260ba874b9120d"
+    },
+    {
+      "event_id": "41a19fd5-7743-43e1-9612-7c98c1242ad8",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "FINAL_AUTHORIZATION",
+      "timestamp": "2026-09-28T18:42:25.785Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790622145
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790620945,
+            "expected": 1790621545
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "recovery-test-agent",
+            "expected": "recovery-test-agent"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 180,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 180,
+            "expected": 300
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+            "expected": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "time": 1790620945,
+        "mandate": {
+          "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+          "company_id": "local-race-regression",
+          "buyer_id": "recovery-test-agent",
+          "task_budget_minor": 300,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790620945,
+          "expires_at": 1790622145
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        }
+      },
+      "previous_event_hash": "0x77cf020aea1d1104e8109f72687dd60a57aac7273808b8765e260ba874b9120d",
+      "event_hash": "0x23923b9ef5e5cfecf8a0df6c499098afa99b03dafb63c6f4b82abc1a552bc49d"
+    },
+    {
+      "event_id": "cd54004a-5cee-441d-be21-a83eb2b450e3",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "ESCROW_TRANSACTION_REVERTED",
+      "timestamp": "2026-09-28T18:42:27.207Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "operation": "release",
+        "tx_hash": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6",
+        "reason": "CHAIN_REVERTED",
+        "receipt": {
+          "transactionHash": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6",
+          "blockNumber": 5,
+          "blockHash": "0x8b4e9924eb2ba3282bb8b38095ecd7f75927f0b67dad83008c54e685022a268e",
+          "status": 0,
+          "from": "0x495f106e65fa3595949f13384ca6EB140245DA83",
+          "to": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+          "logs": [],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 5,
+            "observedBlockHash": "0x8b4e9924eb2ba3282bb8b38095ecd7f75927f0b67dad83008c54e685022a268e"
+          }
+        }
+      },
+      "previous_event_hash": "0x23923b9ef5e5cfecf8a0df6c499098afa99b03dafb63c6f4b82abc1a552bc49d",
+      "event_hash": "0x7321853e5e1ed7634c45e98f80cfd5329a7e83c2a5c1c23fc7f8c491047c2aea"
+    },
+    {
+      "event_id": "3bdce83a-bd50-4b4a-9199-399c70b54ee2",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "BUYER_REFUND_SUPERSEDED_CONTROLLER",
+      "timestamp": "2026-09-28T18:42:27.442Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "context": {
+          "prior_state": "DELIVERY_VERIFIED",
+          "attestation": {
+            "deal": {
+              "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+              "buyer_id": "recovery-test-agent",
+              "seller_id": "seller-a",
+              "price_minor": 180,
+              "currency_or_demo_asset": "DEMO",
+              "deliverable_type": "CAPEX_DATASET",
+              "requirements": {
+                "minimum_rows": 40,
+                "required_columns": [
+                  "company",
+                  "quarter",
+                  "capex",
+                  "currency",
+                  "source_url"
+                ],
+                "minimum_source_coverage": 0.9,
+                "format": "JSON"
+              },
+              "deadline": 60,
+              "created_at": 1790620945,
+              "expires_at": 1790621545,
+              "supersedes_deal_id": null
+            },
+            "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+            "mandate": {
+              "mandate_id": "5d432a4e-ea75-4c23-8add-b41ee29c8e65",
+              "company_id": "local-race-regression",
+              "buyer_id": "recovery-test-agent",
+              "task_budget_minor": 300,
+              "max_single_minor": 200,
+              "allowed_sellers": [
+                "seller-a"
+              ],
+              "category": "RESEARCH_DATA",
+              "status": "ACTIVE",
+              "created_at": 1790620945,
+              "expires_at": 1790622145
+            },
+            "delivery": "[{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":100,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/0\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q2\",\"capex\":101,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/1\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":102,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/2\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q4\",\"capex\":103,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/3\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q1\",\"capex\":104,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/4\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q2\",\"capex\":105,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/5\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q3\",\"capex\":106,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/6\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q4\",\"capex\":107,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/7\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q1\",\"capex\":108,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/8\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":109,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/9\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q3\",\"capex\":110,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/10\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":111,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/11\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q1\",\"capex\":112,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/12\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q2\",\"capex\":113,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/13\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q3\",\"capex\":114,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/14\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q4\",\"capex\":115,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/15\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":116,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/16\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q2\",\"capex\":117,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/17\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":118,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/18\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q4\",\"capex\":119,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/19\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q1\",\"capex\":120,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/20\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q2\",\"capex\":121,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/21\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q3\",\"capex\":122,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/22\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q4\",\"capex\":123,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/23\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q1\",\"capex\":124,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/24\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":125,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/25\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q3\",\"capex\":126,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/26\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":127,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/27\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q1\",\"capex\":128,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/28\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q2\",\"capex\":129,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/29\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q3\",\"capex\":130,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/30\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q4\",\"capex\":131,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/31\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":132,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/32\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q2\",\"capex\":133,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/33\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":134,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/34\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q4\",\"capex\":135,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/35\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q1\",\"capex\":136,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/36\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q2\",\"capex\":137,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/37\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q3\",\"capex\":138,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/38\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q4\",\"capex\":139,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/39\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q1\",\"capex\":140,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/40\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":141,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/41\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q3\",\"capex\":142,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/42\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":143,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/43\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q1\",\"capex\":144,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/44\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q2\",\"capex\":145,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/45\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q3\",\"capex\":146,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/46\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q4\",\"capex\":147,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/47\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":148,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/48\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q2\",\"capex\":149,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/49\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":150,\"currency\":\"KRW\",\"source_url\":\"\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q4\",\"capex\":151,\"currency\":\"KRW\",\"source_url\":\"\"}]",
+            "validation": {
+              "validator_version": "delivery-v2",
+              "url_validation_scope": "HTTP(S) syntax only; no retrieval or factual verification",
+              "verified": true,
+              "checks": [
+                {
+                  "name": "VALID_JSON_ARRAY",
+                  "pass": true,
+                  "actual": true,
+                  "expected": true
+                },
+                {
+                  "name": "MINIMUM_ROWS",
+                  "pass": true,
+                  "actual": 52,
+                  "expected": 40
+                },
+                {
+                  "name": "REQUIRED_COLUMNS",
+                  "pass": true,
+                  "actual": true,
+                  "expected": [
+                    "company",
+                    "quarter",
+                    "capex",
+                    "currency",
+                    "source_url"
+                  ]
+                },
+                {
+                  "name": "SOURCE_URL_COVERAGE",
+                  "pass": true,
+                  "actual": 0.9615384615384616,
+                  "expected": 0.9
+                },
+                {
+                  "name": "DELIVERY_DEADLINE",
+                  "pass": true,
+                  "actual": 1790620945,
+                  "expected": 1790621005
+                },
+                {
+                  "name": "CAPEX_VALUE_TYPES",
+                  "pass": true,
+                  "actual": true,
+                  "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+                },
+                {
+                  "name": "CAPEX_QUARTER_RANGE",
+                  "pass": true,
+                  "actual": true,
+                  "expected": "2025-Q1 through 2026-Q4"
+                },
+                {
+                  "name": "CURRENCY_FORMAT",
+                  "pass": true,
+                  "actual": true,
+                  "expected": "three uppercase letters; currency authenticity is not verified"
+                },
+                {
+                  "name": "UNIQUE_ECONOMIC_ROWS",
+                  "pass": true,
+                  "actual": 52,
+                  "expected": 52
+                }
+              ],
+              "failure_reason_code": null,
+              "evidence_hash": "0x5aaf9d8ffd4aa8c91dfa811304bae8dcb8762f08d8087a2c32bcef602a4c6c25",
+              "content_hash": "0x6053840c37e9e0f796444b7c5c53542df8b72b48a8fe503f840a9e08de471d1b",
+              "row_count": 52,
+              "source_count": 50,
+              "source_coverage": 0.9615384615384616,
+              "submitted_at": 1790620945,
+              "deadline": 1790621005,
+              "semantic_truth_verified": false
+            },
+            "final_checks": [
+              {
+                "name": "MANDATE_ACTIVE",
+                "pass": true,
+                "actual": "ACTIVE",
+                "expected": "ACTIVE"
+              },
+              {
+                "name": "MANDATE_NOT_EXPIRED",
+                "pass": true,
+                "actual": 1790620945,
+                "expected": 1790622145
+              },
+              {
+                "name": "DEAL_NOT_EXPIRED",
+                "pass": true,
+                "actual": 1790620945,
+                "expected": 1790621545
+              },
+              {
+                "name": "BUYER_ALLOWED",
+                "pass": true,
+                "actual": "recovery-test-agent",
+                "expected": "recovery-test-agent"
+              },
+              {
+                "name": "SELLER_ALLOWED",
+                "pass": true,
+                "actual": "seller-a",
+                "expected": [
+                  "seller-a"
+                ]
+              },
+              {
+                "name": "MAX_SINGLE",
+                "pass": true,
+                "actual": 180,
+                "expected": 200
+              },
+              {
+                "name": "TASK_BUDGET",
+                "pass": true,
+                "actual": 180,
+                "expected": 300
+              },
+              {
+                "name": "DEAL_HASH",
+                "pass": true,
+                "actual": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+                "expected": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+              },
+              {
+                "name": "PREVIEW_REQUIRED",
+                "pass": true,
+                "actual": false,
+                "expected": false
+              }
+            ],
+            "reason": "DELIVERY_VERIFIED",
+            "outcome": "release",
+            "prior_event_hash": "0x23923b9ef5e5cfecf8a0df6c499098afa99b03dafb63c6f4b82abc1a552bc49d",
+            "preview": null
+          },
+          "attestation_hash": "0x03436b17cd4546182e58364eeb1b8c54ab4b03c14708e91c368595a9d395fdf4",
+          "settlement_reason": "DELIVERY_VERIFIED"
+        },
+        "operations": [
+          {
+            "kind": "release",
+            "status": "REVERTED",
+            "tx_hash": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6",
+            "reason": null
+          }
+        ]
+      },
+      "previous_event_hash": "0x7321853e5e1ed7634c45e98f80cfd5329a7e83c2a5c1c23fc7f8c491047c2aea",
+      "event_hash": "0x5ff80f6b5313fb34e952f0ee29ece0830ffb1d910f6a2928b27e51b23b679892"
+    },
+    {
+      "event_id": "c8048080-7ce3-4397-b0bd-0c183c967142",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "BUYER_REFUND_OBSERVED",
+      "timestamp": "2026-09-28T18:42:27.443Z",
+      "actor_type": "buyer",
+      "actor_id": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+      "structured_payload": {
+        "schema_version": 1,
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "funding_tx_hash": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+        "refund_tx_hash": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+        "buyer": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+        "seller": "0x8325422E8A813c9dDb4ffF68C8853a45C42A5C48",
+        "amount_wei": "180000000000",
+        "deadline": 1790621005,
+        "refund_block_timestamp": 1790621007,
+        "reason_hash": "0xfa9d972d66729da7b7dae41db38eb8af8e2c90e3b84588af7b3afb475c357bd6"
+      },
+      "previous_event_hash": "0x5ff80f6b5313fb34e952f0ee29ece0830ffb1d910f6a2928b27e51b23b679892",
+      "event_hash": "0xd0a1dc988218b5aa8ed66e2b66cbc1cfda4d9326519a1156f28f74dfbcda0da6"
+    },
+    {
+      "event_id": "a9914212-c694-4c37-91d1-1668fa7ca12a",
+      "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+      "event_type": "ESCROW_REFUNDED",
+      "timestamp": "2026-09-28T18:42:27.444Z",
+      "actor_type": "buyer",
+      "actor_id": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+      "structured_payload": {
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "amount_minor": 180,
+        "tx_hash": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+        "chain_id": 31338,
+        "contract": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "reason": "BUYER_DEADLINE_REFUND",
+        "attestation_hash": "0xfa9d972d66729da7b7dae41db38eb8af8e2c90e3b84588af7b3afb475c357bd6"
+      },
+      "previous_event_hash": "0xd0a1dc988218b5aa8ed66e2b66cbc1cfda4d9326519a1156f28f74dfbcda0da6",
+      "event_hash": "0x54c224d7db5aa87c7116fa691dbd9d872f408f56af69426df133b19970dd8686"
+    }
+  ],
+  "control": null,
+  "control_source": null,
+  "transactions": {
+    "fund": {
+      "status": "CONFIRMED",
+      "tx_hash": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+      "original_tx_hash": null,
+      "receipt": {
+        "transactionHash": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+        "blockNumber": 2,
+        "blockHash": "0xe2aea2f34ea679d2bb4f427ef343df4bef4698025334a59b1ca54ca13bcaad1e",
+        "status": 1,
+        "from": "0x495f106e65fa3595949f13384ca6EB140245DA83",
+        "to": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "logs": [
+          {
+            "address": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+            "topics": [
+              "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+              "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+              "0x00000000000000000000000002a94aa681fb50539d0c6a22b8e16d62cbc975e9",
+              "0x0000000000000000000000008325422e8a813c9ddb4fff68c8853a45c42a5c48"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006abab54d"
+          }
+        ],
+        "finality": {
+          "mode": "confirmations",
+          "confirmations": 1,
+          "requiredConfirmations": 1,
+          "observedBlock": 2,
+          "observedBlockHash": "0xe2aea2f34ea679d2bb4f427ef343df4bef4698025334a59b1ca54ca13bcaad1e"
+        }
+      },
+      "claim": {
+        "kind": "fund",
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "tx_hash": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+        "chain_id": 31338,
+        "contract": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "sender": "0x495f106e65fa3595949f13384ca6EB140245DA83",
+        "nonce": 1,
+        "value_wei": "180000000000",
+        "calldata_hash": "0x235284d187d8e884bece1a76c4500c864af2205f4b461e61b96d82d35a5c5b16",
+        "buyer": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+        "seller": "0x8325422E8A813c9dDb4ffF68C8853a45C42A5C48",
+        "amount_wei": "180000000000",
+        "delivery_window": 60,
+        "deal_expiry": 1790621545
+      },
+      "reason": null,
+      "replacement": null
+    },
+    "refund": {
+      "status": "CONFIRMED",
+      "tx_hash": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+      "original_tx_hash": null,
+      "receipt": {
+        "transactionHash": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+        "blockNumber": 4,
+        "blockHash": "0xfd80b7aa7b73a4db6508c4eec29a72589224e61214c3b08fb0d8ea19137062d0",
+        "status": 1,
+        "from": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+        "to": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "logs": [
+          {
+            "address": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+            "topics": [
+              "0x93abb8d9a70a9379d002f0f514c2136138c6f3259a6380f2d15fe33a1ad11b25",
+              "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208"
+            ],
+            "data": "0xfa9d972d66729da7b7dae41db38eb8af8e2c90e3b84588af7b3afb475c357bd600000000000000000000000000000000000000000000000000000029e8d60800"
+          }
+        ],
+        "finality": {
+          "mode": "confirmations",
+          "confirmations": 2,
+          "requiredConfirmations": 1,
+          "observedBlock": 5,
+          "observedBlockHash": "0x8b4e9924eb2ba3282bb8b38095ecd7f75927f0b67dad83008c54e685022a268e"
+        }
+      },
+      "claim": {
+        "kind": "refund",
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "tx_hash": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+        "chain_id": 31338,
+        "contract": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "sender": "0x02a94aa681fb50539d0c6A22b8E16d62CBc975e9",
+        "nonce": 0,
+        "value_wei": "0",
+        "calldata_hash": "0x0e59fe5167e9b58f5dc710eb869cf335f3ac79a206a10630448c9c843949125b",
+        "attestation_hash": "0xfa9d972d66729da7b7dae41db38eb8af8e2c90e3b84588af7b3afb475c357bd6"
+      },
+      "reason": null,
+      "replacement": null,
+      "actor": "buyer"
+    }
+  },
+  "controller_attempts": [
+    {
+      "kind": "release",
+      "status": "REVERTED",
+      "tx_hash": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6",
+      "original_tx_hash": null,
+      "receipt": {
+        "transactionHash": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6",
+        "blockNumber": 5,
+        "blockHash": "0x8b4e9924eb2ba3282bb8b38095ecd7f75927f0b67dad83008c54e685022a268e",
+        "status": 0,
+        "from": "0x495f106e65fa3595949f13384ca6EB140245DA83",
+        "to": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "logs": [],
+        "finality": {
+          "mode": "confirmations",
+          "confirmations": 1,
+          "requiredConfirmations": 1,
+          "observedBlock": 5,
+          "observedBlockHash": "0x8b4e9924eb2ba3282bb8b38095ecd7f75927f0b67dad83008c54e685022a268e"
+        }
+      },
+      "claim": {
+        "kind": "release",
+        "deal_hash": "0x5cce3b2749b9312bcd77297706f76ad2195b6693d9df0b2e6795157453ca7208",
+        "tx_hash": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6",
+        "chain_id": 31338,
+        "contract": "0x62bd6c2a4379238685A8E6c60ECeE9F81D5cCD50",
+        "sender": "0x495f106e65fa3595949f13384ca6EB140245DA83",
+        "nonce": 2,
+        "value_wei": "0",
+        "calldata_hash": "0xbf405db84930d555185db182b5c9d92905c49d8d2a233cf2dbcf0659bda7e477",
+        "attestation_hash": "0x03436b17cd4546182e58364eeb1b8c54ab4b03c14708e91c368595a9d395fdf4"
+      },
+      "reason": null,
+      "replacement": null
+    }
+  ],
+  "kiln": [],
+  "limitations": [
+    "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+    "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+    "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+    "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+    "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+  ]
+}

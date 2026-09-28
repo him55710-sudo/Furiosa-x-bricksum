@@ -1,0 +1,45 @@
+{
+  "run": "5b2ccb95-10b9-4f62-a51a-73761d51c336",
+  "status": "PASS",
+  "completed_at": "2026-09-28T16:30:04.865Z",
+  "network": "sepolia",
+  "deal_id": "6579e4d4-0a72-4f9a-afb6-e6094629d37c",
+  "application_pid": 2624,
+  "application_exit": {
+    "code": null,
+    "signal": "SIGTERM"
+  },
+  "application_stopped_at": "2026-09-28T16:20:03.891Z",
+  "application_http_unavailable": true,
+  "early_buyer_refund_denied": true,
+  "unrelated_sender_denied": true,
+  "buyer_helper": {
+    "status": "REFUNDED",
+    "buyer": "0xC7EEcEc71Bbc6e143f289E5F75E0416E9470bB40",
+    "tx_hash": "0x7387cdedf14644687700a45c6d10cfe24c78940d70230b96495a037f9ec245f8",
+    "amount_wei": "180000000000",
+    "balance_before": "100180000000000",
+    "balance_after": "43535849133184",
+    "gas_fee_wei": "56824150866816",
+    "reason_hash": "0xedcf8ab4c72d45cc142852210ab42411a88725e1c8914c4368e7070410e8754d",
+    "block_number": 11801719,
+    "block_hash": "0x2678bbae7f4ec8364b6c1a20a3ee4a25298fc86a2ef463ca6d60d2c2bb61e61e",
+    "rpc_origin": "https://ethereum-sepolia-rpc.publicnode.com",
+    "app_access": false,
+    "controller_key_access": false,
+    "app_database_access": false,
+    "node_filesystem_permission_enforced": true,
+    "model_calls": 0
+  },
+  "reconciled_state": "REFUNDED",
+  "reservation_after": 0,
+  "controller_nonce_before_recovery": 6,
+  "controller_nonce_after_recovery": 6,
+  "model_calls": 0,
+  "notes": [
+    "Separate deadline-recovery experiment; not a refund of the already released research purchase.",
+    "Application shutdown is observed by the local harness, not proven by blockchain.",
+    "Buyer child process cannot read the controller key or application database through its Node filesystem permissions.",
+    "Test gas is a separate operator-funded allowance; escrow returns principal, not gas."
+  ]
+}

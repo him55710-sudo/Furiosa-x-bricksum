@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-09-28T18:05:19.298Z",
+  "scope": "Read-only UI verification of previously executed local-devnet transactions; no new model call, purchase or settlement.",
+  "url": "http://127.0.0.1:3415/",
+  "source_fingerprint": "dfa1acb264a00bc868d9660fd44c27bc4afc7815ac89875f9b83bfcf91b08e1e",
+  "built_assets": [
+    {
+      "path": "dist-deal-escrow/assets/index-t3imEiil.js",
+      "sha256": "e828c5a939915d506c7c7352de6797fd1c9d2b38f22818748a12b7d0ebe7b64f"
+    },
+    {
+      "path": "dist-deal-escrow/assets/index-T4SW130E.css",
+      "sha256": "a00397df16a8f55f7d8b29c907c8f4d0511568d543ad173194447b457a41f78c"
+    }
+  ],
+  "tests": {
+    "status": "PASS",
+    "passed": 80,
+    "tests": 80,
+    "completed_at": "2026-09-28T18:03:18.863Z"
+  },
+  "deals": {
+    "refund": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+    "release": "e06c6f70-1895-43d0-bb3d-0c13be2ede58"
+  },
+  "browser_observations": [
+    {
+      "check": "Deal detail source identity",
+      "result": "LG Energy Solution; 2025 Q1-Q4; Investment in Facilities; official PDF page 16; delivery-source-v1"
+    },
+    {
+      "check": "Repeat order explanation",
+      "result": "Names original 0a32c266 and states no new model call."
+    },
+    {
+      "check": "Switch receipt while verification is requested",
+      "result": "Refund heading and export link both select 0a32c266; prior VALID result count is zero.",
+      "limit": "Interactive normal-latency observation; no artificial network delay or exhaustive response-order test."
+    },
+    {
+      "check": "Selected receipt verification",
+      "result": "VALID for refund and payout against the configured local chain."
+    },
+    {
+      "check": "Return from refund receipt to workbench",
+      "result": "Refund state and selected order preserved."
+    },
+    {
+      "check": "Timeline",
+      "result": "Shows original approval, preview stop, sample, funding, full validation, payout and later revocation in recorded order."
+    },
+    {
+      "check": "Current mandate versus historical policy",
+      "result": "Current REVOKED status is explicitly distinct from recorded approval-time checks."
+    },
+    {
+      "check": "Mobile page overflow",
+      "result": "NONE",
+      "viewport_width": 390,
+      "document_width": 375,
+      "note": "Wide telemetry table remains in its own scroll container."
+    },
+    {
+      "check": "Captured browser warnings/errors",
+      "result": "NONE",
+      "entries": 0
+    }
+  ],
+  "viewport_override_reset": true,
+  "workspace_usage_after_checks": {
+    "calls": 1,
+    "total_tokens": 1481
+  },
+  "screenshots": [
+    {
+      "path": "audit-source-mobile.png",
+      "sha256": "aa17987d22a3ab403a117a19093ede2809bd14a744afcf23ce8a93b6e84d3dcb"
+    },
+    {
+      "path": "audit-timeline-desktop.png",
+      "sha256": "3cb8b34c569328428b4e176c06362dc89cfa6356fd0056f9aad1b71148ef8f45"
+    }
+  ],
+  "limitations": [
+    "This is not a human usability study.",
+    "No new public testnet execution was performed.",
+    "Earlier original-PDF workbench run artifacts remain preserved with their original UI source fingerprint."
+  ]
+}

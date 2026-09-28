@@ -19,8 +19,8 @@ export const marketOffers:Offer[]=[
 ];
 export const publicOffers=(offers:Offer[])=>offers.map(({preview_json,delivery_mode,...offer})=>offer);
 export function documentOffers(id:string):Offer[]{
- const d=sourceDescriptor(id),sample=citedSourceRows(id).slice(0,d.preview_rows);
- return marketOffers.map(offer=>({...offer,description:offer.description.replaceAll('2025',String(d.year)).replaceAll('2026',String(d.year+1)),preview_json:JSON.stringify(sample.map((row:any)=>offer.delivery_mode==='annual-estimate'?{...row,capex:row.capex+1}:row))}));
+  const d=sourceDescriptor(id),sample=citedSourceRows(id).slice(0,d.preview_rows);
+  return marketOffers.map(offer=>({...offer,description:offer.description.replace(/2025|2026/g,year=>String(d.year+(year==='2026'?1:0))),preview_json:JSON.stringify(sample.map((row:any)=>offer.delivery_mode==='annual-estimate'?{...row,capex:row.capex+1}:row))}));
 }
 export function dealFromOffer(m:Mandate,offer:Offer,id:string,price=offer.price_minor,time=now()):Deal{
   const {version,max_delivery_seconds,...requirements}=m.task_requirements??researchRequirements;

@@ -1,4 +1,4 @@
-name: Control Memory verification
+name: Product verification
 on:
   push:
   pull_request:
@@ -6,6 +6,38 @@ on:
 permissions:
   contents: read
 jobs:
+  deal-escrow-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Discard the historical report so an interrupted run cannot upload it as new evidence.
+      - run: rm -f artifacts/deal-escrow/tests.json
+      - name: Compile escrow and check the committed contract artifact
+        run: |
+          pnpm run ade:contracts
+          git diff --exit-code -- artifacts/deal-escrow/contract.json
+      - name: Verify escrow invariants, recovery, evidence and application startup
+        run: pnpm run ade:test
+      - name: Build the live workbench
+        run: pnpm run ade:build
+      - name: Build the evidence replay
+        run: pnpm run ade:replay:build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deal-escrow-verification-${{ github.run_id }}
+          path: artifacts/deal-escrow/tests.json
+          if-no-files-found: warn
+          retention-days: 14
   local-verification:
     runs-on: ubuntu-latest
     timeout-minutes: 15

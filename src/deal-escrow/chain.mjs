@@ -1,8 +1,10 @@
 import ganache from 'ganache';
-import {Wallet,BrowserProvider,JsonRpcProvider,Contract,ContractFactory,keccak256,Transaction,toQuantity} from 'ethers';
+import {Wallet,BrowserProvider,JsonRpcProvider,Contract,ContractFactory,keccak256,Transaction} from 'ethers';
 import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
 import path from 'node:path';
 import {acquireRuntimeLock} from './runtime-lock.mjs';
+import {observeBuyerRefund} from './buyer-refund.mjs';
+import {findMinedNonce} from './nonce-transaction.mjs';
 const read=p=>JSON.parse(readFileSync(p,'utf8'));
 export const UNIT_WEI=1_000_000_000n; // Test asset scale, NOT a USD conversion.
 export function finalityConfiguration({publicNetwork=false,confirmations,finalityMode}={}){
@@ -89,16 +91,13 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
     const height=finalityPolicy.mode==='finalized'?observed.number:observed.number-finalityPolicy.confirmations+1;
     if(height<0)return {status:'PENDING'};
     const confirmed=await provider.getBlock(height);if(!confirmed)return {status:'PENDING'};
-    if(await provider.getTransactionCount(wallet.address,height)<=signed.nonce)return {status:'PENDING'};
     // A higher account nonce is insufficient evidence: locate the exact mined
     // replacement and bind it to a canonical receipt at the finality boundary.
-    const start=Number.isInteger(op.preparedBlock)?Math.max(0,op.preparedBlock):Math.max(0,height-2048);
-    if(height-start>2048)return {status:'PENDING',reason:'REPLACEMENT_SEARCH_LIMIT'};
-    for(let n=height;n>=start;n--){
-      const block=await provider.send('eth_getBlockByNumber',[toQuantity(n),true]);
-      const replacement=block?.transactions?.find(t=>t.from?.toLowerCase()===wallet.address.toLowerCase()&&Number(BigInt(t.nonce))===signed.nonce);
-      if(!replacement)continue;
+    const located=await findMinedNonce(provider,{sender:wallet.address,nonce:signed.nonce,fromBlock:Number.isSafeInteger(op.preparedBlock)?Math.max(0,op.preparedBlock):0,basis:{number:height,hash:confirmed.hash}});
+    if(located){
+      const replacement=located.transaction;
       const actual=await provider.getTransactionReceipt(replacement.hash);if(!actual)return {status:'PENDING'};
+      if(actual.hash!==replacement.hash||actual.from?.toLowerCase()!==wallet.address.toLowerCase()||actual.blockNumber!==located.blockNumber||actual.blockHash!==located.blockHash)throw new Error('CHAIN_RECEIPT_MISMATCH');
       const finality=await confirmReceipt(provider,actual,finalityPolicy);
       // The original may have appeared while reconciliation read the head.
       if(replacement.hash===op.txHash){const receipt=await checkedReceipt(op,actual);return {status:actual.status===1?'CONFIRMED':'REVERTED',receipt};}
@@ -109,12 +108,12 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
         if((replacement.input??replacement.data)?.toLowerCase()!==signed.data.toLowerCase()||BigInt(replacement.value)!==signed.value)return {status:'PENDING',reason:'REPLACEMENT_INTENT_MISMATCH'};
         return {status:'CONFIRMED',receipt:{...normalizeReceipt(actual),finality},replacement:{originalTxHash:op.txHash,nonce:signed.nonce,replacementTxHash:replacement.hash}};
       }
-      if(escrow.status!==({fund:0,release:1,refund:1}[kind]))return {status:'PENDING',reason:'EXTERNAL_SETTLEMENT_REQUIRES_RECONCILIATION'};
+      if(escrow.status!==({fund:0,release:1,refund:1}[kind])&&!(kind!=='fund'&&escrow.status===3))return {status:'PENDING',reason:'EXTERNAL_SETTLEMENT_REQUIRES_RECONCILIATION'};
       return {status:'REPLACED',replacement:{originalTxHash:op.txHash,nonce:signed.nonce,replacementTxHash:replacement.hash,receipt:{...normalizeReceipt(actual),finality},escrow,basisBlockNumber:height,basisBlockHash:confirmed.hash,observedBlock:finality.observedBlock,observedBlockHash:finality.observedBlockHash}};
     }
     return {status:'PENDING',reason:'REPLACEMENT_NOT_FOUND'};
   }
-  return {provider,contract,wallet,sellers,deployment,finalityPolicy,prepare,broadcast,inspect,revertedReceipt,reconcile,verifyStoredReceipt,async close(){try{provider.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}}};
+  return {provider,contract,wallet,sellers,deployment,finalityPolicy,prepare,broadcast,inspect,revertedReceipt,reconcile,verifyStoredReceipt,observeBuyerRefund:(dealHash,funding,search)=>observeBuyerRefund({provider,contract,deployment,finalityPolicy,confirmReceipt,normalizeReceipt},dealHash,funding,search),async close(){try{provider.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}}};
   }catch(error){try{provider?.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}throw error;}
 }
 export function normalizeReceipt(r){return {transactionHash:r.hash,blockNumber:r.blockNumber,blockHash:r.blockHash,status:r.status,from:r.from,to:r.to,logs:r.logs.map(l=>({address:l.address,topics:[...l.topics],data:l.data}))};}

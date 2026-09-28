@@ -1,0 +1,101 @@
+{
+  "checked_at": "2026-09-28T18:17:31.598Z",
+  "source_fingerprint": "0172d1ee94a1cf4a34629df24ab887e1bd28261ae5ecd721f2d8cd3f725326a2",
+  "scope": "Read-only checks after reloading the owned port-3415 service with revised Kiln adapter. Existing terminal transactions; no new purchase or settlement.",
+  "health": {
+    "status": "ok",
+    "block": 5,
+    "pending_operations": 0,
+    "attention_deals": [],
+    "last_recovery_at": "2026-09-28T18:17:17.053Z",
+    "last_recovery_error": null
+  },
+  "receipts": [
+    {
+      "id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+      "state": "REFUNDED",
+      "network": "local-devnet",
+      "transactions": {
+        "fund": "0xf6817957910d5cef03b8e5098363c444b0ecee2814b31965ecd97896b09d4546",
+        "refund": "0xe1f186096f8e2f56f25a868fa873314ca666eee1f750e026d6efb85de11a6e71"
+      },
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T18:17:31.267Z"
+      }
+    },
+    {
+      "id": "e06c6f70-1895-43d0-bb3d-0c13be2ede58",
+      "state": "SETTLED",
+      "network": "local-devnet",
+      "transactions": {
+        "fund": "0x2567700a9d512777cd8b918fc75a3d82396e9e39fb580ece3a39f40e6d4dd493",
+        "release": "0xb12eec9b23b6d747094dc9263e85aad69aca2aa1ac1bb5931a53b8a850d2d7a5"
+      },
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "preview raw content revalidated and bound to the immutable Deal",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "e06c6f70-1895-43d0-bb3d-0c13be2ede58",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": true,
+            "semantic_truth_verified": false
+          },
+          {
+            "deal_id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T18:17:31.598Z"
+      }
+    }
+  ]
+}

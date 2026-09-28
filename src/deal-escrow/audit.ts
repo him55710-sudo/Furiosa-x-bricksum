@@ -1,6 +1,7 @@
 import {Transaction,Interface} from 'ethers';
 import {hash,ensure,validateDeal,validateMandate,policy,transitions} from './domain.ts';
 import {validateDelivery,validatePreview,DELIVERY_VALIDATOR_VERSION} from './delivery.ts';
+import {SourceDependencyError} from './source-document.ts';
 import type {DealEngine} from './engine.ts';
 const financialEvents:Record<string,string>={fund:'ESCROW_FUNDED',release:'ESCROW_RELEASED',refund:'ESCROW_REFUNDED'};
 const fundedStates=['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED','SETTLED','REFUNDED'];
@@ -10,6 +11,7 @@ class Incomplete extends Error {}
 function need(condition:unknown,code:string):asserts condition {if(!condition)throw new Incomplete(code);}
 function same(a:any,b:any){return typeof a==='string'&&typeof b==='string'&&a.toLowerCase()===b.toLowerCase();}
 function claim(engine:DealEngine,op:any){
+  if(op.actor==='buyer')return op.claim;
   if(!op.raw)return null;
   const tx=Transaction.from(op.raw),decoded=engine.chain.contract.interface.parseTransaction({data:tx.data,value:tx.value});
   ensure(decoded,'UNDECODABLE_SIGNED_INTENT');
@@ -17,11 +19,13 @@ function claim(engine:DealEngine,op:any){
     ...(decoded.name==='fund'?{buyer:decoded.args[1],seller:decoded.args[2],amount_wei:decoded.args[3].toString(),delivery_window:Number(decoded.args[4]),deal_expiry:Number(decoded.args[5])}:{attestation_hash:decoded.args[1]})};
 }
 export function receipt(engine:DealEngine,id:string){
+  const exportOperation=(op:any)=>({status:op.status,tx_hash:op.txHash??null,original_tx_hash:op.originalTxHash??null,receipt:op.receipt??null,claim:claim(engine,op),reason:op.reason??null,replacement:op.replacement??null,...(op.actor==='buyer'?{actor:'buyer'}:{})});
   const exportOne=(dealId:string,seen:Set<string>):any=>{
     ensure(!seen.has(dealId)&&seen.size<8,'CONTROL_SOURCE_CYCLE');const next=new Set(seen).add(dealId),r=engine.store.get(dealId),control=engine.gate(r);
-    return {schema_version:2,product:'Agent Deal Escrow',exported_at:new Date().toISOString(),network:engine.chain.deployment,mandate:engine.store.mandate(r.mandateId),mandate_history:engine.store.events(r.mandateId),deal:r.deal,deal_hash:r.dealHash,state:r.state,evidence:r.details,events:engine.store.events(dealId),control,
+    return {schema_version:r.details.buyer_refund?(r.details.controller_settlement?4:3):2,product:'Agent Deal Escrow',exported_at:new Date().toISOString(),network:engine.chain.deployment,mandate:engine.store.mandate(r.mandateId),mandate_history:engine.store.events(r.mandateId),deal:r.deal,deal_hash:r.dealHash,state:r.state,evidence:r.details,events:engine.store.events(dealId),control,
       control_source:control&&control.origin_deal_id!==dealId?exportOne(control.origin_deal_id,next):null,
-      transactions:Object.fromEntries(['fund','release','refund'].flatMap(kind=>{const op=engine.store.operation(dealId,kind);return op?[[kind,{status:op.status,tx_hash:op.txHash??null,original_tx_hash:op.originalTxHash??null,receipt:op.receipt??null,claim:claim(engine,op),reason:op.reason??null,replacement:op.replacement??null}]]:[];})),kiln:engine.store.usage(dealId),limitations};
+      transactions:Object.fromEntries(['fund','release','refund'].flatMap(kind=>{const op=engine.store.operation(dealId,kind);return op?[[kind,exportOperation(op)]]:[];})),
+      ...(r.details.controller_settlement?{controller_attempts:['release','refund'].flatMap(kind=>{const op=engine.store.operation(dealId,'controller_'+kind);return op?[{kind,...exportOperation(op)}]:[];})}:{}),kiln:engine.store.usage(dealId),limitations};
   };return exportOne(id,new Set());
 }
 function checkEvents(events:any[],id:string){
@@ -32,12 +36,13 @@ function recompute(raw:string,requirements:any,v:any){
   need(typeof raw==='string'&&v,'DELIVERY_EVIDENCE_MISSING');
   const version=v.validator_version??'delivery-v1';need(['delivery-v1',DELIVERY_VALIDATOR_VERSION,'delivery-reference-v1','delivery-source-v1','delivery-source-preview-v1'].includes(version),'VALIDATOR_VERSION_UNSUPPORTED');
   ensure(Number.isSafeInteger(v.submitted_at)&&Number.isSafeInteger(v.deadline),'VALIDATION_TIME_INVALID');
-  const result=validateDelivery(raw,requirements,v.submitted_at,v.deadline,{version});if(v.source_evidence)need(result.source_evidence?.parser===v.source_evidence.parser&&result.source_evidence?.reader_sha256===v.source_evidence.reader_sha256,'SOURCE_READER_VERSION_UNAVAILABLE');ensure(hash(result)===hash(v),'VALIDATION_MISMATCH');return result;
+  const result=validateDelivery(raw,requirements,v.submitted_at,v.deadline,{version});checkSourceVersion(result,v);ensure(hash(result)===hash(v),'VALIDATION_MISMATCH');return result;
 }
+function checkSourceVersion(result:any,recorded:any){if(recorded.source_evidence)need(['parser','reader_sha256','grammar_sha256'].every(key=>result.source_evidence?.[key]===recorded.source_evidence[key]),'SOURCE_READER_VERSION_UNAVAILABLE');}
 async function rpc<T>(fn:()=>Promise<T>):Promise<T>{try{return await fn();}catch{throw new Incomplete('RPC_UNAVAILABLE');}}
 async function checkChainReceipt(chain:any,op:any,target=chain.deployment.contract){
   const tx:any=await rpc(()=>chain.provider.getTransactionReceipt(op.tx_hash));need(tx,'CHAIN_RECEIPT_UNAVAILABLE');
-  ensure(tx.hash===op.tx_hash&&same(tx.to,target)&&same(tx.from,chain.deployment.controller),'CHAIN_TRANSACTION_MISMATCH');
+  ensure(tx.hash===op.tx_hash&&same(tx.to,target)&&same(tx.from,op.actor==='buyer'?chain.deployment.buyer:chain.deployment.controller),'CHAIN_TRANSACTION_MISMATCH');
   ensure(tx.status===op.receipt.status,'CHAIN_RECEIPT_MISMATCH');
   need(tx.blockNumber===op.receipt.blockNumber&&tx.blockHash===op.receipt.blockHash,'CHAIN_RECEIPT_REORG_OR_STALE');
   const block:any=await rpc(()=>chain.provider.getBlock(tx.blockNumber));need(block,'CHAIN_BLOCK_UNAVAILABLE');
@@ -50,9 +55,26 @@ async function checkChainReceipt(chain:any,op:any,target=chain.deployment.contra
     const decoded=chain.contract.interface.parseTransaction({data:actual.data,value:actual.value});ensure(decoded?.name===op.claim.kind&&decoded.args[0]===op.claim.deal_hash&&actual.nonce===op.claim.nonce&&actual.value.toString()===op.claim.value_wei&&Number(actual.chainId)===op.claim.chain_id&&hash(actual.data)===op.claim.calldata_hash,'CHAIN_CLAIM_MISMATCH');}
   return tx;
 }
+function checkAttestation(r:any,a:any,attestationHash:string,reason:string){
+  need(a,'ATTESTATION_MISSING');ensure(hash(a)===attestationHash,'ATTESTATION_HASH_MISMATCH');
+  ensure(hash(a.deal)===r.deal_hash&&a.deal_hash===r.deal_hash&&hash(a.delivery)===hash(r.evidence.delivery??null)&&hash(a.validation)===hash(r.evidence.validation??null)&&hash(a.preview??null)===hash(r.evidence.preview??null),'ATTESTATION_CONTENT_MISMATCH');
+  const final=r.events.find((e:any)=>e.event_hash===a.prior_event_hash);need(final,'FINAL_AUTHORIZATION_MISSING');
+  ensure(final.event_type==='FINAL_AUTHORIZATION'&&hash(final.structured_payload.checks)===hash(a.final_checks)&&hash(final.structured_payload.mandate)===hash(a.mandate),'FINAL_AUTHORIZATION_MISMATCH');
+  ensure(a.reason===reason&&['release','refund'].includes(a.outcome),'SETTLEMENT_REASON_MISMATCH');
+  if(a.outcome==='release')ensure(a.validation?.verified&&a.final_checks.every((c:any)=>c.pass),'UNSAFE_RELEASE');
+}
 async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:any[]){
   need(r&&r.deal&&r.mandate&&r.evidence&&r.transactions&&r.network,'RECEIPT_FIELDS_MISSING');
-  need([1,2].includes(r.schema_version),'RECEIPT_VERSION_UNSUPPORTED');ensure(!seen.has(r.deal.deal_id)&&seen.size<8,'CONTROL_SOURCE_CYCLE');const next=new Set(seen).add(r.deal.deal_id);
+  need([1,2,3,4].includes(r.schema_version),'RECEIPT_VERSION_UNSUPPORTED');ensure(!seen.has(r.deal.deal_id)&&seen.size<8,'CONTROL_SOURCE_CYCLE');const next=new Set(seen).add(r.deal.deal_id);
+  const direct=r.evidence.buyer_refund,controller=r.evidence.controller_settlement;
+  if(direct){
+    ensure([3,4].includes(r.schema_version)&&r.state==='REFUNDED'&&r.transactions.refund?.actor==='buyer'&&!r.transactions.release&&!r.evidence.attestation&&(r.schema_version===4||!r.evidence.validation),'BUYER_REFUND_SCOPE_MISMATCH');
+    ensure(direct.schema_version===1&&direct.deal_hash===r.deal_hash&&direct.funding_tx_hash===r.transactions.fund?.tx_hash&&direct.refund_tx_hash===r.transactions.refund.tx_hash,'BUYER_REFUND_BINDING_MISMATCH');
+    ensure(!same(r.network.buyer,r.network.controller)&&same(direct.buyer,r.network.buyer)&&same(direct.seller,r.network.sellers[r.deal.seller_id])&&direct.amount_wei===(BigInt(r.deal.price_minor)*BigInt(r.network.unitWei)).toString(),'BUYER_REFUND_PARTY_MISMATCH');
+    ensure(Number.isSafeInteger(direct.refund_block_timestamp)&&direct.refund_block_timestamp>=direct.deadline&&direct.deadline===r.evidence.escrow?.deadline&&direct.reason_hash===r.evidence.attestation_hash&&/^0x[0-9a-f]{64}$/i.test(direct.reason_hash)&&direct.reason_hash!=='0x'+'0'.repeat(64)&&r.evidence.settlement_reason==='BUYER_DEADLINE_REFUND','BUYER_REFUND_DEADLINE_MISMATCH');
+  }else ensure(![3,4].includes(r.schema_version)&&!Object.values(r.transactions).some((op:any)=>op.actor==='buyer'),'BUYER_REFUND_PROOF_MISSING');
+  if(r.schema_version===4)ensure(controller&&Array.isArray(r.controller_attempts)&&r.controller_attempts.length<=2,'CONTROLLER_HISTORY_MISSING');
+  else ensure(!controller&&r.controller_attempts===undefined,'UNEXPECTED_CONTROLLER_HISTORY');
   validateDeal(r.deal);validateMandate(r.mandate);ensure(Object.hasOwn(transitions,r.state),'INVALID_RECEIPT_STATE');ensure(hash(r.deal)===r.deal_hash,'DEAL_HASH_MISMATCH');checks.push('immutable Deal hash');
   checkEvents(r.events,r.deal.deal_id);checkEvents(r.mandate_history,r.mandate.mandate_id);
   need(r.mandate_history[0]?.event_type==='MANDATE_CREATED','MANDATE_ORIGIN_MISSING');const original=r.mandate_history[0].structured_payload;
@@ -61,13 +83,24 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
   need(event('NEGOTIATION_STARTED'),'NEGOTIATION_ORIGIN_MISSING');ensure(event('NEGOTIATION_STARTED').structured_payload.mandate_id===r.mandate.mandate_id,'MANDATE_BINDING_MISMATCH');
   const accepted=event('DEAL_ACCEPTED');if(fundedStates.includes(r.state)||['DEAL_ACCEPTED','PREVIEW_REQUIRED','PREVIEW_VERIFIED','POLICY_APPROVED'].includes(r.state))need(accepted,'ACCEPTANCE_MISSING');if(accepted)ensure(accepted.structured_payload.deal_hash===r.deal_hash,'ACCEPTANCE_MISMATCH');
   checks.push('hash-linked events bound to the Deal and mandate');
+  if(direct){const observed=event('BUYER_REFUND_OBSERVED');need(observed,'BUYER_REFUND_EVENT_MISSING');ensure(hash(observed.structured_payload)===hash(direct)&&observed.actor_type==='buyer'&&same(observed.actor_id,r.network.buyer),'BUYER_REFUND_EVENT_MISMATCH');checks.push('buyer deadline refund recorded independently of controller delivery attestation');}
+  if(controller){
+    ensure(['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED'].includes(controller.prior_state),'CONTROLLER_HISTORY_STATE');
+    ensure(controller.prior_state==='ESCROW_FUNDED'?!r.evidence.validation:!!r.evidence.validation&&r.evidence.validation.verified===(controller.prior_state==='DELIVERY_VERIFIED'),'CONTROLLER_HISTORY_DELIVERY');
+    const superseded=event('BUYER_REFUND_SUPERSEDED_CONTROLLER');need(superseded,'CONTROLLER_HISTORY_EVENT_MISSING');
+    const summaries=r.controller_attempts.map((op:any)=>({kind:op.kind,status:op.status,tx_hash:op.tx_hash,reason:op.reason}));
+    ensure(new Set(summaries.map((op:any)=>op.kind)).size===summaries.length&&hash(superseded.structured_payload)===hash({context:controller,operations:summaries}),'CONTROLLER_HISTORY_MISMATCH');
+    if(controller.attestation)checkAttestation(r,controller.attestation,controller.attestation_hash,controller.settlement_reason);
+    else ensure(!controller.attestation_hash&&!controller.settlement_reason&&!r.controller_attempts.length,'CONTROLLER_ATTESTATION_MISSING');
+    checks.push('superseded controller attempts and delivery are preserved separately from the buyer refund');
+  }
   if(r.evidence.validation){ensure(r.evidence.validation.validator_version!=='delivery-source-preview-v1','PREVIEW_IS_NOT_FULL_DELIVERY');const v=recompute(r.evidence.delivery,r.deal.requirements,r.evidence.validation);need(r.evidence.escrow,'ESCROW_EVIDENCE_MISSING');ensure(v.deadline===r.evidence.escrow.deadline,'DEADLINE_MISMATCH');
     need(event('DELIVERY_SUBMITTED')&&event('DELIVERY_VALIDATED'),'DELIVERY_EVENTS_MISSING');ensure(event('DELIVERY_SUBMITTED').structured_payload.content_hash===v.content_hash&&event('DELIVERY_SUBMITTED').structured_payload.submitted_at===v.submitted_at&&hash(event('DELIVERY_VALIDATED').structured_payload)===hash(v),'DELIVERY_EVENT_MISMATCH');
     const currentQuality=validateDelivery(r.evidence.delivery,r.deal.requirements,v.submitted_at,v.deadline);
     quality.push({deal_id:r.deal.deal_id,recorded_validator:r.evidence.validation.validator_version??'delivery-v1',current_validator:currentQuality.validator_version,current_checks_pass:currentQuality.verified,semantic_truth_verified:false});checks.push('versioned delivery structure and quality checks; no factual certification');
   }else if(['DELIVERY_SUBMITTED','DELIVERY_VERIFIED','SETTLED'].includes(r.state))throw new Incomplete('DELIVERY_EVIDENCE_MISSING');
   let previewIndex=-1;
-  if(r.evidence.preview){const {raw,deal_hash,...v}=r.evidence.preview;ensure(deal_hash===r.deal_hash,'PREVIEW_DEAL_MISMATCH');const expected=validatePreview(raw,r.deal.requirements,v.submitted_at,v.deadline,v.validator_version??'delivery-v1');ensure(hash(expected)===hash(v),'PREVIEW_VALIDATION_MISMATCH');ensure(v.verified===true&&v.deadline===r.deal.expires_at,'PREVIEW_INVALID');previewIndex=r.events.findIndex((e:any)=>e.event_type==='PREVIEW_VALIDATED'&&hash(e.structured_payload)===hash(v));need(previewIndex>=0,'PREVIEW_EVENT_MISSING');checks.push('preview raw content revalidated and bound to the immutable Deal');}
+  if(r.evidence.preview){const {raw,deal_hash,...v}=r.evidence.preview;ensure(deal_hash===r.deal_hash,'PREVIEW_DEAL_MISMATCH');need(typeof raw==='string'&&Number.isSafeInteger(v.submitted_at)&&Number.isSafeInteger(v.deadline),'PREVIEW_EVIDENCE_MISSING');const expected=validatePreview(raw,r.deal.requirements,v.submitted_at,v.deadline,v.validator_version??'delivery-v1');checkSourceVersion(expected,v);ensure(hash(expected)===hash(v),'PREVIEW_VALIDATION_MISMATCH');ensure(v.verified===true&&v.deadline===r.deal.expires_at,'PREVIEW_INVALID');previewIndex=r.events.findIndex((e:any)=>e.event_type==='PREVIEW_VALIDATED'&&hash(e.structured_payload)===hash(v));need(previewIndex>=0,'PREVIEW_EVENT_MISSING');checks.push('preview raw content revalidated and bound to the immutable Deal');}
   const control=r.control;
   if(r.control_source)ensure(control&&control.origin_deal_id!==r.deal.deal_id,'UNEXPECTED_CONTROL_SOURCE');
   if(control){ensure(control.rule==='REQUIRE_PREVIEW'&&control.status==='ACTIVE'&&control.company_id===r.mandate.company_id&&control.seller_id===r.deal.seller_id,'CONTROL_SCOPE_MISMATCH');
@@ -87,16 +120,25 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
     const expected=policy(p.mandate,r.deal,{time:p.time,...p.accounting,dealHash:r.deal_hash,previewRequired:pc.expected,previewVerified:hasPreview});ensure(hash(expected)===hash(p.checks),'POLICY_CHECK_MISMATCH');
   }
   checks.push('policy arithmetic; preview flags checked against actual preview evidence');
-  for(const [kind,op] of Object.entries(r.transactions) as [string,any][]){
+  const transactionEntries:[string,any,boolean][]=[...Object.entries(r.transactions).map(([kind,op]):[string,any,boolean]=>[kind,op,false]),...(r.controller_attempts??[]).map((op:any):[string,any,boolean]=>[op.kind,op,true])];
+  for(const [kind,op,archived] of transactionEntries){
+    if(archived){
+      ensure(['release','refund'].includes(kind)&&['REVERTED','CANCELLED'].includes(op.status)&&!op.actor,'CONTROLLER_ATTEMPT_INVALID');
+      if(!op.claim)ensure(op.status==='CANCELLED'&&!op.tx_hash&&!op.original_tx_hash&&!op.receipt&&!op.replacement&&(op.reason==='BUYER_REFUND_CONFIRMED'||r.events.some((e:any)=>e.event_type==='TRANSACTION_BLOCKED'&&e.structured_payload.stage==='FINAL_AUTHORIZATION'&&e.structured_payload.reason===op.reason)),'CONTROLLER_UNSIGNED_CANCELLATION');
+      else ensure(op.claim.attestation_hash===controller.attestation_hash&&(op.status==='REVERTED'||op.reason==='SIGNED_NONCE_REPLACED'),'CONTROLLER_SIGNED_ATTEMPT_INVALID');
+    }
+    if(op.actor!==undefined)ensure(direct&&kind==='refund'&&op.actor==='buyer'&&op.status==='CONFIRMED'&&!op.original_tx_hash&&!op.replacement,'BUYER_REFUND_OPERATION_MISMATCH');
     ensure(Object.hasOwn(financialEvents,kind),'UNKNOWN_TRANSACTION_KIND');ensure(['PENDING','CONFIRMED','REVERTED','CANCELLED'].includes(op.status),'TRANSACTION_STATUS_INVALID');
-    if(op.claim){const c=op.claim;ensure(c.kind===kind&&c.deal_hash===r.deal_hash&&c.tx_hash===(op.original_tx_hash??op.tx_hash)&&c.chain_id===r.network.chainId&&same(c.contract,r.network.contract)&&same(c.sender,r.network.controller),'TRANSACTION_CLAIM_MISMATCH');
+    if(op.claim){const c=op.claim;ensure(c.kind===kind&&c.deal_hash===r.deal_hash&&c.tx_hash===(op.original_tx_hash??op.tx_hash)&&c.chain_id===r.network.chainId&&same(c.contract,r.network.contract)&&same(c.sender,op.actor==='buyer'?r.network.buyer:r.network.controller),'TRANSACTION_CLAIM_MISMATCH');
       if(kind==='fund')ensure(c.amount_wei===(BigInt(r.deal.price_minor)*BigInt(r.network.unitWei)).toString()&&c.value_wei===c.amount_wei&&same(c.buyer,r.network.buyer)&&same(c.seller,r.network.sellers[r.deal.seller_id])&&c.delivery_window===r.deal.deadline&&c.deal_expiry===r.deal.expires_at,'FUND_CLAIM_MISMATCH');
       else {ensure(c.value_wei==='0','SETTLEMENT_VALUE_MISMATCH');if(op.status==='CONFIRMED')ensure(c.attestation_hash===r.evidence.attestation_hash,'SETTLEMENT_CLAIM_MISMATCH');}
-    }else if(r.schema_version===2&&['CONFIRMED','REVERTED'].includes(op.status))throw new Incomplete('SIGNED_INTENT_CLAIM_MISSING');
+    }else if(r.schema_version>=2&&['CONFIRMED','REVERTED'].includes(op.status))throw new Incomplete('SIGNED_INTENT_CLAIM_MISSING');
     if(op.original_tx_hash){need(op.replacement&&op.claim,'REPLACEMENT_EVIDENCE_MISSING');ensure(op.status==='CONFIRMED'&&op.replacement.originalTxHash===op.original_tx_hash&&op.replacement.replacementTxHash===op.tx_hash&&op.replacement.nonce===op.claim.nonce,'REPLACEMENT_CLAIM_MISMATCH');}
     if(op.status==='CANCELLED'&&op.reason==='SIGNED_NONCE_REPLACED'){
       const rep=op.replacement;need(rep?.receipt&&op.claim,'REPLACEMENT_EVIDENCE_MISSING');ensure(rep.originalTxHash===op.tx_hash&&rep.nonce===op.claim.nonce&&rep.replacementTxHash===rep.receipt.transactionHash&&rep.replacementTxHash!==op.tx_hash,'REPLACEMENT_CLAIM_MISMATCH');
-      const replacementEvent=r.events.find((e:any)=>e.event_type==='ESCROW_TRANSACTION_REPLACED'&&e.structured_payload.operation===kind);need(replacementEvent,'REPLACEMENT_EVENT_MISSING');const {operation,...proof}=replacementEvent.structured_payload;ensure(hash(proof)===hash(rep),'REPLACEMENT_EVENT_MISMATCH');ensure(rep.escrow?.status===({fund:0,release:1,refund:1} as any)[kind],'REPLACEMENT_OUTCOME_MISMATCH');
+      const replacementEvent=r.events.find((e:any)=>e.event_type==='ESCROW_TRANSACTION_REPLACED'&&e.structured_payload.operation===kind);need(replacementEvent,'REPLACEMENT_EVENT_MISSING');const {operation,...proof}=replacementEvent.structured_payload;ensure(hash(proof)===hash(rep),'REPLACEMENT_EVENT_MISMATCH');
+      if(rep.escrow?.status===3)need(archived&&direct,'EXTERNAL_SETTLEMENT_RECONCILIATION_PENDING');
+      else ensure(rep.escrow?.status===({fund:0,release:1,refund:1} as any)[kind],'REPLACEMENT_OUTCOME_MISMATCH');
       if(chain){
         await checkChainReceipt(chain,{tx_hash:rep.replacementTxHash,receipt:rep.receipt},rep.receipt.to);const replacement:any=await rpc(()=>chain.provider.getTransaction(rep.replacementTxHash));need(replacement,'REPLACEMENT_TRANSACTION_UNAVAILABLE');ensure(replacement.nonce===op.claim.nonce&&same(replacement.from,chain.deployment.controller),'REPLACEMENT_NONCE_MISMATCH');
         const basis:any=await rpc(()=>chain.provider.getBlock(rep.basisBlockNumber));need(basis&&basis.hash===rep.basisBlockHash,'REPLACEMENT_BASIS_REORG');
@@ -104,7 +146,7 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
       }
     }
     if(['CONFIRMED','REVERTED'].includes(op.status)){
-      need(op.receipt&&op.tx_hash,'TRANSACTION_RECEIPT_MISSING');ensure(op.receipt.transactionHash===op.tx_hash&&same(op.receipt.to,r.network.contract)&&same(op.receipt.from,r.network.controller),'TRANSACTION_RECEIPT_MISMATCH');
+      need(op.receipt&&op.tx_hash,'TRANSACTION_RECEIPT_MISSING');ensure(op.receipt.transactionHash===op.tx_hash&&same(op.receipt.to,r.network.contract)&&same(op.receipt.from,op.actor==='buyer'?r.network.buyer:r.network.controller),'TRANSACTION_RECEIPT_MISMATCH');
       if(op.status==='CONFIRMED'){ensure(op.receipt.status===1,'TRANSACTION_STATUS_MISMATCH');const e=event(financialEvents[kind]);need(e,'FINANCIAL_EVENT_MISSING');const p=e.structured_payload;ensure(p.deal_hash===r.deal_hash&&p.tx_hash===op.tx_hash&&p.amount_minor===r.deal.price_minor&&p.chain_id===r.network.chainId&&same(p.contract,r.network.contract),'FINANCIAL_EVENT_MISMATCH');if(kind!=='fund')ensure(p.attestation_hash===r.evidence.attestation_hash,'FINANCIAL_ATTESTATION_MISMATCH');
         need(Array.isArray(op.receipt.logs),'TRANSACTION_LOGS_MISSING');const logs=op.receipt.logs.filter((l:any)=>same(l.address,r.network.contract)).map((l:any)=>{try{return escrowEvents.parseLog(l);}catch{return null;}}).filter((l:any)=>l?.name===({fund:'Funded',release:'Released',refund:'Refunded'} as any)[kind]);
         ensure(logs.length===1&&logs[0].args[0]===r.deal_hash,'RECEIPT_LOG_MISMATCH');const log=logs[0];ensure(log.args.amount===BigInt(r.deal.price_minor)*BigInt(r.network.unitWei),'RECEIPT_AMOUNT_MISMATCH');
@@ -122,24 +164,25 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
   if(['BLOCKED','EXPIRED'].includes(r.state))need(event('TRANSACTION_BLOCKED'),'BLOCK_EVENT_MISSING');
   if(r.state==='POLICY_APPROVED')need(r.events.some((e:any)=>e.event_type==='POLICY_CHECKED'&&e.structured_payload.checks.every((c:any)=>c.pass)),'APPROVED_POLICY_MISSING');
   if(fundedStates.includes(r.state)){need(r.transactions.fund?.status==='CONFIRMED'&&r.evidence.escrow,'FUNDING_EVIDENCE_MISSING');need(r.events.some((e:any)=>e.event_type==='POLICY_CHECKED'&&e.structured_payload.checks.every((c:any)=>c.pass)),'APPROVED_POLICY_MISSING');}
-  if(['SETTLED','REFUNDED'].includes(r.state)){
-    need(r.transactions[r.state==='SETTLED'?'release':'refund']?.status==='CONFIRMED','SETTLEMENT_RECEIPT_MISSING');const a=r.evidence.attestation;need(a,'ATTESTATION_MISSING');ensure(hash(a)===r.evidence.attestation_hash,'ATTESTATION_HASH_MISMATCH');ensure(hash(a.deal)===r.deal_hash&&a.deal_hash===r.deal_hash&&hash(a.delivery)===hash(r.evidence.delivery??null)&&hash(a.validation)===hash(r.evidence.validation??null)&&hash(a.preview??null)===hash(r.evidence.preview??null),'ATTESTATION_CONTENT_MISMATCH');
-    const final=r.events.find((e:any)=>e.event_hash===a.prior_event_hash);need(final,'FINAL_AUTHORIZATION_MISSING');ensure(final.event_type==='FINAL_AUTHORIZATION'&&hash(final.structured_payload.checks)===hash(a.final_checks)&&hash(final.structured_payload.mandate)===hash(a.mandate),'FINAL_AUTHORIZATION_MISMATCH');ensure(a.reason===r.evidence.settlement_reason,'SETTLEMENT_REASON_MISMATCH');
+  if(['SETTLED','REFUNDED'].includes(r.state)&&!direct){
+    need(r.transactions[r.state==='SETTLED'?'release':'refund']?.status==='CONFIRMED','SETTLEMENT_RECEIPT_MISSING');const a=r.evidence.attestation;checkAttestation(r,a,r.evidence.attestation_hash,r.evidence.settlement_reason);
     if(r.state==='SETTLED')ensure(a.outcome==='release'&&a.validation.verified&&a.final_checks.every((c:any)=>c.pass)&&!r.transactions.refund,'UNSAFE_RELEASE');else ensure(a.outcome==='refund'&&r.transactions.release?.status!=='CONFIRMED','OUTCOME_MISMATCH');checks.push('settlement attestation binds Deal, mandate, delivery, preview and final checks');
   }
   if(Object.values(r.transactions).some((op:any)=>op.status==='PENDING'))throw new Incomplete('TRANSACTION_RECONCILIATION_PENDING');
   if(r.evidence.reconciliation_required)throw new Incomplete('CHAIN_RECONCILIATION_REQUIRED');
   if(chain){ensure(same(chain.deployment.contract,r.network.contract)&&chain.deployment.chainId===r.network.chainId,'UNTRUSTED_DEPLOYMENT');
-    for(const [kind,op] of Object.entries(r.transactions) as [string,any][]){if(!['CONFIRMED','REVERTED'].includes(op.status))continue;const tx=await checkChainReceipt(chain,op);if(op.status==='REVERTED')continue;
+    ensure(same(chain.deployment.controller,r.network.controller)&&same(chain.deployment.buyer,r.network.buyer)&&same(chain.deployment.sellers[r.deal.seller_id],r.network.sellers[r.deal.seller_id])&&chain.deployment.unitWei===r.network.unitWei,'CHAIN_DEPLOYMENT_IDENTITY_MISMATCH');
+    for(const [kind,op] of transactionEntries){if(!['CONFIRMED','REVERTED'].includes(op.status))continue;const tx=await checkChainReceipt(chain,op);if(op.status==='REVERTED')continue;
       const log=tx.logs.filter((l:any)=>same(l.address,chain.deployment.contract)).map((l:any)=>{try{return chain.contract.interface.parseLog(l);}catch{return null;}}).find((l:any)=>l?.name===({fund:'Funded',release:'Released',refund:'Refunded'} as any)[kind]);ensure(log&&log.args[0]===r.deal_hash,'CHAIN_EVENT_MISMATCH');
       ensure(log.args.amount===BigInt(r.deal.price_minor)*BigInt(chain.deployment.unitWei),'CHAIN_AMOUNT_MISMATCH');
       if(kind==='fund'){ensure(same(log.args.buyer,chain.deployment.buyer)&&same(log.args.seller,chain.deployment.sellers[r.deal.seller_id]),'CHAIN_PARTY_MISMATCH');ensure(Number(log.args.deadline)===r.evidence.escrow.deadline,'CHAIN_DEADLINE_MISMATCH');}else ensure(log.args[1]===r.evidence.attestation_hash,'CHAIN_ATTESTATION_MISMATCH');
     }
     const e:any=await rpc(()=>chain.inspect(r.deal_hash)),expected=r.state==='SETTLED'?2:r.state==='REFUNDED'?3:r.transactions.fund?.status==='CONFIRMED'?1:0;ensure(e.status===expected,'CHAIN_OUTCOME_MISMATCH');checks.push('independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome');
+    if(direct){const op=r.transactions.refund,block:any=await rpc(()=>chain.provider.getBlock(op.receipt.blockNumber));need(block,'CHAIN_BLOCK_UNAVAILABLE');ensure(block.timestamp===direct.refund_block_timestamp&&block.timestamp>=direct.deadline,'CHAIN_BUYER_REFUND_DEADLINE_MISMATCH');const transaction:any=await rpc(()=>chain.provider.getTransaction(op.tx_hash));need(transaction,'CHAIN_TRANSACTION_UNAVAILABLE');const decoded=chain.contract.interface.parseTransaction({data:transaction.data,value:transaction.value});ensure(decoded?.name==='refund'&&decoded.args[0]===r.deal_hash&&decoded.args[1]===direct.reason_hash&&transaction.value===0n,'CHAIN_BUYER_REFUND_CALL_MISMATCH');checks.push('buyer signed the zero-value refund call after the on-chain deadline');}
   }
 }
 export async function verifyReceipt(r:any,chain?:any){const checks:string[]=[],delivery_quality:any[]=[];try{
   await verify(r,chain,new Set(),checks,delivery_quality);
   return {verdict:chain?'VALID':'STRUCTURALLY_VALID',scope:chain?'Stored evidence and independently read configured chain; controller trust remains':'Offline structural checks only; no independent chain authenticity claim',checks:[...new Set(checks)],delivery_quality,unverified:limitations,checked_at:new Date().toISOString()};
-}catch(e){const unavailable=e instanceof Error&&(e.message==='SOURCE_DOCUMENT_NOT_IMPORTED'||('code' in e&&e.code==='ENOENT'));return {verdict:e instanceof Incomplete||unavailable?'INCOMPLETE':'INVALID',reason:e instanceof Error?e.message:'INVALID_EVIDENCE',checks:[...new Set(checks)],delivery_quality,unverified:limitations,checked_at:new Date().toISOString()};}}
+}catch(e){const unavailable=e instanceof SourceDependencyError||(e instanceof Error&&e.message==='SOURCE_DOCUMENT_NOT_IMPORTED');return {verdict:e instanceof Incomplete||unavailable?'INCOMPLETE':'INVALID',reason:e instanceof Error?e.message:'INVALID_EVIDENCE',checks:[...new Set(checks)],delivery_quality,unverified:limitations,checked_at:new Date().toISOString()};}}
 export function efficiency(records:any[]){const flows=new Map<string,any>();for(const r of records){const f=flows.get(r.flow_name)??{flow_name:r.flow_name,calls:0,prompt_tokens:0,completion_tokens:0,total_tokens:0,latency_ms:0,missing_usage:false};f.calls++;for(const k of ['prompt_tokens','completion_tokens','total_tokens']){if(r[k]===null)f.missing_usage=true;else f[k]+=r[k];}f.latency_ms+=r.latency_ms;flows.set(r.flow_name,f);}return {generated_at:new Date().toISOString(),flows:[...flows.values()],calls:records.length,deterministic_operations:['schema validation','policy checks','delivery validation','escrow authorization'].map(operation=>({operation,llm_calls:0})),ttft:null,ttft_note:'Non-streaming API used; TTFT was not measured.',energy:{measured:false,joules:null,label:'Energy Estimate — Assumption Based',method:'If organizer supplies application-attributable average watts P, estimate E=P×sum(latency_ms)/1000. API latency includes queue/network; this is not hardware active time.',power_assumption_watts:null,source:'No organizer power assumption or application power telemetry supplied; no numerical estimate is presented.',limitations:'No application-measured energy, utilization, batching attribution, or verified baseline. Token/call totals are measured; reduction relative to another design is not yet measured.'}};}

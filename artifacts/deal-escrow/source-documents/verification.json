@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "completed_at": "2026-09-28T17:22:49.890Z",
+  "duration_ms": 10515,
+  "network": "local-devnet",
+  "tests": 4,
+  "passed": 4,
+  "skipped": 0,
+  "source_fingerprint": "bfd2d78c8d574ab673cbf986aa88c279fa02c36e427559f59cfa078989aa91dd",
+  "ending_source_fingerprint": "bfd2d78c8d574ab673cbf986aa88c279fa02c36e427559f59cfa078989aa91dd",
+  "documents": [
+    {
+      "id": "lges-2025-pdf",
+      "status": "SUPPORTED",
+      "pdf_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+      "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+      "parser": "PyMuPDF 1.24.14",
+      "quarters": [
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4"
+      ],
+      "reference_values_registered": false
+    },
+    {
+      "id": "lges-2024-pdf",
+      "status": "UNAVAILABLE_OR_UNSUPPORTED",
+      "reason": "UNSUPPORTED_SOURCE_TABLE"
+    },
+    {
+      "id": "lges-2026q1-pdf",
+      "status": "SUPPORTED",
+      "pdf_sha256": "30675ac5e6a6a17f47492ad60787059bc42dd3bf4dbb53d66db7df8ddff962bf",
+      "index_digest": "0xc395828d73132b4b8be9ae1d17aa284004a2e6c5d14a30e40e1787f8a90ce3ae",
+      "parser": "PyMuPDF 1.24.14",
+      "quarters": [
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4"
+      ],
+      "reference_values_registered": false
+    },
+    {
+      "id": "lges-2025q2-pdf",
+      "status": "UNAVAILABLE_OR_UNSUPPORTED",
+      "reason": "UNSUPPORTED_SOURCE_TABLE"
+    },
+    {
+      "id": "lges-2026q2-pdf",
+      "status": "SUPPORTED",
+      "pdf_sha256": "caf96a272fe8f036937a5ef8540b1948fc0b3e09202545cb162a222908f3b14b",
+      "index_digest": "0x7d6d944a9deb648527272dc9070828ce36b85a456e639af3975e2aff1636a39a",
+      "parser": "PyMuPDF 1.24.14",
+      "quarters": [
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4"
+      ],
+      "reference_values_registered": false
+    }
+  ],
+  "output": "TAP version 13\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: PDF geometry parser uses source tokens; changed input values are not compared with an answer registry\nok 1 - PDF geometry parser uses source tokens; changed input values are not compared with an answer registry\n  ---\n  duration_ms: 464.9694\n  type: 'test'\n  ...\n# Subtest: unsupported original document stops before escrow signing and records the source failure\nok 2 - unsupported original document stops before escrow signing and records the source failure\n  ---\n  duration_ms: 1828.1575\n  type: 'test'\n  ...\n# Subtest: a plausible value and a genuine citation fail when they belong to another row, period or document\nok 3 - a plausible value and a genuine citation fail when they belong to another row, period or document\n  ---\n  duration_ms: 218.793\n  type: 'test'\n  ...\n# Subtest: one-quarter sample restores funding but cannot release payment for an incomplete full delivery\nok 4 - one-quarter sample restores funding but cannot release payment for an incomplete full delivery\n  ---\n  duration_ms: 4008.6046\n  type: 'test'\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 7606.6261\n",
+  "stderr": "",
+  "limitations": [
+    "Development regression on already-inspected same-issuer documents; not an unseen holdout.",
+    "Extraction and verification share the bounded geometry parser; a common parser error can survive both.",
+    "No independent human review, customer payment, live Kiln call, or new public-testnet run in this report.",
+    "Local deterministic extraction is a zero-inference baseline, not proof that buying this extraction is useful."
+  ]
+}

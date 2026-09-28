@@ -30,7 +30,7 @@ try{
         for(let round=0;round<3&&offers.length;round++){
           let proposal;
           if(variant==='fixed'||!live)proposal=(strongRules?strongFixedSelection:fixedSelection)(m,publicOffers(offers));
-          else {if(totalCalls>=maxCalls)throw new Error('MODEL_CALL_CAP');totalCalls++;const client=new KilnClient({onRecord:r=>calls.push(r)});const response=reviewed?await client.reviewOffers({human_task:contentReviewTask(m),offers:publicOffers(offers)}):await client.selectOffer({human_task:researchTask,mandate:m,offers:publicOffers(offers)});proposal=reviewed?reviewedSelection(m,offers,response.args):response.args;if(reviewed)decisions.push({round,content_reviews:response.args.reviews});}
+          else {if(totalCalls>=maxCalls)throw new Error('MODEL_CALL_CAP');totalCalls++;const client=new KilnClient({onRecord:r=>calls.push(r)});const response=reviewed?await client.reviewOffers({human_task:contentReviewTask(m),offers:publicOffers(offers)}):await client.selectOfferTools({human_task:researchTask,mandate:m,offers:publicOffers(offers)});proposal=reviewed?reviewedSelection(m,offers,response.args):response.args;if(reviewed)decisions.push({round,content_reviews:response.args.reviews});}
           decisions.push({round,proposal,input_offer_ids:offers.map(o=>o.offer_id)});const selected=resolveSelection(m,offers,proposal);if(!selected.accepted){blockedReason=selected.reason;break;}
           const offer=selected.offer,dealId=await install(engine,m,offer,selected.deal.price_minor,'new-'+round);chosen={offer_id:offer.offer_id,deal_id:dealId,price_minor:selected.deal.price_minor};
           if(store.get(dealId).state==='PREVIEW_REQUIRED'){

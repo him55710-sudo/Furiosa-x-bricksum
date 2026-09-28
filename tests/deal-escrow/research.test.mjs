@@ -5,6 +5,15 @@ import {policy,now,hash} from '../../src/deal-escrow/domain.ts';
 import {marketOffers,resolveSelection,fixedSelection,reviewedSelection,contentReviewTask,procureResearch,deliverResearch} from '../../src/deal-escrow/research.ts';
 import {DealStore} from '../../src/deal-escrow/store.ts';import {DealEngine} from '../../src/deal-escrow/engine.ts';import {openChain} from '../../src/deal-escrow/chain.mjs';import {receipt,verifyReceipt} from '../../src/deal-escrow/audit.ts';import {KilnClient} from '../../src/deal-escrow/kiln.ts';
 const mandate=(patch={})=>({mandate_id:'research-task',company_id:'research-team',buyer_id:'research-agent-07',task_budget_minor:300,max_single_minor:200,allowed_sellers:['seller-a','seller-b'],category:'RESEARCH_DATA',status:'ACTIVE',created_at:now(),expires_at:now()+1800,task_requirements:researchRequirements,...patch});
+
+test('purchase units cannot be replaced by dataset currency or an explanation',async()=>{
+  let payload;const args={decision:'counter',offer_id:'primary-reports',counter_price_minor:180,reason:'Deliberately wrong explanation: pay 180 KRW.'};
+  const client=new KilnClient({model:'test-model',key:'test',fetchImpl:async(_url,options)=>{payload=JSON.parse(options.body);return Response.json({model:'test-model',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{type:'function',function:{name:'select_offer',arguments:JSON.stringify(args)}}]}}]});}});
+  const m=mandate(),result=await client.selectOffer({mandate:m,offers:marketOffers,payment_context:{asset:'KRW',minor_units_per_unit:1}}),input=JSON.parse(payload.messages[1].content);
+  assert.equal(input.payment_context.asset,'DEMO');assert.equal(input.payment_context.minor_units_per_unit,100);
+  const selected=resolveSelection(m,marketOffers,result.args);assert.equal(selected.accepted,true);assert.equal(selected.deal.currency_or_demo_asset,'DEMO');assert.equal(selected.deal.price_minor,180);
+  args.currency='KRW';await assert.rejects(client.selectOffer({mandate:m,offers:marketOffers}),/UNKNOWN_FIELD|FIELDS/);
+});
 test('pinned actual observations reject plausible but wrong values, periods, units, documents and pages',()=>{
   const rows=referenceRows(),check=v=>validateDelivery(JSON.stringify(v),researchRequirements,10,20);assert.equal(check(rows).verified,true);assert.equal(rows.reduce((a,r)=>a+r.capex,0),reference.cross_check.annual_total_billion_krw);
   for(const mutate of [r=>r[0].capex=3441,r=>r[0].quarter='2026-Q1',r=>r[0].unit='million',r=>r[0].source_page=8,r=>r[0].source_sha256='0'.repeat(64),r=>r[0].source_value=3014,r=>r[0].source_label='Cash Flows from Investing Activities',r=>r[0]=null,r=>r[1]={...r[0]}]){const copy=structuredClone(rows);mutate(copy);const result=check(copy);assert.equal(result.verified,false);assert.doesNotThrow(()=>hash(result));}
@@ -33,9 +42,9 @@ test('final buyer really has acceptance and rejection tools; model may reject',a
 test('offer selection separates accept, discount and rejection without nullable counter ambiguity',async()=>{
   for(const [name,args,decision] of [['choose_offer',{offer_id:'offer',reason:'Matches the requested quarters.'},'accept'],['request_discount',{offer_id:'offer',price_minor:180,reason:'Posted floor fits the human cap.'},'counter'],['reject_offers',{reason:'None meets the requested period.'},'reject']]){
     let offered;const client=new KilnClient({model:'test',key:'test',fetchImpl:async(_url,options)=>{offered=JSON.parse(options.body).tools.map(t=>t.function.name);return Response.json({model:'test',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{type:'function',function:{name,arguments:JSON.stringify(args)}}]}}]});}});
-    const response=await client.selectOffer({offers:[{offer_id:'offer'}]});assert.equal(response.args.decision,decision);assert.equal(response.args.counter_price_minor,decision==='counter'?180:null);assert.deepEqual(offered,['choose_offer','request_discount','reject_offers']);
+    const response=await client.selectOfferTools({offers:[{offer_id:'offer'}]});assert.equal(response.args.decision,decision);assert.equal(response.args.counter_price_minor,decision==='counter'?180:null);assert.deepEqual(offered,['choose_offer','request_discount','reject_offers']);
   }
-  const client=new KilnClient({model:'test',key:'test',fetchImpl:async()=>Response.json({model:'test',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{type:'function',function:{name:'choose_offer',arguments:JSON.stringify({offer_id:'offer',reason:'Approve.',amount:999})}}]}}]})});await assert.rejects(client.selectOffer({offers:[{offer_id:'offer'}]}),/SCHEMA_FIELDS/);
+  const client=new KilnClient({model:'test',key:'test',fetchImpl:async()=>Response.json({model:'test',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{type:'function',function:{name:'choose_offer',arguments:JSON.stringify({offer_id:'offer',reason:'Approve.',amount:999})}}]}}]})});await assert.rejects(client.selectOfferTools({offers:[{offer_id:'offer'}]}),/SCHEMA_FIELDS/);
 });
 
 test('content reviews cannot choose prices; policy ranks posted floors and excludes unclear or infeasible work',()=>{

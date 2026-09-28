@@ -1,0 +1,55 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {mkdtempSync} from 'node:fs';
+import path from 'node:path';
+import {tmpdir} from 'node:os';
+import {openChain} from '../../src/deal-escrow/chain.mjs';
+import {DealStore} from '../../src/deal-escrow/store.ts';
+import {DealEngine} from '../../src/deal-escrow/engine.ts';
+import {hash,now} from '../../src/deal-escrow/domain.ts';
+import {receipt,verifyReceipt} from '../../src/deal-escrow/audit.ts';
+
+test('buyer refund after more than 2048 blocks resumes across restart and RPC failure without another payment',async()=>{
+  const chain=await openChain(),file=path.join(mkdtempSync(path.join(tmpdir(),'ade-long-refund-')),'state.sqlite');
+  let store=new DealStore(file),engine=new DealEngine(store,chain);
+  try{
+    const t=now(),m={mandate_id:randomUUID(),company_id:'offline-research',buyer_id:'research-agent-07',task_budget_minor:300,max_single_minor:200,allowed_sellers:['seller-a'],category:'RESEARCH_DATA',status:'ACTIVE',created_at:t,expires_at:t+1200};
+    engine.mandate(m);
+    const d={deal_id:randomUUID(),buyer_id:m.buyer_id,seller_id:'seller-a',price_minor:180,currency_or_demo_asset:'DEMO',deliverable_type:'CAPEX_DATASET',requirements:{minimum_rows:4,required_columns:['company','quarter','capex','currency','source_url'],minimum_source_coverage:1,format:'JSON'},deadline:60,created_at:t,expires_at:t+600,supersedes_deal_id:null};
+    engine.propose(d,m.mandate_id);engine.agentAction('accept_deal',{deal_id:d.deal_id});await engine.fund(d.deal_id);
+    const dealHash=hash(d),controllerNonce=await chain.provider.getTransactionCount(chain.wallet.address);
+    store.close();
+    await chain.provider.send('evm_increaseTime',[61]);
+    await chain.provider.send('evm_mine',[{blocks:2050}]);
+    const buyer=chain.contract.connect(await chain.provider.getSigner(chain.deployment.buyer));
+    const refunded=await(await buyer.refund(dealHash,hash('BUYER_DEADLINE_REFUND'))).wait();
+    store=new DealStore(file);engine=new DealEngine(store,chain);
+    const observe=chain.observeBuyerRefund;
+    chain.observeBuyerRefund=(hash,fund,search)=>observe(hash,fund,{...search,maxPages:1});
+    const first=await engine.recover();
+    assert.equal(first.at(-1).reason,'BUYER_REFUND_SEARCH_PENDING');
+    const cursor=store.scan(d.deal_id,'buyer-refund');
+    assert.equal(cursor.through_block,store.operation(d.deal_id,'fund').receipt.blockNumber+1023);
+    assert.equal(store.accounting(m.mandate_id).reserved,180);
+    assert.equal(store.operation(d.deal_id,'refund'),null);
+    store.close();store=new DealStore(file);engine=new DealEngine(store,chain);
+    assert.deepEqual(store.scan(d.deal_id,'buyer-refund'),cursor);
+    chain.observeBuyerRefund=async()=>{throw new Error('RPC_OFFLINE');};
+    assert.equal((await engine.recover()).at(-1).reason,'RPC_OFFLINE');
+    assert.deepEqual(store.scan(d.deal_id,'buyer-refund'),cursor);
+    assert.equal(store.accounting(m.mandate_id).reserved,180);
+    chain.observeBuyerRefund=observe;
+    const result=await engine.recover();
+    assert.equal(result.at(-1).status,'BUYER_REFUND_RECONCILED',JSON.stringify(result));
+    assert.equal(store.get(d.deal_id).state,'REFUNDED');
+    assert.equal(store.accounting(m.mandate_id).reserved,0);
+    assert.equal(store.operation(d.deal_id,'refund').txHash,refunded.hash);
+    assert.equal(store.scan(d.deal_id,'buyer-refund'),null);
+    await engine.recover();
+    assert.equal(store.events(d.deal_id).filter(e=>e.event_type==='ESCROW_REFUNDED').length,1);
+    assert.equal(await chain.provider.getTransactionCount(chain.wallet.address),controllerNonce);
+    const audited=await verifyReceipt(receipt(engine,d.deal_id),chain);
+    assert.equal(audited.verdict,'VALID',JSON.stringify(audited));
+  }finally{store.close();await chain.close();}
+});

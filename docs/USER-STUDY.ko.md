@@ -2,19 +2,22 @@
 
 현재 상태: 실제 참여자 응답 없음. 자동 브라우저 검사와 페르소나 에이전트를 사람 3명으로 계산하지 않는다.
 
-현재 영상은 새 원문 셀 검사·한 분기 샘플·공개 Sepolia 지급/환불·앱 종료 후 독립 회수를 담은 7장면 기록이다. 156.56초이며 실제 실행 재생과 합성음성임을 표시한다. 프로그램 검사와 화면 확인은 통과했지만 사람의 이해도는 아직 확인하지 않았다. 이전 참조표 영상은 `earlier-reference-recording`에 보존하며, 그 응답을 새 기능 검증으로 집계하지 않는다. 실제 구매자·공급자와 확인할 범위는 [파일럿 조건 초안](SUPPLIER-PILOT-TERMS.ko.md)에 정리했다.
-
 ## 준비 자료
 
-- 로컬 서비스 첫 화면: `http://127.0.0.1:3412/`
-- 기록된 실행: `http://127.0.0.1:3412/?replay=1`
-- [2분 37초 한국어 합성음성 영상](../artifacts/deal-escrow/research/agent-deal-escrow-demo.ko.mp4) · [대본](../artifacts/deal-escrow/research/narration.ko.txt) · [미디어 검사](../artifacts/deal-escrow/research/video-verification.json). 원격 참여자는 영상 파일을 보고 답할 수 있다. 앱의 실제 사람 응답 수는 아직 0명이다.
-- 참여자 질문지: `http://127.0.0.1:3412/?study=1`
-- 현재 앱 원문: https://www.lgensol.com/upload/file/irEvent/26_2Q_LGES_business_performance_F_EN.pdf#page=15
-- 이전 영상 원문: https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf#page=16
+- 참여자 질문지: `http://127.0.0.1:3414/?study=1`
+- 질문지에 고정된 데모: `http://127.0.0.1:3414/?replay=1&studyDemo=1`
+- 일반 기록 재생: `http://127.0.0.1:3413/?replay=1`
+- 원문: https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf#page=16
 - 원문 검토 대상: 시설투자 현금유출 2025 Q1 -3,014 / Q2 -2,717 / Q3 -2,171 / Q4 -2,515, 십억 원. 납품은 지출액을 양수로 정규화하고 원 부호도 보존한다.
 
 링크는 실행 중인 PC에서만 열린다. 원격 참가자에게 localhost 링크를 보내지 않는다. 현장 PC 또는 화면 공유로 시청하고 질문지에 직접 답한다. 공개 게시나 사람에게 메시지 발송은 아직 하지 않았다.
+
+```sh
+pnpm ade:replay:build
+pnpm ade:source:study
+```
+
+질문지 서비스는 지갑·Kiln API·체인 DB를 열지 않는다. 서버 시작 시 데모의 증거와 빌드 파일을 고정하고, 그 버전의 원문 실행·별도 회수 실행을 시청 화면과 응답에 연결한다. 질문지에서 데모를 열면 같은 버전이 제공된다. 실행 중 빌드 파일을 바꿔도 화면은 바뀌지 않으며, 새 버전을 제공하려면 서비스를 재시작한다. 질문 항목·증거·화면이 달라지면 이전 응답은 새 버전의 집계에 포함되지 않는다.
 
 ## 초면 참여자 3명
 
@@ -34,10 +37,11 @@
 
 ## 기록과 완료 기준
 
-- 응답은 해당 실행 디렉터리의 `human-study/responses.jsonl`에 저장된다. 개인 연락처를 수집하지 않는다.
+- 응답은 Git에서 제외된 `data/private/deal-escrow/source-study/responses.jsonl`에 저장된다. 개인 연락처를 수집하지 않는다. `ADE_STUDY_DIR`로 별도 저장 위치를 지정할 수 있다.
 - 실제 사람과 자동 QA는 `participant_kind`로 분리한다. 참가 코드별 마지막 응답을 집계한다.
-- 질문지와 원문 링크·쪽수·검토 값은 현재 데모의 증거에서 읽는다. 응답에는 시청 자료 SHA256, 질문 문구, 원문 정보와 이를 묶은 study ID를 저장한다. 화면을 연 뒤 자료나 질문지가 바뀌면 제출을 거부한다.
-- 현재 자료·질문지에 해당하는 응답만 집계하고, 이전 응답은 보존해 별도 건수로 표시한다. 다른 버전에 이미 참여한 동일 코드는 초면 참여자로 다시 세지 않는다. 자동 QA와 사람 코드가 같아도 사람 응답을 덮어쓰지 않는다.
+- 응답에는 시청 버전, 원문·회수 실행 ID, 증거 해시, UI 파일별 해시, 질문 항목이 포함된다. 해당 증거와 실제 UI 바이트도 같은 비공개 폴더의 `sessions/<version>.json`에 보존한다. 수정된 데모를 과거 응답으로 검증했다고 주장하지 않는다.
+- 같은 제출 ID의 재시도는 한 번만 저장한다. 다른 내용으로 ID를 재사용하거나, 버전·동의·시청 확인이 맞지 않으면 저장하지 않는다. 저장 실패 시 입력한 답변을 화면에 유지한다.
+- 응답자가 직접 선택한 `human`은 신원이나 이해도의 증명이 아니다. 현재 자동 집계의 `reviewed_humans`와 `human_validation_complete`는 각각 0과 false로 유지하며, 별도 관찰 기록으로 검토해야 한다.
 - 사람 3명의 실제 응답·이해 관찰, 잠재 사용자의 실제 사건, 원문 표 사람 검토가 있어야 이 단계의 완료를 판단한다. 폼이나 영상 완성만으로 완료가 아니다.
 
 ## 텍스트로 전달할 수 있는 참여 안내 초안

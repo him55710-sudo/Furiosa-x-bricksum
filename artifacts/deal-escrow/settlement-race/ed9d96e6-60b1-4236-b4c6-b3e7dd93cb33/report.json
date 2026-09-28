@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "run": "ed9d96e6-60b1-4236-b4c6-b3e7dd93cb33",
+  "status": "PASS",
+  "network": "local-devnet",
+  "chain_id": 31338,
+  "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+  "completed_at": "2026-09-28T18:42:27.841Z",
+  "source_fingerprint": "3e8dfdcc2e7222cfa82a885760608f9172858d31ac05abac0022c31e987ea920",
+  "ending_source_fingerprint": "3e8dfdcc2e7222cfa82a885760608f9172858d31ac05abac0022c31e987ea920",
+  "before": {
+    "state": "DELIVERY_VERIFIED",
+    "reserved": 180,
+    "controller_status": "PENDING"
+  },
+  "after": {
+    "state": "REFUNDED",
+    "reserved": 0,
+    "controller_nonce_before": 2,
+    "controller_nonce_after": 3
+  },
+  "transactions": {
+    "fund": "0xe9e8ad6fdea1696c4a41f116c1768cadaf6b8c465beacae6ce8700a71da66368",
+    "buyer_refund": "0x7378ee29d9da122a628fcbaff8dd2e8501052535fcddaaca950f80f1bc440c99",
+    "controller_revert": "0x84e97d0a29379ee79214e5f1deef97cd3ef8ff3705edb214d93bb4463f3b75c6"
+  },
+  "model_calls": 0,
+  "public_chain_transactions": 0,
+  "verification": {
+    "verdict": "VALID",
+    "scope": "Stored evidence and independently read configured chain; controller trust remains",
+    "checks": [
+      "immutable Deal hash",
+      "hash-linked events bound to the Deal and mandate",
+      "buyer deadline refund recorded independently of controller delivery attestation",
+      "superseded controller attempts and delivery are preserved separately from the buyer refund",
+      "versioned delivery structure and quality checks; no factual certification",
+      "policy arithmetic; preview flags checked against actual preview evidence",
+      "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome",
+      "buyer signed the zero-value refund call after the on-chain deadline"
+    ],
+    "delivery_quality": [
+      {
+        "deal_id": "b0fb4a29-a1ce-4dbf-b053-bccbd761617c",
+        "recorded_validator": "delivery-v2",
+        "current_validator": "delivery-v2",
+        "current_checks_pass": true,
+        "semantic_truth_verified": false
+      }
+    ],
+    "unverified": [
+      "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+      "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+      "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+      "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+      "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+    ],
+    "checked_at": "2026-09-28T18:42:27.812Z"
+  },
+  "limitations": [
+    "Synthetic local regression with a 61-second EVM time advance, not public testnet evidence.",
+    "Reopens the actual database; not a separate operating-system crash test.",
+    "The single already-signed controller transaction mined as a revert; its gas is not refunded."
+  ]
+}
