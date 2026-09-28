@@ -54,6 +54,8 @@
 
 ## 실행·확인 명령
 
+[GitHub 자동 검사](../.github/workflows/verify-system.yml)에 현재 제품 전용 `deal-escrow-verification` 작업을 추가했다. 새 Ubuntu 환경에서 잠긴 의존성 설치, 계약 재컴파일 및 저장된 계약 산출물 일치, 현재 자동 검사, live/replay 화면 빌드를 실행한다. 기존 Control Memory 작업의 성공을 현재 제품 검증으로 대신하지 않는다. 과거 `tests.json`을 먼저 제거하므로 새 검사 전에 중단된 실행은 과거 PASS 파일을 새 증거로 업로드하지 않는다. 실제 통과 여부는 해당 커밋의 Actions 결과와 `deal-escrow-verification-<run_id>` 보고서로 확인한다. 이 작업에는 Kiln 키·공개 체인 서명·PDF 원문·사람 참여가 없으며 그 실증을 대체하지 않는다.
+
 ```sh
 pnpm ade:test                        # 외부 모델/공개 거래 없이 현재 자동 검사
 pnpm ade:build                       # live workbench 빌드
