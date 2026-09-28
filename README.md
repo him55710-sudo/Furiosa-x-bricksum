@@ -18,6 +18,8 @@ The buyer refund independently verified VALID at finalized block 11,801,738. The
 
 Policy and final-authorization records now retain the exact timestamp used for their checks. A clock-boundary regression previously reproduced a completed payment whose receipt failed with `POLICY_CHECK_MISMATCH`; the fix keeps that receipt reconstructable while preserving a fresh expiry check before signing. Historical records are not rewritten.
 
+A separate [original-PDF validation path](docs/PDF-SOURCE-VALIDATION.ko.md) now checks pinned PDF bytes and cited table cells without a registered answer table. It supports three of five already-inspected same-issuer documents; the other two stop as unsupported. One-row previews cannot authorize an incomplete final delivery, and unsupported sources stop before funding signatures. Local extraction uses zero model calls. These are local development checks, not a new public-chain proof, unseen-document benchmark, or evidence that paid outsourcing beats local extraction. Run `pnpm ade:pdf:verify` after the documented imports; basic `ade:test` remains PDF/Python independent.
+
 ```sh
 pnpm ade:replay:build
 pnpm ade:source:replay

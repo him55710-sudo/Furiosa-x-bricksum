@@ -1,6 +1,7 @@
 import {keccak256, toUtf8Bytes} from 'ethers';
+import {sourcePolicyHash} from './source-catalog.mjs';
 
-export type Requirements = {minimum_rows:number; required_columns:string[]; minimum_source_coverage:number; format:'JSON';reference_dataset_id?:string};
+export type Requirements = {minimum_rows:number; required_columns:string[]; minimum_source_coverage:number; format:'JSON';reference_dataset_id?:string;source_document_id?:string;source_policy_hash?:string};
 export type TaskRequirements = Requirements & {version:1;max_delivery_seconds:number};
 export type Deal = {deal_id:string; buyer_id:string; seller_id:string; price_minor:number; currency_or_demo_asset:'DEMO'; deliverable_type:'CAPEX_DATASET'; requirements:Requirements; deadline:number; created_at:number; expires_at:number; supersedes_deal_id:string|null};
 export type Mandate = {mandate_id:string; company_id:string; buyer_id:string; task_budget_minor:number; max_single_minor:number; allowed_sellers:string[]; category:'RESEARCH_DATA'; status:'ACTIVE'|'REVOKED'; created_at:number; expires_at:number;task_requirements?:TaskRequirements};
@@ -20,8 +21,9 @@ export function exact(v:any,keys:string[]){ensure(v&&typeof v==='object'&&!Array
 export function integer(v:unknown,min:number,max:number){ensure(Number.isSafeInteger(v)&&Number(v)>=min&&Number(v)<=max,'SCHEMA_INTEGER');}
 export function identifier(v:unknown){ensure(typeof v==='string'&&/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$/.test(v),'SCHEMA_ID');}
 export function validateRequirements(r:any):Requirements {
-  exact(r,['minimum_rows','required_columns','minimum_source_coverage','format',...(Object.hasOwn(r??{},'reference_dataset_id')?['reference_dataset_id']:[])]);integer(r.minimum_rows,1,10000);
+  exact(r,['minimum_rows','required_columns','minimum_source_coverage','format',...(Object.hasOwn(r??{},'reference_dataset_id')?['reference_dataset_id']:[]),...(Object.hasOwn(r??{},'source_document_id')?['source_document_id','source_policy_hash']:[])]);integer(r.minimum_rows,1,10000);
   if(Object.hasOwn(r,'reference_dataset_id'))ensure(r.reference_dataset_id==='lges-2025-v1','UNKNOWN_REFERENCE_DATASET');
+  if(Object.hasOwn(r,'source_document_id')){ensure(!r.reference_dataset_id,'CONFLICTING_SOURCE_PROFILES');identifier(r.source_document_id);ensure(r.source_policy_hash===sourcePolicyHash(r.source_document_id),'SOURCE_POLICY_HASH_MISMATCH');}
   ensure(Array.isArray(r.required_columns)&&r.required_columns.length>0&&r.required_columns.length<=30,'SCHEMA_COLUMNS');
   r.required_columns.forEach(identifier);ensure(new Set(r.required_columns).size===r.required_columns.length,'DUPLICATE_COLUMN');
   ensure(['company','quarter','capex','currency','source_url'].every(k=>r.required_columns.includes(k)),'REQUIRED_CAPEX_COLUMNS');
@@ -43,7 +45,7 @@ export function validateMandate(m:any):Mandate {
   if(Object.hasOwn(m,'task_requirements'))validateTaskRequirements(m.task_requirements);return structuredClone(m);
 }
 export function validateTaskRequirements(input:any):TaskRequirements {
-  exact(input,['version','minimum_rows','required_columns','minimum_source_coverage','format','max_delivery_seconds',...(Object.hasOwn(input??{},'reference_dataset_id')?['reference_dataset_id']:[])]);ensure(input.version===1,'TASK_REQUIREMENTS_VERSION');
+  exact(input,['version','minimum_rows','required_columns','minimum_source_coverage','format','max_delivery_seconds',...(Object.hasOwn(input??{},'reference_dataset_id')?['reference_dataset_id']:[]),...(Object.hasOwn(input??{},'source_document_id')?['source_document_id','source_policy_hash']:[])]);ensure(input.version===1,'TASK_REQUIREMENTS_VERSION');
   const {version,max_delivery_seconds,...requirements}=input;validateRequirements(requirements);integer(max_delivery_seconds,1,3600);return structuredClone(input);
 }
 export const defaultTaskRequirements:TaskRequirements={version:1,minimum_rows:40,required_columns:['company','quarter','capex','currency','source_url'],minimum_source_coverage:.9,format:'JSON',max_delivery_seconds:180};
@@ -72,6 +74,7 @@ export function policy(m:Mandate,d:Deal,{time=now(),spent=0,reserved=0,dealHash=
       {name:'TASK_REQUIRED_COLUMNS',pass:m.task_requirements.required_columns.every(c=>d.requirements.required_columns.includes(c)),actual:d.requirements.required_columns,expected:m.task_requirements.required_columns},
       {name:'TASK_DELIVERY_WINDOW',pass:d.deadline<=m.task_requirements.max_delivery_seconds,actual:d.deadline,expected:m.task_requirements.max_delivery_seconds},
       ...(m.task_requirements.reference_dataset_id?[{name:'TASK_REFERENCE_DATASET',pass:d.requirements.reference_dataset_id===m.task_requirements.reference_dataset_id,actual:d.requirements.reference_dataset_id??null,expected:m.task_requirements.reference_dataset_id}]:[]),
+      ...(m.task_requirements.source_document_id?[{name:'TASK_SOURCE_DOCUMENT',pass:d.requirements.source_document_id===m.task_requirements.source_document_id&&d.requirements.source_policy_hash===m.task_requirements.source_policy_hash,actual:{id:d.requirements.source_document_id??null,policy_hash:d.requirements.source_policy_hash??null},expected:{id:m.task_requirements.source_document_id,policy_hash:m.task_requirements.source_policy_hash}}]:[]),
     ]:[]),
     {name:'PREVIEW_REQUIRED',pass:!previewRequired||previewVerified,actual:previewVerified,expected:previewRequired},
   ];

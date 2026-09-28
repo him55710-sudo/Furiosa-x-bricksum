@@ -1,0 +1,6 @@
+import {mkdirSync,existsSync,readFileSync,writeFileSync,renameSync} from 'node:fs';import path from 'node:path';import {createHash} from 'node:crypto';
+import {sourceDescriptor,sourcePath,sourceDocument} from '../src/deal-escrow/source-document.ts';
+const id=process.argv[2]??'lges-2025-pdf',d=sourceDescriptor(id),file=sourcePath(id);
+mkdirSync(path.dirname(file),{recursive:true});
+if(!existsSync(file)){const url=new URL(d.url);if(url.protocol!=='https:'||url.hostname!=='www.lgensol.com')throw new Error('SOURCE_HOST_NOT_ALLOWED');const response=await fetch(url,{redirect:'error',signal:AbortSignal.timeout(30000)});if(!response.ok)throw new Error('SOURCE_DOWNLOAD_FAILED');const bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>20_000_000||!bytes.subarray(0,5).equals(Buffer.from('%PDF-'))||createHash('sha256').update(bytes).digest('hex')!==d.sha256)throw new Error('SOURCE_DOWNLOAD_MISMATCH');const pending=file+'.pending';writeFileSync(pending,bytes);renameSync(pending,file);}
+const table=sourceDocument(id);console.log(JSON.stringify({id,pdf_sha256:d.sha256,index_digest:table.index_digest,quarters:table.target_cells.map(c=>c.period),reference_values_registered:false,bytes:readFileSync(file).length}));

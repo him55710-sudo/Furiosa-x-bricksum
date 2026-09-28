@@ -1,0 +1,12 @@
+import {spawnSync} from 'node:child_process';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {verificationSource} from '../src/deal-escrow/verification-source.mjs';
+import {documentCatalog,sourceDocument} from '../src/deal-escrow/source-document.ts';
+const before=verificationSource(),started=Date.now();
+const documents=documentCatalog.map(d=>{try{const table=sourceDocument(d.id);return {id:d.id,status:'SUPPORTED',pdf_sha256:d.sha256,index_digest:table.index_digest,parser:table.parser,quarters:table.target_cells.map(c=>c.period),reference_values_registered:false};}catch(e){return {id:d.id,status:'UNAVAILABLE_OR_UNSUPPORTED',reason:e.message};}});
+const result=spawnSync(process.execPath,['--test','--test-reporter=tap','verification/source-document.integration.mjs'],{encoding:'utf8',timeout:120000,maxBuffer:2_000_000});
+const after=verificationSource(),output=result.stdout??'',count=name=>Number(output.match(new RegExp(`# ${name} (\\d+)`))?.[1]??0);
+const pass=result.status===0&&count('tests')>0&&count('tests')===count('pass')&&!count('skipped')&&before.sha256===after.sha256;
+const report={status:pass?'PASS':'FAIL',completed_at:new Date().toISOString(),duration_ms:Date.now()-started,network:'local-devnet',tests:count('tests'),passed:count('pass'),skipped:count('skipped'),source_fingerprint:before.sha256,ending_source_fingerprint:after.sha256,documents,output,stderr:result.stderr??'',limitations:['Development regression on already-inspected same-issuer documents; not an unseen holdout.','Extraction and verification share the bounded geometry parser; a common parser error can survive both.','No independent human review, customer payment, live Kiln call, or new public-testnet run in this report.','Local deterministic extraction is a zero-inference baseline, not proof that buying this extraction is useful.']};
+mkdirSync('artifacts/deal-escrow/source-documents',{recursive:true});writeFileSync('artifacts/deal-escrow/source-documents/verification.json',JSON.stringify(report,null,2));
+console.log(JSON.stringify({status:report.status,passed:report.passed,tests:report.tests,documents},null,2));if(!pass){process.stderr.write(output+report.stderr);}process.exitCode=pass?0:1;

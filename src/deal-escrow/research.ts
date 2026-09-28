@@ -3,7 +3,8 @@ import type {Deal,Mandate} from './domain.ts';
 import type {DealEngine} from './engine.ts';
 import {KilnClient} from './kiln.ts';
 import {reference,referenceRows,researchRequirements,sourcePacket} from './reference.ts';
-import {validateDelivery} from './delivery.ts';
+import {validateDelivery,validatePreview} from './delivery.ts';
+import {sourceDescriptor,sourceDocument,sourceTask,citedSourceRows} from './source-document.ts';
 
 export type Offer={offer_id:string;seller_id:string;price_minor:number;floor_price_minor:number;minimum_rows:number;minimum_source_coverage:number;deadline:number;description:string;preview_json?:string;delivery_mode?:string};
 export const researchTask='Buy all four 2025 quarterly realized facility-investment cash outflows of LG Energy Solution from its Q4 2025 earnings presentation, in billion KRW, with original signed value, exact document hash, page and row. Do not substitute annual totals, forecasts or total investing cash flows.';
@@ -13,6 +14,10 @@ export const marketOffers:Offer[]=[
   {offer_id:'archive-service',seller_id:'seller-b',price_minor:170,floor_price_minor:160,minimum_rows:4,minimum_source_coverage:1,deadline:300,description:'Historical actual quarterly facility cash expenditures from the original presentation. Archive verification takes 300 seconds.',preview_json:JSON.stringify(referenceRows()),delivery_mode:'source-extraction'},
 ];
 export const publicOffers=(offers:Offer[])=>offers.map(({preview_json,delivery_mode,...offer})=>offer);
+export function documentOffers(id:string):Offer[]{
+  const d=sourceDescriptor(id),sample=citedSourceRows(id).slice(0,d.preview_rows);
+  return marketOffers.map(offer=>({...offer,description:offer.description.replace(/2025|2026/g,year=>String(d.year+(year==='2026'?1:0))),preview_json:JSON.stringify(sample.map((row:any)=>offer.delivery_mode==='annual-estimate'?{...row,capex:row.capex+1}:row))}));
+}
 export function dealFromOffer(m:Mandate,offer:Offer,id:string,price=offer.price_minor,time=now()):Deal{
   const {version,max_delivery_seconds,...requirements}=m.task_requirements??researchRequirements;
   return {deal_id:id,buyer_id:m.buyer_id,seller_id:offer.seller_id,price_minor:price,currency_or_demo_asset:'DEMO',deliverable_type:'CAPEX_DATASET',requirements:{...requirements,minimum_rows:offer.minimum_rows,minimum_source_coverage:offer.minimum_source_coverage},deadline:offer.deadline,created_at:time,expires_at:Math.min(time+1800,m.expires_at),supersedes_deal_id:null};
@@ -32,34 +37,37 @@ export function fixedSelection(m:Mandate,offers:Offer[],time=now()){
   return eligible[0]?.proposal??{decision:'reject',offer_id:null,counter_price_minor:null,reason:'No offer passed the disclosed baseline rules.'};
 }
 export function memoryScreen(engine:DealEngine,m:Mandate,offers:Offer[]){
-  return offers.map(offer=>{const control=engine.store.control(m.company_id,offer.seller_id);if(!control)return {offer,eligible:true,preview:null};const preview=offer.preview_json?validateDelivery(offer.preview_json,m.task_requirements!,now(),m.expires_at):null;return {offer,eligible:preview?.verified===true,preview,control};});
+  return offers.map(offer=>{const control=engine.store.control(m.company_id,offer.seller_id);if(!control)return {offer,eligible:true,preview:null};const preview=offer.preview_json?(m.task_requirements?.source_document_id?validatePreview(offer.preview_json,m.task_requirements,now(),m.expires_at):validateDelivery(offer.preview_json,m.task_requirements!,now(),m.expires_at)):null;return {offer,eligible:preview?.verified===true,preview,control};});
 }
 const requests=new WeakMap<object,Map<string,Promise<any>>>();
 export function researchRequests(engine:DealEngine){return engine.store.db.prepare('SELECT body FROM research_requests ORDER BY rowid DESC').all().map((r:any)=>JSON.parse(r.body));}
 export function researchRequest(engine:DealEngine,id:string){const row=engine.store.db.prepare('SELECT body FROM research_requests WHERE mandate_id=?').get(id) as any;return row?JSON.parse(row.body):null;}
 function save(engine:DealEngine,id:string,patch:any){const value={...researchRequest(engine,id),...patch,updated_at:new Date().toISOString()};engine.store.db.prepare('UPDATE research_requests SET body=? WHERE mandate_id=?').run(JSON.stringify(value),id);return value;}
-export function procureResearch(engine:DealEngine,mandateId:string,{offers=marketOffers,clientFactory=(record:any)=>new KilnClient({onRecord:record})}:any={}){
+export function procureResearch(engine:DealEngine,mandateId:string,{offers:offered,clientFactory=(record:any)=>new KilnClient({onRecord:record})}:any={}){
   let active=requests.get(engine.store);if(!active){active=new Map();requests.set(engine.store,active);}if(active.has(mandateId))return active.get(mandateId)!;
   const existing=researchRequest(engine,mandateId);if(existing)return Promise.resolve(existing);
-  const mandate=engine.store.mandate(mandateId);ensure(mandate.task_requirements?.reference_dataset_id===reference.id,'RESEARCH_MANDATE_REQUIRED');
-  const record={mandate_id:mandateId,status:'RUNNING',task:researchTask,offers:publicOffers(offers),started_at:new Date().toISOString(),deal_id:null};
+  const mandate=engine.store.mandate(mandateId),documentId=mandate.task_requirements?.source_document_id;ensure(documentId||mandate.task_requirements?.reference_dataset_id===reference.id,'RESEARCH_MANDATE_REQUIRED');
+  ensure(mandate.status==='ACTIVE','MANDATE_ACTIVE');ensure(now()<mandate.expires_at,'MANDATE_NOT_EXPIRED');if(documentId)sourceDocument(documentId);
+  const offers:Offer[]=offered??(documentId?documentOffers(documentId):marketOffers),task=documentId?sourceTask(documentId):researchTask;
+  const record={mandate_id:mandateId,status:'RUNNING',task,offers:publicOffers(offers),started_at:new Date().toISOString(),deal_id:null};
   engine.store.db.prepare('INSERT INTO research_requests(mandate_id,body) VALUES(?,?)').run(mandateId,JSON.stringify(record));
   const work=(async()=>{
     const screening=memoryScreen(engine,mandate,offers),eligible=screening.filter(x=>x.eligible).map(x=>x.offer);save(engine,mandateId,{screening:screening.map(({offer,eligible,preview,control})=>({offer_id:offer.offer_id,eligible,preview,control:control??null}))});
     if(!eligible.length)return save(engine,mandateId,{status:'REJECTED',reason:'NO_VERIFIED_PREVIEW',model_calls:0});
     const client=clientFactory((r:any)=>engine.store.telemetry('market.'+mandateId,r));await client.models();
-    const decision=await client.selectOffer({human_task:researchTask,mandate,offers:publicOffers(eligible)});save(engine,mandateId,{decision});
+    const decision=await client.selectOffer({human_task:task,mandate,offers:publicOffers(eligible)});save(engine,mandateId,{decision});
     const selection=resolveSelection(mandate,eligible,decision.args);if(!selection.accepted)return save(engine,mandateId,{status:decision.args.decision==='reject'?'REJECTED':'BLOCKED',reason:selection.reason});
     const offer=selection.offer!,intent=engine.store.getOrCreateIntent(mandateId,offer.seller_id),deal={...selection.deal!,deal_id:intent.deal_id};
-    engine.propose(deal,mandateId);engine.store.details(deal.deal_id,{purchase_intent_id:intent.id,negotiation:[{actor:'Buyer Agent',...decision}],research:{offer:publicOffers([offer])[0],task:researchTask,reference_dataset_id:reference.id,counteroffer_accepted:decision.args.decision==='counter',seller_response:'Posted floor-price policy; no model bargaining response claimed'}});
-    engine.store.event(deal.deal_id,'NEGOTIATION_EVIDENCE',{decision,offers:publicOffers(eligible),task:researchTask},'system','research-market');
+    engine.propose(deal,mandateId);engine.store.details(deal.deal_id,{purchase_intent_id:intent.id,negotiation:[{actor:'Buyer Agent',...decision}],research:{offer:publicOffers([offer])[0],task,...(documentId?{source_document_id:documentId}:{reference_dataset_id:reference.id}),counteroffer_accepted:decision.args.decision==='counter',seller_response:'Posted floor-price policy; no model bargaining response claimed'}});
+    engine.store.event(deal.deal_id,'NEGOTIATION_EVIDENCE',{decision,offers:publicOffers(eligible),task},'system','research-market');
     engine.store.db.prepare('UPDATE telemetry SET deal_id=? WHERE deal_id=?').run(deal.deal_id,'market.'+mandateId);
     engine.agentAction('accept_deal',{deal_id:deal.deal_id});if(engine.store.get(deal.deal_id).state==='PREVIEW_REQUIRED'&&offer.preview_json)engine.preview(deal.deal_id,offer.preview_json);
     engine.store.updateIntent(intent.id,{status:'COMPLETED'});return save(engine,mandateId,{status:'READY',deal_id:deal.deal_id,selected_offer:offer.offer_id});
   })().catch(e=>save(engine,mandateId,{status:'FAILED',reason:/^[A-Z0-9_]+$/.test(e.message)?e.message:'RESEARCH_FAILED'})).finally(()=>active!.delete(mandateId));active.set(mandateId,work);return work;
 }
 export async function deliverResearch(engine:DealEngine,id:string,{clientFactory=(record:any)=>new KilnClient({onRecord:record})}:any={}){
-  const r=engine.store.get(id);ensure(r.deal.requirements.reference_dataset_id===reference.id,'RESEARCH_DEAL_REQUIRED');ensure(r.state==='ESCROW_FUNDED','INVALID_STATE_TRANSITION');
+  const r=engine.store.get(id),documentId=r.deal.requirements.source_document_id;ensure(documentId||r.deal.requirements.reference_dataset_id===reference.id,'RESEARCH_DEAL_REQUIRED');ensure(r.state==='ESCROW_FUNDED','INVALID_STATE_TRANSITION');
+  if(documentId){const table=sourceDocument(documentId),raw=JSON.stringify(citedSourceRows(documentId));engine.store.details(id,{extraction_method:'deterministic PDF cell selection',extracted_delivery:{raw,model:null,model_calls:0,source_packet_hash:hash(table),task:sourceTask(documentId)}});return engine.deliver(id,raw);}
   if(r.details.extracted_delivery)return engine.deliver(id,r.details.extracted_delivery.raw);
   ensure(!r.details.extraction_started,'EXTRACTION_ALREADY_STARTED');engine.store.details(id,{extraction_started:true});
   const client=clientFactory((record:any)=>engine.store.telemetry(id,record));

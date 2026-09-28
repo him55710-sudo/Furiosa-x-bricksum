@@ -1,6 +1,7 @@
 import {Transaction,Interface} from 'ethers';
 import {hash,ensure,validateDeal,validateMandate,policy,transitions} from './domain.ts';
-import {validateDelivery,DELIVERY_VALIDATOR_VERSION} from './delivery.ts';
+import {validateDelivery,validatePreview,DELIVERY_VALIDATOR_VERSION} from './delivery.ts';
+import {SourceDependencyError} from './source-document.ts';
 import type {DealEngine} from './engine.ts';
 const financialEvents:Record<string,string>={fund:'ESCROW_FUNDED',release:'ESCROW_RELEASED',refund:'ESCROW_REFUNDED'};
 const fundedStates=['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED','SETTLED','REFUNDED'];
@@ -31,10 +32,11 @@ function checkEvents(events:any[],id:string){
 }
 function recompute(raw:string,requirements:any,v:any){
   need(typeof raw==='string'&&v,'DELIVERY_EVIDENCE_MISSING');
-  const version=v.validator_version??'delivery-v1';need(['delivery-v1',DELIVERY_VALIDATOR_VERSION,'delivery-reference-v1'].includes(version),'VALIDATOR_VERSION_UNSUPPORTED');
+  const version=v.validator_version??'delivery-v1';need(['delivery-v1',DELIVERY_VALIDATOR_VERSION,'delivery-reference-v1','delivery-source-v1','delivery-source-preview-v1'].includes(version),'VALIDATOR_VERSION_UNSUPPORTED');
   ensure(Number.isSafeInteger(v.submitted_at)&&Number.isSafeInteger(v.deadline),'VALIDATION_TIME_INVALID');
-  const result=validateDelivery(raw,requirements,v.submitted_at,v.deadline,{version});ensure(hash(result)===hash(v),'VALIDATION_MISMATCH');return result;
+  const result=validateDelivery(raw,requirements,v.submitted_at,v.deadline,{version});checkSourceVersion(result,v);ensure(hash(result)===hash(v),'VALIDATION_MISMATCH');return result;
 }
+function checkSourceVersion(result:any,recorded:any){if(recorded.source_evidence)need(['parser','reader_sha256','grammar_sha256'].every(key=>result.source_evidence?.[key]===recorded.source_evidence[key]),'SOURCE_READER_VERSION_UNAVAILABLE');}
 async function rpc<T>(fn:()=>Promise<T>):Promise<T>{try{return await fn();}catch{throw new Incomplete('RPC_UNAVAILABLE');}}
 async function checkChainReceipt(chain:any,op:any,target=chain.deployment.contract){
   const tx:any=await rpc(()=>chain.provider.getTransactionReceipt(op.tx_hash));need(tx,'CHAIN_RECEIPT_UNAVAILABLE');
@@ -70,12 +72,13 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
   const accepted=event('DEAL_ACCEPTED');if(fundedStates.includes(r.state)||['DEAL_ACCEPTED','PREVIEW_REQUIRED','PREVIEW_VERIFIED','POLICY_APPROVED'].includes(r.state))need(accepted,'ACCEPTANCE_MISSING');if(accepted)ensure(accepted.structured_payload.deal_hash===r.deal_hash,'ACCEPTANCE_MISMATCH');
   checks.push('hash-linked events bound to the Deal and mandate');
   if(direct){const observed=event('BUYER_REFUND_OBSERVED');need(observed,'BUYER_REFUND_EVENT_MISSING');ensure(hash(observed.structured_payload)===hash(direct)&&observed.actor_type==='buyer'&&same(observed.actor_id,r.network.buyer),'BUYER_REFUND_EVENT_MISMATCH');checks.push('buyer deadline refund recorded independently of controller delivery attestation');}
-  if(r.evidence.validation){const v=recompute(r.evidence.delivery,r.deal.requirements,r.evidence.validation);need(r.evidence.escrow,'ESCROW_EVIDENCE_MISSING');ensure(v.deadline===r.evidence.escrow.deadline,'DEADLINE_MISMATCH');
+  if(r.evidence.validation){ensure(r.evidence.validation.validator_version!=='delivery-source-preview-v1','PREVIEW_IS_NOT_FULL_DELIVERY');const v=recompute(r.evidence.delivery,r.deal.requirements,r.evidence.validation);need(r.evidence.escrow,'ESCROW_EVIDENCE_MISSING');ensure(v.deadline===r.evidence.escrow.deadline,'DEADLINE_MISMATCH');
     need(event('DELIVERY_SUBMITTED')&&event('DELIVERY_VALIDATED'),'DELIVERY_EVENTS_MISSING');ensure(event('DELIVERY_SUBMITTED').structured_payload.content_hash===v.content_hash&&event('DELIVERY_SUBMITTED').structured_payload.submitted_at===v.submitted_at&&hash(event('DELIVERY_VALIDATED').structured_payload)===hash(v),'DELIVERY_EVENT_MISMATCH');
-    quality.push({deal_id:r.deal.deal_id,recorded_validator:r.evidence.validation.validator_version??'delivery-v1',current_validator:DELIVERY_VALIDATOR_VERSION,current_checks_pass:validateDelivery(r.evidence.delivery,r.deal.requirements,v.submitted_at,v.deadline).verified,semantic_truth_verified:false});checks.push('versioned delivery structure and quality checks; no factual certification');
+    const currentQuality=validateDelivery(r.evidence.delivery,r.deal.requirements,v.submitted_at,v.deadline);
+    quality.push({deal_id:r.deal.deal_id,recorded_validator:r.evidence.validation.validator_version??'delivery-v1',current_validator:currentQuality.validator_version,current_checks_pass:currentQuality.verified,semantic_truth_verified:false});checks.push('versioned delivery structure and quality checks; no factual certification');
   }else if(['DELIVERY_SUBMITTED','DELIVERY_VERIFIED','SETTLED'].includes(r.state))throw new Incomplete('DELIVERY_EVIDENCE_MISSING');
   let previewIndex=-1;
-  if(r.evidence.preview){const {raw,deal_hash,...v}=r.evidence.preview;ensure(deal_hash===r.deal_hash,'PREVIEW_DEAL_MISMATCH');recompute(raw,{...r.deal.requirements,minimum_rows:r.deal.requirements.reference_dataset_id?Math.min(5,r.deal.requirements.minimum_rows):5},v);ensure(v.verified===true&&v.deadline===r.deal.expires_at,'PREVIEW_INVALID');previewIndex=r.events.findIndex((e:any)=>e.event_type==='PREVIEW_VALIDATED'&&hash(e.structured_payload)===hash(v));need(previewIndex>=0,'PREVIEW_EVENT_MISSING');checks.push('preview raw content revalidated and bound to the immutable Deal');}
+  if(r.evidence.preview){const {raw,deal_hash,...v}=r.evidence.preview;ensure(deal_hash===r.deal_hash,'PREVIEW_DEAL_MISMATCH');need(typeof raw==='string'&&Number.isSafeInteger(v.submitted_at)&&Number.isSafeInteger(v.deadline),'PREVIEW_EVIDENCE_MISSING');const expected=validatePreview(raw,r.deal.requirements,v.submitted_at,v.deadline,v.validator_version??'delivery-v1');checkSourceVersion(expected,v);ensure(hash(expected)===hash(v),'PREVIEW_VALIDATION_MISMATCH');ensure(v.verified===true&&v.deadline===r.deal.expires_at,'PREVIEW_INVALID');previewIndex=r.events.findIndex((e:any)=>e.event_type==='PREVIEW_VALIDATED'&&hash(e.structured_payload)===hash(v));need(previewIndex>=0,'PREVIEW_EVENT_MISSING');checks.push('preview raw content revalidated and bound to the immutable Deal');}
   const control=r.control;
   if(r.control_source)ensure(control&&control.origin_deal_id!==r.deal.deal_id,'UNEXPECTED_CONTROL_SOURCE');
   if(control){ensure(control.rule==='REQUIRE_PREVIEW'&&control.status==='ACTIVE'&&control.company_id===r.mandate.company_id&&control.seller_id===r.deal.seller_id,'CONTROL_SCOPE_MISMATCH');
@@ -152,5 +155,5 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
 export async function verifyReceipt(r:any,chain?:any){const checks:string[]=[],delivery_quality:any[]=[];try{
   await verify(r,chain,new Set(),checks,delivery_quality);
   return {verdict:chain?'VALID':'STRUCTURALLY_VALID',scope:chain?'Stored evidence and independently read configured chain; controller trust remains':'Offline structural checks only; no independent chain authenticity claim',checks:[...new Set(checks)],delivery_quality,unverified:limitations,checked_at:new Date().toISOString()};
-}catch(e){return {verdict:e instanceof Incomplete?'INCOMPLETE':'INVALID',reason:e instanceof Error?e.message:'INVALID_EVIDENCE',checks:[...new Set(checks)],delivery_quality,unverified:limitations,checked_at:new Date().toISOString()};}}
+}catch(e){const unavailable=e instanceof SourceDependencyError||(e instanceof Error&&e.message==='SOURCE_DOCUMENT_NOT_IMPORTED');return {verdict:e instanceof Incomplete||unavailable?'INCOMPLETE':'INVALID',reason:e instanceof Error?e.message:'INVALID_EVIDENCE',checks:[...new Set(checks)],delivery_quality,unverified:limitations,checked_at:new Date().toISOString()};}}
 export function efficiency(records:any[]){const flows=new Map<string,any>();for(const r of records){const f=flows.get(r.flow_name)??{flow_name:r.flow_name,calls:0,prompt_tokens:0,completion_tokens:0,total_tokens:0,latency_ms:0,missing_usage:false};f.calls++;for(const k of ['prompt_tokens','completion_tokens','total_tokens']){if(r[k]===null)f.missing_usage=true;else f[k]+=r[k];}f.latency_ms+=r.latency_ms;flows.set(r.flow_name,f);}return {generated_at:new Date().toISOString(),flows:[...flows.values()],calls:records.length,deterministic_operations:['schema validation','policy checks','delivery validation','escrow authorization'].map(operation=>({operation,llm_calls:0})),ttft:null,ttft_note:'Non-streaming API used; TTFT was not measured.',energy:{measured:false,joules:null,label:'Energy Estimate — Assumption Based',method:'If organizer supplies application-attributable average watts P, estimate E=P×sum(latency_ms)/1000. API latency includes queue/network; this is not hardware active time.',power_assumption_watts:null,source:'No organizer power assumption or application power telemetry supplied; no numerical estimate is presented.',limitations:'No application-measured energy, utilization, batching attribution, or verified baseline. Token/call totals are measured; reduction relative to another design is not yet measured.'}};}

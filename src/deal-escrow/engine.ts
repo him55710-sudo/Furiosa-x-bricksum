@@ -1,7 +1,8 @@
 import {ensure,exact,hash,now,policy} from './domain.ts';
 import type {Deal,Mandate} from './domain.ts';
 import {DealStore} from './store.ts';
-import {validateDelivery} from './delivery.ts';
+import {validateDelivery,validatePreview} from './delivery.ts';
+import {sourceDocument} from './source-document.ts';
 
 // Multiple facades in one process share the executor queue. Cross-process
 // ownership is enforced by openChain's runtime lock, not by this WeakMap.
@@ -21,7 +22,7 @@ export class DealEngine {
   }
   gate(r:any){return this.store.control(this.store.mandate(r.mandateId).company_id,r.deal.seller_id);}
   checks(id:string,time=this.clock()){const r=this.store.get(id),m=this.store.mandate(r.mandateId);return policy(m,r.deal,{time,...this.store.accounting(r.mandateId,id),dealHash:r.dealHash,previewRequired:!!this.gate(r),previewVerified:r.details.preview?.verified===true&&r.details.preview?.deal_hash===r.dealHash});}
-  preview(id:string,raw:string){ensure(typeof raw==='string'&&Buffer.byteLength(raw)<=2_000_000,'DELIVERY_SIZE');return this.store.transaction(()=>{const r=this.store.get(id);ensure(r.state==='PREVIEW_REQUIRED','INVALID_STATE_TRANSITION');const requirement={...r.deal.requirements,minimum_rows:r.deal.requirements.reference_dataset_id?Math.min(5,r.deal.requirements.minimum_rows):5};const result=validateDelivery(raw,requirement,this.clock(),r.deal.expires_at);this.store.event(id,'PREVIEW_VALIDATED',result);this.store.details(id,{preview_attempt:result});
+  preview(id:string,raw:string){ensure(typeof raw==='string'&&Buffer.byteLength(raw)<=2_000_000,'DELIVERY_SIZE');return this.store.transaction(()=>{const r=this.store.get(id);ensure(r.state==='PREVIEW_REQUIRED','INVALID_STATE_TRANSITION');const result=validatePreview(raw,r.deal.requirements,this.clock(),r.deal.expires_at);this.store.event(id,'PREVIEW_VALIDATED',result);this.store.details(id,{preview_attempt:result});
     if(result.verified){this.store.details(id,{preview:{...result,raw,deal_hash:r.dealHash}});this.store.move(id,'PREVIEW_VERIFIED');}return this.store.get(id);});}
   approve(id:string){return this.store.transaction(()=>{
     const r=this.store.get(id);ensure(['DEAL_ACCEPTED','PREVIEW_REQUIRED','PREVIEW_VERIFIED','POLICY_APPROVED'].includes(r.state),'INVALID_STATE_TRANSITION');
@@ -44,6 +45,11 @@ export class DealEngine {
       ensure(!unresolved,'CHAIN_PREDECESSOR_UNRESOLVED');
       // Last authorization re-check immediately before signing. Once signed, reconcile that exact tx.
       if(kind!=='refund'){const failure=this.checks(id).find(c=>!c.pass);if(failure){this.store.transaction(()=>{this.store.saveOperation(id,kind,{...op,status:'CANCELLED',reason:failure.name});if(kind==='fund')this.store.move(id,failure.name.includes('EXPIRED')?'EXPIRED':'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:failure.name,stage:'FINAL_AUTHORIZATION'});});throw new Error(failure.name);}}
+      if(kind==='fund'&&r.deal.requirements.source_document_id){try{sourceDocument(r.deal.requirements.source_document_id);}catch(error){
+        const sourceReason=error instanceof Error&&/^[A-Z_]+$/.test(error.message)?error.message:'SOURCE_READER_UNAVAILABLE';
+        this.store.transaction(()=>{this.store.saveOperation(id,kind,{...op,status:'CANCELLED',reason:'SOURCE_NOT_VERIFIABLE'});this.store.move(id,'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:'SOURCE_NOT_VERIFIABLE',source_reason:sourceReason,stage:'BEFORE_SIGNING'});});
+        throw new Error('SOURCE_NOT_VERIFIABLE');
+      }}
       let signed;
       try{signed=await this.chain.prepare(kind,r.dealHash,r.deal,r.details.attestation_hash);}catch(error){
         if(error instanceof Error&&error.message==='DELIVERY_WINDOW_BELOW_FINALITY_BUDGET')this.store.transaction(()=>{this.store.saveOperation(id,kind,{...op,status:'CANCELLED',reason:error.message});this.store.move(id,'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:error.message});});
