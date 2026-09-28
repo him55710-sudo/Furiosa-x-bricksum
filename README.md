@@ -8,6 +8,8 @@ This GWDC 2026 FuriosaAI × Bricksum Challenge B prototype focuses on one commis
 
 [Focused product plan and user-need evidence](docs/FOCUSED-PRODUCT-PLAN.ko.md): one paid financial-data extraction job, the developer accountable for its result and cost, and explicit limits of reference-based validation. The source-backed and application-off runs are implemented; unseen-document generalization, transaction economics and customer validation remain pending. Older synthetic evidence is kept separately.
 
+[Current requirement-by-requirement audit](docs/DELIVERY-READINESS-AUDIT.ko.md) separates implemented prototype behavior from missing human/customer evidence. [Latest 3-minute Korean-captioned video](artifacts/deal-escrow/source-film/source-demo-3min.webm) follows the four-value source job and the separate buyer recovery; it is an edited, silent sequence of real replay screenshots, not live transaction footage. [Video guide and reproduction](docs/SOURCE-DEMO-VIDEO.ko.md).
+
 ## Public Sepolia proof and Korean demo
 
 The newer [source-backed public run](docs/SOURCE-PUBLIC-PROOF.ko.md) uses actual Kiln extraction of four quarterly values from a transcribed issuer table. Correct delivery releases funds; a controlled wrong-metric delivery refunds; the seller's next purchase, an over-budget proposal and a revoked mandate stop before signing. It uses a separate buyer address, two real model calls (4,495 tokens), and explicitly labeled energy assumptions. Validation is against a fixed reference table, not general factual certification.
@@ -125,17 +127,18 @@ The main UI shows current persisted state. The separate read-only service at por
 
 | Responsibility | AI / Kiln | Trusted deterministic code |
 |---|---|---|
-| Understand task and negotiate price/rows/coverage/deadline | Yes | Validate proposed terms |
-| Propose acceptance/rejection | ID-only tool | Verify immutable Deal |
+| Compare source-job offers / propose bounded price changes | `select_offer` | Validate supplier, published price floor, approved source/quality/deadline |
+| Extract source table | `submit_dataset` in the public source run | Validate the returned rows; the newer local PDF path extracts with code |
+| Propose acceptance/rejection | Constrained structured action | Resolve selected offer and verify immutable Deal |
 | Spending authority, arithmetic, task reservation | No | Human mandate + policy + SQLite transaction |
 | Schema, canonical hash, expiry, state transitions | No | Strict validation and fail-closed transitions |
-| Delivery checks | No | JSON array, field types, unique company/quarter/currency rows, row count, URL coverage, deadline |
+| Delivery checks | No | Base JSON/quality checks plus pinned reference checks for the public source run, or PDF byte/cell correspondence in the newer local workbench |
 | Settlement amount | Never | Exact accepted `price_minor`, contract-locked amount |
 | Transfer, release, refund | Never exposed as model tools | Trusted controller and contract |
 | Control Memory | Cannot create/remove rules | Canonical failure → fixed additional gate |
 | Audit prose | Optional; not used in this prototype | All displayed facts come from stored records |
 
-The tool allowlist is `discover_sellers`, `request_offer`, `counter_offer`, `accept_deal`, `reject_deal`. Actual negotiation uses `counter_offer`, `request_offer`, `accept_deal`; discovery is the fixed two-seller scenario configuration. There is no generic marketplace. Monetary tools are absent from the model API.
+The allowlist includes `select_offer` and `submit_dataset` for the source workflow. The older synthetic negotiation uses `discover_sellers`, `request_offer`, `counter_offer`, `accept_deal`, `reject_deal`; discovery is a fixed two-seller configuration. Each request exposes only its required tools. The source workflow's seller price response is deterministic, not another LLM negotiation. Monetary tools are absent from the model API.
 
 ## 6. Trust boundary
 
@@ -174,7 +177,7 @@ The client reads `KILN_MODEL`. On each live negotiation it calls `/models` when 
 
 Each inference call records flow, request ID, prompt/completion/total tokens, timestamps, total latency, tool and result. Requests are non-streaming: TTFT is **not measured**. Model discovery is a management request and is not counted as an inference call.
 
-Natural-language reasoning can disagree with numeric fields. The observed Seller A prose mentioned three minutes while its structured duration was 90 seconds. Code bound the Deal to 90 seconds. This demonstrates why prose is not authoritative; it is not a claim of perfect negotiation quality.
+Natural-language reasoning can disagree with numeric fields. An earlier synthetic Seller A response mentioned three minutes while its structured duration was 90 seconds. The later PDF workbench response confused KRW dataset values with DEMO purchase units. Both original observations remain preserved; a separate real-call unit regression checks the corrected financial context. These are not claims of perfect negotiation quality.
 
 ## 9. Blockchain read / write / settle
 
@@ -186,11 +189,11 @@ Natural-language reasoning can disagree with numeric fields. The observed Seller
 
 The evidence argument is a hash of the stored settlement attestation, including the Deal, mandate snapshot, delivery and validation, final policy checks and prior event hash. This is a direct commitment, not an optional Merkle system. It provides tamper evidence after the commitment point, not truth certification.
 
-Current end-to-end evidence is a **real local Ganache devnet**, chain ID 31338, persistent blocks/receipts and dedicated demo identities. One minor demo unit maps to 1 gwei of native test asset; 100 minor units display as 1.00 demo unit. This is not a USD exchange rate. Deployment plus four financial transactions are recorded in the real demo.
+Current evidence contains separately identified **Sepolia** runs (chain ID 11155111) and **local Ganache devnet** runs (31338). The public source run funds twice, releases once and refunds once; the application-off recovery uses a different deal. The newer raw-PDF workbench and recovery regressions are local evidence. One minor demo unit maps to 1 gwei of native test asset; 100 minor units display as 1.00 demo unit. This is not a USD exchange rate.
 
-The public Sepolia run is complete: actual fund, release and refund receipts are included in [the public proof](docs/PUBLIC-ESCROW-PROOF.ko.md). `pnpm ade:sepolia` resumes a durable local journal; a completed run is only rechecked, with no new inference or transfer. `pnpm ade:verify:public` uses a separate read-only RPC and finalized blocks, without the app or signer. Public execution only accepts chain ID 11155111. Existing free faucet assets funded the demo; no real ETH was bought.
+The [public source proof](docs/SOURCE-PUBLIC-PROOF.ko.md) and [separate buyer recovery](docs/BUYER-RECOVERY-PROOF.ko.md) include actual transaction hashes and independent finalized verification. `pnpm ade:source:verify` and `pnpm ade:source:recovery:verify` recheck them without a signer. The older synthetic run remains under `ade:verify:public`. New execution commands and paid calls are documented separately; replaying or verifying evidence does not require a new purchase. Public execution only accepts chain ID 11155111. Existing free faucet assets funded the demo; no real ETH was bought.
 
-SQLite and external settlement are not distributed-atomic. Before broadcast, an operation claim and exact signed transaction are persisted privately. Unknown responses keep reservations; recovery reconciles the original transaction or an independently confirmed same-nonce replacement. Confirmed funding reverts release reservations; confirmed release reverts permit refund. Canonical block checks and configured finality precede local confirmation: local defaults to one confirmation and public Sepolia to two. A detected reorganization quarantines financial execution for operator review. These prototype checks are not production finality guarantees. One writer owns each runtime directory and shared Engine facades serialize the executor; this is not a distributed coordinator. The buyer has a contract refund escape after deadline, though this dedicated-wallet demo uses the same controller address as the buyer.
+SQLite and external settlement are not distributed-atomic. Before broadcast, an operation claim and exact signed transaction are persisted privately. Unknown responses keep reservations; recovery reconciles the original transaction or an independently confirmed same-nonce replacement. Confirmed funding reverts release reservations; confirmed release reverts permit refund. Canonical block checks and configured finality precede local confirmation: local defaults to one confirmation and public Sepolia to two. A detected reorganization quarantines financial execution for operator review. These prototype checks are not production finality guarantees. One writer owns each runtime directory and shared Engine facades serialize the executor; this is not a distributed coordinator. The buyer has a contract refund escape after deadline. The current source and recovery runs use separate buyer/controller addresses; both are test identities managed for the demonstration, not independently recruited counterparties.
 
 A mined revert is distinguished from an unknown response using the exact signed transaction hash, controller, contract and status-0 receipt. A confirmed failed release is recorded as `REVERTED`, then refunded with reason `ESCROW_RELEASE_REVERTED`; recovery resumes this path after reopening the database. A successful release whose response was lost remains pending until reconciled and must never initiate a refund. Failed funding becomes `BLOCKED`. A reverted refund requires investigation; no automatic new signed retry or production finality guarantee is claimed.
 
@@ -198,9 +201,11 @@ A mined revert is distinguished from an unknown response using the exact signed 
 
 **Budget:** an accepted 2.50-unit proposal exceeds a 2.00-unit maximum. `MAX_SINGLE` is recorded, state becomes `BLOCKED`, no funding transaction exists.
 
-**Delivery:** Seller B promises at least 40 rows and delivers 7. `DELIVERY_REQUIREMENT_FAILED` is recorded, funds return to the buyer, and `REQUIRE_PREVIEW` activates. A subsequent Deal cannot fund without a verified preview.
+**Human stop:** a revoked mandate produces `MANDATE_ACTIVE` failure and `BLOCKED`, with no funding signature. The public source run contains separate budget and revocation receipts.
 
-The preview template requires 5 rows, the accepted schema and coverage, before Deal expiry. It binds to that Deal hash. It is an additional machine-verifiable precondition, not a guarantee of the final dataset's quality. Controls are company + seller scoped and have database triggers rejecting modification/deletion. Human-admin removal is future work only.
+**Delivery and next purchase:** the public source run injects a wrong metric into an otherwise well-shaped four-row delivery. `DELIVERY_REQUIREMENT_FAILED` is recorded and escrow refunds. The next deal requires a verified preview and records a funding stop without one. The earlier 40-row promise / 7-row delivery is a separate synthetic regression.
+
+Preview requirements are validator-specific and bound to the immutable Deal. The older synthetic template uses five rows; the four-value public reference run has the documented full-sample limitation. The newer local PDF path uses one row before funding and still requires four rows for final delivery. A preview is not a guarantee of final quality. Controls are company + seller scoped and have database triggers rejecting modification/deletion. Human-admin removal is future work only.
 
 The UI accepts preview and delivery JSON as files or text, reports failed checks, and resumes funding after a verified preview. New mandates bind human quality floors independently of model-generated terms. One default purchase intent persists per mandate; retries and concurrent callers reuse its Deal. Buying a separate dataset requires an explicit new purchase action. Historical mandates and delivery-v1 receipts retain their original interpretation, while the audit also reports whether their data meets current delivery-v2 checks.
 
@@ -222,15 +227,15 @@ The ten required properties are: no model-selected settlement amount; immutable 
 
 ## 13. Kiln token / energy report
 
-The public run has **6 inference calls, 3,958 prompt tokens, 2,942 completion tokens, 6,900 total tokens**. Flow-level rows are in the [public report](artifacts/deal-escrow/sepolia/latest.json). The earlier local run had 6,541 tokens and is retained as historical evidence; totals from different workflows are not combined.
+The current public source run has **2 inference calls / 4,495 tokens**: offer comparison 855 input + 1,263 output = 2,118; source extraction 895 input + 1,482 output = 2,377. Its [report](artifacts/deal-escrow/source-sepolia/a2f6f4fa-9f1e-4892-8518-325b8762c4f2/report.json) preserves these observations. The separate buyer recovery uses zero model calls. The newer local PDF workbench's one comparison uses 1,481 tokens, and the isolated unit regression uses 2,481. The older synthetic public run used 6,900 tokens and the earlier local synthetic run 6,541; different tasks are not combined or compared as a savings percentage.
 
 Schema validation, policy, delivery validation and escrow authorization make zero LLM calls. No before/after token reduction claim is made without a measured baseline.
 
-**Energy Estimate — Assumption Based:** no application power telemetry or organizer-provided attributable power assumption is available. Accordingly Joules and assumed watts remain null. If the organizer supplies an appropriate power assumption `P`, the documented illustrative method is `P × API-duration-seconds`; queue/network time, utilization and batching make that a limited estimate, not measured NPU energy. Hardware benchmark values are not substituted for application measurements.
+**Energy Estimate — Assumption Based:** physical power is unmeasured. The public source run includes a separate [sensitivity calculation](artifacts/deal-escrow/source-sepolia/a2f6f4fa-9f1e-4892-8518-325b8762c4f2/energy-estimate.json): four assumed cards × 150W per card × assumed power fraction × assumed active fraction of API duration. Physical deployment, active duration and application attribution are not verified; the calculated values are scenarios, not measurements or GPU comparisons. The basic live usage report keeps actual joules null. Hardware benchmark values are not substituted for application measurements.
 
 ## 14. Limitations
 
-- Does not prove semantic truth of a dataset; synthetic example values and URL strings are used.
+- Does not prove semantic truth of a dataset. The public source run uses a pinned reference; the newer local PDF parser and validator share possible errors. Independent heldout and human source review remain pending. Earlier synthetic values and URL-string checks are labeled separately.
 - Sellers are demo/adversarial actors, not a live marketplace or validated customer network.
 - Escrow and structured offers are not claimed as novel; blockchain does not prove truth.
 - Control Memory activates predefined trusted enforcement templates; it does not learn or relax financial policies.
@@ -241,10 +246,10 @@ Schema validation, policy, delivery validation and escrow authorization make zer
 
 ## 15. Future work
 
-Within this narrow workflow: public testnet completion, stronger RPC finality reconciliation, controlled model robustness experiments, and a human audit-reconstruction observation. Optional Merkle anchoring and benchmark visualizations are deferred. Marketplace, ERP/accounting, credit cards, seller reputation networks, semantic truth verification and production custody remain out of scope.
+Within this narrow workflow: actual buyer/supplier participation, human audit reconstruction and source review, a frozen independent heldout evaluation, and transaction economics against existing alternatives. The public testnet runs and bounded recovery regressions are implemented; they do not prove production readiness. Optional Merkle anchoring and benchmark visualizations are deferred. Marketplace, ERP/accounting, credit cards, seller reputation networks, semantic truth verification and production custody remain out of scope.
 
 ## Files and priority gates
 
 `src/deal-escrow/{domain,store,delivery,engine,kiln,audit}.ts`, `chain.mjs`, `server.mjs`; `contracts/AgentDealEscrow.sol`; `tests/deal-escrow`; `web/deal-escrow`; `scripts/*deal-escrow.mjs`.
 
-P0 schemas/policy/state tests → P1 contract lifecycle → P2 delivery integration → P3 real Kiln tools → P4 reconstructable receipt → P5 scoped gate → P6 UI/demo/README. Core local gates pass; the public-testnet portion of Definition of Done remains open. The optional safety benchmark and Merkle tree were not added.
+P0 schemas/policy/state tests → P1 contract lifecycle → P2 delivery integration → P3 real Kiln tools → P4 reconstructable receipt → P5 scoped gate → P6 UI/demo/README. Core automated gates and the identified public-testnet runs pass. Human reconstruction/understanding, source review and customer-need gates remain open; the full goal is not complete. The optional safety benchmark and Merkle tree were not added. See the [current completion audit](docs/DELIVERY-READINESS-AUDIT.ko.md).
