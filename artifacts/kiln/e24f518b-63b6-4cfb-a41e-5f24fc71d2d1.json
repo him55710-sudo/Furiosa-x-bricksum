@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "run_id": "e24f518b-63b6-4cfb-a41e-5f24fc71d2d1",
+  "observed_at": "2026-09-28T09:48:18.438Z",
+  "purpose": "Synthetic procurement connection probe; never executes a payment",
+  "model_requested": "gpt-oss-120b",
+  "inference_calls": [],
+  "onchain_transactions": [],
+  "preflight": [
+    {
+      "offer_id": "alpha-basic",
+      "all_in_minor": 2200,
+      "result": "ALLOW_CANDIDATE"
+    },
+    {
+      "offer_id": "beta-plus",
+      "all_in_minor": 2400,
+      "result": "ALLOW_CANDIDATE"
+    },
+    {
+      "offer_id": "alpha-over-cap",
+      "all_in_minor": 3100,
+      "result": "ALL_IN_BUDGET_EXCEEDED"
+    },
+    {
+      "offer_id": "unknown-cheap",
+      "all_in_minor": 1000,
+      "result": "MERCHANT_NOT_ALLOWED"
+    }
+  ],
+  "scope": "This probe checks candidate filtering only, not the complete mandate, session budget, or final authorization.",
+  "model_check": {
+    "http_status": 200,
+    "latency_ms": 447,
+    "served_models": [
+      "deepseek-v4.1-flash",
+      "qwen3-32b"
+    ],
+    "required_model_listed": false
+  },
+  "status": "STOPPED",
+  "reason_code": "REQUIRED_MODEL_NOT_SERVED"
+}

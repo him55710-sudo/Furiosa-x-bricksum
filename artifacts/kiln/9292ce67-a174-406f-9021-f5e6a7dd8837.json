@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "run_id": "9292ce67-a174-406f-9021-f5e6a7dd8837",
+  "observed_at": "2026-09-28T10:08:51.926Z",
+  "purpose": "Synthetic procurement connection probe; never executes a payment",
+  "model_requested": "qwen3-32b",
+  "inference_calls": [
+    {
+      "flow": "offer_selection",
+      "http_status": 200,
+      "latency_ms": 5951,
+      "generation_id": "bb716278-1954-446d-b575-690da4999208",
+      "completion_id": "chat-01b96af67dd44ee3becdab76993b5508",
+      "model_returned": "qwen3-32b",
+      "prompt_tokens": 355,
+      "completion_tokens": 405,
+      "total_tokens": 760,
+      "cost_usd": 0.00014156,
+      "cached_tokens": 6,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "onchain_transactions": [],
+  "preflight": [
+    {
+      "offer_id": "alpha-basic",
+      "all_in_minor": 2200,
+      "result": "ALLOW_CANDIDATE"
+    },
+    {
+      "offer_id": "beta-plus",
+      "all_in_minor": 2400,
+      "result": "ALLOW_CANDIDATE"
+    },
+    {
+      "offer_id": "alpha-over-cap",
+      "all_in_minor": 3100,
+      "result": "ALL_IN_BUDGET_EXCEEDED"
+    },
+    {
+      "offer_id": "unknown-cheap",
+      "all_in_minor": 1000,
+      "result": "MERCHANT_NOT_ALLOWED"
+    }
+  ],
+  "scope": "This probe checks candidate filtering only, not the complete mandate, session budget, or final authorization.",
+  "model_check": {
+    "http_status": 200,
+    "latency_ms": 1267,
+    "served_models": [
+      "deepseek-v4.1-flash",
+      "qwen3-32b"
+    ],
+    "required_model_listed": true
+  },
+  "request_sha256": "e74ef6e2ed50a603790eca807573825bcd6df70bcaba5e1830a657d3bd9bd791",
+  "route_diagnostic": false,
+  "selected_offer_id": "beta-plus",
+  "proposal_reason": "Provides 120 credits (exceeding the 100+ minimum requirement) with a 72-hour refund window (better flexibility than Alpha's 24 hours) at a total cost of 2400 minor units (within budget).",
+  "validated_tool_proposal": {
+    "tool_call_id": "call-ae21ebfd96da4dd991763f9fa5fed395",
+    "tool_name": "propose_purchase",
+    "arguments": {
+      "offer_id": "beta-plus",
+      "reason": "Provides 120 credits (exceeding the 100+ minimum requirement) with a 72-hour refund window (better flexibility than Alpha's 24 hours) at a total cost of 2400 minor units (within budget)."
+    }
+  },
+  "status": "LIVE_KILN_PROPOSAL_VALIDATED_NO_PAYMENT",
+  "usage_complete": true
+}

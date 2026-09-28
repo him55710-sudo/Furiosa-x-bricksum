@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "run_id": "73e3d971-86c4-4632-a398-057f8e95d0d8",
+  "observed_at": "2026-09-28T09:46:13.635Z",
+  "purpose": "Synthetic procurement connection probe; never executes a payment",
+  "model_requested": "gpt-oss-120b",
+  "inference_calls": [
+    {
+      "flow": "offer_selection",
+      "http_status": 404,
+      "latency_ms": 1508,
+      "generation_id": null,
+      "completion_id": null,
+      "model_returned": null,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "total_tokens": null,
+      "cost_usd": null,
+      "cached_tokens": null,
+      "finish_reason": null,
+      "provider_error": {
+        "code": "model_not_found",
+        "classification": "MODEL_NOT_FOUND_OR_INACCESSIBLE"
+      }
+    }
+  ],
+  "onchain_transactions": [],
+  "preflight": [
+    {
+      "offer_id": "alpha-basic",
+      "all_in_minor": 2200,
+      "result": "ALLOW_CANDIDATE"
+    },
+    {
+      "offer_id": "beta-plus",
+      "all_in_minor": 2400,
+      "result": "ALLOW_CANDIDATE"
+    },
+    {
+      "offer_id": "alpha-over-cap",
+      "all_in_minor": 3100,
+      "result": "ALL_IN_BUDGET_EXCEEDED"
+    },
+    {
+      "offer_id": "unknown-cheap",
+      "all_in_minor": 1000,
+      "result": "MERCHANT_NOT_ALLOWED"
+    }
+  ],
+  "scope": "This probe checks candidate filtering only, not the complete mandate, session budget, or final authorization.",
+  "model_check": {
+    "http_status": 200,
+    "latency_ms": 1440,
+    "served_models": [
+      "deepseek-v4.1-flash",
+      "qwen3-32b"
+    ],
+    "required_model_listed": false
+  },
+  "request_sha256": "7fdb5afbe459705536be27c4a47df56268d0311490e20b3475f502e9b10afe4a",
+  "route_diagnostic": true,
+  "status": "STOPPED",
+  "reason_code": "INFERENCE_HTTP_404"
+}

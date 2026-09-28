@@ -1,0 +1,14 @@
+{
+  "name": "gwdc-control-memory",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "kiln:check": "node --env-file-if-exists=.env.local scripts/kiln-probe.mjs --check-only",
+    "kiln:probe": "node --env-file-if-exists=.env.local scripts/kiln-probe.mjs",
+    "kiln:route": "node --env-file-if-exists=.env.local scripts/kiln-probe.mjs --verify-route",
+    "kiln:preview": "node scripts/kiln-probe.mjs --preview",
+    "review:packet": "node scripts/review-packet.mjs"
+  }
+}
