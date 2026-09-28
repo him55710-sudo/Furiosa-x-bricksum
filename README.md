@@ -4,7 +4,7 @@
 
 소규모 개발팀의 AI Platform·Finance 담당자를 위한 **실행 가능한 Agent Finance Console**입니다. 검증된 수수료 초과 실패를 같은 소유자·목적·판매자의 다음 거래에서 **더 이른 확정 총액 검사**로 전환합니다.
 
-[기획 v2](docs/HACKATHON-PLAN.ko.md)는 문서 변환 작업 한 건, 공개 온체인 독립 검증, 사용자 직접 취소, AI 효용 평가로 다음 개발 범위를 좁힙니다. **추가 기능은 계획 상태**이며 아래는 현재 구현 설명입니다.
+[기획 v3](docs/HACKATHON-PLAN.v3.ko.md)는 **유료 자료 조회의 결제 직후 응답 유실·재시작**으로 문제를 좁힙니다. 사용자가 승인한 구매 1건에 최대 한 번만 지급하고, 기존 자료를 회수하는 [목표 데모](docs/DEMO-STORYBOARD.v3.ko.md)와 [실제 사용자 조사 근거](docs/USER-DISCOVERY.v3.ko.md)를 정리했습니다. **추가 기능은 계획 상태**이며 아래는 현재 구현 설명입니다.
 
 ![실제 API와 devnet 결제의 증빙 검증](artifacts/demo/08-final-verified.png)
 
