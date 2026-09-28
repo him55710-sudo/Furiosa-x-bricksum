@@ -1,18 +1,18 @@
 {
   "schema_version": 2,
   "status": "PASS",
-  "completed_at": "2026-09-28T16:00:00.021Z",
-  "duration_ms": 13764,
+  "completed_at": "2026-09-28T16:35:40.072Z",
+  "duration_ms": 16048,
   "runner": "node --test --test-reporter=tap",
   "node": "v24.19.0",
   "exit_code": 0,
-  "tests": 68,
-  "passed": 68,
+  "tests": 71,
+  "passed": 71,
   "failed": 0,
   "cancelled": 0,
   "skipped": 0,
-  "source_fingerprint": "dddd05df350ba56e0e60142ea5744a2ed005ffdcc3f55567b469259efeb49708",
-  "ending_source_fingerprint": "dddd05df350ba56e0e60142ea5744a2ed005ffdcc3f55567b469259efeb49708",
+  "source_fingerprint": "ca0a8e8a3f1de04fd8d7193498724799cee7c425730ad8c9ec89708b22598216",
+  "ending_source_fingerprint": "ca0a8e8a3f1de04fd8d7193498724799cee7c425730ad8c9ec89708b22598216",
   "source_changed": false,
   "source_files": [
     "artifacts/deal-escrow/contract.json",
@@ -28,6 +28,11 @@
     "artifacts/deal-escrow/runs/d07e8650-bc47-4ecd-b138-8885d8288a04/b512ba8a-6d5b-4ab8-9289-21c61735955c.json",
     "artifacts/deal-escrow/runs/d07e8650-bc47-4ecd-b138-8885d8288a04/d5b5141f-d88e-461d-97f6-057317359f64.json",
     "artifacts/deal-escrow/runs/d07e8650-bc47-4ecd-b138-8885d8288a04/report.json",
+    "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/buyer-refund.json",
+    "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/funded-receipt.json",
+    "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/public-packet.json",
+    "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/reconciled-receipt.json",
+    "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/report.json",
     "artifacts/deal-escrow/source-sepolia/a2f6f4fa-9f1e-4892-8518-325b8762c4f2/147472c4-bb26-4028-b4d6-0aae3de7965a.json",
     "artifacts/deal-escrow/source-sepolia/a2f6f4fa-9f1e-4892-8518-325b8762c4f2/3072706f-f6e1-4dfd-a96a-e23266a034e8.json",
     "artifacts/deal-escrow/source-sepolia/a2f6f4fa-9f1e-4892-8518-325b8762c4f2/4d5cc40a-c16c-4b61-9796-17cc9554e3df.json",
@@ -43,9 +48,11 @@
     "scripts/check-deal-escrow-browser.mjs",
     "scripts/check-deal-personas.mjs",
     "scripts/compile-deal-escrow.mjs",
+    "scripts/deal-research-buyer-refund.mjs",
     "scripts/demo-deal-escrow-public.mjs",
     "scripts/demo-deal-escrow.mjs",
     "scripts/demo-deal-research-public.mjs",
+    "scripts/demo-deal-research-recovery.mjs",
     "scripts/estimate-deal-research-energy.mjs",
     "scripts/provision-deal-escrow-sepolia.mjs",
     "scripts/provision-deal-research-public.mjs",
@@ -58,7 +65,9 @@
     "scripts/verify-deal-escrow.mjs",
     "scripts/verify-deal-personas.mjs",
     "scripts/verify-deal-research-public.mjs",
+    "scripts/verify-deal-research-recovery.mjs",
     "src/deal-escrow/audit.ts",
+    "src/deal-escrow/buyer-refund.mjs",
     "src/deal-escrow/chain.mjs",
     "src/deal-escrow/delivery.ts",
     "src/deal-escrow/domain.ts",
@@ -67,15 +76,18 @@
     "src/deal-escrow/evidence-server.mjs",
     "src/deal-escrow/kiln.ts",
     "src/deal-escrow/public-run.mjs",
+    "src/deal-escrow/recovery-evidence.mjs",
     "src/deal-escrow/reference.ts",
     "src/deal-escrow/replay-evidence.mjs",
     "src/deal-escrow/research.ts",
     "src/deal-escrow/runtime-lock.mjs",
     "src/deal-escrow/server.mjs",
     "src/deal-escrow/store.ts",
+    "src/deal-escrow/study.mjs",
     "src/deal-escrow/test-report.mjs",
     "src/deal-escrow/verification-source.mjs",
     "tests/deal-escrow/audit.test.mjs",
+    "tests/deal-escrow/buyer-refund.test.mjs",
     "tests/deal-escrow/contract.test.mjs",
     "tests/deal-escrow/delivery-quality.test.mjs",
     "tests/deal-escrow/domain.test.mjs",
@@ -84,17 +96,20 @@
     "tests/deal-escrow/kiln.test.mjs",
     "tests/deal-escrow/public-run.test.mjs",
     "tests/deal-escrow/quality-intent.test.mjs",
+    "tests/deal-escrow/recovery-evidence.test.mjs",
     "tests/deal-escrow/recovery.test.mjs",
     "tests/deal-escrow/replacement-settlement.test.mjs",
     "tests/deal-escrow/replay-evidence.test.mjs",
     "tests/deal-escrow/research.test.mjs",
     "tests/deal-escrow/runtime-lock.test.mjs",
+    "tests/deal-escrow/server-start.test.mjs",
     "tests/deal-escrow/source-public-evidence.test.mjs",
     "tsconfig.deal-escrow-public.json",
     "tsconfig.deal-escrow.json",
     "verification/deal-personas.mjs",
     "vite.deal-escrow-public.config.ts",
     "vite.deal-escrow.config.ts",
+    "web/deal-escrow-public/RecoveryEvidence.tsx",
     "web/deal-escrow-public/Replay.css",
     "web/deal-escrow-public/Replay.tsx",
     "web/deal-escrow-public/SourceEvidence.tsx",
@@ -162,6 +177,26 @@
       "sha256": "e8c773efac65d172528cd491275df7ae38fb13914ecdfa0dcc86a93c6256e3db"
     },
     {
+      "path": "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/buyer-refund.json",
+      "sha256": "4a9694ca4367d1759725d64dae2ac5b46b89bef937d4e22ce1832967a62f4ccd"
+    },
+    {
+      "path": "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/funded-receipt.json",
+      "sha256": "ab018244d071d9927ac10923402baffe4fdf3e44078d584c8b4f0b6304a6ccea"
+    },
+    {
+      "path": "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/public-packet.json",
+      "sha256": "bcb40d7ec2585c1b743f369bec8cf59c9988e426a0751eee55df4dcdd8e685f7"
+    },
+    {
+      "path": "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/reconciled-receipt.json",
+      "sha256": "789312c71822d232f8922c836c1902db4f65108968fa9b036fa84b66aea1fd35"
+    },
+    {
+      "path": "artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/report.json",
+      "sha256": "a1c19c2705b1a811815d2153b4664e22fdad93520c0ab3d518415d1e47edb251"
+    },
+    {
       "path": "artifacts/deal-escrow/source-sepolia/a2f6f4fa-9f1e-4892-8518-325b8762c4f2/147472c4-bb26-4028-b4d6-0aae3de7965a.json",
       "sha256": "c3f20eca8dcbf9582ab8d440a4e98d3df6d58c96368ab65f4c69c5c82e54aac7"
     },
@@ -203,7 +238,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "3e3c71b3976b7da2dfae2a1e404ccbe83f30693ae6d5b4afd0695ff3161aaa5f"
+      "sha256": "9e0c96c088e1961a09eed38a3984cb8a1e969302ecd126785f59ddc1d4eb4193"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -222,6 +257,10 @@
       "sha256": "c14a76606be214621740d2e2b3e445abe48e7645c76265c9c67228e4b0f76852"
     },
     {
+      "path": "scripts/deal-research-buyer-refund.mjs",
+      "sha256": "5422d1da448abc5924ffcbb3f53bb97c41d1ad51a8dac39f08b68e48a8793509"
+    },
+    {
       "path": "scripts/demo-deal-escrow-public.mjs",
       "sha256": "6a5e9dd4a7f4b6f4efb39d0692824539dc50e032f61f02eca72cc1e3fd4fe6b0"
     },
@@ -232,6 +271,10 @@
     {
       "path": "scripts/demo-deal-research-public.mjs",
       "sha256": "b335e9aaaeae32b1330f98082617801705d3ab3ac6179726c599c4ff676c17d9"
+    },
+    {
+      "path": "scripts/demo-deal-research-recovery.mjs",
+      "sha256": "649eb5f56336174d4fd25c7024c45cf7fc0c7fce3e5c1dd4edcc6f8325e74f19"
     },
     {
       "path": "scripts/estimate-deal-research-energy.mjs",
@@ -282,12 +325,20 @@
       "sha256": "fb481f47d783fb3b17559ceedc367c079275031dc77e06c185423daa31e21054"
     },
     {
+      "path": "scripts/verify-deal-research-recovery.mjs",
+      "sha256": "8580b3fe81a1343ebefb7a5577d39c2199e23cf28ba3ee770e935f0867d20d52"
+    },
+    {
       "path": "src/deal-escrow/audit.ts",
-      "sha256": "75533aee1b7b3f600697112fe3a15723628335351de98a81df80d3ccf5ddc344"
+      "sha256": "6df2eed7fef058a91a65204c38d090f0792d182e9afb66e5bf29d44e10b41ddc"
+    },
+    {
+      "path": "src/deal-escrow/buyer-refund.mjs",
+      "sha256": "2a17c8dee187ae4a5ae592d4b9f1f8ff19cb0706dbbb5ccb7d10e0db15be8042"
     },
     {
       "path": "src/deal-escrow/chain.mjs",
-      "sha256": "8debf618f9b2759e2a241e38893d2ac616cd9b2fa46aa3427d8254eeaa239e4b"
+      "sha256": "74a5a4034f7ecf0fb63689c1d4d3275eda306636436139232ad403a578b06bc3"
     },
     {
       "path": "src/deal-escrow/delivery.ts",
@@ -303,11 +354,11 @@
     },
     {
       "path": "src/deal-escrow/engine.ts",
-      "sha256": "cbe7d63cdef3d8c1f70d92fd0f83496478ac42f18b6da4ed211475e7af6daaff"
+      "sha256": "c360829320173e7724f63bdffe8108d712fdd9ab553cd6dcf66a2d1e798f1c63"
     },
     {
       "path": "src/deal-escrow/evidence-server.mjs",
-      "sha256": "b36cb5e225cfaa2007bc46dc7f570b43ed1035d4da11eb73d83acc3d4a13d2b5"
+      "sha256": "78e3c98a14a1c929bc9c68013d62cf812066d7e9354ce235133bcf022e6e2a49"
     },
     {
       "path": "src/deal-escrow/kiln.ts",
@@ -318,12 +369,16 @@
       "sha256": "b0447cbee58b12f5a74d9a2cf213e750d2f7bf10c0237e56f7f98e6a00b6a529"
     },
     {
+      "path": "src/deal-escrow/recovery-evidence.mjs",
+      "sha256": "c077db84a2d2af6478ab498547859498a35769fe29fcb1e92f8c82e690fe9bff"
+    },
+    {
       "path": "src/deal-escrow/reference.ts",
       "sha256": "3d7a5d1b92ceac97be751c92c03d0e33aae8e0ac425096d854cc492a77df1fea"
     },
     {
       "path": "src/deal-escrow/replay-evidence.mjs",
-      "sha256": "fa42b8aa8034d396c67f05ca74ae84cd3b6a9872f132fd6f5464d62322536795"
+      "sha256": "9220039ca1241370da668ce1fa99c15e245ef6d978f494d6dc4b0f4472ac9833"
     },
     {
       "path": "src/deal-escrow/research.ts",
@@ -342,16 +397,24 @@
       "sha256": "c9d948cb3a1deeb20dda792087713951ded177fedad2cfe5a0e6ea9968afee8c"
     },
     {
+      "path": "src/deal-escrow/study.mjs",
+      "sha256": "f82ef35278d6f9202a7760db6c32bfaa8d860bbd0324bc0c052fe4bae6630e68"
+    },
+    {
       "path": "src/deal-escrow/test-report.mjs",
       "sha256": "f761e4b6b76d8b75e8c408b1f6400eb7fd7bce762ea7bb0feb55abf989c70aca"
     },
     {
       "path": "src/deal-escrow/verification-source.mjs",
-      "sha256": "1f8b72d4e9e249fb63930f913e01d94c814ce5afc1de2101fd5b1035aa66d0bf"
+      "sha256": "832ab7ada12f8198aaa5c9a92f37b9d337d4e108d8ed90a719d09c3239c20d69"
     },
     {
       "path": "tests/deal-escrow/audit.test.mjs",
       "sha256": "b2eebd3dc531ed5d2e32b3149e540704e3ac112395d9efe3aa1f4b58d0b40fce"
+    },
+    {
+      "path": "tests/deal-escrow/buyer-refund.test.mjs",
+      "sha256": "20fafbf33f2acb4172539d0f15640f3923e81781ea365061c60004ccfb5debab"
     },
     {
       "path": "tests/deal-escrow/contract.test.mjs",
@@ -386,6 +449,10 @@
       "sha256": "0e9194d6a54d8f7a27f3e4a115ad9c9548ca17117844bada1610fcba773cead6"
     },
     {
+      "path": "tests/deal-escrow/recovery-evidence.test.mjs",
+      "sha256": "6f6f47618377b85fb444301188f4cd9d1b130b5d5a145c4db183d142998bca29"
+    },
+    {
       "path": "tests/deal-escrow/recovery.test.mjs",
       "sha256": "10671afecda2d3f666afe0d6085e31f757b07322072d0a240117a99ebd91cee9"
     },
@@ -404,6 +471,10 @@
     {
       "path": "tests/deal-escrow/runtime-lock.test.mjs",
       "sha256": "091154d46a7f81b64cebf79a096046cbc3604fceff44900c4056130d12b8879d"
+    },
+    {
+      "path": "tests/deal-escrow/server-start.test.mjs",
+      "sha256": "bcbcd1e98ed94141bdcdb4da8348e4990d86c79c67f3799b836d85266ee315a5"
     },
     {
       "path": "tests/deal-escrow/source-public-evidence.test.mjs",
@@ -430,12 +501,16 @@
       "sha256": "48d765d7aed33c611a166be9ba7291c1874459b2027a6ecb38cadc873d011786"
     },
     {
+      "path": "web/deal-escrow-public/RecoveryEvidence.tsx",
+      "sha256": "a1fb6eb6b6388997b7ebbf815b25ae508874757b0587782c10e9f125facba6b8"
+    },
+    {
       "path": "web/deal-escrow-public/Replay.css",
-      "sha256": "e8af9fa918846882c7609ddb6b845d6f38b6ad710348c39c911f381428251e41"
+      "sha256": "91eed280801724d5b21baf77f6fa41a85bb62f7a01c9265243838057e6488f20"
     },
     {
       "path": "web/deal-escrow-public/Replay.tsx",
-      "sha256": "2bf013f014c8d6d2eee1fafa079ab0d8922bcb029270c39689d685a43563da75"
+      "sha256": "3cb120c30fcaea15e392f13cc85b704543ee1c594767c174e34de180eb3a6acb"
     },
     {
       "path": "web/deal-escrow-public/SourceEvidence.tsx",
@@ -478,7 +553,7 @@
       "sha256": "be54fc2d385111358f125b97865c92ac477d9bcec80276a4669a1d6e3ffbe87b"
     }
   ],
-  "output": "TAP version 13\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: historical receipt reconstructs original checks and explicitly reports current quality shortfall\nok 1 - historical receipt reconstructs original checks and explicitly reports current quality shortfall\n  ---\n  duration_ms: 33.9745\n  type: 'test'\n  ...\n# Subtest: receipt detects altered amount, delivery, event history and attestation as INVALID\nok 2 - receipt detects altered amount, delivery, event history and attestation as INVALID\n  ---\n  duration_ms: 48.5672\n  type: 'test'\n  ...\n# Subtest: missing settlement material and unavailable RPC are INCOMPLETE, not fabricated corruption\nok 3 - missing settlement material and unavailable RPC are INCOMPLETE, not fabricated corruption\n  ---\n  duration_ms: 34.3156\n  type: 'test'\n  ...\n# Subtest: receipt binds event identity even if an attacker recomputes all event hashes\nok 4 - receipt binds event identity even if an attacker recomputes all event hashes\n  ---\n  duration_ms: 2.8101\n  type: 'test'\n  ...\n# Subtest: canonical-block disagreement or insufficient configured confirmations is INCOMPLETE\nok 5 - canonical-block disagreement or insufficient configured confirmations is INCOMPLETE\n  ---\n  duration_ms: 31.666\n  type: 'test'\n  ...\n# Subtest: control source refunds, preview contents and durable transaction claims are independently checked\nok 6 - control source refunds, preview contents and durable transaction claims are independently checked\n  ---\n  duration_ms: 3429.7558\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: real EVM escrow enforces amount, roles, single outcome, expiry, and buyer refund\nok 7 - real EVM escrow enforces amount, roles, single outcome, expiry, and buyer refund\n  ---\n  duration_ms: 3541.7927\n  type: 'test'\n  ...\n# Subtest: CAPEX delivery rejects empty and mistyped values, invalid quarters and invalid numeric amounts\nok 8 - CAPEX delivery rejects empty and mistyped values, invalid quarters and invalid numeric amounts\n  ---\n  duration_ms: 60.2395\n  type: 'test'\n  ...\n# Subtest: economic row duplication cannot inflate delivery or five-row preview quantity\nok 9 - economic row duplication cannot inflate delivery or five-row preview quantity\n  ---\n  duration_ms: 12.9534\n  type: 'test'\n  ...\n# Subtest: source coverage requires safe URL strings but never certifies remote content or semantic truth\nok 10 - source coverage requires safe URL strings but never certifies remote content or semantic truth\n  ---\n  duration_ms: 28.8861\n  type: 'test'\n  ...\n# Subtest: historical v1 delivery remains reproducible while stricter v2 reports its quality gap\nok 11 - historical v1 delivery remains reproducible while stricter v2 reports its quality gap\n  ---\n  duration_ms: 15.8309\n  type: 'test'\n  ...\n# Subtest: strict schema rejects authority injection, unknown fields, non-finite and fractional money\nok 12 - strict schema rejects authority injection, unknown fields, non-finite and fractional money\n  ---\n  duration_ms: 2.4964\n  type: 'test'\n  ...\n# Subtest: canonical hash is key-order independent and changes with any financial condition\nok 13 - canonical hash is key-order independent and changes with any financial condition\n  ---\n  duration_ms: 5.6688\n  type: 'test'\n  ...\n# Subtest: accepted Deal is immutable in memory and SQL; amendment requires a new identity\nok 14 - accepted Deal is immutable in memory and SQL; amendment requires a new identity\n  ---\n  duration_ms: 6.608\n  type: 'test'\n  ...\n# Subtest: all unlisted state transitions fail closed, including every terminal escape\nok 15 - all unlisted state transitions fail closed, including every terminal escape\n  ---\n  duration_ms: 2.132\n  type: 'test'\n  ...\n# Subtest: budget, mandate expiry, revocation, Deal expiry and hash binding enforced independently\nok 16 - budget, mandate expiry, revocation, Deal expiry and hash binding enforced independently\n  ---\n  duration_ms: 9.4283\n  type: 'test'\n  ...\n# Subtest: LLM-like failure data cannot create or remove a control\nok 17 - LLM-like failure data cannot create or remove a control\n  ---\n  duration_ms: 3.0375\n  type: 'test'\n  ...\n# Subtest: human-approved task quality cannot be weakened by otherwise valid Deal terms\nok 18 - human-approved task quality cannot be weakened by otherwise valid Deal terms\n  ---\n  duration_ms: 4.2604\n  type: 'test'\n  ...\n# Subtest: energy assumptions are applied independently by flow without treating API latency as measured active time\nok 19 - energy assumptions are applied independently by flow without treating API latency as measured active time\n  ---\n  duration_ms: 3.4974\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: delivery validator checks structure and timing, never semantic truth\nok 20 - delivery validator checks structure and timing, never semantic truth\n  ---\n  duration_ms: 17.7975\n  type: 'test'\n  ...\n# Subtest: real EVM lifecycle, financial invariants, seller-scoped monotonic memory and recovery\n    # Subtest: 1 LLM cannot choose settlement amount or invoke financial tools\n    ok 1 - 1 LLM cannot choose settlement amount or invoke financial tools\n      ---\n      duration_ms: 12.3539\n      type: 'test'\n      ...\n    # Subtest: success locks exact accepted price then releases only after verified delivery\n    ok 2 - success locks exact accepted price then releases only after verified delivery\n      ---\n      duration_ms: 993.3085\n      type: 'test'\n      ...\n    # Subtest: 6 same Deal cannot settle twice\n    ok 3 - 6 same Deal cannot settle twice\n      ---\n      duration_ms: 728.3199\n      type: 'test'\n      ...\n    # Subtest: 10 failed delivery refunds; 7 refunded Deal never releases; 8/9 memory only restricts\n    ok 4 - 10 failed delivery refunds; 7 refunded Deal never releases; 8/9 memory only restricts\n      ---\n      duration_ms: 1361.3905\n      type: 'test'\n      ...\n    # Subtest: 5 revoked mandate cannot fund and final revoke causes refund\n    ok 5 - 5 revoked mandate cannot fund and final revoke causes refund\n      ---\n      duration_ms: 639.6481\n      type: 'test'\n      ...\n    # Subtest: 4 expired Deal cannot fund or release; expired mandate cannot fund\n    ok 6 - 4 expired Deal cannot fund or release; expired mandate cannot fund\n      ---\n      duration_ms: 643.1218\n      type: 'test'\n      ...\n    # Subtest: 3 hash mismatch cannot settle even if the delivery passes\n    ok 7 - 3 hash mismatch cannot settle even if the delivery passes\n      ---\n      duration_ms: 438.8996\n      type: 'test'\n      ...\n    # Subtest: task budget reserves concurrently and budget failure never funds\n    ok 8 - task budget reserves concurrently and budget failure never funds\n      ---\n      duration_ms: 373.8122\n      type: 'test'\n      ...\n    # Subtest: funded Deal without any delivery refunds after its deadline\n    ok 9 - funded Deal without any delivery refunds after its deadline\n      ---\n      duration_ms: 615.7641\n      type: 'test'\n      ...\n    # Subtest: a newly activated seller gate is rechecked after policy approval\n    ok 10 - a newly activated seller gate is rechecked after policy approval\n      ---\n      duration_ms: 29.1037\n      type: 'test'\n      ...\n    # Subtest: ambiguous broadcast persists signed intent and recovers same tx exactly once\n    ok 11 - ambiguous broadcast persists signed intent and recovers same tx exactly once\n      ---\n      duration_ms: 1695.7481\n      type: 'test'\n      ...\n    1..11\nok 21 - real EVM lifecycle, financial invariants, seller-scoped monotonic memory and recovery\n  ---\n  duration_ms: 8489.4808\n  type: 'test'\n  ...\n# Subtest: mined release revert after deadline safely refunds and survives interrupted reconciliation\n    # Subtest: immediate confirmed revert\n    ok 1 - immediate confirmed revert\n      ---\n      duration_ms: 1626.8449\n      type: 'test'\n      ...\n    # Subtest: restart after lost failure receipt\n    ok 2 - restart after lost failure receipt\n      ---\n      duration_ms: 1642.6974\n      type: 'test'\n      ...\n    1..2\nok 22 - mined release revert after deadline safely refunds and survives interrupted reconciliation\n  ---\n  duration_ms: 3270.2389\n  type: 'test'\n  ...\n# Subtest: a successful release with a lost response must never trigger a refund\nok 23 - a successful release with a lost response must never trigger a refund\n  ---\n  duration_ms: 912.9759\n  type: 'test'\n  ...\n# Subtest: Kiln identifier is required and telemetry records real response usage\nok 24 - Kiln identifier is required and telemetry records real response usage\n  ---\n  duration_ms: 21.9257\n  type: 'test'\n  ...\n# Subtest: unsafe model tools, unknown fields, malformed actions and truncation fail closed\nok 25 - unsafe model tools, unknown fields, malformed actions and truncation fail closed\n  ---\n  duration_ms: 8.2255\n  type: 'test'\n  ...\n# Subtest: network and invalid model listing never invent usage\nok 26 - network and invalid model listing never invent usage\n  ---\n  duration_ms: 1.7554\n  type: 'test'\n  ...\n# Subtest: durable model result is reused while failed or interrupted calls cannot silently consume tokens again\nok 27 - durable model result is reused while failed or interrupted calls cannot silently consume tokens again\n  ---\n  duration_ms: 13.6522\n  type: 'test'\n  ...\n# Subtest: observation recovers the pending operation without invoking its start function twice\nok 28 - observation recovers the pending operation without invoking its start function twice\n  ---\n  duration_ms: 13.9973\n  type: 'test'\n  ...\n# Subtest: separate callers and persisted retry converge on one Deal and do not repeat model calls\nok 29 - separate callers and persisted retry converge on one Deal and do not repeat model calls\n  ---\n  duration_ms: 222.7211\n  type: 'test'\n  ...\n# Subtest: weakened model terms are policy-blocked before funding even when tool output is valid\nok 30 - weakened model terms are policy-blocked before funding even when tool output is valid\n  ---\n  duration_ms: 30.4914\n  type: 'test'\n  ...\n# Subtest: new quality mandates require a persisted purchase intent; interrupted model jobs never auto-retry\nok 31 - new quality mandates require a persisted purchase intent; interrupted model jobs never auto-retry\n  ---\n  duration_ms: 6.5261\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: mined failed funding releases its reservation and recovery is idempotent\nok 32 - mined failed funding releases its reservation and recovery is idempotent\n  ---\n  duration_ms: 1551.9456\n  type: 'test'\n  ...\n# Subtest: a release mined after its deadline refunds only after the exact revert is confirmed\nok 33 - a release mined after its deadline refunds only after the exact revert is confirmed\n  ---\n  duration_ms: 1350.6313\n  type: 'test'\n  ...\n# Subtest: an unknown raw transaction keeps its reservation and blocks another signed nonce\nok 34 - an unknown raw transaction keeps its reservation and blocks another signed nonce\n  ---\n  duration_ms: 1132.107\n  type: 'test'\n  ...\n# Subtest: a finalized same-nonce unrelated replacement cancels funding without freeing ambiguous payments\nok 35 - a finalized same-nonce unrelated replacement cancels funding without freeing ambiguous payments\n  ---\n  duration_ms: 811.3428\n  type: 'test'\n  ...\n# Subtest: an equivalent mined replacement is reconciled using its actual receipt exactly once\nok 36 - an equivalent mined replacement is reconciled using its actual receipt exactly once\n  ---\n  duration_ms: 817.0131\n  type: 'test'\n  ...\n# Subtest: insufficient confirmations keep funding pending until a canonical confirmation arrives\nok 37 - insufficient confirmations keep funding pending until a canonical confirmation arrives\n  ---\n  duration_ms: 636.5309\n  type: 'test'\n  ...\n# Subtest: an unconfirmed revert cannot release reserved funds\nok 38 - an unconfirmed revert cannot release reserved funds\n  ---\n  duration_ms: 761.5072\n  type: 'test'\n  ...\n# Subtest: a disappeared canonical receipt quarantines the runtime without discarding budget exposure\nok 39 - a disappeared canonical receipt quarantines the runtime without discarding budget exposure\n  ---\n  duration_ms: 692.6837\n  type: 'test'\n  ...\n# Subtest: recovery resumes a durable delivery saved before its settlement operation existed\nok 40 - recovery resumes a durable delivery saved before its settlement operation existed\n  ---\n  duration_ms: 1063.0092\n  type: 'test'\n  ...\n# Subtest: an interrupted approval without a signed funding intent is cancelled without spending\nok 41 - an interrupted approval without a signed funding intent is cancelled without spending\n  ---\n  duration_ms: 231.8047\n  type: 'test'\n  ...\n# Subtest: two in-process engine facades sharing the executor fund one operation exactly once\nok 42 - two in-process engine facades sharing the executor fund one operation exactly once\n  ---\n  duration_ms: 654.5671\n  type: 'test'\n  ...\n# Subtest: public finality defaults and unsafe configurations are explicit\nok 43 - public finality defaults and unsafe configurations are explicit\n  ---\n  duration_ms: 0.4033\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: release: same-intent replacement preserves original signature and verifies actual settlement\nok 44 - release: same-intent replacement preserves original signature and verifies actual settlement\n  ---\n  duration_ms: 2224.3434\n  type: 'test'\n  ...\n# Subtest: refund: same-intent replacement preserves original signature and verifies actual settlement\nok 45 - refund: same-intent replacement preserves original signature and verifies actual settlement\n  ---\n  duration_ms: 1441.2797\n  type: 'test'\n  ...\n# Subtest: public replay binds the released, refunded and denied receipts to the same evidence set\nok 46 - public replay binds the released, refunded and denied receipts to the same evidence set\n  ---\n  duration_ms: 90.9152\n  type: 'test'\n  ...\n# Subtest: replay refuses missing records, changed outcomes and unrelated usage totals\nok 47 - replay refuses missing records, changed outcomes and unrelated usage totals\n  ---\n  duration_ms: 61.0668\n  type: 'test'\n  ...\n# Subtest: replay refuses a tampered control origin or a receipt from another deployment\nok 48 - replay refuses a tampered control origin or a receipt from another deployment\n  ---\n  duration_ms: 42.9632\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: pinned actual observations reject plausible but wrong values, periods, units, documents and pages\nok 49 - pinned actual observations reject plausible but wrong values, periods, units, documents and pages\n  ---\n  duration_ms: 32.6763\n  type: 'test'\n  ...\n# Subtest: human reference profile cannot be removed by changing the Deal; counteroffer cannot overrule seller floor\nok 50 - human reference profile cannot be removed by changing the Deal; counteroffer cannot overrule seller floor\n  ---\n  duration_ms: 8.2099\n  type: 'test'\n  ...\n# Subtest: real EVM pays source-matching rows, refunds a same-shape false value, and permits corrected preview\nok 51 - real EVM pays source-matching rows, refunds a same-shape false value, and permits corrected preview\n  ---\n  duration_ms: 3458.3116\n  type: 'test'\n  ...\n# Subtest: final buyer really has acceptance and rejection tools; model may reject\nok 52 - final buyer really has acceptance and rejection tools; model may reject\n  ---\n  duration_ms: 5.3094\n  type: 'test'\n  ...\n# Subtest: one writer across processes, rejected contender cannot steal or remove ownership, killed writer can recover\nok 53 - one writer across processes, rejected contender cannot steal or remove ownership, killed writer can recover\n  ---\n  duration_ms: 338.7936\n  type: 'test'\n  ...\n# Subtest: actual source workflow keeps same-shape wrong-metric refund, independent buyer and measured calls together\nok 54 - actual source workflow keeps same-shape wrong-metric refund, independent buyer and measured calls together\n  ---\n  duration_ms: 71.9923\n  type: 'test'\n  ...\n# Subtest: an old synthetic receipt cannot substitute for the source-backed public proof\nok 55 - an old synthetic receipt cannot substitute for the source-backed public proof\n  ---\n  duration_ms: 10.1412\n  type: 'test'\n  ...\n1..55\n# tests 68\n# suites 0\n# pass 68\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 13694.4379\n",
+  "output": "TAP version 13\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: historical receipt reconstructs original checks and explicitly reports current quality shortfall\nok 1 - historical receipt reconstructs original checks and explicitly reports current quality shortfall\n  ---\n  duration_ms: 42.4502\n  type: 'test'\n  ...\n# Subtest: receipt detects altered amount, delivery, event history and attestation as INVALID\nok 2 - receipt detects altered amount, delivery, event history and attestation as INVALID\n  ---\n  duration_ms: 30.656\n  type: 'test'\n  ...\n# Subtest: missing settlement material and unavailable RPC are INCOMPLETE, not fabricated corruption\nok 3 - missing settlement material and unavailable RPC are INCOMPLETE, not fabricated corruption\n  ---\n  duration_ms: 42.9979\n  type: 'test'\n  ...\n# Subtest: receipt binds event identity even if an attacker recomputes all event hashes\nok 4 - receipt binds event identity even if an attacker recomputes all event hashes\n  ---\n  duration_ms: 11.008\n  type: 'test'\n  ...\n# Subtest: canonical-block disagreement or insufficient configured confirmations is INCOMPLETE\nok 5 - canonical-block disagreement or insufficient configured confirmations is INCOMPLETE\n  ---\n  duration_ms: 52.0059\n  type: 'test'\n  ...\n# Subtest: control source refunds, preview contents and durable transaction claims are independently checked\nok 6 - control source refunds, preview contents and durable transaction claims are independently checked\n  ---\n  duration_ms: 4712.6466\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: buyer deadline refund survives an app restart, preserves uncertain reservations, and is audited as buyer action\nok 7 - buyer deadline refund survives an app restart, preserves uncertain reservations, and is audited as buyer action\n  ---\n  duration_ms: 3777.5578\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: real EVM escrow enforces amount, roles, single outcome, expiry, and buyer refund\nok 8 - real EVM escrow enforces amount, roles, single outcome, expiry, and buyer refund\n  ---\n  duration_ms: 5566.6931\n  type: 'test'\n  ...\n# Subtest: CAPEX delivery rejects empty and mistyped values, invalid quarters and invalid numeric amounts\nok 9 - CAPEX delivery rejects empty and mistyped values, invalid quarters and invalid numeric amounts\n  ---\n  duration_ms: 49.3891\n  type: 'test'\n  ...\n# Subtest: economic row duplication cannot inflate delivery or five-row preview quantity\nok 10 - economic row duplication cannot inflate delivery or five-row preview quantity\n  ---\n  duration_ms: 21.0969\n  type: 'test'\n  ...\n# Subtest: source coverage requires safe URL strings but never certifies remote content or semantic truth\nok 11 - source coverage requires safe URL strings but never certifies remote content or semantic truth\n  ---\n  duration_ms: 19.4036\n  type: 'test'\n  ...\n# Subtest: historical v1 delivery remains reproducible while stricter v2 reports its quality gap\nok 12 - historical v1 delivery remains reproducible while stricter v2 reports its quality gap\n  ---\n  duration_ms: 4.3912\n  type: 'test'\n  ...\n# Subtest: strict schema rejects authority injection, unknown fields, non-finite and fractional money\nok 13 - strict schema rejects authority injection, unknown fields, non-finite and fractional money\n  ---\n  duration_ms: 2.4687\n  type: 'test'\n  ...\n# Subtest: canonical hash is key-order independent and changes with any financial condition\nok 14 - canonical hash is key-order independent and changes with any financial condition\n  ---\n  duration_ms: 9.7616\n  type: 'test'\n  ...\n# Subtest: accepted Deal is immutable in memory and SQL; amendment requires a new identity\nok 15 - accepted Deal is immutable in memory and SQL; amendment requires a new identity\n  ---\n  duration_ms: 32.8365\n  type: 'test'\n  ...\n# Subtest: all unlisted state transitions fail closed, including every terminal escape\nok 16 - all unlisted state transitions fail closed, including every terminal escape\n  ---\n  duration_ms: 4.8845\n  type: 'test'\n  ...\n# Subtest: budget, mandate expiry, revocation, Deal expiry and hash binding enforced independently\nok 17 - budget, mandate expiry, revocation, Deal expiry and hash binding enforced independently\n  ---\n  duration_ms: 25.2729\n  type: 'test'\n  ...\n# Subtest: LLM-like failure data cannot create or remove a control\nok 18 - LLM-like failure data cannot create or remove a control\n  ---\n  duration_ms: 4.1749\n  type: 'test'\n  ...\n# Subtest: human-approved task quality cannot be weakened by otherwise valid Deal terms\nok 19 - human-approved task quality cannot be weakened by otherwise valid Deal terms\n  ---\n  duration_ms: 5.3468\n  type: 'test'\n  ...\n# Subtest: energy assumptions are applied independently by flow without treating API latency as measured active time\nok 20 - energy assumptions are applied independently by flow without treating API latency as measured active time\n  ---\n  duration_ms: 3.151\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: delivery validator checks structure and timing, never semantic truth\nok 21 - delivery validator checks structure and timing, never semantic truth\n  ---\n  duration_ms: 33.0005\n  type: 'test'\n  ...\n# Subtest: real EVM lifecycle, financial invariants, seller-scoped monotonic memory and recovery\n    # Subtest: 1 LLM cannot choose settlement amount or invoke financial tools\n    ok 1 - 1 LLM cannot choose settlement amount or invoke financial tools\n      ---\n      duration_ms: 6.532\n      type: 'test'\n      ...\n    # Subtest: success locks exact accepted price then releases only after verified delivery\n    ok 2 - success locks exact accepted price then releases only after verified delivery\n      ---\n      duration_ms: 1492.9311\n      type: 'test'\n      ...\n    # Subtest: 6 same Deal cannot settle twice\n    ok 3 - 6 same Deal cannot settle twice\n      ---\n      duration_ms: 1000.0486\n      type: 'test'\n      ...\n    # Subtest: 10 failed delivery refunds; 7 refunded Deal never releases; 8/9 memory only restricts\n    ok 4 - 10 failed delivery refunds; 7 refunded Deal never releases; 8/9 memory only restricts\n      ---\n      duration_ms: 2069.9347\n      type: 'test'\n      ...\n    # Subtest: 5 revoked mandate cannot fund and final revoke causes refund\n    ok 5 - 5 revoked mandate cannot fund and final revoke causes refund\n      ---\n      duration_ms: 694.1459\n      type: 'test'\n      ...\n    # Subtest: 4 expired Deal cannot fund or release; expired mandate cannot fund\n    ok 6 - 4 expired Deal cannot fund or release; expired mandate cannot fund\n      ---\n      duration_ms: 657.0716\n      type: 'test'\n      ...\n    # Subtest: 3 hash mismatch cannot settle even if the delivery passes\n    ok 7 - 3 hash mismatch cannot settle even if the delivery passes\n      ---\n      duration_ms: 471.1506\n      type: 'test'\n      ...\n    # Subtest: task budget reserves concurrently and budget failure never funds\n    ok 8 - task budget reserves concurrently and budget failure never funds\n      ---\n      duration_ms: 446.3799\n      type: 'test'\n      ...\n    # Subtest: funded Deal without any delivery refunds after its deadline\n    ok 9 - funded Deal without any delivery refunds after its deadline\n      ---\n      duration_ms: 640.2575\n      type: 'test'\n      ...\n    # Subtest: a newly activated seller gate is rechecked after policy approval\n    ok 10 - a newly activated seller gate is rechecked after policy approval\n      ---\n      duration_ms: 30.6006\n      type: 'test'\n      ...\n    # Subtest: ambiguous broadcast persists signed intent and recovers same tx exactly once\n    ok 11 - ambiguous broadcast persists signed intent and recovers same tx exactly once\n      ---\n      duration_ms: 1693.6001\n      type: 'test'\n      ...\n    1..11\nok 22 - real EVM lifecycle, financial invariants, seller-scoped monotonic memory and recovery\n  ---\n  duration_ms: 10534.1178\n  type: 'test'\n  ...\n# Subtest: mined release revert after deadline safely refunds and survives interrupted reconciliation\n    # Subtest: immediate confirmed revert\n    ok 1 - immediate confirmed revert\n      ---\n      duration_ms: 1652.4502\n      type: 'test'\n      ...\n    # Subtest: restart after lost failure receipt\n    ok 2 - restart after lost failure receipt\n      ---\n      duration_ms: 1695.158\n      type: 'test'\n      ...\n    1..2\nok 23 - mined release revert after deadline safely refunds and survives interrupted reconciliation\n  ---\n  duration_ms: 3348.3209\n  type: 'test'\n  ...\n# Subtest: a successful release with a lost response must never trigger a refund\nok 24 - a successful release with a lost response must never trigger a refund\n  ---\n  duration_ms: 881.9067\n  type: 'test'\n  ...\n# Subtest: Kiln identifier is required and telemetry records real response usage\nok 25 - Kiln identifier is required and telemetry records real response usage\n  ---\n  duration_ms: 15.3912\n  type: 'test'\n  ...\n# Subtest: unsafe model tools, unknown fields, malformed actions and truncation fail closed\nok 26 - unsafe model tools, unknown fields, malformed actions and truncation fail closed\n  ---\n  duration_ms: 11.7082\n  type: 'test'\n  ...\n# Subtest: network and invalid model listing never invent usage\nok 27 - network and invalid model listing never invent usage\n  ---\n  duration_ms: 1.674\n  type: 'test'\n  ...\n# Subtest: durable model result is reused while failed or interrupted calls cannot silently consume tokens again\nok 28 - durable model result is reused while failed or interrupted calls cannot silently consume tokens again\n  ---\n  duration_ms: 13.5543\n  type: 'test'\n  ...\n# Subtest: observation recovers the pending operation without invoking its start function twice\nok 29 - observation recovers the pending operation without invoking its start function twice\n  ---\n  duration_ms: 3.7979\n  type: 'test'\n  ...\n# Subtest: separate callers and persisted retry converge on one Deal and do not repeat model calls\nok 30 - separate callers and persisted retry converge on one Deal and do not repeat model calls\n  ---\n  duration_ms: 226.1842\n  type: 'test'\n  ...\n# Subtest: weakened model terms are policy-blocked before funding even when tool output is valid\nok 31 - weakened model terms are policy-blocked before funding even when tool output is valid\n  ---\n  duration_ms: 24.0277\n  type: 'test'\n  ...\n# Subtest: new quality mandates require a persisted purchase intent; interrupted model jobs never auto-retry\nok 32 - new quality mandates require a persisted purchase intent; interrupted model jobs never auto-retry\n  ---\n  duration_ms: 7.2645\n  type: 'test'\n  ...\n# Subtest: public application-off evidence is a distinct buyer refund with unchanged controller nonce and no model calls\nok 33 - public application-off evidence is a distinct buyer refund with unchanged controller nonce and no model calls\n  ---\n  duration_ms: 31.3692\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: mined failed funding releases its reservation and recovery is idempotent\nok 34 - mined failed funding releases its reservation and recovery is idempotent\n  ---\n  duration_ms: 2130.5237\n  type: 'test'\n  ...\n# Subtest: a release mined after its deadline refunds only after the exact revert is confirmed\nok 35 - a release mined after its deadline refunds only after the exact revert is confirmed\n  ---\n  duration_ms: 1623.8168\n  type: 'test'\n  ...\n# Subtest: an unknown raw transaction keeps its reservation and blocks another signed nonce\nok 36 - an unknown raw transaction keeps its reservation and blocks another signed nonce\n  ---\n  duration_ms: 1629.8122\n  type: 'test'\n  ...\n# Subtest: a finalized same-nonce unrelated replacement cancels funding without freeing ambiguous payments\nok 37 - a finalized same-nonce unrelated replacement cancels funding without freeing ambiguous payments\n  ---\n  duration_ms: 826.0329\n  type: 'test'\n  ...\n# Subtest: an equivalent mined replacement is reconciled using its actual receipt exactly once\nok 38 - an equivalent mined replacement is reconciled using its actual receipt exactly once\n  ---\n  duration_ms: 867.8068\n  type: 'test'\n  ...\n# Subtest: insufficient confirmations keep funding pending until a canonical confirmation arrives\nok 39 - insufficient confirmations keep funding pending until a canonical confirmation arrives\n  ---\n  duration_ms: 624.9314\n  type: 'test'\n  ...\n# Subtest: an unconfirmed revert cannot release reserved funds\nok 40 - an unconfirmed revert cannot release reserved funds\n  ---\n  duration_ms: 706.1813\n  type: 'test'\n  ...\n# Subtest: a disappeared canonical receipt quarantines the runtime without discarding budget exposure\nok 41 - a disappeared canonical receipt quarantines the runtime without discarding budget exposure\n  ---\n  duration_ms: 608.6794\n  type: 'test'\n  ...\n# Subtest: recovery resumes a durable delivery saved before its settlement operation existed\nok 42 - recovery resumes a durable delivery saved before its settlement operation existed\n  ---\n  duration_ms: 958.847\n  type: 'test'\n  ...\n# Subtest: an interrupted approval without a signed funding intent is cancelled without spending\nok 43 - an interrupted approval without a signed funding intent is cancelled without spending\n  ---\n  duration_ms: 213.6944\n  type: 'test'\n  ...\n# Subtest: two in-process engine facades sharing the executor fund one operation exactly once\nok 44 - two in-process engine facades sharing the executor fund one operation exactly once\n  ---\n  duration_ms: 682.9491\n  type: 'test'\n  ...\n# Subtest: public finality defaults and unsafe configurations are explicit\nok 45 - public finality defaults and unsafe configurations are explicit\n  ---\n  duration_ms: 0.4052\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: release: same-intent replacement preserves original signature and verifies actual settlement\nok 46 - release: same-intent replacement preserves original signature and verifies actual settlement\n  ---\n  duration_ms: 2572.0632\n  type: 'test'\n  ...\n# Subtest: refund: same-intent replacement preserves original signature and verifies actual settlement\nok 47 - refund: same-intent replacement preserves original signature and verifies actual settlement\n  ---\n  duration_ms: 1965.1646\n  type: 'test'\n  ...\n# Subtest: public replay binds the released, refunded and denied receipts to the same evidence set\nok 48 - public replay binds the released, refunded and denied receipts to the same evidence set\n  ---\n  duration_ms: 109.9082\n  type: 'test'\n  ...\n# Subtest: replay refuses missing records, changed outcomes and unrelated usage totals\nok 49 - replay refuses missing records, changed outcomes and unrelated usage totals\n  ---\n  duration_ms: 80.888\n  type: 'test'\n  ...\n# Subtest: replay refuses a tampered control origin or a receipt from another deployment\nok 50 - replay refuses a tampered control origin or a receipt from another deployment\n  ---\n  duration_ms: 53.3299\n  type: 'test'\n  ...\n# This version of µWS is not compatible with your Node.js build:\n# Error: Cannot find module '../binaries/uws_win32_x64_137.node'\n# Require stack:\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0\\\\node_modules\\\\@trufflesuite\\\\uws-js-unofficial\\\\src\\\\uws.js\n# - C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\escrow-public-proof\\\\Furiosa x Bricksum\\\\node_modules\\\\.pnpm\\\\ganache@7.9.2\\\\node_modules\\\\ganache\\\\dist\\\\node\\\\core.js\n# Falling back to a NodeJS implementation; performance may be degraded.\n# Subtest: pinned actual observations reject plausible but wrong values, periods, units, documents and pages\nok 51 - pinned actual observations reject plausible but wrong values, periods, units, documents and pages\n  ---\n  duration_ms: 32.3391\n  type: 'test'\n  ...\n# Subtest: human reference profile cannot be removed by changing the Deal; counteroffer cannot overrule seller floor\nok 52 - human reference profile cannot be removed by changing the Deal; counteroffer cannot overrule seller floor\n  ---\n  duration_ms: 6.034\n  type: 'test'\n  ...\n# Subtest: real EVM pays source-matching rows, refunds a same-shape false value, and permits corrected preview\nok 53 - real EVM pays source-matching rows, refunds a same-shape false value, and permits corrected preview\n  ---\n  duration_ms: 4227.1787\n  type: 'test'\n  ...\n# Subtest: final buyer really has acceptance and rejection tools; model may reject\nok 54 - final buyer really has acceptance and rejection tools; model may reject\n  ---\n  duration_ms: 4.485\n  type: 'test'\n  ...\n# Subtest: one writer across processes, rejected contender cannot steal or remove ownership, killed writer can recover\nok 55 - one writer across processes, rejected contender cannot steal or remove ownership, killed writer can recover\n  ---\n  duration_ms: 312.5112\n  type: 'test'\n  ...\n# Subtest: production application entrypoint starts without Kiln credentials and serves health, state and study APIs\nok 56 - production application entrypoint starts without Kiln credentials and serves health, state and study APIs\n  ---\n  duration_ms: 2010.3336\n  type: 'test'\n  ...\n# Subtest: actual source workflow keeps same-shape wrong-metric refund, independent buyer and measured calls together\nok 57 - actual source workflow keeps same-shape wrong-metric refund, independent buyer and measured calls together\n  ---\n  duration_ms: 90.0083\n  type: 'test'\n  ...\n# Subtest: an old synthetic receipt cannot substitute for the source-backed public proof\nok 58 - an old synthetic receipt cannot substitute for the source-backed public proof\n  ---\n  duration_ms: 12.2142\n  type: 'test'\n  ...\n1..58\n# tests 71\n# suites 0\n# pass 71\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 15970.1443\n",
   "stderr": "",
   "runner_error": null
 }

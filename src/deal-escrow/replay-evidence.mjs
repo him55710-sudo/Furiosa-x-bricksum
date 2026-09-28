@@ -3,6 +3,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {verifyReceipt,efficiency} from './audit.ts';
 import {hash} from './domain.ts';
+import {loadBuyerRecovery} from './recovery-evidence.mjs';
 
 // A replay is one closed evidence set, never the first matching rows from a
 // mutable database. Its usage and failure-derived gate share those same IDs.
@@ -43,5 +44,5 @@ export async function loadReplay(index='artifacts/deal-escrow/sepolia/latest.jso
   const verificationMatches=verification?.run===report.run&&verification?.status==='PASS'&&report.results.every(r=>verification.results?.some(v=>v.id===r.id&&v.verdict==='VALID'&&v.sha256===createHash('sha256').update(readFileSync(path.join(directory,`${r.id}.json`))).digest('hex')));
   const energyFile=path.join(directory,'energy-estimate.json'),energy=existsSync(energyFile)?JSON.parse(readFileSync(energyFile,'utf8')):null;
   const energyMatches=energy?.run===report.run&&energy?.report_sha256===createHash('sha256').update(readFileSync(index)).digest('hex')&&energy?.measured===false;
-  return {...data,independent_verification:verificationMatches?verification:null,energy_estimate:energyMatches?energy:null};
+  return {...data,independent_verification:verificationMatches?verification:null,energy_estimate:energyMatches?energy:null,recovery:await loadBuyerRecovery(report.run,report.network.contract)};
 }

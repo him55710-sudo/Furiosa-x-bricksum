@@ -3,6 +3,7 @@ import {Wallet,BrowserProvider,JsonRpcProvider,Contract,ContractFactory,keccak25
 import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
 import path from 'node:path';
 import {acquireRuntimeLock} from './runtime-lock.mjs';
+import {observeBuyerRefund} from './buyer-refund.mjs';
 const read=p=>JSON.parse(readFileSync(p,'utf8'));
 export const UNIT_WEI=1_000_000_000n; // Test asset scale, NOT a USD conversion.
 export function finalityConfiguration({publicNetwork=false,confirmations,finalityMode}={}){
@@ -114,7 +115,7 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
     }
     return {status:'PENDING',reason:'REPLACEMENT_NOT_FOUND'};
   }
-  return {provider,contract,wallet,sellers,deployment,finalityPolicy,prepare,broadcast,inspect,revertedReceipt,reconcile,verifyStoredReceipt,async close(){try{provider.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}}};
+  return {provider,contract,wallet,sellers,deployment,finalityPolicy,prepare,broadcast,inspect,revertedReceipt,reconcile,verifyStoredReceipt,observeBuyerRefund:(dealHash,funding)=>observeBuyerRefund({provider,contract,deployment,finalityPolicy,confirmReceipt,normalizeReceipt},dealHash,funding),async close(){try{provider.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}}};
   }catch(error){try{provider?.destroy();if(transport)await transport.disconnect();}finally{runtimeLock?.release();}throw error;}
 }
 export function normalizeReceipt(r){return {transactionHash:r.hash,blockNumber:r.blockNumber,blockHash:r.blockHash,status:r.status,from:r.from,to:r.to,logs:r.logs.map(l=>({address:l.address,topics:[...l.topics],data:l.data}))};}

@@ -87,6 +87,7 @@ export class DealEngine {
     });
   }
   async deliver(id:string,raw:string){return this.serial(async()=>{
+    await this.reconcileBuyerRefund(id);
     ensure(typeof raw==='string'&&Buffer.byteLength(raw)<=2_000_000,'DELIVERY_SIZE');
     this.store.transaction(()=>{const r=this.store.get(id);ensure(r.state==='ESCROW_FUNDED','INVALID_STATE_TRANSITION');const result=validateDelivery(raw,r.deal.requirements,this.clock(),r.details.escrow.deadline);
       this.store.move(id,'DELIVERY_SUBMITTED');this.store.details(id,{delivery:raw,validation:result});this.store.event(id,'DELIVERY_SUBMITTED',{content_hash:result.content_hash,submitted_at:result.submitted_at},'seller',r.deal.seller_id);this.store.event(id,'DELIVERY_VALIDATED',result,'system','delivery-validator');if(result.verified)this.store.move(id,'DELIVERY_VERIFIED');});
@@ -110,6 +111,22 @@ export class DealEngine {
       if(kind==='release'&&['CANCELLED','REVERTED'].includes(this.store.operation(id,kind)?.status))await this.settle(id);else throw error;
     }
   }
+  async reconcileBuyerRefund(id:string){
+    const r=this.store.get(id),fund=this.store.operation(id,'fund');
+    if(!this.chain.observeBuyerRefund||r.state!=='ESCROW_FUNDED'||fund?.status!=='CONFIRMED'||this.store.operation(id,'release')||this.store.operation(id,'refund'))return false;
+    const observed=await this.chain.observeBuyerRefund(r.dealHash,fund);if(!observed)return false;
+    ensure(observed.proof.amount_wei===(BigInt(r.deal.price_minor)*BigInt(this.chain.deployment.unitWei)).toString(),'BUYER_REFUND_AMOUNT_MISMATCH');
+    this.store.transaction(()=>{
+      ensure(this.store.get(id).state==='ESCROW_FUNDED'&&!this.store.operation(id,'refund'),'STATE_CONFLICT');
+      const {escrow,proof,...operation}=observed;
+      this.store.saveOperation(id,'refund',operation);
+      this.store.details(id,{escrow,buyer_refund:proof,refund_tx:observed.txHash,settlement_reason:'BUYER_DEADLINE_REFUND',attestation_hash:proof.reason_hash});
+      this.store.event(id,'BUYER_REFUND_OBSERVED',proof,'buyer',proof.buyer);
+      this.store.move(id,'REFUNDED');
+      this.store.event(id,'ESCROW_REFUNDED',{deal_hash:r.dealHash,amount_minor:r.deal.price_minor,tx_hash:observed.txHash,chain_id:this.chain.deployment.chainId,contract:this.chain.deployment.contract,reason:'BUYER_DEADLINE_REFUND',attestation_hash:proof.reason_hash},'buyer',proof.buyer);
+    });
+    return true;
+  }
   async recover(){return this.serial(async()=>{const results=[];let observationUnavailable=false;
     // A previously observed receipt can disappear. Preserve its spent/reserved
     // accounting and require review instead of silently authorizing new money.
@@ -125,6 +142,7 @@ export class DealEngine {
     if(observationUnavailable)return results;
     for(const r of this.store.list()){
     const id=r.deal.deal_id;
+    try{if(await this.reconcileBuyerRefund(id)){results.push({id,kind:'refund',status:'BUYER_REFUND_RECONCILED'});continue;}}catch(error){results.push({id,kind:'refund',status:'PENDING_RECONCILIATION',reason:error instanceof Error?error.message:'BUYER_REFUND_OBSERVATION_UNAVAILABLE'});continue;}
     if(r.state==='POLICY_APPROVED'&&!this.store.operation(id,'fund')){
       this.store.transaction(()=>{this.store.move(id,'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:'INTERRUPTED_BEFORE_FUNDING'});});
       results.push({id,kind:'fund',status:'CANCELLED_BEFORE_SIGNING'});continue;
@@ -139,5 +157,5 @@ export class DealEngine {
       try{await this.settle(id);results.push({id,kind:'settlement',status:'RECOVERED'});}catch{results.push({id,kind:'settlement',status:'PENDING_RECONCILIATION'});}
     }
   }return results;});}
-  async expire(id:string){return this.serial(async()=>{const r=this.store.get(id);ensure(this.clock()>=r.details.escrow.deadline,'NOT_EXPIRED');await this.settle(id);return this.store.get(id);});}
+  async expire(id:string){return this.serial(async()=>{if(await this.reconcileBuyerRefund(id))return this.store.get(id);const r=this.store.get(id);ensure(this.clock()>=r.details.escrow.deadline,'NOT_EXPIRED');await this.settle(id);return this.store.get(id);});}
 }

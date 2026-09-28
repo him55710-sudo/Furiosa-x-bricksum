@@ -12,6 +12,8 @@ This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum 
 
 The newer [source-backed public run](docs/SOURCE-PUBLIC-PROOF.ko.md) uses actual Kiln extraction of four quarterly values from a transcribed issuer table. Correct delivery releases funds; a controlled wrong-metric delivery refunds; the seller's next purchase, an over-budget proposal and a revoked mandate stop before signing. It uses a separate buyer address, two real model calls (4,495 tokens), and explicitly labeled energy assumptions. Validation is against a fixed reference table, not general factual certification.
 
+A separate [application-off recovery run](docs/BUYER-RECOVERY-PROOF.ko.md) terminates the real application, waits for the on-chain deadline, and refunds with the buyer key from a process denied access to the controller key and app database. Reopening the record reconciles the refund and releases the reservation without a new controller transaction or model call. Stage 09 replays this distinct run; its independent finalized verdict is displayed separately.
+
 ```sh
 pnpm ade:replay:build
 pnpm ade:source:replay
