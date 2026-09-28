@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {Transaction} from 'ethers';
+import {openChain} from '../../src/deal-escrow/chain.mjs';
+import {DealStore} from '../../src/deal-escrow/store.ts';
+import {DealEngine} from '../../src/deal-escrow/engine.ts';
+import {now} from '../../src/deal-escrow/domain.ts';
+import {fixtureDelivery} from '../../src/deal-escrow/delivery.ts';
+import {receipt,verifyReceipt} from '../../src/deal-escrow/audit.ts';
+
+for(const [kind,rows,state,event] of [['release',52,'SETTLED','ESCROW_RELEASED'],['refund',7,'REFUNDED','ESCROW_REFUNDED']])test(`${kind}: same-intent replacement preserves original signature and verifies actual settlement`,async t=>{
+ const chain=await openChain(),store=new DealStore(':memory:'),engine=new DealEngine(store,chain);
+ t.after(async()=>{store.close();await chain.close();});const time=now(),mid=randomUUID(),id=randomUUID();
+ engine.mandate({mandate_id:mid,company_id:'replacement-test',buyer_id:'buyer',task_budget_minor:300,max_single_minor:200,allowed_sellers:['seller-a'],category:'RESEARCH_DATA',status:'ACTIVE',created_at:time,expires_at:time+1200});
+ engine.propose({deal_id:id,buyer_id:'buyer',seller_id:'seller-a',price_minor:180,currency_or_demo_asset:'DEMO',deliverable_type:'CAPEX_DATASET',requirements:{minimum_rows:40,required_columns:['company','quarter','capex','currency','source_url'],minimum_source_coverage:.9,format:'JSON'},deadline:180,created_at:time,expires_at:time+600,supersedes_deal_id:null},mid);
+ engine.agentAction('accept_deal',{deal_id:id});await engine.fund(id);
+ const broadcast=chain.broadcast;chain.broadcast=async()=>{throw new Error('LOST_BEFORE_BROADCAST');};
+ await assert.rejects(engine.deliver(id,fixtureDelivery(rows)),/LOST_BEFORE_BROADCAST/);chain.broadcast=broadcast;
+ const original=store.operation(id,kind),signed=Transaction.from(original.raw);
+ const replacement=await chain.wallet.sendTransaction({to:signed.to,data:signed.data,value:signed.value,nonce:signed.nonce,gasLimit:signed.gasLimit+1n});await replacement.wait();
+ await engine.recover();await engine.recover();
+ assert.equal(store.get(id).state,state);assert.equal(store.operation(id,kind).txHash,replacement.hash);
+ assert.equal(store.operation(id,kind).originalTxHash,original.txHash);
+ assert.equal(store.events(id).filter(e=>e.event_type===event).length,1);
+ const bundle=receipt(engine,id),verified=await verifyReceipt(bundle,chain);
+ assert.equal(bundle.transactions[kind].claim.tx_hash,original.txHash);
+ assert.equal(verified.verdict,'VALID',verified.reason);
+ const tampered=structuredClone(bundle);tampered.transactions[kind].replacement.nonce++;
+ assert.equal((await verifyReceipt(tampered,chain)).verdict,'INVALID');
+});

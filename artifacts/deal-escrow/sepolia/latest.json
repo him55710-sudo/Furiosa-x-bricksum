@@ -1,0 +1,476 @@
+{
+  "schema_version": 2,
+  "run": "d07e8650-bc47-4ecd-b138-8885d8288a04",
+  "created_at": "2026-09-28T14:51:17.483Z",
+  "completed_at": "2026-09-28T14:53:51.985Z",
+  "status": "PASS",
+  "directory": "data/private/deal-escrow/sepolia",
+  "evidence_directory": "artifacts/deal-escrow/runs/d07e8650-bc47-4ecd-b138-8885d8288a04",
+  "network": {
+    "schemaVersion": 1,
+    "chainId": 11155111,
+    "network": "sepolia",
+    "contract": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+    "controller": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+    "buyer": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+    "sellers": {
+      "seller-a": "0xF845672E01A4A4BCf3A0A150d413D33D60FC0C36",
+      "seller-b": "0x8EA58430331fadF804D1EAf78A071411a59Cd3DF"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "58bd05598942562583f68e8a272989489a0580d3b68bb41ad0e93fb2511c359d",
+    "runtimeHash": "0x3cae53ca265f2127e9a48339f15f028cbe1e343344f31ced77aed97e99d316a3",
+    "deploymentTx": "0xbd28a6f684657aedc4ce2576d7c2ac574b94648a82eae257e72d68b2d80435c7",
+    "createdAt": "2026-09-28T14:51:27.986Z",
+    "finality": {
+      "mode": "confirmations",
+      "confirmations": 2
+    }
+  },
+  "results": [
+    {
+      "scenario": "success",
+      "id": "5d130778-f7dc-434a-9bbe-26355c0a2ab2",
+      "state": "SETTLED",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "5d130778-f7dc-434a-9bbe-26355c0a2ab2",
+            "recorded_validator": "delivery-v2",
+            "current_validator": "delivery-v2",
+            "current_checks_pass": true,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T14:53:50.259Z"
+      },
+      "transactions": {
+        "fund": {
+          "status": "CONFIRMED",
+          "tx_hash": "0x0e7281178c068321f14f3e94cd5481ac5853692d877ed2f7ed42ddbe58f62d41",
+          "original_tx_hash": null,
+          "receipt": {
+            "transactionHash": "0x0e7281178c068321f14f3e94cd5481ac5853692d877ed2f7ed42ddbe58f62d41",
+            "blockNumber": 11801233,
+            "blockHash": "0x27fa0016b04a48202821e54a66ac8d296ac751d3a97a9f8b7f9b56a65019d33e",
+            "status": 1,
+            "from": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "to": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "logs": [
+              {
+                "address": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+                "topics": [
+                  "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                  "0xbaa2f50af54e39d0d9113dce6e4136522201d8eb8103e79106a7b3f3950d150f",
+                  "0x000000000000000000000000e3e6e3451ef871546a08339f0da42a2c07a5a2a9",
+                  "0x000000000000000000000000f845672e01a4a4bcf3a0a150d413d33d60fc0c36"
+                ],
+                "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006aba7fc4"
+              }
+            ],
+            "finality": {
+              "mode": "confirmations",
+              "confirmations": 2,
+              "requiredConfirmations": 2,
+              "observedBlock": 11801234,
+              "observedBlockHash": "0x023943ab9c505b2c6378e53a6522912abcf4eceeeb4aa5ddd022d6b00f228cef"
+            }
+          },
+          "claim": {
+            "kind": "fund",
+            "deal_hash": "0xbaa2f50af54e39d0d9113dce6e4136522201d8eb8103e79106a7b3f3950d150f",
+            "tx_hash": "0x0e7281178c068321f14f3e94cd5481ac5853692d877ed2f7ed42ddbe58f62d41",
+            "chain_id": 11155111,
+            "contract": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "sender": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "nonce": 1,
+            "value_wei": "180000000000",
+            "calldata_hash": "0x9a005f2688ebba15a78f23dbd5df3dccab30b39945eb1ab2a4c95d54014569f4",
+            "buyer": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "seller": "0xF845672E01A4A4BCf3A0A150d413D33D60FC0C36",
+            "amount_wei": "180000000000",
+            "delivery_window": 180,
+            "deal_expiry": 1790607704
+          },
+          "reason": null,
+          "replacement": null
+        },
+        "release": {
+          "status": "CONFIRMED",
+          "tx_hash": "0x4885281275dabcc83e13ec20b39edcc538a2eb0ab5b6c6497b8c0ea6cd8232b0",
+          "original_tx_hash": null,
+          "receipt": {
+            "transactionHash": "0x4885281275dabcc83e13ec20b39edcc538a2eb0ab5b6c6497b8c0ea6cd8232b0",
+            "blockNumber": 11801236,
+            "blockHash": "0x5e885d8f71383c807571d8e9bf63e7ecfe4208cf52a30da358e24991531d7973",
+            "status": 1,
+            "from": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "to": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "logs": [
+              {
+                "address": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+                "topics": [
+                  "0x0e334fd11ab7bea6d2bda89338c0f25674e099b70dd28aaaee262fbecba48882",
+                  "0xbaa2f50af54e39d0d9113dce6e4136522201d8eb8103e79106a7b3f3950d150f"
+                ],
+                "data": "0x1ca129a6fae9c817515419656c05cd66e11a685678087a4417ef6c865db416c300000000000000000000000000000000000000000000000000000029e8d60800"
+              }
+            ],
+            "finality": {
+              "mode": "confirmations",
+              "confirmations": 2,
+              "requiredConfirmations": 2,
+              "observedBlock": 11801237,
+              "observedBlockHash": "0x8c3a586fb0e0dbbdc86f2e0a22f98ff3ce8ba6c198cd5409d9951cbd10fa4def"
+            }
+          },
+          "claim": {
+            "kind": "release",
+            "deal_hash": "0xbaa2f50af54e39d0d9113dce6e4136522201d8eb8103e79106a7b3f3950d150f",
+            "tx_hash": "0x4885281275dabcc83e13ec20b39edcc538a2eb0ab5b6c6497b8c0ea6cd8232b0",
+            "chain_id": 11155111,
+            "contract": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "sender": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "nonce": 2,
+            "value_wei": "0",
+            "calldata_hash": "0xd65c9a963aebe877d4980adb6964cdb27329ea2bbf8ccf2cb4afca250453acee",
+            "attestation_hash": "0x1ca129a6fae9c817515419656c05cd66e11a685678087a4417ef6c865db416c3"
+          },
+          "reason": null,
+          "replacement": null
+        }
+      }
+    },
+    {
+      "scenario": "refund",
+      "id": "35e67e14-76b4-4c24-9274-2b7a4d82482a",
+      "state": "REFUNDED",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "35e67e14-76b4-4c24-9274-2b7a4d82482a",
+            "recorded_validator": "delivery-v2",
+            "current_validator": "delivery-v2",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T14:53:50.870Z"
+      },
+      "transactions": {
+        "fund": {
+          "status": "CONFIRMED",
+          "tx_hash": "0x9020bcaad098c1693d52d828ce819a41bb7c8aace0abdd5861d85a5f9e3337d5",
+          "original_tx_hash": null,
+          "receipt": {
+            "transactionHash": "0x9020bcaad098c1693d52d828ce819a41bb7c8aace0abdd5861d85a5f9e3337d5",
+            "blockNumber": 11801239,
+            "blockHash": "0x82b02378a28ba6d03e008a1360a53c4b6df094b28464e1963c1e27563c06e7a7",
+            "status": 1,
+            "from": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "to": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "logs": [
+              {
+                "address": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+                "topics": [
+                  "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                  "0x704093117300a59182455fcf1590c47a296dabb7b040a1d9f36c87bf6bbddd48",
+                  "0x000000000000000000000000e3e6e3451ef871546a08339f0da42a2c07a5a2a9",
+                  "0x0000000000000000000000008ea58430331fadf804d1eaf78a071411a59cd3df"
+                ],
+                "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006aba800c"
+              }
+            ],
+            "finality": {
+              "mode": "confirmations",
+              "confirmations": 2,
+              "requiredConfirmations": 2,
+              "observedBlock": 11801240,
+              "observedBlockHash": "0x9582c1c9d332bb81bf258b6ee774f57cc8b4a117bffb3d32f4e6c3cd4a07254b"
+            }
+          },
+          "claim": {
+            "kind": "fund",
+            "deal_hash": "0x704093117300a59182455fcf1590c47a296dabb7b040a1d9f36c87bf6bbddd48",
+            "tx_hash": "0x9020bcaad098c1693d52d828ce819a41bb7c8aace0abdd5861d85a5f9e3337d5",
+            "chain_id": 11155111,
+            "contract": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "sender": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "nonce": 3,
+            "value_wei": "180000000000",
+            "calldata_hash": "0xf5db478e1ec8de83554c1c0bb2bd2b5a3a9517fe75b57acccde7bce67c573b1a",
+            "buyer": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "seller": "0x8EA58430331fadF804D1EAf78A071411a59Cd3DF",
+            "amount_wei": "180000000000",
+            "delivery_window": 180,
+            "deal_expiry": 1790607785
+          },
+          "reason": null,
+          "replacement": null
+        },
+        "refund": {
+          "status": "CONFIRMED",
+          "tx_hash": "0x2618632ab0c3f3dce66eb61fbac9ef19c0a78976086538e771683aac92378d5d",
+          "original_tx_hash": null,
+          "receipt": {
+            "transactionHash": "0x2618632ab0c3f3dce66eb61fbac9ef19c0a78976086538e771683aac92378d5d",
+            "blockNumber": 11801241,
+            "blockHash": "0x265c56418066e7aa103523254cd858cf4b4b5c7ce791774c34a691131ccd0178",
+            "status": 1,
+            "from": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "to": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "logs": [
+              {
+                "address": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+                "topics": [
+                  "0x93abb8d9a70a9379d002f0f514c2136138c6f3259a6380f2d15fe33a1ad11b25",
+                  "0x704093117300a59182455fcf1590c47a296dabb7b040a1d9f36c87bf6bbddd48"
+                ],
+                "data": "0x5d5d95dd8e8f3361ee74627e95e09020982ee3de4f30d23a013c6b82004ed92300000000000000000000000000000000000000000000000000000029e8d60800"
+              }
+            ],
+            "finality": {
+              "mode": "confirmations",
+              "confirmations": 2,
+              "requiredConfirmations": 2,
+              "observedBlock": 11801242,
+              "observedBlockHash": "0xdfd736a65c23355cc2cdf83f2193abcbdd9dd06a1d720e8f1d4b1a4b65babe86"
+            }
+          },
+          "claim": {
+            "kind": "refund",
+            "deal_hash": "0x704093117300a59182455fcf1590c47a296dabb7b040a1d9f36c87bf6bbddd48",
+            "tx_hash": "0x2618632ab0c3f3dce66eb61fbac9ef19c0a78976086538e771683aac92378d5d",
+            "chain_id": 11155111,
+            "contract": "0x7fAFf4f3CE80c1603752A5cEa8f35a61638101b9",
+            "sender": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+            "nonce": 4,
+            "value_wei": "0",
+            "calldata_hash": "0x0278e7addd4d7931babf1b43c16276fed6be259a1e7589d70fc1de9ab27d511d",
+            "attestation_hash": "0x5d5d95dd8e8f3361ee74627e95e09020982ee3de4f30d23a013c6b82004ed923"
+          },
+          "reason": null,
+          "replacement": null
+        }
+      }
+    },
+    {
+      "scenario": "preview-denied",
+      "id": "50ed20bc-244c-456c-9103-67e3195767f5",
+      "state": "PREVIEW_REQUIRED",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "35e67e14-76b4-4c24-9274-2b7a4d82482a",
+            "recorded_validator": "delivery-v2",
+            "current_validator": "delivery-v2",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T14:53:51.754Z"
+      },
+      "transactions": {}
+    },
+    {
+      "scenario": "budget-denied",
+      "id": "2ceeeabb-6207-4080-9fb3-d62f4de611df",
+      "state": "BLOCKED",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T14:53:51.831Z"
+      },
+      "transactions": {}
+    },
+    {
+      "scenario": "expired-denied",
+      "id": "b512ba8a-6d5b-4ab8-9289-21c61735955c",
+      "state": "EXPIRED",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T14:53:51.903Z"
+      },
+      "transactions": {}
+    },
+    {
+      "scenario": "human-stop",
+      "id": "d5b5141f-d88e-461d-97f6-057317359f64",
+      "state": "BLOCKED",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T14:53:51.983Z"
+      },
+      "transactions": {}
+    }
+  ],
+  "efficiency": {
+    "generated_at": "2026-09-28T14:53:51.985Z",
+    "flows": [
+      {
+        "flow_name": "Buyer counter-offer",
+        "calls": 2,
+        "prompt_tokens": 1418,
+        "completion_tokens": 1118,
+        "total_tokens": 2536,
+        "latency_ms": 16278,
+        "missing_usage": false
+      },
+      {
+        "flow_name": "seller-a negotiation",
+        "calls": 1,
+        "prompt_tokens": 542,
+        "completion_tokens": 516,
+        "total_tokens": 1058,
+        "latency_ms": 7452,
+        "missing_usage": false
+      },
+      {
+        "flow_name": "Buyer final Deal selection",
+        "calls": 2,
+        "prompt_tokens": 1429,
+        "completion_tokens": 792,
+        "total_tokens": 2221,
+        "latency_ms": 11655,
+        "missing_usage": false
+      },
+      {
+        "flow_name": "seller-b negotiation",
+        "calls": 1,
+        "prompt_tokens": 569,
+        "completion_tokens": 516,
+        "total_tokens": 1085,
+        "latency_ms": 7429,
+        "missing_usage": false
+      }
+    ],
+    "calls": 6,
+    "deterministic_operations": [
+      {
+        "operation": "schema validation",
+        "llm_calls": 0
+      },
+      {
+        "operation": "policy checks",
+        "llm_calls": 0
+      },
+      {
+        "operation": "delivery validation",
+        "llm_calls": 0
+      },
+      {
+        "operation": "escrow authorization",
+        "llm_calls": 0
+      }
+    ],
+    "ttft": null,
+    "ttft_note": "Non-streaming API used; TTFT was not measured.",
+    "energy": {
+      "measured": false,
+      "joules": null,
+      "label": "Energy Estimate — Assumption Based",
+      "method": "If organizer supplies application-attributable average watts P, estimate E=P×sum(latency_ms)/1000. API latency includes queue/network; this is not hardware active time.",
+      "power_assumption_watts": null,
+      "source": "No organizer power assumption or application power telemetry supplied; no numerical estimate is presented.",
+      "limitations": "No application-measured energy, utilization, batching attribution, or verified baseline. Token/call totals are measured; reduction relative to another design is not yet measured."
+    }
+  },
+  "scenario_note": "Two distinct scripted company-approved task mandates. Amounts are native test assets, not USD. Synthetic CAPEX fixtures; structural validation only. Public demo uses two canonical confirmations; independent finalized verification is separate."
+}

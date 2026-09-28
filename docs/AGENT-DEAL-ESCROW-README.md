@@ -4,22 +4,7 @@ We built a verifiable escrow and financial-control layer for AI agents that nego
 
 **Verifiable escrow and financial controls for AI-to-AI digital work transactions.**
 
-This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum Challenge B specification. The previous paid-resource recovery prototype is preserved in [the legacy README](docs/LEGACY-PURCHASE-README.ko.md), not the scope of this product.
-
-## Public Sepolia proof and Korean demo
-
-The completed public run contains two fund transactions, one release, one refund, and four recorded stops. An independent RPC verified all six evidence bundles against finalized Sepolia state. The 9-step Korean demo is read-only and uses those exact records. It needs no API key or wallet.
-
-```sh
-pnpm install --frozen-lockfile
-pnpm ade:replay:build
-pnpm ade:replay
-# Open http://127.0.0.1:3410/?replay=1
-```
-
-[Public proof, architecture and demo script](docs/PUBLIC-ESCROW-PROOF.ko.md) · [Independent verification](artifacts/deal-escrow/runs/d07e8650-bc47-4ecd-b138-8885d8288a04/independent-verification.json) · [3-minute silent evidence video](artifacts/deal-escrow/public-ui/demo-3min.webm)
-
-![The failure changes the next purchase](artifacts/deal-escrow/public-ui/06.png)
+This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum Challenge B specification. The previous paid-resource recovery prototype is preserved in [the legacy README](LEGACY-PURCHASE-README.ko.md), not the scope of this product.
 
 ## Run
 
@@ -44,11 +29,9 @@ pnpm ade:demo
 pnpm ade:start
 ```
 
-`ade:demo` makes six paid API calls under this implementation request and creates new dedicated devnet identities. Do not run it merely to view existing evidence. The local server opens the latest local run's private state, or a new local service directory when the latest evidence is public; `ADE_DATA_DIR` selects a separate directory. Stop a server before opening the same chain database in another process. `ade:test` does **not** make paid model calls or public-chain transactions.
+`ade:demo` makes six paid API calls under this implementation request and creates new dedicated devnet identities. Do not run it merely to view existing evidence. The server opens the latest run's private state by default; `ADE_DATA_DIR` selects a separate directory. Stop a server before opening the same chain database in another process. `ade:test` does **not** make paid model calls or public-chain transactions.
 
-Evidence: [public run](artifacts/deal-escrow/sepolia/latest.json), [actual test runner output](artifacts/deal-escrow/tests.json), [public demo browser checks](artifacts/deal-escrow/public-ui/browser-checks.json), [trusted deployment](artifacts/deal-escrow/sepolia/trusted-deployment.json).
-
-The [persona remediation record](docs/LIMITATIONS-REMEDIATION.ko.md) covers the newer human quality floors, durable purchase intents, strict delivery validation, failure recovery and audit checks. `pnpm ade:personas` runs scripted attacks without external calls; `pnpm ade:personas:live` makes at most six real Kiln calls. `node scripts/check-deal-personas.mjs` verifies preview correction through settlement in an isolated local browser/demo.
+Evidence: [latest real demo](../artifacts/deal-escrow/latest-demo.json), [actual test runner output](../artifacts/deal-escrow/tests.json), [browser checks](../artifacts/deal-escrow/browser.json), [Sepolia readiness](../artifacts/deal-escrow/sepolia-status.json).
 
 ## 1. Problem
 
@@ -64,7 +47,7 @@ Negotiate an immutable structured Deal, enforce delegated spending, lock test as
 
 ## 4. Demo workflow
 
-1. A human approves task budget, maximum single transaction, mandate expiry, minimum rows/source coverage/required columns and maximum delivery duration.
+1. A human approves task budget, maximum single transaction and mandate expiry.
 2. Buyer and Seller use actual Kiln tools to negotiate price, minimum rows, source coverage and delivery window. Structured output is checked independently.
 3. The Buyer proposes `accept_deal(deal_id)`. Strict schema and policy decide whether funding is permitted.
 4. Native **test assets** are locked in `AgentDealEscrow`; the seller is not yet paid.
@@ -76,7 +59,7 @@ The recorded run negotiated Seller A at **2.00** units and Seller B at **1.50**.
 
 The dataset is synthetic. Source URL coverage counts well-formed HTTP(S) strings without fetching pages or proving that they substantiate the values.
 
-The main UI shows current persisted state. `/?replay=1` presents the recorded evidence on the requested 3-minute sequence and clearly labels it **not live**. `pnpm ade:record` records that replay as a silent WebM; the recording script requires Microsoft Edge and Playwright's video encoder. See [demo script](docs/AGENT-DEAL-ESCROW-DEMO.ko.md).
+The main UI shows current persisted state. `/?replay=1` presents the recorded evidence on the requested 3-minute sequence and clearly labels it **not live**. `pnpm ade:record` records that replay as a silent WebM; the recording script requires Microsoft Edge and Playwright's video encoder. See [demo script](AGENT-DEAL-ESCROW-DEMO.ko.md).
 
 ## 5. AI vs Code
 
@@ -86,7 +69,7 @@ The main UI shows current persisted state. `/?replay=1` presents the recorded ev
 | Propose acceptance/rejection | ID-only tool | Verify immutable Deal |
 | Spending authority, arithmetic, task reservation | No | Human mandate + policy + SQLite transaction |
 | Schema, canonical hash, expiry, state transitions | No | Strict validation and fail-closed transitions |
-| Delivery checks | No | JSON array, field types, unique company/quarter/currency rows, row count, URL coverage, deadline |
+| Delivery checks | No | JSON array, required fields, row count, URL coverage, deadline |
 | Settlement amount | Never | Exact accepted `price_minor`, contract-locked amount |
 | Transfer, release, refund | Never exposed as model tools | Trusted controller and contract |
 | Control Memory | Cannot create/remove rules | Canonical failure → fixed additional gate |
@@ -145,9 +128,9 @@ The evidence argument is a hash of the stored settlement attestation, including 
 
 Current end-to-end evidence is a **real local Ganache devnet**, chain ID 31338, persistent blocks/receipts and dedicated demo identities. One minor demo unit maps to 1 gwei of native test asset; 100 minor units display as 1.00 demo unit. This is not a USD exchange rate. Deployment plus four financial transactions are recorded in the real demo.
 
-The public Sepolia run is complete: actual fund, release and refund receipts are included in [the public proof](docs/PUBLIC-ESCROW-PROOF.ko.md). `pnpm ade:sepolia` resumes a durable local journal; a completed run is only rechecked, with no new inference or transfer. `pnpm ade:verify:public` uses a separate read-only RPC and finalized blocks, without the app or signer. Public execution only accepts chain ID 11155111. Existing free faucet assets funded the demo; no real ETH was bought.
+Run `pnpm ade:sepolia` after the dedicated test wallet is funded. It executes the same six-call negotiation and escrow workflow on public Sepolia. Public Sepolia is supported only for chain ID 11155111. Mainnet fails closed. At the last check, RPC access succeeded but the dedicated wallet had zero test ETH, so **public testnet fund/release/refund are not yet demonstrated**. The address is in `sepolia-status.json`; never buy real ETH for this demo. [PublicNode's Sepolia endpoint](https://ethereum.publicnode.com/?sepolia) and [Ethereum's testnet/faucet documentation](https://ethereum.org/developers/docs/networks/) describe the external setup.
 
-SQLite and external settlement are not distributed-atomic. Before broadcast, an operation claim and exact signed transaction are persisted privately. Unknown responses keep reservations; recovery reconciles the original transaction or an independently confirmed same-nonce replacement. Confirmed funding reverts release reservations; confirmed release reverts permit refund. Canonical block checks and configured finality precede local confirmation: local defaults to one confirmation and public Sepolia to two. A detected reorganization quarantines financial execution for operator review. These prototype checks are not production finality guarantees. One writer owns each runtime directory and shared Engine facades serialize the executor; this is not a distributed coordinator. The buyer has a contract refund escape after deadline, though this dedicated-wallet demo uses the same controller address as the buyer.
+SQLite and external settlement are not distributed-atomic. Before broadcast, an operation claim and exact signed transaction are persisted privately. An unknown response keeps the operation pending and its budget reserved; restart recovery rebroadcasts/reconciles the same hash. A successful receipt is required before local terminal state. The implementation uses one controller worker and a local process lock, not a distributed coordinator. A single confirmation is used for this hackathon prototype; production finality/reorg handling is not claimed. The buyer has a contract refund escape after deadline, though this dedicated-wallet demo uses the same controller address as the buyer.
 
 A mined revert is distinguished from an unknown response using the exact signed transaction hash, controller, contract and status-0 receipt. A confirmed failed release is recorded as `REVERTED`, then refunded with reason `ESCROW_RELEASE_REVERTED`; recovery resumes this path after reopening the database. A successful release whose response was lost remains pending until reconciled and must never initiate a refund. Failed funding becomes `BLOCKED`. A reverted refund requires investigation; no automatic new signed retry or production finality guarantee is claimed.
 
@@ -158,8 +141,6 @@ A mined revert is distinguished from an unknown response using the exact signed 
 **Delivery:** Seller B promises at least 40 rows and delivers 7. `DELIVERY_REQUIREMENT_FAILED` is recorded, funds return to the buyer, and `REQUIRE_PREVIEW` activates. A subsequent Deal cannot fund without a verified preview.
 
 The preview template requires 5 rows, the accepted schema and coverage, before Deal expiry. It binds to that Deal hash. It is an additional machine-verifiable precondition, not a guarantee of the final dataset's quality. Controls are company + seller scoped and have database triggers rejecting modification/deletion. Human-admin removal is future work only.
-
-The UI accepts preview and delivery JSON as files or text, reports failed checks, and resumes funding after a verified preview. New mandates bind human quality floors independently of model-generated terms. One default purchase intent persists per mandate; retries and concurrent callers reuse its Deal. Buying a separate dataset requires an explicit new purchase action. Historical mandates and delivery-v1 receipts retain their original interpretation, while the audit also reports whether their data meets current delivery-v2 checks.
 
 ## 11. Approval & evidence
 
@@ -179,7 +160,7 @@ The ten required properties are: no model-selected settlement amount; immutable 
 
 ## 13. Kiln token / energy report
 
-The public run has **6 inference calls, 3,958 prompt tokens, 2,942 completion tokens, 6,900 total tokens**. Flow-level rows are in the [public report](artifacts/deal-escrow/sepolia/latest.json). The earlier local run had 6,541 tokens and is retained as historical evidence; totals from different workflows are not combined.
+The stored live run has **6 inference calls, 3,476 prompt tokens, 3,065 completion tokens, 6,541 total tokens**. Aggregate measured call latency is 45.919 seconds. Flow-level rows are in the report and UI; values are not benchmark projections.
 
 Schema validation, policy, delivery validation and escrow authorization make zero LLM calls. No before/after token reduction claim is made without a measured baseline.
 
@@ -193,7 +174,7 @@ Schema validation, policy, delivery validation and escrow authorization make zer
 - Control Memory activates predefined trusted enforcement templates; it does not learn or relax financial policies.
 - No production KYC/AML, real money, production custody, enterprise identity or dispute arbitration.
 - No claim of formal verification, 100% security, perfect distributed atomicity, finality/reorg resilience, measured energy or guaranteed model accuracy.
-- Public testnet financial execution is verified, but not a production custody, legal compliance or data-truth guarantee. Task principal limits do not include operator-funded network gas.
+- Public testnet financial execution remains unverified until test ETH is available. A local devnet transaction must not be labeled Sepolia.
 - No completed human-observer study. Receipt reconstruction is currently verified by automated checks and browser tests.
 
 ## 15. Future work

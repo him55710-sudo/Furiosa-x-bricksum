@@ -27,7 +27,22 @@
     "verify:system": "node scripts/verify-system.mjs",
     "verify:live": "node --env-file-if-exists=.env.local scripts/verify-system.mjs --suite=live",
     "verify:browser": "node scripts/verify-system.mjs --suite=browser",
-    "verify:personas": "node scripts/verify-system.mjs --suite=personas"
+    "verify:personas": "node scripts/verify-system.mjs --suite=personas",
+    "ade:contracts": "node scripts/compile-deal-escrow.mjs",
+    "ade:check": "tsc --project tsconfig.deal-escrow.json",
+    "ade:build": "tsc --project tsconfig.deal-escrow.json && vite build --config vite.deal-escrow.config.ts",
+    "ade:test": "node scripts/test-deal-escrow.mjs",
+    "ade:demo": "node --env-file-if-exists=.env.local scripts/demo-deal-escrow.mjs",
+    "ade:start": "node --env-file-if-exists=.env.local src/deal-escrow/server.mjs",
+    "ade:record": "node scripts/record-deal-escrow.mjs",
+    "ade:sepolia": "node --env-file-if-exists=.env.local scripts/demo-deal-escrow-public.mjs",
+    "ade:replay": "node src/deal-escrow/evidence-server.mjs",
+    "ade:replay:build": "tsc --project tsconfig.deal-escrow-public.json && vite build --config vite.deal-escrow-public.config.ts",
+    "ade:verify:public": "node scripts/verify-deal-escrow-public.mjs",
+    "ade:browser": "node scripts/check-deal-escrow-browser.mjs",
+    "ade:verify": "node scripts/verify-deal-escrow.mjs",
+    "ade:personas": "node scripts/verify-deal-personas.mjs",
+    "ade:personas:live": "node --env-file-if-exists=.env.local scripts/verify-deal-personas.mjs --live"
   },
   "dependencies": {
     "ethers": "^6.17.0",
