@@ -110,7 +110,7 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
         if((replacement.input??replacement.data)?.toLowerCase()!==signed.data.toLowerCase()||BigInt(replacement.value)!==signed.value)return {status:'PENDING',reason:'REPLACEMENT_INTENT_MISMATCH'};
         return {status:'CONFIRMED',receipt:{...normalizeReceipt(actual),finality},replacement:{originalTxHash:op.txHash,nonce:signed.nonce,replacementTxHash:replacement.hash}};
       }
-      if(escrow.status!==({fund:0,release:1,refund:1}[kind]))return {status:'PENDING',reason:'EXTERNAL_SETTLEMENT_REQUIRES_RECONCILIATION'};
+      if(escrow.status!==({fund:0,release:1,refund:1}[kind])&&!(kind!=='fund'&&escrow.status===3))return {status:'PENDING',reason:'EXTERNAL_SETTLEMENT_REQUIRES_RECONCILIATION'};
       return {status:'REPLACED',replacement:{originalTxHash:op.txHash,nonce:signed.nonce,replacementTxHash:replacement.hash,receipt:{...normalizeReceipt(actual),finality},escrow,basisBlockNumber:height,basisBlockHash:confirmed.hash,observedBlock:finality.observedBlock,observedBlockHash:finality.observedBlockHash}};
     }
     return {status:'PENDING',reason:'REPLACEMENT_NOT_FOUND'};

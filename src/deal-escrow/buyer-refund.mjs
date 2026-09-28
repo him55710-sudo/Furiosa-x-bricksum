@@ -49,15 +49,18 @@ export async function observeBuyerRefund({provider,contract,deployment,finalityP
   await confirmReceipt(provider,fund,finalityPolicy);
   const log=await findBuyerRefundEvent({provider,contract},dealHash,fund,search);
   const mined=await provider.getTransactionReceipt(log.transactionHash),tx=await provider.getTransaction(log.transactionHash);
-  check(mined?.status===1&&tx&&same(mined.to,deployment.contract)&&same(mined.from,deployment.buyer)&&same(tx.from,deployment.buyer),'BUYER_REFUND_SENDER_MISMATCH');
+  check(mined?.status===1&&tx&&same(mined.to,deployment.contract)&&same(tx.to,deployment.contract)&&same(mined.from,tx.from)&&(same(tx.from,deployment.buyer)||same(tx.from,deployment.controller)),'BUYER_REFUND_SENDER_MISMATCH');
   check(mined.hash===log.transactionHash&&tx.hash===log.transactionHash&&mined.blockNumber===log.blockNumber&&mined.blockHash===log.blockHash,'BUYER_REFUND_EVENT_RECEIPT_MISMATCH');
   const finality=await confirmReceipt(provider,mined,finalityPolicy),block=await provider.getBlock(mined.blockNumber);
   check(block?.hash===mined.blockHash,'CHAIN_REORG_DETECTED');
   const decoded=contract.interface.parseTransaction({data:tx.data,value:tx.value}),reason=log.args.reasonHash;
   check(decoded?.name==='refund'&&decoded.args[0]===dealHash&&decoded.args[1]===reason&&tx.value===0n&&Number(tx.chainId)===deployment.chainId,'BUYER_REFUND_CALL_MISMATCH');
-  check(same(escrow.buyer,deployment.buyer)&&block.timestamp>=Number(escrow.deadline)&&log.args.amount===escrow.amount,'BUYER_REFUND_DEADLINE_MISMATCH');
   const confirmedLogs=mined.logs.filter(l=>same(l.address,deployment.contract)).map(l=>{try{return contract.interface.parseLog(l);}catch{return null;}}).filter(l=>l?.name==='Refunded'&&l.args.dealHash===dealHash);
   check(confirmedLogs.length===1&&confirmedLogs[0].args.reasonHash===reason&&confirmedLogs[0].args.amount===escrow.amount,'BUYER_REFUND_EVENT_RECEIPT_MISMATCH');
+  // A controller refund, including its equivalent nonce replacement, belongs
+  // to the existing signed-operation recovery path rather than buyer recovery.
+  if(same(tx.from,deployment.controller))return null;
+  check(same(escrow.buyer,deployment.buyer)&&block.timestamp>=Number(escrow.deadline)&&log.args.amount===escrow.amount,'BUYER_REFUND_DEADLINE_MISMATCH');
   const funded=fund.logs.filter(l=>same(l.address,deployment.contract)).map(l=>{try{return contract.interface.parseLog(l);}catch{return null;}}).find(l=>l?.name==='Funded'&&l.args.dealHash===dealHash);
   check(funded&&same(funded.args.buyer,escrow.buyer)&&same(funded.args.seller,escrow.seller)&&funded.args.amount===escrow.amount&&funded.args.deadline===escrow.deadline,'BUYER_REFUND_ESCROW_MISMATCH');
   return {status:'CONFIRMED',actor:'buyer',txHash:tx.hash,receipt:{...normalizeReceipt(mined),finality},claim:{kind:'refund',deal_hash:dealHash,tx_hash:tx.hash,chain_id:Number(tx.chainId),contract:tx.to,sender:tx.from,nonce:tx.nonce,value_wei:'0',calldata_hash:hash(tx.data),attestation_hash:reason},proof:{schema_version:1,deal_hash:dealHash,funding_tx_hash:fund.hash,refund_tx_hash:tx.hash,buyer:escrow.buyer,seller:escrow.seller,amount_wei:escrow.amount.toString(),deadline:Number(escrow.deadline),refund_block_timestamp:block.timestamp,reason_hash:reason},escrow:{buyer:escrow.buyer,seller:escrow.seller,amount:escrow.amount.toString(),deadline:Number(escrow.deadline),status:3}};

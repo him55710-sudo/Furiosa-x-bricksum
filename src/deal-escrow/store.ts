@@ -58,6 +58,7 @@ export class DealStore {
   }return {spent,reserved};}
   operation(id:string,kind:string){const r=this.db.prepare('SELECT body FROM operations WHERE deal_id=? AND kind=?').get(id,kind) as any;return r?JSON.parse(r.body):null;}
   saveOperation(id:string,kind:string,body:any){this.db.prepare('INSERT INTO operations VALUES(?,?,?) ON CONFLICT(deal_id,kind) DO UPDATE SET body=excluded.body').run(id,kind,JSON.stringify(body));}
+  archiveControllerOperation(id:string,kind:string){const op=this.operation(id,kind);ensure(['release','refund'].includes(kind)&&op&&['REVERTED','CANCELLED'].includes(op.status)&&!this.operation(id,'controller_'+kind),'CONTROLLER_OPERATION_NOT_RESOLVED');this.saveOperation(id,'controller_'+kind,op);this.db.prepare('DELETE FROM operations WHERE deal_id=? AND kind=?').run(id,kind);}
   scan(id:string,kind:string){const r=this.db.prepare('SELECT body FROM reconciliation_scans WHERE deal_id=? AND kind=?').get(id,kind) as any;return r?JSON.parse(r.body):null;}
   saveScan(id:string,kind:string,body:any){if(body===null)this.db.prepare('DELETE FROM reconciliation_scans WHERE deal_id=? AND kind=?').run(id,kind);else this.db.prepare('INSERT INTO reconciliation_scans VALUES(?,?,?) ON CONFLICT(deal_id,kind) DO UPDATE SET body=excluded.body').run(id,kind,JSON.stringify(body));}
   telemetry(id:string,body:any){this.db.prepare('INSERT INTO telemetry VALUES(?,?,?)').run(randomUUID(),id,JSON.stringify(body));}

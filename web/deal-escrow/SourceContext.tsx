@@ -25,7 +25,15 @@ export function SourceContext({deal,evidence,documents}:{deal:any;evidence:any;d
  </section>;
 }
 
-const eventLabels:Record<string,string>={MANDATE_CREATED:'사람이 예산·납품 조건 승인',NEGOTIATION_EVIDENCE:'모델 견적 판단 기록',DEAL_ACCEPTED:'고정된 거래 조건 수락',TRANSACTION_BLOCKED:'거래 진행 차단',PREVIEW_VALIDATED:'샘플 검사',ESCROW_FUNDED:'에스크로에 대금 예치',DELIVERY_VALIDATED:'최종 납품 검사',ESCROW_RELEASED:'공급자에게 지급',ESCROW_REFUNDED:'구매자에게 환불',BUYER_REFUND_OBSERVED:'구매자의 직접 환불 확인',MANDATE_REVOKED:'사람이 위임 중지'};
+export function BuyerRefundSummary({evidence,attempts=[],amount}:{evidence:any;attempts?:any[];amount:number}){
+ if(!evidence.buyer_refund)return null;
+ return <section className="source-context" aria-label="구매자 직접 환불과 이전 정산 시도"><p className="eyebrow">최종 자금 이동</p><h3>구매자가 마감 후 직접 회수했습니다.</h3><p><strong>{(amount/100).toFixed(2)} 테스트 단위가 구매자에게 반환됐습니다.</strong> 납품 검수 기록과 실제 지급 결과를 구분합니다. 아래 체인 대조에서 환불 근거를 확인할 수 있습니다.</p>
+ {evidence.controller_settlement&&<><h3>앞서 진행하던 운영자 정산은 어떻게 됐나요?</h3>{attempts.length?<ul>{attempts.map(op=><li key={op.kind}>{op.kind==='release'?'공급자 지급 시도':'운영자 환불 시도'} · {op.status==='REVERTED'?'체인에서 실패':op.claim?'같은 nonce의 다른 거래로 취소':'서명 전에 취소'} · 원금 이전 없음</li>)}</ul>:<p>납품 기록만 저장됐고 운영자 정산 거래는 생성되지 않았습니다.</p>}<p>실패·취소된 시도를 지우지 않고 최종 구매자 환불과 함께 보존했습니다. 서명된 거래의 가스 비용은 원금과 별도입니다.</p></>}
+ {!!attempts.length&&<details><summary>이전 정산 시도의 거래 증거</summary>{attempts.map(op=><div key={op.kind}><p>{op.kind==='release'?'공급자 지급':'운영자 환불'} · {op.status}</p><code>{op.tx_hash??'서명 전 취소 — 거래 해시 없음'}</code>{op.replacement&&<p>nonce를 사용한 대체 거래<code>{op.replacement.replacementTxHash}</code></p>}</div>)}</details>}
+ </section>;
+}
+
+const eventLabels:Record<string,string>={MANDATE_CREATED:'사람이 예산·납품 조건 승인',NEGOTIATION_EVIDENCE:'모델 견적 판단 기록',DEAL_ACCEPTED:'고정된 거래 조건 수락',TRANSACTION_BLOCKED:'거래 진행 차단',PREVIEW_VALIDATED:'샘플 검사',ESCROW_FUNDED:'에스크로에 대금 예치',DELIVERY_VALIDATED:'최종 납품 검사',ESCROW_RELEASED:'공급자에게 지급',ESCROW_REFUNDED:'구매자에게 환불',ESCROW_TRANSACTION_REVERTED:'운영자 거래가 체인에서 실패',ESCROW_TRANSACTION_REPLACED:'운영자 거래의 nonce 대체 확인',BUYER_REFUND_SUPERSEDED_CONTROLLER:'앞선 정산 시도를 보존하고 구매자 환불 반영',BUYER_REFUND_OBSERVED:'구매자의 직접 환불 확인',MANDATE_REVOKED:'사람이 위임 중지'};
 export function EvidenceTimeline({receipt}:{receipt:any}){
  const events=[...receipt.mandate_history,...receipt.events].filter(e=>eventLabels[e.event_type]).sort((a,b)=>a.timestamp.localeCompare(b.timestamp));
  return <section className="evidence-timeline" aria-label="승인부터 정산까지 저장된 사건 순서"><h3>승인부터 정산까지</h3><p className="muted">저장된 사건 순서입니다. 위임의 현재 상태와 거래 당시 검사를 구분하며, 체인 대조 결과는 별도로 확인합니다.</p><ol>{events.map(e=>{const payload=e.structured_payload;return <li key={e.event_id}><time dateTime={e.timestamp}><span className="event-date">{new Date(e.timestamp).toLocaleDateString('ko-KR')}</span>{new Date(e.timestamp).toLocaleTimeString('en-GB',{hour12:false})}</time><div><strong>{eventLabels[e.event_type]}</strong>{e.event_type==='MANDATE_CREATED'&&<span>예산 {(payload.task_budget_minor/100).toFixed(2)} · 건별 최대 {(payload.max_single_minor/100).toFixed(2)} 테스트 단위</span>}{typeof payload.verified==='boolean'&&<span className={payload.verified?'pass':'fail'}>{payload.row_count}행 · {payload.verified?'검사 통과':'검사 실패'}</span>}{payload.reason&&<span>{payload.reason}</span>}{e.event_type==='MANDATE_REVOKED'&&<span>완료된 지급은 취소되지 않습니다.</span>}</div></li>;})}</ol></section>;

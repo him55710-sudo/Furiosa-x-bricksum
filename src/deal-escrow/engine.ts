@@ -41,6 +41,7 @@ export class DealEngine {
     ensure(!this.store.list().some(row=>row.details.reconciliation_required),'CHAIN_RECONCILIATION_REQUIRED');
     const alreadySigned=!!op.raw;
     if(!op.raw){
+      if(kind!=='fund'&&await this.reconcileBuyerRefund(id))return;
       const unresolved=this.store.list().some(row=>['fund','release','refund'].some(action=>{const other=this.store.operation(row.deal.deal_id,action);return (row.deal.deal_id!==id||action!==kind)&&other?.status==='PENDING'&&other.raw;}));
       ensure(!unresolved,'CHAIN_PREDECESSOR_UNRESOLVED');
       // Last authorization re-check immediately before signing. Once signed, reconcile that exact tx.
@@ -100,6 +101,7 @@ export class DealEngine {
     await this.settle(id);return this.store.get(id);
   });}
   async settle(id:string){
+    if(await this.reconcileBuyerRefund(id))return;
     const r=this.store.get(id);ensure(['DELIVERY_SUBMITTED','DELIVERY_VERIFIED','ESCROW_FUNDED'].includes(r.state),'INVALID_STATE_TRANSITION');
     const time=this.clock(),checks=this.checks(id,time),failed=checks.find(c=>!c.pass);const expired=time>=r.details.escrow.deadline;
     ensure(r.details.validation||expired,'DELIVERY_REQUIRED');
@@ -119,11 +121,28 @@ export class DealEngine {
   }
   async reconcileBuyerRefund(id:string){
     const r=this.store.get(id),fund=this.store.operation(id,'fund');
-    if(!this.chain.observeBuyerRefund||r.state!=='ESCROW_FUNDED'||fund?.status!=='CONFIRMED'||this.store.operation(id,'release')||this.store.operation(id,'refund'))return false;
+    if(!this.chain.observeBuyerRefund||!['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED'].includes(r.state)||fund?.status!=='CONFIRMED')return false;
+    const attempts=['release','refund'].flatMap(kind=>{const op=this.store.operation(id,kind);return op?[{kind,op}]:[];});
+    if(attempts.some(({op})=>op.status==='CONFIRMED'))return false;
     const observed=await this.chain.observeBuyerRefund(r.dealHash,fund,{cursor:this.store.scan(id,'buyer-refund'),onProgress:(cursor:unknown)=>this.store.saveScan(id,'buyer-refund',cursor)});if(!observed)return false;
+    // A buyer refund cannot consume the controller's signed nonce. Resolve the
+    // exact transaction/replacement before archiving it or freeing the budget.
+    if(attempts.some(({op})=>op.status==='PENDING'&&op.raw))return false;
     ensure(observed.proof.amount_wei===(BigInt(r.deal.price_minor)*BigInt(this.chain.deployment.unitWei)).toString(),'BUYER_REFUND_AMOUNT_MISMATCH');
     this.store.transaction(()=>{
-      ensure(this.store.get(id).state==='ESCROW_FUNDED'&&!this.store.operation(id,'refund'),'STATE_CONFLICT');
+      ensure(this.store.get(id).state===r.state,'STATE_CONFLICT');
+      if(attempts.length||r.details.validation){
+        const context={prior_state:r.state,attestation:r.details.attestation??null,attestation_hash:r.details.attestation_hash??null,settlement_reason:r.details.settlement_reason??null};
+        const summaries=[];
+        for(const {kind,op} of attempts){
+          if(op.status==='PENDING')this.store.saveOperation(id,kind,{...op,status:'CANCELLED',reason:'BUYER_REFUND_CONFIRMED'});
+          const resolved=this.store.operation(id,kind);
+          this.store.archiveControllerOperation(id,kind);
+          summaries.push({kind,status:resolved.status,tx_hash:resolved.txHash??null,reason:resolved.reason??null});
+        }
+        this.store.details(id,{controller_settlement:context,attestation:null});
+        this.store.event(id,'BUYER_REFUND_SUPERSEDED_CONTROLLER',{context,operations:summaries});
+      }
       const {escrow,proof,...operation}=observed;
       this.store.saveOperation(id,'refund',operation);
       this.store.saveScan(id,'buyer-refund',null);
@@ -131,6 +150,7 @@ export class DealEngine {
       this.store.event(id,'BUYER_REFUND_OBSERVED',proof,'buyer',proof.buyer);
       this.store.move(id,'REFUNDED');
       this.store.event(id,'ESCROW_REFUNDED',{deal_hash:r.dealHash,amount_minor:r.deal.price_minor,tx_hash:observed.txHash,chain_id:this.chain.deployment.chainId,contract:this.chain.deployment.contract,reason:'BUYER_DEADLINE_REFUND',attestation_hash:proof.reason_hash},'buyer',proof.buyer);
+      if(r.details.validation?.failure_reason_code==='DELIVERY_REQUIREMENT_FAILED')this.store.activate(this.store.mandate(r.mandateId).company_id,r.deal.seller_id,id,r.details.validation);
     });
     return true;
   }
@@ -155,6 +175,7 @@ export class DealEngine {
       results.push({id,kind:'fund',status:'CANCELLED_BEFORE_SIGNING'});continue;
     }
     for(const kind of ['fund','release','refund'] as const){if(this.store.operation(id,kind)?.status==='PENDING'){try{await this.execute(id,kind);results.push({id,kind,status:'RECOVERED'});}catch{results.push({id,kind,status:this.store.operation(id,kind)?.status==='REVERTED'?'REVERTED':'PENDING_RECONCILIATION'});}}}
+    try{if(await this.reconcileBuyerRefund(id)){results.push({id,kind:'refund',status:'BUYER_REFUND_RECONCILED'});continue;}}catch(error){results.push({id,kind:'refund',status:'PENDING_RECONCILIATION',reason:error instanceof Error?error.message:'BUYER_REFUND_OBSERVATION_UNAVAILABLE'});continue;}
     // Also covers a restart between saving a mined revert and starting the refund.
     if(['REVERTED','CANCELLED'].includes(this.store.operation(id,'release')?.status)&&!this.store.operation(id,'refund')){
       try{await this.settle(id);results.push({id,kind:'refund',status:'RECOVERED'});}catch{results.push({id,kind:'refund',status:'PENDING_RECONCILIATION'});}
