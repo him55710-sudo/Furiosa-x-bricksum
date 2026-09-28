@@ -50,7 +50,7 @@ export class Engine {
     const s=this.session(id),runId=hash({id,requestId});
     const existing=this.store.get('run',runId);if(existing)return existing;
     if(s.status!=='ACTIVE')throw new Error('MANDATE_INACTIVE');
-    const run={id:runId,sessionId:id,scenarioId,arm:s.policy.arm,status:'QUEUED',reason:null,createdAt:new Date().toISOString(),usage:[],quotes:[],quoteMetrics:{early:0,final:0,cacheHits:0,latencyMs:0,syntheticDelayMs:quoteDelayMs},proposal:null,offer:null,authorization:null,tx:null,receipt:null,paymentKey:hash({runId,purpose:'one-payment'}),controls:[],transitions:0};
+    const run={id:runId,sessionId:id,scenarioId,arm:s.policy.arm,status:'QUEUED',reason:null,createdAt:new Date().toISOString(),usage:[],quotes:[],quoteMetrics:{early:0,final:0,attempts:{early:0,final:0},rejected:0,cacheHits:0,latencyMs:0,syntheticDelayMs:quoteDelayMs},proposal:null,offer:null,authorization:null,tx:null,receipt:null,paymentKey:hash({runId,purpose:'one-payment'}),controls:[],transitions:0};
     this.store.put('run',runId,run);this.store.event(id,'RUN_QUEUED',{scenarioId,arm:run.arm},runId);
     const job=Promise.resolve().then(()=>this.execute(runId,quoteDelayMs)).finally(()=>this.jobs.delete(runId));this.jobs.set(runId,job);return run;
   }

@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {getAddress,verifyMessage} from 'ethers';
 import {verifyBundle} from './verifier.mjs';
 import {SCENARIOS} from './fixtures.mjs';
+import {readBenchmark} from './benchmark.mjs';
 import {MODEL,MANDATE_TYPES,REVOKE_TYPES,sameAddress,nowSeconds} from '../shared/schema.mjs';
 
 // Production and verification use the same HTTP handlers. Dependencies are supplied
@@ -55,7 +56,7 @@ app.post('/api/sessions/:id/run',(req,res)=>{owned(req,req.params.id);res.status
 app.post('/api/sessions/:id/stop',async(req,res)=>{owned(req,req.params.id);res.json(await engine.stop(req.params.id,req.body.signature));});
 app.get('/api/sessions/:id/events',(req,res)=>{owned(req,req.params.id);res.json(store.events(req.params.id));});
 app.get('/api/runs/:id/evidence',(req,res)=>{const run=store.get('run',req.params.id);if(!run)return res.status(404).json({error:'RUN_NOT_FOUND'});owned(req,run.sessionId);res.setHeader('Content-Disposition',`attachment; filename="control-memory-${run.id.slice(2,10)}.json"`);res.json(engine.bundle(run.id));});
-app.get('/api/benchmark',async(req,res)=>{try{res.json(JSON.parse(await readFile('artifacts/experiments/latest.json','utf8')));}catch{res.json({status:'NOT_RUN',rows:[]});}});
+app.get('/api/benchmark',async(req,res)=>{try{res.json(await readBenchmark());}catch(error){res.json({status:error.code==='ENOENT'?'NOT_RUN':'EVIDENCE_UNAVAILABLE',rows:[]});}});
 app.use(express.static('dist',{index:'index.html'}));
 app.get('/{*path}',(req,res)=>res.sendFile('index.html',{root:'dist'}));
 app.use((err,req,res,next)=>{const code=/^[A-Z][A-Z0-9_]{1,80}$/.test(err?.message??'')?err.message:'REQUEST_FAILED';res.status(code==='FORBIDDEN'?403:400).json({error:code});});
