@@ -21,7 +21,7 @@
 
 구매자 도구는 별도 Node 프로세스로 실행했다. 파일 읽기 권한은 공개 자료·프로그램 의존성·구매자 전용 키와 거래 journal로 제한했다. 운영자 키와 앱 DB 경로는 허용하지 않았다. 이는 악성 코드에 대한 범용 보안 샌드박스나 실제 고객의 개인 키 관리 시스템을 검증한 것이 아니다.
 
-앱의 진행 기준은 canonical 2 confirmations다. 별도 Tenderly RPC의 `finalized` 판정은 [독립 검증 파일](../artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/independent-verification.json)을 따른다. 아직 해당 거래가 최종 확정 블록에 들어오지 않은 관측에서는 `INCOMPLETE / CHAIN_FINALITY_PENDING`을 표시하며, UI에서도 완료 배지를 붙이지 않는다.
+앱의 진행 기준은 canonical 2 confirmations다. 별도 Tenderly RPC의 [독립 검증](../artifacts/deal-escrow/source-recovery/5b2ccb95-10b9-4f62-a51a-73761d51c336/independent-verification.json)은 finalized block **11,801,738**에서 **PASS / VALID**를 확인했다. 그 전 관측은 `INCOMPLETE / CHAIN_FINALITY_PENDING`으로 표시했으며, 최종 확정 이전에 완료 배지를 붙이지 않았다.
 
 ## 비용과 지연을 숨기지 않는다
 
