@@ -6,8 +6,9 @@
 
 ## 확인한 현재 상태
 
-- 구현 기준 커밋 `33fc444`, 실행 소스 지문 `fcc202e6ab29f3ba4c94ecbd8136938880377d9e1349b90bdfb7df73e4f9f905`. [Node 실행 보고서](../artifacts/deal-escrow/tests.json)는 101/101, 실패·건너뛰기 0이며 현재 앱/테스트 소스와 일치한다. 이 감사의 문서·영상 변경은 앱 소스를 바꾸지 않는다.
-- TypeScript/Vite 빌드는 해당 소스에서 통과했다. [재시작 후 검사](../artifacts/deal-escrow/nonce-recovery/runtime-checks.json)는 로컬 작업 2건과 정산 경합 1건의 상태·해시·블록을 보존하고 영수증 모두 `VALID`를 확인했다.
+- 현재 저장소 기준 자동 검사 커밋 `b3ff2c3`, 소스 지문 `40741369a95ceb694c7fede80101bbd7301f400b32b7a3dfa3e2558b33362f50`. [실제 Ubuntu CI 보고서](../artifacts/deal-escrow/tests.json)는 101/101, 실패·건너뛰기 0이며 현재 앱/테스트 소스와 일치한다. [실행·산출물 대조 기록](../artifacts/deal-escrow/ci/36472682269.json)에 Actions 실행과 원본 보고서 해시를 연결했다.
+- 과거 Windows 검사 소스 `fcc202e6ab29f3ba4c94ecbd8136938880377d9e1349b90bdfb7df73e4f9f905`와의 차이는 6개 파일의 CRLF/LF뿐이었다. 각 파일을 Git에 저장된 바이트와 대조한 뒤 작업본을 기존 `.gitattributes`의 LF 기준에 맞췄다. 과거 거래·검사 기록의 지문은 소급 변경하지 않았다. 동작 코드는 바뀌지 않았다.
+- 새 Ubuntu 환경에서 계약 재컴파일 산출물 일치와 live/replay 두 TypeScript/Vite 빌드가 통과했다. 이전 [재시작 후 검사](../artifacts/deal-escrow/nonce-recovery/runtime-checks.json)는 로컬 작업 2건과 정산 경합 1건의 상태·해시·블록을 보존하고 영수증 모두 `VALID`를 확인한 별도 Windows 관측이다.
 - 현재 읽기 전용 재생 API는 원문 실행 `a2f6f4fa`의 지급·환불·샘플 차단·예산 차단·승인 중지 5건과 별도 회수 `5b2ccb95`를 반환했다. 저장된 독립 RPC 판정은 각각 finalized block 11,801,516과 11,801,738의 관측이며 현재 시각의 재실행으로 표시하지 않는다.
 - 참여자 서비스 `/api/study`의 실제 사람 자기신고 응답 0, 검토된 사람 0. 자동 QA 1건은 사람으로 세지 않는다. 영수증 재구성이나 원문 검토를 실제 사람에게 관찰한 증거가 없다.
 
