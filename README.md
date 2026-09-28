@@ -2,11 +2,11 @@ We built a spending-control and escrow prototype for research-agent developers c
 
 # Agent Deal Escrow
 
-**Verifiable escrow and financial controls for AI-to-AI digital work transactions.**
+**Pay for the financial-data extraction you approved, with verifiable delivery and settlement.**
 
-This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum Challenge B specification. The previous paid-resource recovery prototype is preserved in [the legacy README](docs/LEGACY-PURCHASE-README.ko.md), not the scope of this product.
+This GWDC 2026 FuriosaAI × Bricksum Challenge B prototype focuses on one commissioned research-data extraction job. The previous paid-resource recovery prototype is preserved in [the legacy README](docs/LEGACY-PURCHASE-README.ko.md).
 
-[Focused product plan and user-need evidence](docs/FOCUSED-PRODUCT-PLAN.ko.md): one paid financial-data extraction job, the developer accountable for its result and cost, and explicit limits of reference-based validation. This plan distinguishes the completed synthetic-data public proof below from the proposed source-backed workflow and pending customer validation.
+[Focused product plan and user-need evidence](docs/FOCUSED-PRODUCT-PLAN.ko.md): one paid financial-data extraction job, the developer accountable for its result and cost, and explicit limits of reference-based validation. The source-backed and application-off runs are implemented; unseen-document generalization, transaction economics and customer validation remain pending. Older synthetic evidence is kept separately.
 
 ## Public Sepolia proof and Korean demo
 
@@ -66,17 +66,30 @@ The [persona remediation record](docs/LIMITATIONS-REMEDIATION.ko.md) covers the 
 
 ## 1. Problem
 
-When one AI agent hires another for digital work, paying before delivery creates avoidable financial exposure. An LLM can negotiate useful terms, but its language and tool proposals must not become unrestricted wallet instructions.
+An external worker can return a plausible four-row financial table with the wrong metric. The developer operating the research agent needs to stop payment, explain the failed condition and require evidence before another purchase from that supplier. A table that merely has the right JSON shape and source links is insufficient.
 
 ## 2. Persona
 
-An AI Platform Lead at an AI-native research company delegates small dataset purchases to Research Agent 07. The concrete task is a 2025–2026 Korean EV battery CAPEX dataset. This is a research-data transaction prototype, not corporate finance or procurement software. No validated customer adoption is claimed.
+A developer at a small research-automation team already commissioning paid, asynchronous document extraction from an external supplier. The current task is four quarterly facility-investment outflow values from LG Energy Solution's official 2025 Q4 report. The candidate user must have unresolved delivery/refund problems despite existing provider billing; the supplier must accept the agreed verification rules. Public workflow examples support this user hypothesis, but no customer adoption or willingness to pay has been validated.
 
 ## 3. Declared function
 
-Negotiate an immutable structured Deal, enforce delegated spending, lock test assets, validate deterministic delivery conditions, and release or refund with reconstructable evidence. A verified failure can activate a predefined seller-specific preview gate. Escrow, structured offers and tool calling are not claimed as novel.
+Help research-agent developers commission a bounded financial-data extraction job and pay only after the approved delivery checks pass, with a reconstructable receipt for payment or refund. A verified failure can activate a predefined seller-specific preview gate. Escrow, structured offers and tool calling are not claimed as novel.
 
 ## 4. Demo workflow
+
+### Current source-backed demo — port 3413
+
+1. A person approves the source version, metric, four quarters, unit, supplier, budget and deadline.
+2. Kiln Qwen3-32B compares offers and extracts the transcribed source table. Code checks the proposed immutable Deal before funding escrow.
+3. Correct delivery matches the pinned reference and releases the locked test principal.
+4. A separate fault-injection delivery keeps four rows and source fields but substitutes a different metric's value. Validation fails and refunds; a subsequent deal from that supplier requires a preview before funding.
+5. Over-budget and revoked-mandate proposals stop before signing, with recorded reasons.
+6. In a separate unpaid deal, the actual application is stopped. After the real chain deadline, the buyer independently refunds; reopening the record reconciles the reservation with no controller transaction or inference.
+
+Source and recovery receipts, transaction hashes, flow usage and independent finality are available in the linked proof documents. The replay is read-only. Its four reference values are fixed in advance, so this run does not establish automatic verification of unseen documents. The deliberately tiny recovery principal also does not establish viable transaction economics.
+
+### Earlier synthetic regression workflow — port 3410
 
 1. A human approves task budget, maximum single transaction, mandate expiry, minimum rows/source coverage/required columns and maximum delivery duration.
 2. Buyer and Seller use actual Kiln tools to negotiate price, minimum rows, source coverage and delivery window. Structured output is checked independently.
