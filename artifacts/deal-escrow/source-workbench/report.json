@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-09-28T17:49:00.276Z",
+  "execution": "browser-driven live application",
+  "network": "local-devnet",
+  "chain_id": 31338,
+  "public_testnet": false,
+  "source_fingerprint": "d9437c7a6c022827dea274270f3226e48c12deec5db6dfac97c9701d73b89b94",
+  "built_assets": [
+    {
+      "file": "dist-deal-escrow/assets/index-JJIFjTIW.js",
+      "sha256": "57575067f26473231534957e91f7ccaf2d5a64774258744c24261538a9bae9e3"
+    },
+    {
+      "file": "dist-deal-escrow/assets/index-yaK6ysMI.css",
+      "sha256": "9e1e674f62b2b15a995a4d05fa1d269c0337817d6fbc5c4821c0cfa4c945db1a"
+    }
+  ],
+  "model": "qwen3-32b",
+  "source": {
+    "document": {
+      "id": "lges-2025-pdf",
+      "company": "LG Energy Solution",
+      "year": 2025,
+      "url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+      "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+      "page": 16,
+      "row_label": "Investment in Facilities",
+      "currency": "KRW",
+      "unit": "billion",
+      "preview_rows": 1,
+      "human_review": "PENDING"
+    },
+    "parser": "PyMuPDF 1.24.14",
+    "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+    "human_review": "PENDING"
+  },
+  "runs": [
+    {
+      "id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+      "state": "REFUNDED",
+      "mandate_status_at_export": "REVOKED",
+      "deal_hash": "0x583240d056e6fe5ac5ee2ee0db870ae4a2fa2532429da08a39ac3c8c49dba660",
+      "price_minor": 180,
+      "transactions": {
+        "fund": {
+          "status": "CONFIRMED",
+          "hash": "0xf6817957910d5cef03b8e5098363c444b0ecee2814b31965ecd97896b09d4546",
+          "block": 2
+        },
+        "refund": {
+          "status": "CONFIRMED",
+          "hash": "0xe1f186096f8e2f56f25a868fa873314ca666eee1f750e026d6efb85de11a6e71",
+          "block": 3
+        }
+      },
+      "preview_gate_recorded": false,
+      "preview_rows": null,
+      "verification": "VALID"
+    },
+    {
+      "id": "e06c6f70-1895-43d0-bb3d-0c13be2ede58",
+      "state": "SETTLED",
+      "mandate_status_at_export": "REVOKED",
+      "deal_hash": "0x0ed7dbe17b5267fa7aca68fa84ffa213c46ca39e7ab2453ae639f37c04a1788c",
+      "price_minor": 180,
+      "transactions": {
+        "fund": {
+          "status": "CONFIRMED",
+          "hash": "0x2567700a9d512777cd8b918fc75a3d82396e9e39fb580ece3a39f40e6d4dd493",
+          "block": 4
+        },
+        "release": {
+          "status": "CONFIRMED",
+          "hash": "0xb12eec9b23b6d747094dc9263e85aad69aca2aa1ac1bb5931a53b8a850d2d7a5",
+          "block": 5
+        }
+      },
+      "preview_gate_recorded": true,
+      "preview_rows": 1,
+      "verification": "VALID"
+    }
+  ],
+  "efficiency": {
+    "generated_at": "2026-09-28T17:49:00.250Z",
+    "flows": [
+      {
+        "flow_name": "Buyer offer comparison",
+        "calls": 1,
+        "prompt_tokens": 879,
+        "completion_tokens": 602,
+        "total_tokens": 1481,
+        "latency_ms": 8703,
+        "missing_usage": false
+      }
+    ],
+    "calls": 1,
+    "deterministic_operations": [
+      {
+        "operation": "schema validation",
+        "llm_calls": 0
+      },
+      {
+        "operation": "policy checks",
+        "llm_calls": 0
+      },
+      {
+        "operation": "delivery validation",
+        "llm_calls": 0
+      },
+      {
+        "operation": "escrow authorization",
+        "llm_calls": 0
+      }
+    ],
+    "ttft": null,
+    "ttft_note": "Non-streaming API used; TTFT was not measured.",
+    "energy": {
+      "measured": false,
+      "joules": null,
+      "label": "Energy Estimate — Assumption Based",
+      "method": "If organizer supplies application-attributable average watts P, estimate E=P×sum(latency_ms)/1000. API latency includes queue/network; this is not hardware active time.",
+      "power_assumption_watts": null,
+      "source": "No organizer power assumption or application power telemetry supplied; no numerical estimate is presented.",
+      "limitations": "No application-measured energy, utilization, batching attribution, or verified baseline. Token/call totals are measured; reduction relative to another design is not yet measured."
+    }
+  },
+  "research_requests": [
+    {
+      "mandate_id": "db59ca5e-d0a5-46d5-82ec-e7be6dd59920",
+      "status": "READY",
+      "task": "Extract the four 2025 quarterly Investment in Facilities cash outflows for LG Energy Solution from the approved PDF. Provide positive magnitudes in billion KRW and the original signed value, document hash, page and exact source_cell_id. No annual total or investing-activities substitution.",
+      "offers": [
+        {
+          "offer_id": "primary-reports",
+          "seller_id": "seller-a",
+          "price_minor": 210,
+          "floor_price_minor": 180,
+          "minimum_rows": 4,
+          "minimum_source_coverage": 1,
+          "deadline": 120,
+          "description": "Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included."
+        },
+        {
+          "offer_id": "outlook-summary",
+          "seller_id": "seller-b",
+          "price_minor": 120,
+          "floor_price_minor": 100,
+          "minimum_rows": 4,
+          "minimum_source_coverage": 1,
+          "deadline": 60,
+          "description": "Annual investment outlook for 2026 divided into four equal quarterly estimates. Includes the issuer URL. This is not historical cash expenditure."
+        },
+        {
+          "offer_id": "archive-service",
+          "seller_id": "seller-b",
+          "price_minor": 170,
+          "floor_price_minor": 160,
+          "minimum_rows": 4,
+          "minimum_source_coverage": 1,
+          "deadline": 300,
+          "description": "Historical actual quarterly facility cash expenditures from the original presentation. Archive verification takes 300 seconds."
+        }
+      ],
+      "started_at": "2026-09-28T17:37:07.087Z",
+      "deal_id": "0a32c266-5cde-4ff1-831c-1bb5f5f636cb",
+      "screening": [
+        {
+          "offer_id": "primary-reports",
+          "eligible": true,
+          "preview": null,
+          "control": null
+        },
+        {
+          "offer_id": "outlook-summary",
+          "eligible": true,
+          "preview": null,
+          "control": null
+        },
+        {
+          "offer_id": "archive-service",
+          "eligible": true,
+          "preview": null,
+          "control": null
+        }
+      ],
+      "updated_at": "2026-09-28T17:37:16.127Z",
+      "decision": {
+        "tool": "select_offer",
+        "args": {
+          "counter_price_minor": 180,
+          "decision": "counter",
+          "offer_id": "primary-reports",
+          "reason": "The 'primary-reports' offer provides actual historical 2025 quarterly data from an approved PDF with exact source metadata matching all requirements. While its 210 KRW price exceeds the 200 KRW max_single_minor, a counteroffer to the seller's 180 KRW floor satisfies the budget constraint."
+        },
+        "model": "qwen3-32b",
+        "request_id": "chat-032cb5cafc704864b72d986e3102db29"
+      },
+      "selected_offer": "primary-reports"
+    }
+  ],
+  "observations": {
+    "wrong_value": {
+      "quarter": "2025-Q1",
+      "expected": 3014,
+      "submitted": 3441,
+      "origin": "explicit UI fault injection; not a naturally occurring model error"
+    },
+    "preview": "one-quarter sample, followed by full four-quarter validation",
+    "mandate_stop": "UI revocation after settlement; completed settlement is preserved",
+    "local_extraction": {
+      "model_calls": 0,
+      "payment": false
+    },
+    "supplier": "local simulator; no external supplier acceptance"
+  },
+  "limitations": [
+    "Same configured local EVM is read back; this is not independent public-network finality.",
+    "Source extraction and validation share a parser; human review and heldout validation remain pending.",
+    "One actual model comparison is not an AI advantage benchmark or hardware energy measurement.",
+    "Model explanation confused the dataset currency KRW with test purchase units; immutable Deal uses DEMO units.",
+    "Free local extraction can solve this demo source; this run does not demonstrate paid-outsourcing demand."
+  ]
+}
