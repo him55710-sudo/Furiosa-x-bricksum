@@ -1,4 +1,4 @@
-We built a verifiable escrow and financial-control layer for AI agents that negotiate digital work: AI negotiates the Deal, deterministic code enforces spending and delivery conditions, and blockchain escrow releases or refunds funds based on machine-verifiable evidence.
+We built a spending-control and escrow prototype for research-agent developers commissioning financial-data extraction: AI proposes the work, code checks the approved terms and pinned-source delivery, and blockchain escrow releases or refunds with reconstructable evidence.
 
 # Agent Deal Escrow
 
@@ -9,6 +9,16 @@ This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum 
 [Focused product plan and user-need evidence](docs/FOCUSED-PRODUCT-PLAN.ko.md): one paid financial-data extraction job, the developer accountable for its result and cost, and explicit limits of reference-based validation. This plan distinguishes the completed synthetic-data public proof below from the proposed source-backed workflow and pending customer validation.
 
 ## Public Sepolia proof and Korean demo
+
+The newer [source-backed public run](docs/SOURCE-PUBLIC-PROOF.ko.md) uses actual Kiln extraction of four quarterly values from a transcribed issuer table. Correct delivery releases funds; a controlled wrong-metric delivery refunds; the seller's next purchase, an over-budget proposal and a revoked mandate stop before signing. It uses a separate buyer address, two real model calls (4,495 tokens), and explicitly labeled energy assumptions. Validation is against a fixed reference table, not general factual certification.
+
+```sh
+pnpm ade:replay:build
+pnpm ade:source:replay
+# http://127.0.0.1:3413/?replay=1
+```
+
+The earlier synthetic-data proof remains available below for comparison, with its own receipts and measurements.
 
 The completed public run contains two fund transactions, one release, one refund, and four recorded stops. An independent RPC verified all six evidence bundles against finalized Sepolia state. The 9-step Korean demo is read-only and uses those exact records. It needs no API key or wallet.
 
