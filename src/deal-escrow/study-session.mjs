@@ -59,10 +59,10 @@ export function createStudySession({replay,files,directory}){
     if(!exact(b,['submission_id','evidence_version','participant_id','participant_kind','newcomer','practitioner','consent','viewed','answers'])||!validId(b.submission_id)||!validId(b.participant_id)||!['human','automated_qa'].includes(b.participant_kind)||typeof b.newcomer!=='boolean'||typeof b.practitioner!=='boolean'||b.consent!==true||b.viewed!==true||!exact(b.answers,questions.map(q=>q.id))||Object.values(b.answers).some(v=>typeof v!=='string'||!v.trim()||v.length>4000))return res.status(400).json({error:'INVALID_STUDY_RESPONSE'});
     if(b.evidence_version!==version)return res.status(409).json({error:'STUDY_VERSION_CHANGED'});
     const contentHash=digest(canonical(b)),prior=read().find(r=>r.submission_id===b.submission_id);
-    if(prior)return prior.content_sha256===contentHash?res.json({saved:true,duplicate:true,response_id:prior.submission_id,evidence_version:version,human_validation_complete:false}):res.status(409).json({error:'SUBMISSION_ID_REUSED'});
+    if(prior)return prior.content_sha256===contentHash?res.json({saved:true,duplicate:true,response_id:prior.submission_id,evidence_version:version,counts:counts(),human_validation_complete:false}):res.status(409).json({error:'SUBMISSION_ID_REUSED'});
     const record={...b,answers:Object.fromEntries(Object.entries(b.answers).map(([k,v])=>[k,v.trim()])),content_sha256:contentHash,received_at:new Date().toISOString(),evidence_descriptor:descriptor,provenance:b.participant_kind==='human'?'Participant self-report; identity and understanding require separate human review':'Automated QA; excluded from human validation'};
     mkdirSync(directory,{recursive:true});appendFileSync(file,JSON.stringify(record)+'\n',{mode:0o600});
-    res.json({saved:true,duplicate:false,response_id:record.submission_id,evidence_version:version,human_validation_complete:false});
+    res.json({saved:true,duplicate:false,response_id:record.submission_id,evidence_version:version,counts:counts(),human_validation_complete:false});
   });
   app.use('/api',(_req,res)=>res.sendStatus(404));
   app.use((req,res)=>{

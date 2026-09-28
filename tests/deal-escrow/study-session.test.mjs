@@ -20,7 +20,7 @@ test('study freezes rendered bytes and evidence and binds their version to the s
     s.evidence.run='changed';s.build.set('/index.html',Buffer.from('changed'));
     assert.match(await(await fetch(s.origin+'/')).text(),/fixed demo/);
     assert.equal((await(await fetch(s.origin+'/api/replay')).json()).run,'source-run');
-    const result=await s.post();assert.equal(result.status,200);assert.equal((await result.json()).human_validation_complete,false);
+    const result=await s.post();assert.equal(result.status,200);const saved=await result.json();assert.equal(saved.human_validation_complete,false);assert.deepEqual(saved.counts,{self_reported_humans:0,automated_qa:1,reviewed_humans:0});
     const stored=JSON.parse(readFileSync(path.join(s.directory,'responses.jsonl'),'utf8'));
     assert.equal(stored.evidence_descriptor.source_run,'source-run');assert.equal(stored.evidence_version,s.context.evidence_version);assert.equal(stored.evidence_descriptor.ui_manifest.length,2);
     const snapshot=JSON.parse(readFileSync(path.join(s.directory,'sessions',s.context.evidence_version+'.json'),'utf8'));assert.equal(snapshot.replay.run,'source-run');assert.equal(Buffer.from(snapshot.assets.find(f=>f.name==='/index.html').base64,'base64').toString(),'<main>fixed demo</main>');

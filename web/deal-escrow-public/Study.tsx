@@ -11,7 +11,7 @@ export function Study(){
     event.preventDefault();if(!context||busy.current)return;busy.current=true;setSaving(true);setError('');
     try{
       const response=await fetch('/api/study',{method:'POST',headers:{'Content-Type':'application/json','X-ADE-Token':context.token},body:JSON.stringify({submission_id:submission.current,evidence_version:context.evidence_version,participant_id:participant,participant_kind:kind,newcomer,practitioner,consent,viewed,answers})});
-      const result=await response.json();if(!response.ok)throw new Error(errors[result.error]??'저장하지 못했습니다. 답변은 유지됩니다. 연결을 확인하고 다시 시도해 주세요.');setSaved(result.response_id);
+      const result=await response.json();if(!response.ok)throw new Error(errors[result.error]??'저장하지 못했습니다. 답변은 유지됩니다. 연결을 확인하고 다시 시도해 주세요.');setContext(previous=>previous?{...previous,counts:result.counts}:previous);setSaved(result.response_id);
     }catch(e){setError(e instanceof Error?e.message:'저장하지 못했습니다.');}finally{setSaving(false);busy.current=false;status.current?.focus();}
   }
   return <div className="study-page"><header className="study-header"><a href="/?study=1">A <span>Agent Deal Escrow</span></a><span>로컬 참여자 검증</span></header><main className="study-main">
