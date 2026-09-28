@@ -6,6 +6,18 @@ import {marketOffers,resolveSelection,fixedSelection,reviewedSelection,contentRe
 import {DealStore} from '../../src/deal-escrow/store.ts';import {DealEngine} from '../../src/deal-escrow/engine.ts';import {openChain} from '../../src/deal-escrow/chain.mjs';import {receipt,verifyReceipt} from '../../src/deal-escrow/audit.ts';import {KilnClient} from '../../src/deal-escrow/kiln.ts';
 const mandate=(patch={})=>({mandate_id:'research-task',company_id:'research-team',buyer_id:'research-agent-07',task_budget_minor:300,max_single_minor:200,allowed_sellers:['seller-a','seller-b'],category:'RESEARCH_DATA',status:'ACTIVE',created_at:now(),expires_at:now()+1800,task_requirements:researchRequirements,...patch});
 
+test('above-cap asking price exposes a bounded counteroffer without expanding financial authority',async()=>{
+  let payload;const args={decision:'counter',offer_id:'primary-reports',counter_price_minor:180,reason:'Counter within the permitted interval.'};
+  const client=new KilnClient({model:'test',key:'test',fetchImpl:async(_url,options)=>{payload=JSON.parse(options.body);return Response.json({model:'test',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{type:'function',function:{name:'select_offer',arguments:JSON.stringify(args)}}]}}]});}});
+  const m=mandate(),original=structuredClone(marketOffers);await client.selectOffer({mandate:m,offers:marketOffers,negotiation_options:[{counter_interval_minor:{min:1,max:99999}}]});
+  const input=JSON.parse(payload.messages[1].content);assert.deepEqual(input.negotiation_options[0].counter_interval_minor,{min:180,max:200});assert.deepEqual(marketOffers,original);
+  assert.equal(resolveSelection(m,marketOffers,args).accepted,true);
+  assert.throws(()=>resolveSelection(m,marketOffers,{...args,counter_price_minor:179}),/SELLER_COUNTER_OUTSIDE_RANGE/);
+  assert.equal(resolveSelection(m,marketOffers,{...args,counter_price_minor:201}).reason,'MAX_SINGLE');
+  assert.equal(resolveSelection(m,marketOffers,{...args,offer_id:'archive-service',counter_price_minor:160}).reason,'TASK_DELIVERY_WINDOW');
+  await client.selectOffer({mandate:mandate({max_single_minor:170}),offers:marketOffers});assert.equal(JSON.parse(payload.messages[1].content).negotiation_options[0].counter_interval_minor,null);
+});
+
 test('purchase units cannot be replaced by dataset currency or an explanation',async()=>{
   let payload;const args={decision:'counter',offer_id:'primary-reports',counter_price_minor:180,reason:'Deliberately wrong explanation: pay 180 KRW.'};
   const client=new KilnClient({model:'test-model',key:'test',fetchImpl:async(_url,options)=>{payload=JSON.parse(options.body);return Response.json({model:'test-model',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{type:'function',function:{name:'select_offer',arguments:JSON.stringify(args)}}]}}]});}});

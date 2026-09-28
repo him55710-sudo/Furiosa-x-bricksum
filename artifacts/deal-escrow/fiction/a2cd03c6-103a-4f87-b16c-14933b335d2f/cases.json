@@ -1,0 +1,2428 @@
+[
+  {
+    "id": "normal",
+    "persona": "나리 · 리서치 개발자",
+    "title": "맞는 자료에만 지급",
+    "situation": "보고서 마감 전 네 분기의 실제 시설투자액이 필요하다. 저렴한 전망치와 실제 실적 견적을 비교한다.",
+    "expected": "Kiln이 적합한 견적을 제안하고 원문 네 값이 일치하면 공급자에게 지급한다.",
+    "status": "FAIL",
+    "error": "{\"mandate_id\":\"0a84273b-5528-4faf-b182-3f358fda0d02\",\"status\":\"REJECTED\",\"task\":\"Extract the four 2025 quarterly Investment in Facilities cash outflows for LG Energy Solution from the approved PDF. Provide positive magnitudes in billion KRW and the original signed value, document hash, page and exact source_cell_id. No annual total or investing-activities substitution.\",\"offers\":[{\"offer_id\":\"primary-reports\",\"seller_id\":\"seller-a\",\"price_minor\":210,\"floor_price_minor\":180,\"minimum_rows\":4,\"minimum_source_coverage\":1,\"deadline\":120,\"description\":\"Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included.\"},{\"offer_id\":\"outlook-summary\",\"seller_id\":\"seller-b\",\"price_minor\":120,\"floor_price_minor\":100,\"minimum_rows\":4,\"minimum_source_coverage\":1,\"deadline\":60,\"description\":\"Annual investment outlook for 2026 divided into four equal quarterly estimates. Includes the issuer URL. This is not historical cash expenditure.\"},{\"offer_id\":\"archive-service\",\"seller_id\":\"seller-b\",\"price_minor\":170,\"floor_price_minor\":160,\"minimum_rows\":4,\"minimum_source_coverage\":1,\"deadline\":300,\"description\":\"Historical actual quarterly facility cash expenditures from the original presentation. Archive verification takes 300 seconds.\"}],\"started_at\":\"2026-09-28T20:55:06.722Z\",\"deal_id\":null,\"screening\":[{\"offer_id\":\"primary-reports\",\"eligible\":true,\"preview\":null,\"control\":null},{\"offer_id\":\"outlook-summary\",\"eligible\":true,\"preview\":null,\"control\":null},{\"offer_id\":\"archive-service\",\"eligible\":true,\"preview\":null,\"control\":null}],\"updated_at\":\"2026-09-28T20:55:20.130Z\",\"decision\":{\"tool\":\"select_offer\",\"args\":{\"decision\":\"reject\",\"offer_id\":null,\"counter_price_minor\":null,\"reason\":\"No offer meets both requirements and budget. 'primary-reports' exceeds max_single_minor (210 > 200) despite valid data. 'outlook-summary' provides invalid annual estimates. 'archive-service' exceeds max_delivery_seconds (300 > 180).\"},\"model\":\"qwen3-32b\",\"request_id\":\"chat-c7df4ff03bae43618c493420507afb2b\"},\"reason\":\"MODEL_REJECTED_ALL\"}\n+ actual - expected\n\n+ 'REJECTED'\n- 'READY'\n     ^\n",
+    "before": {
+      "block": 1,
+      "controller_nonce": 1,
+      "balances": {
+        "controller": "9998667666250000000",
+        "buyer": "10000000000000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 1,
+      "controller_nonce": 1,
+      "balances": {
+        "controller": "9998667666250000000",
+        "buyer": "10000000000000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [
+      {
+        "flow_name": "Buyer offer comparison",
+        "model": "qwen3-32b",
+        "request_id": "chat-c7df4ff03bae43618c493420507afb2b",
+        "prompt_tokens": 1057,
+        "completion_tokens": 914,
+        "total_tokens": 1971,
+        "start_time": "2026-09-28T20:55:07.054Z",
+        "first_token_time": null,
+        "end_time": "2026-09-28T20:55:20.124Z",
+        "latency_ms": 13070,
+        "tool_called": "select_offer",
+        "result": "VALID_TOOL_PROPOSAL",
+        "prompt_hash": "0xf1366e34fd7a7752926e0ecceba52b0fc790b66b10aa1a459af85de753b5eab1",
+        "streaming": false
+      }
+    ],
+    "new_controller_transactions": 0
+  },
+  {
+    "id": "cumulative",
+    "persona": "나리 · 리서치 개발자",
+    "title": "남은 예산보다 큰 재주문",
+    "situation": "첫 주문은 완료됐지만 동일 작업 예산으로 같은 금액을 한 번 더 쓰려 한다.",
+    "expected": "개별 한도 이내여도 누적 예산을 넘으면 서명 전에 중지한다.",
+    "status": "FAIL",
+    "error": "NORMAL_CASE_REQUIRED",
+    "before": {
+      "block": 1,
+      "controller_nonce": 1,
+      "balances": {
+        "controller": "9998667666250000000",
+        "buyer": "10000000000000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 1,
+      "controller_nonce": 1,
+      "balances": {
+        "controller": "9998667666250000000",
+        "buyer": "10000000000000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 0
+  },
+  {
+    "id": "wrong-value",
+    "persona": "도윤 · 데이터 검수 담당자",
+    "title": "출처가 있어도 숫자가 틀리면",
+    "situation": "공급자가 Q1 시설투자액 대신 다른 현금흐름 값 3,441을 납품한다. 나머지 세 값과 출처는 유지한다.",
+    "expected": "오답을 검출해 환불하고 해당 회사·공급자에 샘플 선행 조건을 만든다.",
+    "deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad",
+    "state": "REFUNDED",
+    "price_minor": 180,
+    "receipt": "7b583af7-90ee-4735-801a-ce77284f4bad.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "versioned delivery structure and quality checks; no factual certification",
+        "seller/company control mapped to a recomputed failed-delivery refund",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [
+        {
+          "deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": false,
+          "semantic_truth_verified": false
+        }
+      ],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:21.278Z"
+    },
+    "chain_state": {
+      "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+      "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+      "amount": "180000000000",
+      "deadline": 1790629040,
+      "status": 3
+    },
+    "transactions": {
+      "fund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0xb3e17e6d107cbc46d55df79fd3384d0b8ee218b2a803eb8079b2f1acbfb7031a",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0xb3e17e6d107cbc46d55df79fd3384d0b8ee218b2a803eb8079b2f1acbfb7031a",
+          "blockNumber": 2,
+          "blockHash": "0xeb0ed83a886a4ac5509a846c6ab05162eff97bfb2b9d85cfd485ff7e2747c26c",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                "0x9c10446754f4e838932369857f30beec8057bf8ce15f4341d49dba9de09cc27c",
+                "0x0000000000000000000000006a13f1bda99f1db4df3bcf5ba65f061db6be8924",
+                "0x000000000000000000000000f2b072a09caf7878d7c261d709044ef166681f7d"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006abad4b0"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 2,
+            "observedBlockHash": "0xeb0ed83a886a4ac5509a846c6ab05162eff97bfb2b9d85cfd485ff7e2747c26c"
+          }
+        },
+        "claim": {
+          "kind": "fund",
+          "deal_hash": "0x9c10446754f4e838932369857f30beec8057bf8ce15f4341d49dba9de09cc27c",
+          "tx_hash": "0xb3e17e6d107cbc46d55df79fd3384d0b8ee218b2a803eb8079b2f1acbfb7031a",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 1,
+          "value_wei": "180000000000",
+          "calldata_hash": "0xa57ab5ad8b45c3bd40668941f3e4554f0c060420ea64d63496fe3ad683b838f2",
+          "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+          "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+          "amount_wei": "180000000000",
+          "delivery_window": 120,
+          "deal_expiry": 1790630720
+        },
+        "reason": null,
+        "replacement": null
+      },
+      "refund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0x649a97299a3bff0fef446060a26d192ccc30733693cc641835d48e224c240dc6",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0x649a97299a3bff0fef446060a26d192ccc30733693cc641835d48e224c240dc6",
+          "blockNumber": 3,
+          "blockHash": "0xa836f5f356c7a9a627539b0acac4b648d604c6af7e963ce9ad8ed88f538804e8",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0x93abb8d9a70a9379d002f0f514c2136138c6f3259a6380f2d15fe33a1ad11b25",
+                "0x9c10446754f4e838932369857f30beec8057bf8ce15f4341d49dba9de09cc27c"
+              ],
+              "data": "0x05dc2da071d8387d2188efdb7d3799f1a0bb8eac00364333f5d701e71ec68a3300000000000000000000000000000000000000000000000000000029e8d60800"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 3,
+            "observedBlockHash": "0xa836f5f356c7a9a627539b0acac4b648d604c6af7e963ce9ad8ed88f538804e8"
+          }
+        },
+        "claim": {
+          "kind": "refund",
+          "deal_hash": "0x9c10446754f4e838932369857f30beec8057bf8ce15f4341d49dba9de09cc27c",
+          "tx_hash": "0x649a97299a3bff0fef446060a26d192ccc30733693cc641835d48e224c240dc6",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 2,
+          "value_wei": "0",
+          "calldata_hash": "0x2e5dbd3e3b4beec9d4c9ec5d8afef3c8eb57f0e02b480a03efc4ebab8b94e962",
+          "attestation_hash": "0x05dc2da071d8387d2188efdb7d3799f1a0bb8eac00364333f5d701e71ec68a33"
+        },
+        "reason": null,
+        "replacement": null
+      }
+    },
+    "accounting": {
+      "spent": 0,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:20.322Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:20.322Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:20.325Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:20.328Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:20.376Z",
+        "reason": null
+      },
+      {
+        "type": "PURCHASE_INTENT_CLAIMED",
+        "at": "2026-09-28T20:55:20.377Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_FUNDED",
+        "at": "2026-09-28T20:55:20.755Z",
+        "reason": "POLICY_APPROVED"
+      },
+      {
+        "type": "DELIVERY_SUBMITTED",
+        "at": "2026-09-28T20:55:20.821Z",
+        "reason": null
+      },
+      {
+        "type": "DELIVERY_VALIDATED",
+        "at": "2026-09-28T20:55:20.822Z",
+        "reason": null
+      },
+      {
+        "type": "FINAL_AUTHORIZATION",
+        "at": "2026-09-28T20:55:20.836Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_REFUNDED",
+        "at": "2026-09-28T20:55:21.077Z",
+        "reason": "DELIVERY_REQUIREMENT_FAILED"
+      },
+      {
+        "type": "CONTROL_MEMORY_ADDED",
+        "at": "2026-09-28T20:55:21.078Z",
+        "reason": null
+      }
+    ],
+    "validation": {
+      "validator_version": "delivery-source-v1",
+      "url_validation_scope": "Original pinned PDF bytes and cited cell geometry; finite supported table grammar; issuer truth is not certified",
+      "source_evidence": {
+        "document_id": "lges-2025-pdf",
+        "pdf_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+        "reader_sha256": "eb471ce9ef3882d6451f5eec3c78cdacbcfd4fe171cf3f58522c27ed8b69385d",
+        "grammar_sha256": "2123a648c93483551eccba418e4fe85a401a3059807be0dab3dd8f16fec84838",
+        "parser": "PyMuPDF 1.24.14",
+        "scope": "all approved quarters",
+        "reference_values_registered": false,
+        "human_review": "PENDING"
+      },
+      "verified": false,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "unit",
+            "source_url",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value",
+            "source_cell_id"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790628920,
+          "expected": 1790629040
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "Approved source-document year, Q1 through Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "SOURCE_PERIOD_SCOPE",
+          "pass": true,
+          "actual": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "SOURCE_CELL_CITATION",
+          "pass": true,
+          "actual": true,
+          "expected": "Cell belongs to the approved document row, year and quarter"
+        },
+        {
+          "name": "SOURCE_CELL_VALUES",
+          "pass": false,
+          "actual": false,
+          "expected": "Original signed PDF text and positive normalized outflow"
+        },
+        {
+          "name": "SOURCE_DOCUMENT_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "page": 16,
+            "currency": "KRW",
+            "unit": "billion"
+          }
+        }
+      ],
+      "failure_reason_code": "DELIVERY_REQUIREMENT_FAILED",
+      "evidence_hash": "0xcea71a00f96070737fb40154d6f6e775cb3bede44757202bcbe32049bc402429",
+      "content_hash": "0x1f074aa239c7f96e4b953e50bd4928f9c4038b58d0d36c066728c9dd3951e2c9",
+      "row_count": 4,
+      "source_count": 4,
+      "source_coverage": 1,
+      "submitted_at": 1790628920,
+      "deadline": 1790629040,
+      "semantic_truth_verified": false
+    },
+    "control": {
+      "rule": "REQUIRE_PREVIEW",
+      "company_id": "fiction-doyun",
+      "seller_id": "seller-a",
+      "origin_deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad"
+    },
+    "money_path": [
+      "controller",
+      "escrow",
+      "buyer"
+    ],
+    "locked_snapshot": {
+      "block": 2,
+      "controller_nonce": 2,
+      "balances": {
+        "controller": "9998458132675418950",
+        "buyer": "10000000000000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "180000000000"
+      }
+    },
+    "observed": "Q1 3,441 ≠ 원문 3,014 · 환불 + 다음 주문 샘플 조건",
+    "comparison": [
+      {
+        "quarter": "2025-Q1",
+        "expected": 3014,
+        "delivered": 3441
+      },
+      {
+        "quarter": "2025-Q2",
+        "expected": 2717,
+        "delivered": 2717
+      },
+      {
+        "quarter": "2025-Q3",
+        "expected": 2171,
+        "delivered": 2171
+      },
+      {
+        "quarter": "2025-Q4",
+        "expected": 2515,
+        "delivered": 2515
+      }
+    ],
+    "status": "PASS",
+    "before": {
+      "block": 1,
+      "controller_nonce": 1,
+      "balances": {
+        "controller": "9998667666250000000",
+        "buyer": "10000000000000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 3,
+      "controller_nonce": 3,
+      "balances": {
+        "controller": "9998370115208517394",
+        "buyer": "10000000180000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 2
+  },
+  {
+    "id": "preview-stop",
+    "persona": "도윤 · 데이터 검수 담당자",
+    "title": "같은 공급자에게 곧바로 재주문",
+    "situation": "오납품한 공급자가 샘플 없이 다시 예치해 달라고 한다.",
+    "expected": "샘플 전에는 예치하지 않는다. 새로운 모델 호출도 없다.",
+    "deal_id": "cb0e1242-b6d2-4b63-a651-4abed486c3db",
+    "state": "PREVIEW_REQUIRED",
+    "price_minor": 180,
+    "receipt": "cb0e1242-b6d2-4b63-a651-4abed486c3db.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "versioned delivery structure and quality checks; no factual certification",
+        "seller/company control mapped to a recomputed failed-delivery refund",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [
+        {
+          "deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": false,
+          "semantic_truth_verified": false
+        }
+      ],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:21.645Z"
+    },
+    "chain_state": {
+      "buyer": "0x0000000000000000000000000000000000000000",
+      "seller": "0x0000000000000000000000000000000000000000",
+      "amount": "0",
+      "deadline": 0,
+      "status": 0
+    },
+    "transactions": {},
+    "accounting": {
+      "spent": 0,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:21.395Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:21.395Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:21.399Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:21.402Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:21.448Z",
+        "reason": null
+      },
+      {
+        "type": "TRANSACTION_BLOCKED",
+        "at": "2026-09-28T20:55:21.449Z",
+        "reason": "PREVIEW_REQUIRED"
+      }
+    ],
+    "validation": null,
+    "control": {
+      "rule": "REQUIRE_PREVIEW",
+      "company_id": "fiction-doyun",
+      "seller_id": "seller-a",
+      "origin_deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad"
+    },
+    "observed": "PREVIEW_REQUIRED · 새 서명 0 · 잔액 변화 0",
+    "stop_reason": "PREVIEW_REQUIRED",
+    "status": "PASS",
+    "before": {
+      "block": 3,
+      "controller_nonce": 3,
+      "balances": {
+        "controller": "9998370115208517394",
+        "buyer": "10000000180000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 3,
+      "controller_nonce": 3,
+      "balances": {
+        "controller": "9998370115208517394",
+        "buyer": "10000000180000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 0
+  },
+  {
+    "id": "sample-is-not-delivery",
+    "persona": "도윤 · 데이터 검수 담당자",
+    "title": "샘플 한 줄을 전체 납품으로 제출",
+    "situation": "공급자가 정상 샘플 한 행을 보여 예치받은 뒤 그 한 행만 최종 결과로 제출한다.",
+    "expected": "샘플 통과가 전체 검수를 대체하지 못한다. 네 분기 미납으로 환불한다.",
+    "deal_id": "b10364a8-40a2-47e8-aa50-14732aa63c9f",
+    "state": "REFUNDED",
+    "price_minor": 180,
+    "receipt": "b10364a8-40a2-47e8-aa50-14732aa63c9f.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "versioned delivery structure and quality checks; no factual certification",
+        "preview raw content revalidated and bound to the immutable Deal",
+        "seller/company control mapped to a recomputed failed-delivery refund",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [
+        {
+          "deal_id": "b10364a8-40a2-47e8-aa50-14732aa63c9f",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": false,
+          "semantic_truth_verified": false
+        },
+        {
+          "deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": false,
+          "semantic_truth_verified": false
+        }
+      ],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:22.976Z"
+    },
+    "chain_state": {
+      "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+      "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+      "amount": "180000000000",
+      "deadline": 1790629042,
+      "status": 3
+    },
+    "transactions": {
+      "fund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0x7df4b07a0e9d76c5fb68b5cb35dbba650de7008a0e5767b3545f6ecf2f32e4e8",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0x7df4b07a0e9d76c5fb68b5cb35dbba650de7008a0e5767b3545f6ecf2f32e4e8",
+          "blockNumber": 4,
+          "blockHash": "0x327270f70d01a16e6d48c7fe1d6b9a946786a5dbae4f2c47b678cb1256684817",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                "0x326885c60ad61caae0ef9037a6ded26f403da36f8f140958703181e30e4788c5",
+                "0x0000000000000000000000006a13f1bda99f1db4df3bcf5ba65f061db6be8924",
+                "0x000000000000000000000000f2b072a09caf7878d7c261d709044ef166681f7d"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006abad4b2"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 4,
+            "observedBlockHash": "0x327270f70d01a16e6d48c7fe1d6b9a946786a5dbae4f2c47b678cb1256684817"
+          }
+        },
+        "claim": {
+          "kind": "fund",
+          "deal_hash": "0x326885c60ad61caae0ef9037a6ded26f403da36f8f140958703181e30e4788c5",
+          "tx_hash": "0x7df4b07a0e9d76c5fb68b5cb35dbba650de7008a0e5767b3545f6ecf2f32e4e8",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 3,
+          "value_wei": "180000000000",
+          "calldata_hash": "0x941989e0e645cd2ffbf17437b78080e5a0e006dfdcbb46f11f2c25bd2886b030",
+          "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+          "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+          "amount_wei": "180000000000",
+          "delivery_window": 120,
+          "deal_expiry": 1790630721
+        },
+        "reason": null,
+        "replacement": null
+      },
+      "refund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0x611ca1cc17635db01c6e46aff160a63e8e422beaeaf53d9c4d698256a224c4c8",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0x611ca1cc17635db01c6e46aff160a63e8e422beaeaf53d9c4d698256a224c4c8",
+          "blockNumber": 5,
+          "blockHash": "0xc0c15b54c2424c70fc8e8a3f2fe159c9496d2a8e5920238391f2c19022bc6aee",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0x93abb8d9a70a9379d002f0f514c2136138c6f3259a6380f2d15fe33a1ad11b25",
+                "0x326885c60ad61caae0ef9037a6ded26f403da36f8f140958703181e30e4788c5"
+              ],
+              "data": "0xb3c69040a8c78cd4f2b0ff2041d9b9a5daffc81a6e2fac7694887e274407d69300000000000000000000000000000000000000000000000000000029e8d60800"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 5,
+            "observedBlockHash": "0xc0c15b54c2424c70fc8e8a3f2fe159c9496d2a8e5920238391f2c19022bc6aee"
+          }
+        },
+        "claim": {
+          "kind": "refund",
+          "deal_hash": "0x326885c60ad61caae0ef9037a6ded26f403da36f8f140958703181e30e4788c5",
+          "tx_hash": "0x611ca1cc17635db01c6e46aff160a63e8e422beaeaf53d9c4d698256a224c4c8",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 4,
+          "value_wei": "0",
+          "calldata_hash": "0xfa7152396e7c8b3af45edb6753782f239dc53a0ee8d3f20be4e8a497e5df32cb",
+          "attestation_hash": "0xb3c69040a8c78cd4f2b0ff2041d9b9a5daffc81a6e2fac7694887e274407d693"
+        },
+        "reason": null,
+        "replacement": null
+      }
+    },
+    "accounting": {
+      "spent": 0,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:21.733Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:21.734Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:21.738Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:21.742Z",
+        "reason": null
+      },
+      {
+        "type": "PREVIEW_VALIDATED",
+        "at": "2026-09-28T20:55:21.753Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:21.795Z",
+        "reason": null
+      },
+      {
+        "type": "PURCHASE_INTENT_CLAIMED",
+        "at": "2026-09-28T20:55:21.795Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_FUNDED",
+        "at": "2026-09-28T20:55:22.117Z",
+        "reason": "POLICY_APPROVED"
+      },
+      {
+        "type": "DELIVERY_SUBMITTED",
+        "at": "2026-09-28T20:55:22.183Z",
+        "reason": null
+      },
+      {
+        "type": "DELIVERY_VALIDATED",
+        "at": "2026-09-28T20:55:22.183Z",
+        "reason": null
+      },
+      {
+        "type": "FINAL_AUTHORIZATION",
+        "at": "2026-09-28T20:55:22.210Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_REFUNDED",
+        "at": "2026-09-28T20:55:22.456Z",
+        "reason": "DELIVERY_REQUIREMENT_FAILED"
+      }
+    ],
+    "validation": {
+      "validator_version": "delivery-source-v1",
+      "url_validation_scope": "Original pinned PDF bytes and cited cell geometry; finite supported table grammar; issuer truth is not certified",
+      "source_evidence": {
+        "document_id": "lges-2025-pdf",
+        "pdf_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+        "reader_sha256": "eb471ce9ef3882d6451f5eec3c78cdacbcfd4fe171cf3f58522c27ed8b69385d",
+        "grammar_sha256": "2123a648c93483551eccba418e4fe85a401a3059807be0dab3dd8f16fec84838",
+        "parser": "PyMuPDF 1.24.14",
+        "scope": "all approved quarters",
+        "reference_values_registered": false,
+        "human_review": "PENDING"
+      },
+      "verified": false,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": false,
+          "actual": 1,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "unit",
+            "source_url",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value",
+            "source_cell_id"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790628922,
+          "expected": 1790629042
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "Approved source-document year, Q1 through Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "SOURCE_PERIOD_SCOPE",
+          "pass": false,
+          "actual": [
+            "2025-Q1"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "SOURCE_CELL_CITATION",
+          "pass": true,
+          "actual": true,
+          "expected": "Cell belongs to the approved document row, year and quarter"
+        },
+        {
+          "name": "SOURCE_CELL_VALUES",
+          "pass": true,
+          "actual": true,
+          "expected": "Original signed PDF text and positive normalized outflow"
+        },
+        {
+          "name": "SOURCE_DOCUMENT_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "page": 16,
+            "currency": "KRW",
+            "unit": "billion"
+          }
+        }
+      ],
+      "failure_reason_code": "DELIVERY_REQUIREMENT_FAILED",
+      "evidence_hash": "0x402acd6a976e9720a513bcf655a8aebd45c9bbdce3f30f77f0981cf1371b2554",
+      "content_hash": "0x844dd7124dc78f4c706cc2469136082de285fd577782d060010ef3698d6b299d",
+      "row_count": 1,
+      "source_count": 1,
+      "source_coverage": 1,
+      "submitted_at": 1790628922,
+      "deadline": 1790629042,
+      "semantic_truth_verified": false
+    },
+    "control": {
+      "rule": "REQUIRE_PREVIEW",
+      "company_id": "fiction-doyun",
+      "seller_id": "seller-a",
+      "origin_deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad"
+    },
+    "money_path": [
+      "controller",
+      "escrow",
+      "buyer"
+    ],
+    "locked_snapshot": {
+      "block": 4,
+      "controller_nonce": 4,
+      "balances": {
+        "controller": "9998181826383760369",
+        "buyer": "10000000180000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "180000000000"
+      }
+    },
+    "observed": "샘플 통과 → 예치 → 최종 1/4행 미납 검출 → 환불",
+    "status": "PASS",
+    "before": {
+      "block": 3,
+      "controller_nonce": 3,
+      "balances": {
+        "controller": "9998370115208517394",
+        "buyer": "10000000180000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 5,
+      "controller_nonce": 5,
+      "balances": {
+        "controller": "9998102064346211950",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 2
+  },
+  {
+    "id": "corrected",
+    "persona": "도윤 · 데이터 검수 담당자",
+    "title": "검수 후 다시 거래할 수 있다",
+    "situation": "같은 공급자가 이번에는 정확한 한 행 샘플과 네 행 전체를 납품한다.",
+    "expected": "샘플 선행 조건을 유지하면서 정상 거래를 지급한다. 영구 차단이 아니다.",
+    "deal_id": "85f26003-e0e7-4dc5-ad72-f5419ed3e2b0",
+    "state": "SETTLED",
+    "price_minor": 180,
+    "receipt": "85f26003-e0e7-4dc5-ad72-f5419ed3e2b0.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "versioned delivery structure and quality checks; no factual certification",
+        "preview raw content revalidated and bound to the immutable Deal",
+        "seller/company control mapped to a recomputed failed-delivery refund",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [
+        {
+          "deal_id": "85f26003-e0e7-4dc5-ad72-f5419ed3e2b0",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": true,
+          "semantic_truth_verified": false
+        },
+        {
+          "deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": false,
+          "semantic_truth_verified": false
+        }
+      ],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:24.107Z"
+    },
+    "chain_state": {
+      "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+      "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+      "amount": "180000000000",
+      "deadline": 1790629043,
+      "status": 2
+    },
+    "transactions": {
+      "fund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0x588b1818a881296628f57e077553223bdce618de27b8e686920f43924ec222fc",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0x588b1818a881296628f57e077553223bdce618de27b8e686920f43924ec222fc",
+          "blockNumber": 6,
+          "blockHash": "0xd7c670eb430dbef2c8fd13a93b7d12e27e3ececca041343c45f254791414c958",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                "0xe2d18b06e4337837f5537dd0609e9094e3d6f2c9db369bfd3c929d17c6e79230",
+                "0x0000000000000000000000006a13f1bda99f1db4df3bcf5ba65f061db6be8924",
+                "0x000000000000000000000000f2b072a09caf7878d7c261d709044ef166681f7d"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006abad4b3"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 6,
+            "observedBlockHash": "0xd7c670eb430dbef2c8fd13a93b7d12e27e3ececca041343c45f254791414c958"
+          }
+        },
+        "claim": {
+          "kind": "fund",
+          "deal_hash": "0xe2d18b06e4337837f5537dd0609e9094e3d6f2c9db369bfd3c929d17c6e79230",
+          "tx_hash": "0x588b1818a881296628f57e077553223bdce618de27b8e686920f43924ec222fc",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 5,
+          "value_wei": "180000000000",
+          "calldata_hash": "0x47f8cf54fac5c31774d050c606e409afd571cfa031a02f52580cc067b6133150",
+          "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+          "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+          "amount_wei": "180000000000",
+          "delivery_window": 120,
+          "deal_expiry": 1790630723
+        },
+        "reason": null,
+        "replacement": null
+      },
+      "release": {
+        "status": "CONFIRMED",
+        "tx_hash": "0x01aa40e787188f420f56c43941cf043c52452509ed5cf046ec8b544ae773c8f5",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0x01aa40e787188f420f56c43941cf043c52452509ed5cf046ec8b544ae773c8f5",
+          "blockNumber": 7,
+          "blockHash": "0x617012bab57e92609b97fa87d5a179ded87adb9f718b74fd50da5c7c5d33b8e9",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0x0e334fd11ab7bea6d2bda89338c0f25674e099b70dd28aaaee262fbecba48882",
+                "0xe2d18b06e4337837f5537dd0609e9094e3d6f2c9db369bfd3c929d17c6e79230"
+              ],
+              "data": "0xf980df548ace41815ca41a5fedc83bb52c8725bfd0078c53fdd88bdf483169b900000000000000000000000000000000000000000000000000000029e8d60800"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 7,
+            "observedBlockHash": "0x617012bab57e92609b97fa87d5a179ded87adb9f718b74fd50da5c7c5d33b8e9"
+          }
+        },
+        "claim": {
+          "kind": "release",
+          "deal_hash": "0xe2d18b06e4337837f5537dd0609e9094e3d6f2c9db369bfd3c929d17c6e79230",
+          "tx_hash": "0x01aa40e787188f420f56c43941cf043c52452509ed5cf046ec8b544ae773c8f5",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 6,
+          "value_wei": "0",
+          "calldata_hash": "0x75864c673ac6de6b3a039a6a200038114d25391bea261e1b41f794a01c891d39",
+          "attestation_hash": "0xf980df548ace41815ca41a5fedc83bb52c8725bfd0078c53fdd88bdf483169b9"
+        },
+        "reason": null,
+        "replacement": null
+      }
+    },
+    "accounting": {
+      "spent": 180,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:23.076Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:23.077Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:23.080Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:23.083Z",
+        "reason": null
+      },
+      {
+        "type": "PREVIEW_VALIDATED",
+        "at": "2026-09-28T20:55:23.094Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:23.142Z",
+        "reason": null
+      },
+      {
+        "type": "PURCHASE_INTENT_CLAIMED",
+        "at": "2026-09-28T20:55:23.143Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_FUNDED",
+        "at": "2026-09-28T20:55:23.500Z",
+        "reason": "POLICY_APPROVED"
+      },
+      {
+        "type": "DELIVERY_SUBMITTED",
+        "at": "2026-09-28T20:55:23.567Z",
+        "reason": null
+      },
+      {
+        "type": "DELIVERY_VALIDATED",
+        "at": "2026-09-28T20:55:23.567Z",
+        "reason": null
+      },
+      {
+        "type": "FINAL_AUTHORIZATION",
+        "at": "2026-09-28T20:55:23.594Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_RELEASED",
+        "at": "2026-09-28T20:55:23.841Z",
+        "reason": "DELIVERY_VERIFIED"
+      }
+    ],
+    "validation": {
+      "validator_version": "delivery-source-v1",
+      "url_validation_scope": "Original pinned PDF bytes and cited cell geometry; finite supported table grammar; issuer truth is not certified",
+      "source_evidence": {
+        "document_id": "lges-2025-pdf",
+        "pdf_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+        "reader_sha256": "eb471ce9ef3882d6451f5eec3c78cdacbcfd4fe171cf3f58522c27ed8b69385d",
+        "grammar_sha256": "2123a648c93483551eccba418e4fe85a401a3059807be0dab3dd8f16fec84838",
+        "parser": "PyMuPDF 1.24.14",
+        "scope": "all approved quarters",
+        "reference_values_registered": false,
+        "human_review": "PENDING"
+      },
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "unit",
+            "source_url",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value",
+            "source_cell_id"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790628923,
+          "expected": 1790629043
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "Approved source-document year, Q1 through Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "SOURCE_PERIOD_SCOPE",
+          "pass": true,
+          "actual": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "SOURCE_CELL_CITATION",
+          "pass": true,
+          "actual": true,
+          "expected": "Cell belongs to the approved document row, year and quarter"
+        },
+        {
+          "name": "SOURCE_CELL_VALUES",
+          "pass": true,
+          "actual": true,
+          "expected": "Original signed PDF text and positive normalized outflow"
+        },
+        {
+          "name": "SOURCE_DOCUMENT_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "page": 16,
+            "currency": "KRW",
+            "unit": "billion"
+          }
+        }
+      ],
+      "failure_reason_code": null,
+      "evidence_hash": "0x3f841ea579b9ac1c9421557b0a1c20ee042eba4f2a3e35f39aa9434e72e72ee0",
+      "content_hash": "0x39ca18bdece6b81eb0cee7f2a8cbe5ae17d035a58ecb589c808e4894c26016c6",
+      "row_count": 4,
+      "source_count": 4,
+      "source_coverage": 1,
+      "submitted_at": 1790628923,
+      "deadline": 1790629043,
+      "semantic_truth_verified": false
+    },
+    "control": {
+      "rule": "REQUIRE_PREVIEW",
+      "company_id": "fiction-doyun",
+      "seller_id": "seller-a",
+      "origin_deal_id": "7b583af7-90ee-4735-801a-ce77284f4bad"
+    },
+    "money_path": [
+      "controller",
+      "escrow",
+      "seller_a"
+    ],
+    "locked_snapshot": {
+      "block": 6,
+      "controller_nonce": 6,
+      "balances": {
+        "controller": "9997930067490269950",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "180000000000"
+      }
+    },
+    "observed": "같은 공급자 · 샘플 + 전체 4행 검수 후 지급 · 통제 유지",
+    "status": "PASS",
+    "before": {
+      "block": 5,
+      "controller_nonce": 5,
+      "balances": {
+        "controller": "9998102064346211950",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000000000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 7,
+      "controller_nonce": 7,
+      "balances": {
+        "controller": "9997856586274594666",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000180000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 2
+  },
+  {
+    "id": "scope",
+    "persona": "서연 · 다른 회사 담당자",
+    "title": "한 회사의 사고를 모두에게 전파하지 않는다",
+    "situation": "다른 회사가 같은 공급자에게 처음 발주한다.",
+    "expected": "회사 범위가 다르면 샘플 조건을 전파하지 않는다. 정상 납품은 지급한다.",
+    "deal_id": "ce21020b-ea12-4d82-bf07-c11d69ace657",
+    "state": "SETTLED",
+    "price_minor": 180,
+    "receipt": "ce21020b-ea12-4d82-bf07-c11d69ace657.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "versioned delivery structure and quality checks; no factual certification",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [
+        {
+          "deal_id": "ce21020b-ea12-4d82-bf07-c11d69ace657",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": true,
+          "semantic_truth_verified": false
+        }
+      ],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:25.082Z"
+    },
+    "chain_state": {
+      "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+      "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+      "amount": "180000000000",
+      "deadline": 1790629044,
+      "status": 2
+    },
+    "transactions": {
+      "fund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0xed936b792d841612cc20371d083d6a3b789412d663736b122b5b1e4173f3d0d9",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0xed936b792d841612cc20371d083d6a3b789412d663736b122b5b1e4173f3d0d9",
+          "blockNumber": 8,
+          "blockHash": "0x2163d69122f6ed4f612cd0d43dd24fe4bd1597018b74af585102dd046e9a6d4d",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                "0x908672f59d02dd1d2dd505e5ab4e9325499191e5a793c5d355ebc3e9a4ff8cc0",
+                "0x0000000000000000000000006a13f1bda99f1db4df3bcf5ba65f061db6be8924",
+                "0x000000000000000000000000f2b072a09caf7878d7c261d709044ef166681f7d"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006abad4b4"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 8,
+            "observedBlockHash": "0x2163d69122f6ed4f612cd0d43dd24fe4bd1597018b74af585102dd046e9a6d4d"
+          }
+        },
+        "claim": {
+          "kind": "fund",
+          "deal_hash": "0x908672f59d02dd1d2dd505e5ab4e9325499191e5a793c5d355ebc3e9a4ff8cc0",
+          "tx_hash": "0xed936b792d841612cc20371d083d6a3b789412d663736b122b5b1e4173f3d0d9",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 7,
+          "value_wei": "180000000000",
+          "calldata_hash": "0x01384c2081598976556b78ac99311f4d209aed42a1121c942cdd6a8f9a7b2f54",
+          "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+          "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+          "amount_wei": "180000000000",
+          "delivery_window": 120,
+          "deal_expiry": 1790630724
+        },
+        "reason": null,
+        "replacement": null
+      },
+      "release": {
+        "status": "CONFIRMED",
+        "tx_hash": "0xebc5af86aaf1bab633fdcde0d08b3005e4064049b0abc5974a96dda6f08b6d00",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0xebc5af86aaf1bab633fdcde0d08b3005e4064049b0abc5974a96dda6f08b6d00",
+          "blockNumber": 9,
+          "blockHash": "0x37e13b8bed645debaa2e597fbbd30a79aab5481a64d360e41505329a471ff223",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0x0e334fd11ab7bea6d2bda89338c0f25674e099b70dd28aaaee262fbecba48882",
+                "0x908672f59d02dd1d2dd505e5ab4e9325499191e5a793c5d355ebc3e9a4ff8cc0"
+              ],
+              "data": "0x07e6630d4a081dde9783f65ad215d06912ae37e0a7986f7fd1db776e8e84f7e700000000000000000000000000000000000000000000000000000029e8d60800"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 9,
+            "observedBlockHash": "0x37e13b8bed645debaa2e597fbbd30a79aab5481a64d360e41505329a471ff223"
+          }
+        },
+        "claim": {
+          "kind": "release",
+          "deal_hash": "0x908672f59d02dd1d2dd505e5ab4e9325499191e5a793c5d355ebc3e9a4ff8cc0",
+          "tx_hash": "0xebc5af86aaf1bab633fdcde0d08b3005e4064049b0abc5974a96dda6f08b6d00",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 8,
+          "value_wei": "0",
+          "calldata_hash": "0x1b4d8586a1eb814dca72307b69a2a690619b7174494b274b0c91082fce3876ef",
+          "attestation_hash": "0x07e6630d4a081dde9783f65ad215d06912ae37e0a7986f7fd1db776e8e84f7e7"
+        },
+        "reason": null,
+        "replacement": null
+      }
+    },
+    "accounting": {
+      "spent": 180,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:24.199Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:24.199Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:24.202Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:24.206Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:24.258Z",
+        "reason": null
+      },
+      {
+        "type": "PURCHASE_INTENT_CLAIMED",
+        "at": "2026-09-28T20:55:24.259Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_FUNDED",
+        "at": "2026-09-28T20:55:24.597Z",
+        "reason": "POLICY_APPROVED"
+      },
+      {
+        "type": "DELIVERY_SUBMITTED",
+        "at": "2026-09-28T20:55:24.648Z",
+        "reason": null
+      },
+      {
+        "type": "DELIVERY_VALIDATED",
+        "at": "2026-09-28T20:55:24.648Z",
+        "reason": null
+      },
+      {
+        "type": "FINAL_AUTHORIZATION",
+        "at": "2026-09-28T20:55:24.662Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_RELEASED",
+        "at": "2026-09-28T20:55:24.879Z",
+        "reason": "DELIVERY_VERIFIED"
+      }
+    ],
+    "validation": {
+      "validator_version": "delivery-source-v1",
+      "url_validation_scope": "Original pinned PDF bytes and cited cell geometry; finite supported table grammar; issuer truth is not certified",
+      "source_evidence": {
+        "document_id": "lges-2025-pdf",
+        "pdf_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+        "reader_sha256": "eb471ce9ef3882d6451f5eec3c78cdacbcfd4fe171cf3f58522c27ed8b69385d",
+        "grammar_sha256": "2123a648c93483551eccba418e4fe85a401a3059807be0dab3dd8f16fec84838",
+        "parser": "PyMuPDF 1.24.14",
+        "scope": "all approved quarters",
+        "reference_values_registered": false,
+        "human_review": "PENDING"
+      },
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "unit",
+            "source_url",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value",
+            "source_cell_id"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790628924,
+          "expected": 1790629044
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "Approved source-document year, Q1 through Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "SOURCE_PERIOD_SCOPE",
+          "pass": true,
+          "actual": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "SOURCE_CELL_CITATION",
+          "pass": true,
+          "actual": true,
+          "expected": "Cell belongs to the approved document row, year and quarter"
+        },
+        {
+          "name": "SOURCE_CELL_VALUES",
+          "pass": true,
+          "actual": true,
+          "expected": "Original signed PDF text and positive normalized outflow"
+        },
+        {
+          "name": "SOURCE_DOCUMENT_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "page": 16,
+            "currency": "KRW",
+            "unit": "billion"
+          }
+        }
+      ],
+      "failure_reason_code": null,
+      "evidence_hash": "0x5ab6bd234d118234c6fa5af20fca17f8ad7f8db45a488d943a14cf48cef680d8",
+      "content_hash": "0x39ca18bdece6b81eb0cee7f2a8cbe5ae17d035a58ecb589c808e4894c26016c6",
+      "row_count": 4,
+      "source_count": 4,
+      "source_coverage": 1,
+      "submitted_at": 1790628924,
+      "deadline": 1790629044,
+      "semantic_truth_verified": false
+    },
+    "control": null,
+    "money_path": [
+      "controller",
+      "escrow",
+      "seller_a"
+    ],
+    "locked_snapshot": {
+      "block": 8,
+      "controller_nonce": 8,
+      "balances": {
+        "controller": "9997697083234251466",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000180000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "180000000000"
+      }
+    },
+    "observed": "다른 회사로 샘플 조건이 전파되지 않음 · 정상 지급",
+    "status": "PASS",
+    "before": {
+      "block": 7,
+      "controller_nonce": 7,
+      "balances": {
+        "controller": "9997856586274594666",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000180000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 9,
+      "controller_nonce": 9,
+      "balances": {
+        "controller": "9997628470967939914",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 2
+  },
+  {
+    "id": "revoked",
+    "persona": "민준 · 예산 관리자",
+    "title": "예치 후 승인을 철회한다",
+    "situation": "납품 전에 관리자가 작업 위임을 중지한다. 이후 정상 데이터가 도착한다.",
+    "expected": "정상 데이터여도 지급 직전에 철회를 확인해 구매자에게 환불한다.",
+    "deal_id": "228983d0-11b3-4a72-a4e5-990b8060d9da",
+    "state": "REFUNDED",
+    "price_minor": 180,
+    "receipt": "228983d0-11b3-4a72-a4e5-990b8060d9da.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "versioned delivery structure and quality checks; no factual certification",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [
+        {
+          "deal_id": "228983d0-11b3-4a72-a4e5-990b8060d9da",
+          "recorded_validator": "delivery-source-v1",
+          "current_validator": "delivery-source-v1",
+          "current_checks_pass": true,
+          "semantic_truth_verified": false
+        }
+      ],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:25.996Z"
+    },
+    "chain_state": {
+      "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+      "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+      "amount": "180000000000",
+      "deadline": 1790629045,
+      "status": 3
+    },
+    "transactions": {
+      "fund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0xbe170a3768c02266480271a2de99cbfbbedc0403df395e3fa884db51a815fef9",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0xbe170a3768c02266480271a2de99cbfbbedc0403df395e3fa884db51a815fef9",
+          "blockNumber": 10,
+          "blockHash": "0xffb6a495b19a1a4d772fb3ed26ec143cd7b8f87a12a9604882ffb9512e3cb8d0",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                "0xf5a6b58175d2dfcc4cd979716ca01884060e18480236c12d559ec9e209f575b3",
+                "0x0000000000000000000000006a13f1bda99f1db4df3bcf5ba65f061db6be8924",
+                "0x000000000000000000000000f2b072a09caf7878d7c261d709044ef166681f7d"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000029e8d60800000000000000000000000000000000000000000000000000000000006abad4b5"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 10,
+            "observedBlockHash": "0xffb6a495b19a1a4d772fb3ed26ec143cd7b8f87a12a9604882ffb9512e3cb8d0"
+          }
+        },
+        "claim": {
+          "kind": "fund",
+          "deal_hash": "0xf5a6b58175d2dfcc4cd979716ca01884060e18480236c12d559ec9e209f575b3",
+          "tx_hash": "0xbe170a3768c02266480271a2de99cbfbbedc0403df395e3fa884db51a815fef9",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 9,
+          "value_wei": "180000000000",
+          "calldata_hash": "0x3391e397526466d2fdfa2c96df6badbf63198222a47608317735e8cd55a2bfed",
+          "buyer": "0x6A13F1bDA99F1dB4Df3BcF5ba65f061db6bE8924",
+          "seller": "0xf2B072a09cAF7878d7C261d709044eF166681F7d",
+          "amount_wei": "180000000000",
+          "delivery_window": 120,
+          "deal_expiry": 1790630725
+        },
+        "reason": null,
+        "replacement": null
+      },
+      "refund": {
+        "status": "CONFIRMED",
+        "tx_hash": "0x3b6d69d529c6df762b4b22edb1ced37620bd2436d5dea5e180243812d86c17b3",
+        "original_tx_hash": null,
+        "receipt": {
+          "transactionHash": "0x3b6d69d529c6df762b4b22edb1ced37620bd2436d5dea5e180243812d86c17b3",
+          "blockNumber": 11,
+          "blockHash": "0x957f344a0e235a550ba2840b438f2411ecaf52e0806e565c1895832152b5a971",
+          "status": 1,
+          "from": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "to": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "logs": [
+            {
+              "address": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+              "topics": [
+                "0x93abb8d9a70a9379d002f0f514c2136138c6f3259a6380f2d15fe33a1ad11b25",
+                "0xf5a6b58175d2dfcc4cd979716ca01884060e18480236c12d559ec9e209f575b3"
+              ],
+              "data": "0x97afa951345cf93f42cbdb537dc8233c1b5b87dc9ef5220ae93002de09b8ccdd00000000000000000000000000000000000000000000000000000029e8d60800"
+            }
+          ],
+          "finality": {
+            "mode": "confirmations",
+            "confirmations": 1,
+            "requiredConfirmations": 1,
+            "observedBlock": 11,
+            "observedBlockHash": "0x957f344a0e235a550ba2840b438f2411ecaf52e0806e565c1895832152b5a971"
+          }
+        },
+        "claim": {
+          "kind": "refund",
+          "deal_hash": "0xf5a6b58175d2dfcc4cd979716ca01884060e18480236c12d559ec9e209f575b3",
+          "tx_hash": "0x3b6d69d529c6df762b4b22edb1ced37620bd2436d5dea5e180243812d86c17b3",
+          "chain_id": 31338,
+          "contract": "0x09592151390c4f0b9D697aA54f5106cD2f3D8540",
+          "sender": "0xc8c39929D01997C1b0e6ad2C8323156485227035",
+          "nonce": 10,
+          "value_wei": "0",
+          "calldata_hash": "0x48976e535828db81aa99b67c635dae0560058683780dd21d1530b09e2c98e848",
+          "attestation_hash": "0x97afa951345cf93f42cbdb537dc8233c1b5b87dc9ef5220ae93002de09b8ccdd"
+        },
+        "reason": null,
+        "replacement": null
+      }
+    },
+    "accounting": {
+      "spent": 0,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:25.208Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:25.208Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:25.212Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:25.215Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:25.267Z",
+        "reason": null
+      },
+      {
+        "type": "PURCHASE_INTENT_CLAIMED",
+        "at": "2026-09-28T20:55:25.268Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_FUNDED",
+        "at": "2026-09-28T20:55:25.610Z",
+        "reason": "POLICY_APPROVED"
+      },
+      {
+        "type": "DELIVERY_SUBMITTED",
+        "at": "2026-09-28T20:55:25.627Z",
+        "reason": null
+      },
+      {
+        "type": "DELIVERY_VALIDATED",
+        "at": "2026-09-28T20:55:25.628Z",
+        "reason": null
+      },
+      {
+        "type": "FINAL_AUTHORIZATION",
+        "at": "2026-09-28T20:55:25.642Z",
+        "reason": null
+      },
+      {
+        "type": "ESCROW_REFUNDED",
+        "at": "2026-09-28T20:55:25.886Z",
+        "reason": "MANDATE_ACTIVE"
+      }
+    ],
+    "validation": {
+      "validator_version": "delivery-source-v1",
+      "url_validation_scope": "Original pinned PDF bytes and cited cell geometry; finite supported table grammar; issuer truth is not certified",
+      "source_evidence": {
+        "document_id": "lges-2025-pdf",
+        "pdf_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "index_digest": "0x713ac126aec1a75e9813c01de49d6d2c58fab85dec52384b3c77f927fedc0b97",
+        "reader_sha256": "eb471ce9ef3882d6451f5eec3c78cdacbcfd4fe171cf3f58522c27ed8b69385d",
+        "grammar_sha256": "2123a648c93483551eccba418e4fe85a401a3059807be0dab3dd8f16fec84838",
+        "parser": "PyMuPDF 1.24.14",
+        "scope": "all approved quarters",
+        "reference_values_registered": false,
+        "human_review": "PENDING"
+      },
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "unit",
+            "source_url",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value",
+            "source_cell_id"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790628925,
+          "expected": 1790629045
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "Approved source-document year, Q1 through Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "SOURCE_PERIOD_SCOPE",
+          "pass": true,
+          "actual": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "SOURCE_CELL_CITATION",
+          "pass": true,
+          "actual": true,
+          "expected": "Cell belongs to the approved document row, year and quarter"
+        },
+        {
+          "name": "SOURCE_CELL_VALUES",
+          "pass": true,
+          "actual": true,
+          "expected": "Original signed PDF text and positive normalized outflow"
+        },
+        {
+          "name": "SOURCE_DOCUMENT_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "page": 16,
+            "currency": "KRW",
+            "unit": "billion"
+          }
+        }
+      ],
+      "failure_reason_code": null,
+      "evidence_hash": "0x7126f90d8dfb4325b46140e7e7bc453e22ae13ed778e8becd350ee43eaabc731",
+      "content_hash": "0x39ca18bdece6b81eb0cee7f2a8cbe5ae17d035a58ecb589c808e4894c26016c6",
+      "row_count": 4,
+      "source_count": 4,
+      "source_coverage": 1,
+      "submitted_at": 1790628925,
+      "deadline": 1790629045,
+      "semantic_truth_verified": false
+    },
+    "control": null,
+    "observed": "데이터 검수는 통과했지만 위임 철회로 지급하지 않고 환불",
+    "money_path": [
+      "controller",
+      "escrow",
+      "buyer"
+    ],
+    "status": "PASS",
+    "before": {
+      "block": 9,
+      "controller_nonce": 9,
+      "balances": {
+        "controller": "9997628470967939914",
+        "buyer": "10000000360000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 2
+  },
+  {
+    "id": "expired",
+    "persona": "민준 · 예산 관리자",
+    "title": "유효기간이 지난 견적",
+    "situation": "위임은 살아 있지만 이미 만료된 개별 견적을 제출한다.",
+    "expected": "견적 만료를 기록하고 서명 전에 중지한다.",
+    "deal_id": "44b00e3e-0ca1-41bc-8ea8-cea01c7a0236",
+    "state": "EXPIRED",
+    "price_minor": 180,
+    "receipt": "44b00e3e-0ca1-41bc-8ea8-cea01c7a0236.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:26.225Z"
+    },
+    "chain_state": {
+      "buyer": "0x0000000000000000000000000000000000000000",
+      "seller": "0x0000000000000000000000000000000000000000",
+      "amount": "0",
+      "deadline": 0,
+      "status": 0
+    },
+    "transactions": {},
+    "accounting": {
+      "spent": 0,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:26.112Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:26.112Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:26.115Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:26.118Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:26.163Z",
+        "reason": null
+      },
+      {
+        "type": "TRANSACTION_BLOCKED",
+        "at": "2026-09-28T20:55:26.164Z",
+        "reason": "DEAL_NOT_EXPIRED"
+      }
+    ],
+    "validation": null,
+    "control": null,
+    "observed": "DEAL_NOT_EXPIRED · 새 서명 0 · 잔액 변화 0",
+    "stop_reason": "DEAL_NOT_EXPIRED",
+    "status": "PASS",
+    "before": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 0
+  },
+  {
+    "id": "merchant",
+    "persona": "민준 · 예산 관리자",
+    "title": "허용 밖 공급자의 더 싼 제안",
+    "situation": "허용 목록에 없는 공급자가 정상 데이터를 제공하겠다고 한다.",
+    "expected": "가격과 데이터 품질에 앞서 공급자 권한을 확인해 중지한다.",
+    "deal_id": "de6a8c48-6cce-4b0b-97ae-1f5e05a8c5b7",
+    "state": "BLOCKED",
+    "price_minor": 180,
+    "receipt": "de6a8c48-6cce-4b0b-97ae-1f5e05a8c5b7.json",
+    "verification": {
+      "verdict": "VALID",
+      "scope": "Stored evidence and independently read configured chain; controller trust remains",
+      "checks": [
+        "immutable Deal hash",
+        "hash-linked events bound to the Deal and mandate",
+        "policy arithmetic; preview flags checked against actual preview evidence",
+        "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+      ],
+      "delivery_quality": [],
+      "unverified": [
+        "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+        "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+        "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+        "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+        "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+      ],
+      "checked_at": "2026-09-28T20:55:26.442Z"
+    },
+    "chain_state": {
+      "buyer": "0x0000000000000000000000000000000000000000",
+      "seller": "0x0000000000000000000000000000000000000000",
+      "amount": "0",
+      "deadline": 0,
+      "status": 0
+    },
+    "transactions": {},
+    "accounting": {
+      "spent": 0,
+      "reserved": 0
+    },
+    "events": [
+      {
+        "type": "NEGOTIATION_STARTED",
+        "at": "2026-09-28T20:55:26.343Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_PROPOSED",
+        "at": "2026-09-28T20:55:26.343Z",
+        "reason": null
+      },
+      {
+        "type": "FICTIONAL_SCENARIO",
+        "at": "2026-09-28T20:55:26.347Z",
+        "reason": null
+      },
+      {
+        "type": "DEAL_ACCEPTED",
+        "at": "2026-09-28T20:55:26.351Z",
+        "reason": null
+      },
+      {
+        "type": "POLICY_CHECKED",
+        "at": "2026-09-28T20:55:26.379Z",
+        "reason": null
+      },
+      {
+        "type": "TRANSACTION_BLOCKED",
+        "at": "2026-09-28T20:55:26.380Z",
+        "reason": "SELLER_ALLOWED"
+      }
+    ],
+    "validation": null,
+    "control": null,
+    "observed": "SELLER_ALLOWED · 새 서명 0 · 잔액 변화 0",
+    "stop_reason": "SELLER_ALLOWED",
+    "status": "PASS",
+    "before": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 0
+  },
+  {
+    "id": "duplicate",
+    "persona": "나리 · 리서치 개발자",
+    "title": "완료 버튼을 다시 눌렀다면",
+    "situation": "이미 지급한 주문에 예치와 납품 요청을 다시 보낸다.",
+    "expected": "거래 해시와 잔액을 보존하고 추가 지급하지 않는다.",
+    "status": "FAIL",
+    "error": "NORMAL_CASE_REQUIRED",
+    "before": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 0
+  },
+  {
+    "id": "tamper",
+    "persona": "지우 · 가상 감사 검증자",
+    "title": "영수증 금액 한 자리 수정",
+    "situation": "저장된 지급 영수증 사본의 가격만 180에서 181로 바꾼다.",
+    "expected": "원본은 VALID, 변조 사본은 INVALID로 판정한다. 실제 사람의 이해도 평가는 아니다.",
+    "status": "FAIL",
+    "error": "NORMAL_CASE_REQUIRED",
+    "before": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "after": {
+      "block": 11,
+      "controller_nonce": 11,
+      "balances": {
+        "controller": "9997413726170883633",
+        "buyer": "10000000540000000000",
+        "seller_a": "10000000360000000000",
+        "seller_b": "10000000000000000000",
+        "escrow": "0"
+      }
+    },
+    "usage": [],
+    "new_controller_transactions": 0
+  }
+]

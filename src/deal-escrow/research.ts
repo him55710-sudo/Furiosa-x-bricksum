@@ -55,7 +55,7 @@ const requests=new WeakMap<object,Map<string,Promise<any>>>();
 export function researchRequests(engine:DealEngine){return engine.store.db.prepare('SELECT body FROM research_requests ORDER BY rowid DESC').all().map((r:any)=>JSON.parse(r.body));}
 export function researchRequest(engine:DealEngine,id:string){const row=engine.store.db.prepare('SELECT body FROM research_requests WHERE mandate_id=?').get(id) as any;return row?JSON.parse(row.body):null;}
 function save(engine:DealEngine,id:string,patch:any){const value={...researchRequest(engine,id),...patch,updated_at:new Date().toISOString()};engine.store.db.prepare('UPDATE research_requests SET body=? WHERE mandate_id=?').run(JSON.stringify(value),id);return value;}
-export function procureResearch(engine:DealEngine,mandateId:string,{offers:offered,clientFactory=(record:any)=>new KilnClient({onRecord:record})}:any={}){
+export function procureResearch(engine:DealEngine,mandateId:string,{offers:offered,selectionMode='content_review',clientFactory=(record:any)=>new KilnClient({onRecord:record})}:any={}){
   let active=requests.get(engine.store);if(!active){active=new Map();requests.set(engine.store,active);}if(active.has(mandateId))return active.get(mandateId)!;
   const existing=researchRequest(engine,mandateId);if(existing)return Promise.resolve(existing);
   const mandate=engine.store.mandate(mandateId),documentId=mandate.task_requirements?.source_document_id;ensure(documentId||mandate.task_requirements?.reference_dataset_id===reference.id,'RESEARCH_MANDATE_REQUIRED');
@@ -67,8 +67,11 @@ export function procureResearch(engine:DealEngine,mandateId:string,{offers:offer
     const screening=memoryScreen(engine,mandate,offers),eligible=screening.filter(x=>x.eligible).map(x=>x.offer);save(engine,mandateId,{screening:screening.map(({offer,eligible,preview,control})=>({offer_id:offer.offer_id,eligible,preview,control:control??null}))});
     if(!eligible.length)return save(engine,mandateId,{status:'REJECTED',reason:'NO_VERIFIED_PREVIEW',model_calls:0});
     const client=clientFactory((r:any)=>engine.store.telemetry('market.'+mandateId,r));await client.models();
-    const review=await client.reviewOffers({human_task:contentReviewTask(mandate),offers:publicOffers(eligible)});
-    const decision={...review,raw_args:review.args,args:reviewedSelection(mandate,eligible,review.args),selection_source:'deterministic_ranking_after_ai_review'};save(engine,mandateId,{decision});
+    ensure(['content_review','offer_selection'].includes(selectionMode),'INVALID_SELECTION_MODE');
+    const decision=selectionMode==='offer_selection'
+      ? await client.selectOffer({human_task:task,mandate,offers:publicOffers(eligible)})
+      : await (async()=>{const review=await client.reviewOffers({human_task:contentReviewTask(mandate),offers:publicOffers(eligible)});return {...review,raw_args:review.args,args:reviewedSelection(mandate,eligible,review.args),selection_source:'deterministic_ranking_after_ai_review'};})();
+    save(engine,mandateId,{decision});
     const selection=resolveSelection(mandate,eligible,decision.args);if(!selection.accepted)return save(engine,mandateId,{status:decision.args.decision==='reject'?'REJECTED':'BLOCKED',reason:selection.reason});
     const offer=selection.offer!,intent=engine.store.getOrCreateIntent(mandateId,offer.seller_id),deal={...selection.deal!,deal_id:intent.deal_id};
     engine.propose(deal,mandateId);engine.store.details(deal.deal_id,{purchase_intent_id:intent.id,negotiation:[{actor:'Buyer Agent',...decision}],research:{offer:publicOffers([offer])[0],task,...(documentId?{source_document_id:documentId}:{reference_dataset_id:reference.id}),counteroffer_accepted:decision.args.decision==='counter',seller_response:'Posted floor-price policy; no model bargaining response claimed',sample_scope:documentId?'one quarter; final delivery requires all four':'legacy full-reference preview'}});

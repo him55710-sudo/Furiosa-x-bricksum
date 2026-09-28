@@ -6,7 +6,10 @@
 
 ## 확인한 현재 상태
 
-- 현재 저장소 기준 자동 검사 커밋 `b3ff2c3`, 소스 지문 `40741369a95ceb694c7fede80101bbd7301f400b32b7a3dfa3e2558b33362f50`. [실제 Ubuntu CI 보고서](../artifacts/deal-escrow/tests.json)는 101/101, 실패·건너뛰기 0이며 현재 앱/테스트 소스와 일치한다. [실행·산출물 대조 기록](../artifacts/deal-escrow/ci/36472682269.json)에 Actions 실행과 원본 보고서 해시를 연결했다.
+- 후속 사용자 요청의 [가상 업무 데모 검증](FICTIONAL-DEMO-VALIDATION.ko.md)은 12/12로 완료했다. 실제 Kiln의 정상 주문 오거절을 발견해 제안 가능 가격 범위를 명시했고, 원래 실패와 수정 후 성공을 별도 보존했다. 현재 자동 검사는 새 회귀를 포함한 102개다. 아래 101개 Ubuntu 증거는 이전 소스의 관측이며, 최신 보고서는 [tests.json](../artifacts/deal-escrow/tests.json)과 현재 소스 지문으로 확인한다. 합성 시나리오는 실제 고객·사람 검증을 대신했다고 주장하지 않는다.
+
+- 현재 [자동 검사 보고서](../artifacts/deal-escrow/tests.json)는 102/102, 실패·건너뛰기 0이며 소스 지문 `ad549e9df44f403951d17c0699d2a9a85275c8ab02e087b5aeb4a67f838e734b`와 일치한다. 가상 시나리오의 첫 오거절을 수정한 가격 제안 회귀를 포함한다.
+- 이전 커밋 `b3ff2c3`의 Ubuntu 검사는 101/101과 소스 지문 `40741369a95ceb694c7fede80101bbd7301f400b32b7a3dfa3e2558b33362f50`을 확인했다. [실행·산출물 대조 기록](../artifacts/deal-escrow/ci/36472682269.json)에 당시 Actions 실행과 원본 보고서 해시를 연결했다. 현재 102개 결과와 구분한다.
 - 과거 Windows 검사 소스 `fcc202e6ab29f3ba4c94ecbd8136938880377d9e1349b90bdfb7df73e4f9f905`와의 차이는 6개 파일의 CRLF/LF뿐이었다. 각 파일을 Git에 저장된 바이트와 대조한 뒤 작업본을 기존 `.gitattributes`의 LF 기준에 맞췄다. 과거 거래·검사 기록의 지문은 소급 변경하지 않았다. 동작 코드는 바뀌지 않았다.
 - 새 Ubuntu 환경에서 계약 재컴파일 산출물 일치와 live/replay 두 TypeScript/Vite 빌드가 통과했다. 이전 [재시작 후 검사](../artifacts/deal-escrow/nonce-recovery/runtime-checks.json)는 로컬 작업 2건과 정산 경합 1건의 상태·해시·블록을 보존하고 영수증 모두 `VALID`를 확인한 별도 Windows 관측이다.
 - 현재 읽기 전용 재생 API는 원문 실행 `a2f6f4fa`의 지급·환불·샘플 차단·예산 차단·승인 중지 5건과 별도 회수 `5b2ccb95`를 반환했다. 저장된 독립 RPC 판정은 각각 finalized block 11,801,516과 11,801,738의 관측이며 현재 시각의 재실행으로 표시하지 않는다.
