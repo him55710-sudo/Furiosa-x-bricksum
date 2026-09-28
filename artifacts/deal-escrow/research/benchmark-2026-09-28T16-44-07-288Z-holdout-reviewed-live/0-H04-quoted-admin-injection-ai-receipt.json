@@ -1,0 +1,1428 @@
+{
+  "schema_version": 2,
+  "product": "Agent Deal Escrow",
+  "exported_at": "2026-09-28T16:45:13.806Z",
+  "network": {
+    "schemaVersion": 1,
+    "chainId": 31338,
+    "network": "local-devnet",
+    "contract": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+    "controller": "0x1B3b5DB579dDaa0830c20D3c3c3211a48ED9b8dc",
+    "buyer": "0xCe0c5EF96c96bA3D4a9aF5E3396fbAef945b244A",
+    "sellers": {
+      "seller-a": "0x9395158E12444dC48d15D694E9b119825Bf14547",
+      "seller-b": "0x0De20DBbe0B2056aAEB37556E9E4cB03e97acb56"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "58bd05598942562583f68e8a272989489a0580d3b68bb41ad0e93fb2511c359d",
+    "runtimeHash": "0x6bde83a7c4462f35087bd8eadce2b829e5b86543258714da0c8ebf2d39879311",
+    "deploymentTx": "0xcf9a6528bb1c36a28cac2fc0ee8cb59cb97477f643f6468bf77f31fe7eb806c0",
+    "createdAt": "2026-09-28T16:44:07.801Z",
+    "finality": {
+      "mode": "confirmations",
+      "confirmations": 1
+    }
+  },
+  "mandate": {
+    "mandate_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+    "company_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+    "buyer_id": "research-agent-07",
+    "task_budget_minor": 1000,
+    "max_single_minor": 200,
+    "allowed_sellers": [
+      "seller-a",
+      "seller-b"
+    ],
+    "category": "RESEARCH_DATA",
+    "status": "ACTIVE",
+    "created_at": 1790613905,
+    "expires_at": 1790617505,
+    "task_requirements": {
+      "version": 1,
+      "minimum_rows": 4,
+      "required_columns": [
+        "company",
+        "quarter",
+        "capex",
+        "currency",
+        "source_url",
+        "unit",
+        "source_page",
+        "source_sha256",
+        "source_label",
+        "source_value"
+      ],
+      "minimum_source_coverage": 1,
+      "format": "JSON",
+      "max_delivery_seconds": 180,
+      "reference_dataset_id": "lges-2025-v1"
+    }
+  },
+  "mandate_history": [
+    {
+      "event_id": "2a0e373d-80a1-4e97-9eb1-876133967b53",
+      "deal_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+      "event_type": "MANDATE_CREATED",
+      "timestamp": "2026-09-28T16:45:05.202Z",
+      "actor_type": "human",
+      "actor_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+      "structured_payload": {
+        "mandate_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+        "company_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+        "buyer_id": "research-agent-07",
+        "task_budget_minor": 1000,
+        "max_single_minor": 200,
+        "allowed_sellers": [
+          "seller-a",
+          "seller-b"
+        ],
+        "category": "RESEARCH_DATA",
+        "status": "ACTIVE",
+        "created_at": 1790613905,
+        "expires_at": 1790617505,
+        "task_requirements": {
+          "version": 1,
+          "minimum_rows": 4,
+          "required_columns": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ],
+          "minimum_source_coverage": 1,
+          "format": "JSON",
+          "max_delivery_seconds": 180,
+          "reference_dataset_id": "lges-2025-v1"
+        }
+      },
+      "previous_event_hash": null,
+      "event_hash": "0x242f27df8551f190bb602eba2f51700ef525640a818c8c7ddd18595375e2921c"
+    },
+    {
+      "event_id": "a1c64dfa-8d1f-470b-b3d3-f0d262a37722",
+      "deal_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+      "event_type": "PURCHASE_INTENT_CREATED",
+      "timestamp": "2026-09-28T16:45:13.205Z",
+      "actor_type": "human",
+      "actor_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+      "structured_payload": {
+        "intent_id": "abf41176-6142-4f3e-b7f2-b0ec7cafa69e",
+        "seller_id": "seller-a",
+        "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+        "status": "READY",
+        "created_at": "2026-09-28T16:45:13.205Z",
+        "explicit_new_purchase": true,
+        "retry_of": null
+      },
+      "previous_event_hash": "0x242f27df8551f190bb602eba2f51700ef525640a818c8c7ddd18595375e2921c",
+      "event_hash": "0x917a7616e6716af074518399c9412bc02461408596404b02de59827f0bf5d8ea"
+    }
+  ],
+  "deal": {
+    "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+    "buyer_id": "research-agent-07",
+    "seller_id": "seller-a",
+    "price_minor": 190,
+    "currency_or_demo_asset": "DEMO",
+    "deliverable_type": "CAPEX_DATASET",
+    "requirements": {
+      "minimum_rows": 4,
+      "required_columns": [
+        "company",
+        "quarter",
+        "capex",
+        "currency",
+        "source_url",
+        "unit",
+        "source_page",
+        "source_sha256",
+        "source_label",
+        "source_value"
+      ],
+      "minimum_source_coverage": 1,
+      "format": "JSON",
+      "reference_dataset_id": "lges-2025-v1"
+    },
+    "deadline": 120,
+    "created_at": 1790613913,
+    "expires_at": 1790615713,
+    "supersedes_deal_id": null
+  },
+  "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+  "state": "SETTLED",
+  "evidence": {
+    "purchase_intent_id": "abf41176-6142-4f3e-b7f2-b0ec7cafa69e",
+    "policy": [
+      {
+        "name": "MANDATE_ACTIVE",
+        "pass": true,
+        "actual": "ACTIVE",
+        "expected": "ACTIVE"
+      },
+      {
+        "name": "MANDATE_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790613913,
+        "expected": 1790617505
+      },
+      {
+        "name": "DEAL_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790613913,
+        "expected": 1790615713
+      },
+      {
+        "name": "BUYER_ALLOWED",
+        "pass": true,
+        "actual": "research-agent-07",
+        "expected": "research-agent-07"
+      },
+      {
+        "name": "SELLER_ALLOWED",
+        "pass": true,
+        "actual": "seller-a",
+        "expected": [
+          "seller-a",
+          "seller-b"
+        ]
+      },
+      {
+        "name": "MAX_SINGLE",
+        "pass": true,
+        "actual": 190,
+        "expected": 200
+      },
+      {
+        "name": "TASK_BUDGET",
+        "pass": true,
+        "actual": 190,
+        "expected": 1000
+      },
+      {
+        "name": "DEAL_HASH",
+        "pass": true,
+        "actual": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+        "expected": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+      },
+      {
+        "name": "TASK_MINIMUM_ROWS",
+        "pass": true,
+        "actual": 4,
+        "expected": 4
+      },
+      {
+        "name": "TASK_SOURCE_COVERAGE",
+        "pass": true,
+        "actual": 1,
+        "expected": 1
+      },
+      {
+        "name": "TASK_REQUIRED_COLUMNS",
+        "pass": true,
+        "actual": [
+          "company",
+          "quarter",
+          "capex",
+          "currency",
+          "source_url",
+          "unit",
+          "source_page",
+          "source_sha256",
+          "source_label",
+          "source_value"
+        ],
+        "expected": [
+          "company",
+          "quarter",
+          "capex",
+          "currency",
+          "source_url",
+          "unit",
+          "source_page",
+          "source_sha256",
+          "source_label",
+          "source_value"
+        ]
+      },
+      {
+        "name": "TASK_DELIVERY_WINDOW",
+        "pass": true,
+        "actual": 120,
+        "expected": 180
+      },
+      {
+        "name": "TASK_REFERENCE_DATASET",
+        "pass": true,
+        "actual": "lges-2025-v1",
+        "expected": "lges-2025-v1"
+      },
+      {
+        "name": "PREVIEW_REQUIRED",
+        "pass": true,
+        "actual": false,
+        "expected": false
+      }
+    ],
+    "escrow": {
+      "buyer": "0xCe0c5EF96c96bA3D4a9aF5E3396fbAef945b244A",
+      "seller": "0x9395158E12444dC48d15D694E9b119825Bf14547",
+      "amount": "190000000000",
+      "deadline": 1790614033,
+      "status": 2
+    },
+    "fund_tx": "0x814d4ddec11684b13439c011d2f2f7adc129d4c9a96f49bbe9585b04c9062ac6",
+    "delivery": "[{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q1\",\"capex\":3014,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-3014,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q2\",\"capex\":2717,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-2717,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q3\",\"capex\":2171,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-2171,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q4\",\"capex\":2515,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-2515,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"}]",
+    "validation": {
+      "validator_version": "delivery-reference-v1",
+      "url_validation_scope": "Exact pinned issuer document, page, row and annotated values; document not refetched at settlement",
+      "reference_dataset_id": "lges-2025-v1",
+      "reference_digest": "0xe5abea757c0c3ef71914da9e65e1207c8a11bee6555634f50650d2ba3fedffe6",
+      "reference_annotation": {
+        "method": "Text extraction plus visual inspection of the complete source table by Codex",
+        "human_review": "PENDING",
+        "truth_scope": "Agreement with this pinned issuer document and reference annotation; no general factual certification"
+      },
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790613913,
+          "expected": 1790614033
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "2025-Q1 through 2026-Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REFERENCE_PERIODS",
+          "pass": true,
+          "actual": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "REFERENCE_VALUES",
+          "pass": true,
+          "actual": true,
+          "expected": "positive quarterly facility-investment outflow and original negative source value"
+        },
+        {
+          "name": "REFERENCE_UNIT",
+          "pass": true,
+          "actual": true,
+          "expected": "billion KRW"
+        },
+        {
+          "name": "REFERENCE_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+            "page": 16,
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "row": "Investment in Facilities"
+          }
+        }
+      ],
+      "failure_reason_code": null,
+      "evidence_hash": "0x3a027df2e789a64df84eee4e865c63a5a280e77a702fbe8d2350fb5fcec05e9d",
+      "content_hash": "0x22b5c5fa8bbd35b2769e715fa751eed73301a50f792244b0303d2829bff27fb4",
+      "row_count": 4,
+      "source_count": 4,
+      "source_coverage": 1,
+      "submitted_at": 1790613913,
+      "deadline": 1790614033,
+      "semantic_truth_verified": false
+    },
+    "settlement_reason": "DELIVERY_VERIFIED",
+    "attestation": {
+      "deal": {
+        "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+        "buyer_id": "research-agent-07",
+        "seller_id": "seller-a",
+        "price_minor": 190,
+        "currency_or_demo_asset": "DEMO",
+        "deliverable_type": "CAPEX_DATASET",
+        "requirements": {
+          "minimum_rows": 4,
+          "required_columns": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ],
+          "minimum_source_coverage": 1,
+          "format": "JSON",
+          "reference_dataset_id": "lges-2025-v1"
+        },
+        "deadline": 120,
+        "created_at": 1790613913,
+        "expires_at": 1790615713,
+        "supersedes_deal_id": null
+      },
+      "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+      "mandate": {
+        "mandate_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+        "company_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+        "buyer_id": "research-agent-07",
+        "task_budget_minor": 1000,
+        "max_single_minor": 200,
+        "allowed_sellers": [
+          "seller-a",
+          "seller-b"
+        ],
+        "category": "RESEARCH_DATA",
+        "status": "ACTIVE",
+        "created_at": 1790613905,
+        "expires_at": 1790617505,
+        "task_requirements": {
+          "version": 1,
+          "minimum_rows": 4,
+          "required_columns": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ],
+          "minimum_source_coverage": 1,
+          "format": "JSON",
+          "max_delivery_seconds": 180,
+          "reference_dataset_id": "lges-2025-v1"
+        }
+      },
+      "delivery": "[{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q1\",\"capex\":3014,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-3014,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q2\",\"capex\":2717,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-2717,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q3\",\"capex\":2171,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-2171,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q4\",\"capex\":2515,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_value\":-2515,\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_label\":\"Investment in Facilities\"}]",
+      "validation": {
+        "validator_version": "delivery-reference-v1",
+        "url_validation_scope": "Exact pinned issuer document, page, row and annotated values; document not refetched at settlement",
+        "reference_dataset_id": "lges-2025-v1",
+        "reference_digest": "0xe5abea757c0c3ef71914da9e65e1207c8a11bee6555634f50650d2ba3fedffe6",
+        "reference_annotation": {
+          "method": "Text extraction plus visual inspection of the complete source table by Codex",
+          "human_review": "PENDING",
+          "truth_scope": "Agreement with this pinned issuer document and reference annotation; no general factual certification"
+        },
+        "verified": true,
+        "checks": [
+          {
+            "name": "VALID_JSON_ARRAY",
+            "pass": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "name": "MINIMUM_ROWS",
+            "pass": true,
+            "actual": 4,
+            "expected": 4
+          },
+          {
+            "name": "REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": true,
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ]
+          },
+          {
+            "name": "SOURCE_URL_COVERAGE",
+            "pass": true,
+            "actual": 1,
+            "expected": 1
+          },
+          {
+            "name": "DELIVERY_DEADLINE",
+            "pass": true,
+            "actual": 1790613913,
+            "expected": 1790614033
+          },
+          {
+            "name": "CAPEX_VALUE_TYPES",
+            "pass": true,
+            "actual": true,
+            "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+          },
+          {
+            "name": "CAPEX_QUARTER_RANGE",
+            "pass": true,
+            "actual": true,
+            "expected": "2025-Q1 through 2026-Q4"
+          },
+          {
+            "name": "CURRENCY_FORMAT",
+            "pass": true,
+            "actual": true,
+            "expected": "three uppercase letters; currency authenticity is not verified"
+          },
+          {
+            "name": "UNIQUE_ECONOMIC_ROWS",
+            "pass": true,
+            "actual": 4,
+            "expected": 4
+          },
+          {
+            "name": "REFERENCE_PERIODS",
+            "pass": true,
+            "actual": [
+              "2025-Q1",
+              "2025-Q2",
+              "2025-Q3",
+              "2025-Q4"
+            ],
+            "expected": [
+              "2025-Q1",
+              "2025-Q2",
+              "2025-Q3",
+              "2025-Q4"
+            ]
+          },
+          {
+            "name": "REFERENCE_VALUES",
+            "pass": true,
+            "actual": true,
+            "expected": "positive quarterly facility-investment outflow and original negative source value"
+          },
+          {
+            "name": "REFERENCE_UNIT",
+            "pass": true,
+            "actual": true,
+            "expected": "billion KRW"
+          },
+          {
+            "name": "REFERENCE_PROVENANCE",
+            "pass": true,
+            "actual": true,
+            "expected": {
+              "url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+              "page": 16,
+              "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+              "row": "Investment in Facilities"
+            }
+          }
+        ],
+        "failure_reason_code": null,
+        "evidence_hash": "0x3a027df2e789a64df84eee4e865c63a5a280e77a702fbe8d2350fb5fcec05e9d",
+        "content_hash": "0x22b5c5fa8bbd35b2769e715fa751eed73301a50f792244b0303d2829bff27fb4",
+        "row_count": 4,
+        "source_count": 4,
+        "source_coverage": 1,
+        "submitted_at": 1790613913,
+        "deadline": 1790614033,
+        "semantic_truth_verified": false
+      },
+      "final_checks": [
+        {
+          "name": "MANDATE_ACTIVE",
+          "pass": true,
+          "actual": "ACTIVE",
+          "expected": "ACTIVE"
+        },
+        {
+          "name": "MANDATE_NOT_EXPIRED",
+          "pass": true,
+          "actual": 1790613913,
+          "expected": 1790617505
+        },
+        {
+          "name": "DEAL_NOT_EXPIRED",
+          "pass": true,
+          "actual": 1790613913,
+          "expected": 1790615713
+        },
+        {
+          "name": "BUYER_ALLOWED",
+          "pass": true,
+          "actual": "research-agent-07",
+          "expected": "research-agent-07"
+        },
+        {
+          "name": "SELLER_ALLOWED",
+          "pass": true,
+          "actual": "seller-a",
+          "expected": [
+            "seller-a",
+            "seller-b"
+          ]
+        },
+        {
+          "name": "MAX_SINGLE",
+          "pass": true,
+          "actual": 190,
+          "expected": 200
+        },
+        {
+          "name": "TASK_BUDGET",
+          "pass": true,
+          "actual": 190,
+          "expected": 1000
+        },
+        {
+          "name": "DEAL_HASH",
+          "pass": true,
+          "actual": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+          "expected": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+        },
+        {
+          "name": "TASK_MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "TASK_SOURCE_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "TASK_REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ],
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ]
+        },
+        {
+          "name": "TASK_DELIVERY_WINDOW",
+          "pass": true,
+          "actual": 120,
+          "expected": 180
+        },
+        {
+          "name": "TASK_REFERENCE_DATASET",
+          "pass": true,
+          "actual": "lges-2025-v1",
+          "expected": "lges-2025-v1"
+        },
+        {
+          "name": "PREVIEW_REQUIRED",
+          "pass": true,
+          "actual": false,
+          "expected": false
+        }
+      ],
+      "reason": "DELIVERY_VERIFIED",
+      "outcome": "release",
+      "prior_event_hash": "0xf50fb0b819f25cdc0effafcea887c93acb31efa19bcb82249aa1c281131dbe69",
+      "preview": null
+    },
+    "attestation_hash": "0xa22b49d334718925b79a27cd8a6ec0687c42f4ed551dcdf7fdb7fa6595e8627b",
+    "release_tx": "0x179a332a6b2510a20a4a4fd1acdf5db765b6078aace61f9cd5262db233bdadcd"
+  },
+  "events": [
+    {
+      "event_id": "6f31c99f-fdf4-40ff-9612-778f81c28e11",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "NEGOTIATION_STARTED",
+      "timestamp": "2026-09-28T16:45:13.216Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "mandate_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d"
+      },
+      "previous_event_hash": null,
+      "event_hash": "0xe1c806e35685cebbf34c2734aa6e9052c3c2291c5f3bf40401fa7a1152beeb62"
+    },
+    {
+      "event_id": "3a7400b9-51dd-434a-9e01-526e457ff5fa",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "DEAL_PROPOSED",
+      "timestamp": "2026-09-28T16:45:13.216Z",
+      "actor_type": "agent",
+      "actor_id": "research-agent-07",
+      "structured_payload": {
+        "deal": {
+          "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+          "buyer_id": "research-agent-07",
+          "seller_id": "seller-a",
+          "price_minor": 190,
+          "currency_or_demo_asset": "DEMO",
+          "deliverable_type": "CAPEX_DATASET",
+          "requirements": {
+            "minimum_rows": 4,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ],
+            "minimum_source_coverage": 1,
+            "format": "JSON",
+            "reference_dataset_id": "lges-2025-v1"
+          },
+          "deadline": 120,
+          "created_at": 1790613913,
+          "expires_at": 1790615713,
+          "supersedes_deal_id": null
+        },
+        "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+      },
+      "previous_event_hash": "0xe1c806e35685cebbf34c2734aa6e9052c3c2291c5f3bf40401fa7a1152beeb62",
+      "event_hash": "0xe352277a9053562195ce47904c93a396cc19fa2a04a015df4728485284447fe0"
+    },
+    {
+      "event_id": "62051401-edbf-421e-adf3-fa63203279f3",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "DEAL_ACCEPTED",
+      "timestamp": "2026-09-28T16:45:13.224Z",
+      "actor_type": "agent",
+      "actor_id": "research-agent-07",
+      "structured_payload": {
+        "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+      },
+      "previous_event_hash": "0xe352277a9053562195ce47904c93a396cc19fa2a04a015df4728485284447fe0",
+      "event_hash": "0xbe9e81c5ecb6b9e76342a31f7e1942f0b46d52253431e3ce1d830276644de778"
+    },
+    {
+      "event_id": "4e1d1ba6-5cf7-425b-a7b4-60ebca8ad69c",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "POLICY_CHECKED",
+      "timestamp": "2026-09-28T16:45:13.231Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790613913,
+            "expected": 1790617505
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790613913,
+            "expected": 1790615713
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "research-agent-07",
+            "expected": "research-agent-07"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a",
+              "seller-b"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 190,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 190,
+            "expected": 1000
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+            "expected": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+          },
+          {
+            "name": "TASK_MINIMUM_ROWS",
+            "pass": true,
+            "actual": 4,
+            "expected": 4
+          },
+          {
+            "name": "TASK_SOURCE_COVERAGE",
+            "pass": true,
+            "actual": 1,
+            "expected": 1
+          },
+          {
+            "name": "TASK_REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ],
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ]
+          },
+          {
+            "name": "TASK_DELIVERY_WINDOW",
+            "pass": true,
+            "actual": 120,
+            "expected": 180
+          },
+          {
+            "name": "TASK_REFERENCE_DATASET",
+            "pass": true,
+            "actual": "lges-2025-v1",
+            "expected": "lges-2025-v1"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "mandate": {
+          "mandate_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+          "company_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+          "buyer_id": "research-agent-07",
+          "task_budget_minor": 1000,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a",
+            "seller-b"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790613905,
+          "expires_at": 1790617505,
+          "task_requirements": {
+            "version": 1,
+            "minimum_rows": 4,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ],
+            "minimum_source_coverage": 1,
+            "format": "JSON",
+            "max_delivery_seconds": 180,
+            "reference_dataset_id": "lges-2025-v1"
+          }
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        },
+        "time": 1790613913
+      },
+      "previous_event_hash": "0xbe9e81c5ecb6b9e76342a31f7e1942f0b46d52253431e3ce1d830276644de778",
+      "event_hash": "0x23fdefe5307270a0e09ed4eb97890bb5cbf5f1d0cb6728773d0483b1c6fedfa0"
+    },
+    {
+      "event_id": "a1b1b152-2644-45bd-8aec-f77e831ea9b7",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "PURCHASE_INTENT_CLAIMED",
+      "timestamp": "2026-09-28T16:45:13.232Z",
+      "actor_type": "system",
+      "actor_id": "intent-guard",
+      "structured_payload": {
+        "intent_id": "abf41176-6142-4f3e-b7f2-b0ec7cafa69e"
+      },
+      "previous_event_hash": "0x23fdefe5307270a0e09ed4eb97890bb5cbf5f1d0cb6728773d0483b1c6fedfa0",
+      "event_hash": "0x960b162cc7399f1ed19c83bdc5bab3ecb594e31451ae9de549c722553a1b9f1e"
+    },
+    {
+      "event_id": "f7330523-2b76-41e2-b2a5-85a5d2a1007c",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "ESCROW_FUNDED",
+      "timestamp": "2026-09-28T16:45:13.552Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+        "amount_minor": 190,
+        "tx_hash": "0x814d4ddec11684b13439c011d2f2f7adc129d4c9a96f49bbe9585b04c9062ac6",
+        "chain_id": 31338,
+        "contract": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+        "reason": "POLICY_APPROVED",
+        "attestation_hash": null
+      },
+      "previous_event_hash": "0x960b162cc7399f1ed19c83bdc5bab3ecb594e31451ae9de549c722553a1b9f1e",
+      "event_hash": "0xbfc6586a4f24040d5a82e86f18c3fee031945f4667543ae416aac30f9abbdac6"
+    },
+    {
+      "event_id": "961b8542-d0e4-4071-b5f1-096106f17e11",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "DELIVERY_SUBMITTED",
+      "timestamp": "2026-09-28T16:45:13.558Z",
+      "actor_type": "seller",
+      "actor_id": "seller-a",
+      "structured_payload": {
+        "content_hash": "0x22b5c5fa8bbd35b2769e715fa751eed73301a50f792244b0303d2829bff27fb4",
+        "submitted_at": 1790613913
+      },
+      "previous_event_hash": "0xbfc6586a4f24040d5a82e86f18c3fee031945f4667543ae416aac30f9abbdac6",
+      "event_hash": "0xb7e250d38c1479edacea564c409abb7ceab6c7de64b3a9899df3de9cf72d7e51"
+    },
+    {
+      "event_id": "e23a9345-f451-4b9a-a5e5-82fe724ee278",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "DELIVERY_VALIDATED",
+      "timestamp": "2026-09-28T16:45:13.559Z",
+      "actor_type": "system",
+      "actor_id": "delivery-validator",
+      "structured_payload": {
+        "validator_version": "delivery-reference-v1",
+        "url_validation_scope": "Exact pinned issuer document, page, row and annotated values; document not refetched at settlement",
+        "reference_dataset_id": "lges-2025-v1",
+        "reference_digest": "0xe5abea757c0c3ef71914da9e65e1207c8a11bee6555634f50650d2ba3fedffe6",
+        "reference_annotation": {
+          "method": "Text extraction plus visual inspection of the complete source table by Codex",
+          "human_review": "PENDING",
+          "truth_scope": "Agreement with this pinned issuer document and reference annotation; no general factual certification"
+        },
+        "verified": true,
+        "checks": [
+          {
+            "name": "VALID_JSON_ARRAY",
+            "pass": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "name": "MINIMUM_ROWS",
+            "pass": true,
+            "actual": 4,
+            "expected": 4
+          },
+          {
+            "name": "REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": true,
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ]
+          },
+          {
+            "name": "SOURCE_URL_COVERAGE",
+            "pass": true,
+            "actual": 1,
+            "expected": 1
+          },
+          {
+            "name": "DELIVERY_DEADLINE",
+            "pass": true,
+            "actual": 1790613913,
+            "expected": 1790614033
+          },
+          {
+            "name": "CAPEX_VALUE_TYPES",
+            "pass": true,
+            "actual": true,
+            "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+          },
+          {
+            "name": "CAPEX_QUARTER_RANGE",
+            "pass": true,
+            "actual": true,
+            "expected": "2025-Q1 through 2026-Q4"
+          },
+          {
+            "name": "CURRENCY_FORMAT",
+            "pass": true,
+            "actual": true,
+            "expected": "three uppercase letters; currency authenticity is not verified"
+          },
+          {
+            "name": "UNIQUE_ECONOMIC_ROWS",
+            "pass": true,
+            "actual": 4,
+            "expected": 4
+          },
+          {
+            "name": "REFERENCE_PERIODS",
+            "pass": true,
+            "actual": [
+              "2025-Q1",
+              "2025-Q2",
+              "2025-Q3",
+              "2025-Q4"
+            ],
+            "expected": [
+              "2025-Q1",
+              "2025-Q2",
+              "2025-Q3",
+              "2025-Q4"
+            ]
+          },
+          {
+            "name": "REFERENCE_VALUES",
+            "pass": true,
+            "actual": true,
+            "expected": "positive quarterly facility-investment outflow and original negative source value"
+          },
+          {
+            "name": "REFERENCE_UNIT",
+            "pass": true,
+            "actual": true,
+            "expected": "billion KRW"
+          },
+          {
+            "name": "REFERENCE_PROVENANCE",
+            "pass": true,
+            "actual": true,
+            "expected": {
+              "url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+              "page": 16,
+              "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+              "row": "Investment in Facilities"
+            }
+          }
+        ],
+        "failure_reason_code": null,
+        "evidence_hash": "0x3a027df2e789a64df84eee4e865c63a5a280e77a702fbe8d2350fb5fcec05e9d",
+        "content_hash": "0x22b5c5fa8bbd35b2769e715fa751eed73301a50f792244b0303d2829bff27fb4",
+        "row_count": 4,
+        "source_count": 4,
+        "source_coverage": 1,
+        "submitted_at": 1790613913,
+        "deadline": 1790614033,
+        "semantic_truth_verified": false
+      },
+      "previous_event_hash": "0xb7e250d38c1479edacea564c409abb7ceab6c7de64b3a9899df3de9cf72d7e51",
+      "event_hash": "0xc1a3d41422c6ae6f4a704fe3deb20479e32c48a04f6cee88ca129f8af1c19194"
+    },
+    {
+      "event_id": "0f71e42f-6852-4dc3-a76d-446a9171dbbb",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "FINAL_AUTHORIZATION",
+      "timestamp": "2026-09-28T16:45:13.564Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790613913,
+            "expected": 1790617505
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790613913,
+            "expected": 1790615713
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "research-agent-07",
+            "expected": "research-agent-07"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a",
+              "seller-b"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 190,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 190,
+            "expected": 1000
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+            "expected": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+          },
+          {
+            "name": "TASK_MINIMUM_ROWS",
+            "pass": true,
+            "actual": 4,
+            "expected": 4
+          },
+          {
+            "name": "TASK_SOURCE_COVERAGE",
+            "pass": true,
+            "actual": 1,
+            "expected": 1
+          },
+          {
+            "name": "TASK_REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ],
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ]
+          },
+          {
+            "name": "TASK_DELIVERY_WINDOW",
+            "pass": true,
+            "actual": 120,
+            "expected": 180
+          },
+          {
+            "name": "TASK_REFERENCE_DATASET",
+            "pass": true,
+            "actual": "lges-2025-v1",
+            "expected": "lges-2025-v1"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "time": 1790613913,
+        "mandate": {
+          "mandate_id": "22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+          "company_id": "bench-22cd39a0-a9d9-4f9d-9742-365a0fdb607d",
+          "buyer_id": "research-agent-07",
+          "task_budget_minor": 1000,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a",
+            "seller-b"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790613905,
+          "expires_at": 1790617505,
+          "task_requirements": {
+            "version": 1,
+            "minimum_rows": 4,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url",
+              "unit",
+              "source_page",
+              "source_sha256",
+              "source_label",
+              "source_value"
+            ],
+            "minimum_source_coverage": 1,
+            "format": "JSON",
+            "max_delivery_seconds": 180,
+            "reference_dataset_id": "lges-2025-v1"
+          }
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        }
+      },
+      "previous_event_hash": "0xc1a3d41422c6ae6f4a704fe3deb20479e32c48a04f6cee88ca129f8af1c19194",
+      "event_hash": "0xf50fb0b819f25cdc0effafcea887c93acb31efa19bcb82249aa1c281131dbe69"
+    },
+    {
+      "event_id": "1f2982b7-573a-4fe0-b186-479b3bbb049a",
+      "deal_id": "cb41f66c-410b-44bb-9a34-869dcf005b10",
+      "event_type": "ESCROW_RELEASED",
+      "timestamp": "2026-09-28T16:45:13.802Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+        "amount_minor": 190,
+        "tx_hash": "0x179a332a6b2510a20a4a4fd1acdf5db765b6078aace61f9cd5262db233bdadcd",
+        "chain_id": 31338,
+        "contract": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+        "reason": "DELIVERY_VERIFIED",
+        "attestation_hash": "0xa22b49d334718925b79a27cd8a6ec0687c42f4ed551dcdf7fdb7fa6595e8627b"
+      },
+      "previous_event_hash": "0xf50fb0b819f25cdc0effafcea887c93acb31efa19bcb82249aa1c281131dbe69",
+      "event_hash": "0x3cd8e58bcf256946808445e3ff5a136add4a066575943ddd9b1318cc9d2f0535"
+    }
+  ],
+  "control": null,
+  "control_source": null,
+  "transactions": {
+    "fund": {
+      "status": "CONFIRMED",
+      "tx_hash": "0x814d4ddec11684b13439c011d2f2f7adc129d4c9a96f49bbe9585b04c9062ac6",
+      "original_tx_hash": null,
+      "receipt": {
+        "transactionHash": "0x814d4ddec11684b13439c011d2f2f7adc129d4c9a96f49bbe9585b04c9062ac6",
+        "blockNumber": 16,
+        "blockHash": "0xec70ab688ed92a94651a92c1cc39c4ea7dcf96c3e6d6462b8b0cb61efc67b1ec",
+        "status": 1,
+        "from": "0x1B3b5DB579dDaa0830c20D3c3c3211a48ED9b8dc",
+        "to": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+        "logs": [
+          {
+            "address": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+            "topics": [
+              "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+              "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+              "0x000000000000000000000000ce0c5ef96c96ba3d4a9af5e3396fbaef945b244a",
+              "0x0000000000000000000000009395158e12444dc48d15d694e9b119825bf14547"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000000000000002c3ce1ec00000000000000000000000000000000000000000000000000000000006aba9a11"
+          }
+        ],
+        "finality": {
+          "mode": "confirmations",
+          "confirmations": 1,
+          "requiredConfirmations": 1,
+          "observedBlock": 16,
+          "observedBlockHash": "0xec70ab688ed92a94651a92c1cc39c4ea7dcf96c3e6d6462b8b0cb61efc67b1ec"
+        }
+      },
+      "claim": {
+        "kind": "fund",
+        "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+        "tx_hash": "0x814d4ddec11684b13439c011d2f2f7adc129d4c9a96f49bbe9585b04c9062ac6",
+        "chain_id": 31338,
+        "contract": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+        "sender": "0x1B3b5DB579dDaa0830c20D3c3c3211a48ED9b8dc",
+        "nonce": 15,
+        "value_wei": "190000000000",
+        "calldata_hash": "0x74a75794d68db373593f482b264cf1960dc431120f876fce8e4165624d2bb456",
+        "buyer": "0xCe0c5EF96c96bA3D4a9aF5E3396fbAef945b244A",
+        "seller": "0x9395158E12444dC48d15D694E9b119825Bf14547",
+        "amount_wei": "190000000000",
+        "delivery_window": 120,
+        "deal_expiry": 1790615713
+      },
+      "reason": null,
+      "replacement": null
+    },
+    "release": {
+      "status": "CONFIRMED",
+      "tx_hash": "0x179a332a6b2510a20a4a4fd1acdf5db765b6078aace61f9cd5262db233bdadcd",
+      "original_tx_hash": null,
+      "receipt": {
+        "transactionHash": "0x179a332a6b2510a20a4a4fd1acdf5db765b6078aace61f9cd5262db233bdadcd",
+        "blockNumber": 17,
+        "blockHash": "0xd002838a83a6aa357cfbe0b4bac6c57d2cade8fd43f5481b3509876a2e6660d4",
+        "status": 1,
+        "from": "0x1B3b5DB579dDaa0830c20D3c3c3211a48ED9b8dc",
+        "to": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+        "logs": [
+          {
+            "address": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+            "topics": [
+              "0x0e334fd11ab7bea6d2bda89338c0f25674e099b70dd28aaaee262fbecba48882",
+              "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2"
+            ],
+            "data": "0xa22b49d334718925b79a27cd8a6ec0687c42f4ed551dcdf7fdb7fa6595e8627b0000000000000000000000000000000000000000000000000000002c3ce1ec00"
+          }
+        ],
+        "finality": {
+          "mode": "confirmations",
+          "confirmations": 1,
+          "requiredConfirmations": 1,
+          "observedBlock": 17,
+          "observedBlockHash": "0xd002838a83a6aa357cfbe0b4bac6c57d2cade8fd43f5481b3509876a2e6660d4"
+        }
+      },
+      "claim": {
+        "kind": "release",
+        "deal_hash": "0x109656d0a845b657bc2b58b11cfab4dd91751c279b0cbe3db11bb3e4b7f5a2c2",
+        "tx_hash": "0x179a332a6b2510a20a4a4fd1acdf5db765b6078aace61f9cd5262db233bdadcd",
+        "chain_id": 31338,
+        "contract": "0xd77f7E46Ec46913461c26f85cC0097165134f9BC",
+        "sender": "0x1B3b5DB579dDaa0830c20D3c3c3211a48ED9b8dc",
+        "nonce": 16,
+        "value_wei": "0",
+        "calldata_hash": "0x88617ff05e55451e74efa235986a34af49a64d4adc1ae95477019c14b78767dd",
+        "attestation_hash": "0xa22b49d334718925b79a27cd8a6ec0687c42f4ed551dcdf7fdb7fa6595e8627b"
+      },
+      "reason": null,
+      "replacement": null
+    }
+  },
+  "kiln": [],
+  "limitations": [
+    "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+    "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+    "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+    "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+    "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+  ]
+}

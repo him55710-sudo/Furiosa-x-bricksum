@@ -1,89 +1,234 @@
-# Control Memory — GWDC Challenge B
+We built a verifiable escrow and financial-control layer for AI agents procuring digital work: AI reviews offer content, deterministic code compares approved terms and enforces delivery conditions, and blockchain escrow releases or refunds funds with reconstructable evidence.
 
-**Declared function:** Control Memory helps developers of paid research agents recover one owner-approved resource purchase after response loss or worker restart, enforces at most one payment for that purchase, and lets another person verify its approval, payment, and received content.
+# Agent Deal Escrow
 
-**“돈은 나갔는데 자료는 없다. 봇을 다시 켜도 되는가?”**에 집중한 실행 가능한 프로토타입입니다. Kiln **Qwen3-32B**가 자료 필요성을 판단하고 근거 답변을 만들며, 코드는 복구와 인용 원문 복사를, `PurchaseVault`는 서명된 구매 1건당 지급 최대 1회를 집행합니다.
+**Verifiable escrow and financial controls for AI-to-AI digital work transactions.**
 
-[구현·재현 문서](docs/PURCHASE-IMPLEMENTATION.ko.md) · [실제 실행·거래·flow별 토큰](artifacts/purchase/README.md) · [좁힌 문제와 설계](docs/HACKATHON-PLAN.v3.ko.md) · [사용자 조사 근거](docs/USER-DISCOVERY.v3.ko.md)
+This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum Challenge B specification. The previous paid-resource recovery prototype is preserved in [the legacy README](docs/LEGACY-PURCHASE-README.ko.md), not the scope of this product.
 
-**구매 복구 P0·공개 Sepolia 관통 검증 완료:** 6 TC 지급 후 실제 HTTP 응답을 끊고 worker를 재시작해 같은 자료를 회수했습니다. 복구까지 실행 3회·지급 1회. 수수료 초과·허용 밖 판매자·만료와 새 견적 중복 지급이 거부됐습니다. 구매 테스트 21개와 공개 8개 검사가 통과했고, 앱 전체 종료 중 독립 RPC 검증도 VALID입니다. [공개 거래·영수증·토큰 1,765개 증빙](artifacts/purchase-sepolia/README.md) · [완료 감사](docs/PURCHASE-COMPLETION-AUDIT.ko.md). 합성 자료·테스트 자산이며 상용 x402 연결이나 실자산 서비스가 아닙니다.
+## Current source-backed research demo
+
+The current task produces four quarterly facility-investment figures from an original LG Energy Solution PDF. A real Kiln model reviews simulated offers and cites source sentence IDs; deterministic code ranks policy-compliant offers by posted floor price and deadline. The source-cell validator checks document, period, row, unit and signed value without a registered numeric answer table. The 2026 Q2 source workflow now has public Sepolia evidence for payment, wrong-row refund, corrected partial sample and buyer-signed refund after the app stops. This is one supported issuer table family, not arbitrary-PDF verification. Earlier unsupported documents and the parser repair remain in the [source evaluation](artifacts/deal-escrow/research/source-evaluation/report.json). Human review, real supplier participation and customer validation remain pending. See [the focused product plan](docs/FOCUSED-PRODUCT-PLAN.ko.md) and [execution status](docs/WINNING-EXECUTION.ko.md).
+
+```sh
+python -m pip install -r requirements-pdf.txt
+pnpm ade:build
+pnpm ade:research:start
+# http://127.0.0.1:3412/ — research workbench
+# http://127.0.0.1:3412/?replay=1 — recorded execution, no new model calls
+# http://127.0.0.1:3412/?study=1 — real participant questionnaire
+```
+
+The local workbench is an admin demonstration. Approving an offer comparison makes a paid model request. Supported PDF extraction defaults to deterministic cell selection with no extraction model call; the optional AI extraction mode makes one paid call. In the observed extraction-only comparison, direct selection took 188 ms and the model took 20,096 ms / 8,253 tokens for the same rows. This is not a human time-saving measurement. Seller counteroffer acceptance follows a published local rule. A failed supplier must pass a one-quarter sample; payment still requires all four quarters. Interactive workbench funds use a local test chain. The latest labeled walkthrough replays the separate public Sepolia source run, with simulated sellers and scripted approvals.
+
+Pinned public PDF files are under `data/source-documents`; their provenance and hashes are in `data/reference/capex/source-documents.json`. `node scripts/import-deal-research-document.mjs` imports or verifies those documents. The PDF bridge requires Python with PyMuPDF; set `ADE_PYTHON` to the executable when it is not the configured bundled runtime or `python3`. Unsupported layouts require review and cannot be automatically purchased. The earlier registered-reference profile remains available for historical receipt replay.
+
+`pnpm ade:research:benchmark:live` compares fixed rules, AI and AI with verified failure history on the same authored cases and final guards (up to 64 paid requests). `pnpm ade:research:benchmark` is an offline harness rehearsal, not an AI measurement. `pnpm ade:server-off` independently verifies a separate buyer's refund after the app process stops, on a separate local EVM.
+
+The reviewed comparison in `latest-benchmark-holdout-reviewed-live.json` recorded fixed rules v1 at 10/16, AI at 16/16 and AI with history at 16/16 expected outcomes. A stronger deterministic baseline subsequently achieved **16/16 with zero model calls**, on the identical authored cases and final guards. [Combined evidence](artifacts/deal-escrow/research/benchmark-comparison-v2.json) retains both baselines and identifies the reused AI records. Both rules and AI were improved using known cases; this does not establish an AI advantage, a fresh holdout or customer validation. Earlier failures remain linked in the execution status.
+
+Rerun the stronger rules without paid calls: `node scripts/benchmark-deal-research.mjs --holdout --fixed-only --strong-rules --repeats=2`. To rerun the paid AI evaluation explicitly: `node --env-file-if-exists=.env.local scripts/benchmark-deal-research.mjs --holdout --reviewed --live --repeats=2`.
+
+Read-only public checks: `node scripts/verify-deal-research-public.mjs`, or add `--finalized` to require finalized chain state. [Independent finalized verification](artifacts/deal-escrow/research/sepolia-source-v1/independent-finalized.json) passed for all three delivery transactions and the separate buyer-signed app-off refund. [Current public source evidence](artifacts/deal-escrow/research/sepolia-source-v1/report.json) includes prior failed attempts. `demo-deal-research-public.mjs` is a durable transaction-producing demonstration, not needed for viewing or independent verification; it requires this task's provisioned test identities.
+
+To rebuild the latest narrated recording from existing evidence, run `node scripts/build-deal-research-public-showcase.mjs`, `pnpm ade:research:narrate`, then `pnpm ade:research:record` while the workbench is running. Verify with `node scripts/verify-deal-research-video.mjs`. Recording uses Edge, Playwright, Windows Microsoft Heami synthetic speech and the isolated imageio-ffmpeg runtime under `data/private/media-tools` (set `ADE_PYTHON` for another Python executable). The MP4 and narration are under `artifacts/deal-escrow/research`; the earlier reference-mode recording is preserved in `earlier-reference-recording`. These commands record past executions; they do not substitute for real human interviews.
+
+## Earlier public Sepolia structural-validation proof
+
+The completed public run contains two fund transactions, one release, one refund, and four recorded stops. An independent RPC verified all six evidence bundles against finalized Sepolia state. The 9-step Korean demo is read-only and uses those exact records. It needs no API key or wallet.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm contracts:build
-pnpm purchase:build
-pnpm purchase:web
-# .env.local에 KILN_API_KEY 설정 후
-pnpm purchase:start
+pnpm ade:replay:build
+pnpm ade:replay
+# Open http://127.0.0.1:3410/?replay=1
 ```
 
-[구매 복구 콘솔 열기](http://127.0.0.1:3500/purchase). 서명 승인 → ‘지급 후 결과 응답 끊기’ 실행 → worker 재시작 → 다시 실행 → 증빙 받기 순서로 시연합니다. `pnpm purchase:test`로 핵심 검증, 실행 중 `pnpm purchase:verify`로 실제 Kiln 관통 검증을 수행합니다.
+[Public proof, architecture and demo script](docs/PUBLIC-ESCROW-PROOF.ko.md) · [Independent verification](artifacts/deal-escrow/runs/d07e8650-bc47-4ecd-b138-8885d8288a04/independent-verification.json) · [3-minute silent evidence video](artifacts/deal-escrow/public-ui/demo-3min.webm)
 
-![복구 후 실제 콘솔](artifacts/purchase/06-final-recovered.png)
+![The failure changes the next purchase](artifacts/deal-escrow/public-ui/06.png)
 
-## 기존 협상·Control Memory 실험
+## Run
 
-아래는 보존된 기존 3400 콘솔과 협상 실험의 설명입니다. 검증된 수수료 초과 실패를 같은 소유자·목적·판매자의 다음 거래에서 더 이른 확정 총액 검사로 전환합니다. v3 자료 구매 복구의 증거와 구별합니다.
-
-## 실행
-
-Node.js **24 이상**, pnpm 11을 사용합니다. 판매자와 지갑은 테스트 전용이며 실제 자산이 필요하지 않습니다.
+Node 24+ and pnpm are required. Existing dependencies are reused; native Node TypeScript stripping runs the server.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm contracts:build
-pnpm build
-pnpm start
+pnpm ade:contracts
+pnpm ade:test
+pnpm ade:build
+pnpm ade:start
 ```
 
-먼저 `.env.example`을 `.env.local`로 복사하고 `KILN_API_KEY`를 입력합니다. [콘솔 열기](http://127.0.0.1:3400). 서버가 로컬 EVM devnet(31337, RPC 8545)을 시작하고 첫 실행에서 계약을 배포합니다. HTTP와 RPC 모두 loopback에만 바인딩합니다.
+Open **http://127.0.0.1:3402**. Overview, Deals, Agents, Controls and Audit are implemented. The browser is a local admin demo, not an internet deployment.
 
-브라우저는 전용 데모 서명 키를 해당 origin의 localStorage에 보관합니다. 실제 지갑을 연결하지 않습니다. 원장·체인·실행자 및 판매자 테스트 키는 Git에서 제외된 `data/private/`에 있습니다. 서버 재시작 후 화면을 새로고침하면 재인증합니다. `localhost`와 `127.0.0.1`은 별도 origin이므로 한 주소를 일관되게 사용하세요.
+For a new real Kiln + real local EVM run:
 
-## 구현한 흐름
+```sh
+# Set KILN_API_KEY, KILN_MODEL and optionally KILN_BASE_URL in .env.local.
+# Model identifier is required, never hardcoded by the new adapter.
+pnpm ade:demo
+pnpm ade:start
+```
 
-1. **예산 위임:** 총 예산·건별 한도·판매자·기한·최대 AI 호출·추가 통제 허용 여부를 확인하고 EIP-712 서명합니다.
-2. **비교와 협상:** Kiln의 **`qwen3-32b`**가 후보를 고르거나 가격 재협상을 제안합니다. 모델 변경은 사용자의 대회 요구사항 정정에 따릅니다. 다른 모델로 자동 대체하지 않습니다.
-3. **코드 검사:** 수수료 포함 총액·누적 지출·예약금·판매자·목적·수량·환불·기한을 검사합니다. SQLite 원자적 예약 후 제출 직전에 다시 검사합니다.
-4. **체인 집행:** Solidity `BudgetVault`가 승인·견적 서명과 경계를 다시 검사하고 TestCredit을 보냅니다. `Payment` 이벤트에 결제 전 증빙 해시를 남깁니다.
-5. **중지와 영수증:** 사람의 중지는 새 작업을 차단하고 온체인 권한을 취소합니다. 이미 제출된 거래는 취소됐다고 표시하지 않고 확정을 추적합니다.
-6. **독립 검증:** JSON과 별도로 신뢰한 배포 정보·RPC를 대조합니다. 원본은 `VALID`, 금액 변조는 `INVALID`, 필수 증빙 누락이나 체인 연결 부재는 `INCOMPLETE`입니다.
+`ade:demo` makes six paid API calls under this implementation request and creates new dedicated devnet identities. Do not run it merely to view existing evidence. The local server opens the latest local run's private state, or a new local service directory when the latest evidence is public; `ADE_DATA_DIR` selects a separate directory. Stop a server before opening the same chain database in another process. `ade:test` does **not** make paid model calls or public-chain transactions.
 
-| AI가 수행 | 코드가 수행 | 블록체인이 수행 |
+Evidence: [public run](artifacts/deal-escrow/sepolia/latest.json), [actual test runner output](artifacts/deal-escrow/tests.json), [public demo browser checks](artifacts/deal-escrow/public-ui/browser-checks.json), [trusted deployment](artifacts/deal-escrow/sepolia/trusted-deployment.json).
+
+The [persona remediation record](docs/LIMITATIONS-REMEDIATION.ko.md) covers the newer human quality floors, durable purchase intents, strict delivery validation, failure recovery and audit checks. `pnpm ade:personas` runs scripted attacks without external calls; `pnpm ade:personas:live` makes at most six real Kiln calls. `node scripts/check-deal-personas.mjs` verifies preview correction through settlement in an isolated local browser/demo.
+
+## 1. Problem
+
+When one AI agent hires another for digital work, paying before delivery creates avoidable financial exposure. An LLM can negotiate useful terms, but its language and tool proposals must not become unrestricted wallet instructions.
+
+## 2. Persona
+
+An AI Platform Lead at an AI-native research company delegates small dataset purchases to Research Agent 07. The concrete task is a 2025–2026 Korean EV battery CAPEX dataset. This is a research-data transaction prototype, not corporate finance or procurement software. No validated customer adoption is claimed.
+
+## 3. Declared function
+
+Negotiate an immutable structured Deal, enforce delegated spending, lock test assets, validate deterministic delivery conditions, and release or refund with reconstructable evidence. A verified failure can activate a predefined seller-specific preview gate. Escrow, structured offers and tool calling are not claimed as novel.
+
+## 4. Demo workflow
+
+1. A human approves task budget, maximum single transaction, mandate expiry, minimum rows/source coverage/required columns and maximum delivery duration.
+2. Buyer and Seller use actual Kiln tools to negotiate price, minimum rows, source coverage and delivery window. Structured output is checked independently.
+3. The Buyer proposes `accept_deal(deal_id)`. Strict schema and policy decide whether funding is permitted.
+4. Native **test assets** are locked in `AgentDealEscrow`; the seller is not yet paid.
+5. Seller A submits 52 synthetic rows, including 50 valid HTTP(S) source URL strings (96.15%). Successful checks release the exact accepted amount.
+6. Seller B submits 7 rows against a minimum of 40. Validation fails, escrow refunds, and a trusted mapping adds `REQUIRE_PREVIEW` for Seller B.
+7. Another Seller B Deal is denied funding until a preview is verified. Seller A remains unaffected.
+
+The recorded run negotiated Seller A at **2.00** units and Seller B at **1.50**. These are actual model outputs, not the prompt's example prices. Each is a separately approved 3.00-unit task with a 2.00-unit transaction limit. Spending both under one 3.00-unit mandate is correctly blocked. Control Memory persists at company + seller scope across tasks.
+
+The dataset is synthetic. Source URL coverage counts well-formed HTTP(S) strings without fetching pages or proving that they substantiate the values.
+
+The structural-validation run above is historical evidence. The current main workbench and narrated recording follow the source-backed research task described at the top of this README. The public evidence server at port 3410 retains its separate earlier replay. See [the earlier demo script](docs/AGENT-DEAL-ESCROW-DEMO.ko.md).
+
+## 5. AI vs Code
+
+| Responsibility | AI / Kiln | Trusted deterministic code |
 |---|---|---|
-| 조건 비교, 후보 제안, 가격 재협상 요청 | 서명·도구 출력 검사, 정책·예약·중지·복구, 사전 승인된 통제 활성화, 증빙 검증 | 위임·취소, 누적 예산·수취인·견적 집행, 테스트 토큰 이동, 증빙 해시 기록 |
+| Understand task and negotiate price/rows/coverage/deadline | Yes | Validate proposed terms |
+| Propose acceptance/rejection | ID-only tool | Verify immutable Deal |
+| Spending authority, arithmetic, task reservation | No | Human mandate + policy + SQLite transaction |
+| Schema, canonical hash, expiry, state transitions | No | Strict validation and fail-closed transitions |
+| Delivery checks | No | JSON array, field types, unique company/quarter/currency rows, row count, URL coverage, deadline |
+| Settlement amount | Never | Exact accepted `price_minor`, contract-locked amount |
+| Transfer, release, refund | Never exposed as model tools | Trusted controller and contract |
+| Control Memory | Cannot create/remove rules | Canonical failure → fixed additional gate |
+| Audit prose | Optional; not used in this prototype | All displayed facts come from stored records |
 
-## 재현 가능한 증거
+The tool allowlist is `discover_sellers`, `request_offer`, `counter_offer`, `accept_deal`, `reject_deal`. Actual negotiation uses `counter_offer`, `request_offer`, `accept_deal`; discovery is the fixed two-seller scenario configuration. There is no generic marketplace. Monetary tools are absent from the model API.
 
-- [제품 실행 기록·거래 해시·흐름별 사용량](artifacts/demo/acceptance.json): 실제 Kiln 응답과 로컬 devnet 거래.
-- [devnet 배포 정보](artifacts/devnet/deployment.json), [계약](contracts/ControlMemory.sol), [서명·정책 스키마](shared/schema.mjs).
-- [B0 / B1 / CM 실험](artifacts/experiments/latest.json): 실제 Kiln 추론, 판매자 시뮬레이터, **결제 시뮬레이션**. 제품의 실제 devnet 결제 증거와 구분합니다.
-- [현재 구현·경계·신뢰 모델](docs/CURRENT-IMPLEMENTATION.ko.md), [3분 데모](docs/DEMO-RUNBOOK.ko.md), [검증 체계](docs/VERIFICATION.ko.md).
-- [실측 결과와 에너지 가정](docs/MEASUREMENTS.ko.md): 흐름별 토큰, 기회 손실, 학습 비용과 고정 코드 사본.
+## 6. Trust boundary
 
-```sh
-pnpm test
-# 브라우저 검증을 처음 실행할 때
-pnpm exec playwright install chromium
-pnpm verify:system
-# 실제 외부 추론 1회가 포함되는 별도 검사
-pnpm verify:live
-# 조건을 먼저 저장한 48-run 소규모 비교: 실제 Kiln 사용량 발생
-node --env-file-if-exists=.env.local scripts/benchmark-live.mjs
-# 실행 중인 devnet에 대해 JSON 영수증을 별도 프로세스에서 검증
-node scripts/verify-evidence.mjs <receipt.json> artifacts/devnet/deployment.json
+Buyer/Seller LLMs, natural language, generated explanations and seller claims are untrusted. Trusted components are the schemas, immutable Deal store, mandate/policy engine, state machine, delivery validator, controller and canonical failure mapper. Kiln, RPC and blockchain are external systems.
+
+The local admin UI binds to loopback only, validates the Host, rejects cross-origin mutations, and requires a per-process session token. Human mandate creation is not a cryptographic identity or enterprise SSO system. API keys, signing keys and signed transaction intents remain in ignored local files; they are not returned in receipts.
+
+Controller authority is explicit: the Solidity contract trusts its configured controller for off-chain delivery and mandate decisions. A compromised controller could make a false attestation. The contract does enforce exact deposited value, a single settlement outcome, release deadline and caller restrictions. There is no claim of trustless off-chain validation.
+
+## 7. State machine
+
+```mermaid
+stateDiagram-v2
+    NEGOTIATING --> DEAL_PROPOSED
+    DEAL_PROPOSED --> DEAL_ACCEPTED
+    DEAL_ACCEPTED --> POLICY_APPROVED
+    DEAL_ACCEPTED --> PREVIEW_REQUIRED: existing seller control
+    PREVIEW_REQUIRED --> PREVIEW_VERIFIED: deterministic sample checks
+    PREVIEW_VERIFIED --> POLICY_APPROVED
+    POLICY_APPROVED --> ESCROW_FUNDED
+    ESCROW_FUNDED --> DELIVERY_SUBMITTED
+    DELIVERY_SUBMITTED --> DELIVERY_VERIFIED: checks pass
+    DELIVERY_VERIFIED --> SETTLED: final authority valid
+    DELIVERY_SUBMITTED --> REFUNDED: checks fail
+    DELIVERY_VERIFIED --> REFUNDED: authority expired/revoked
+    ESCROW_FUNDED --> REFUNDED: delivery deadline elapsed
 ```
 
-자동 검증은 불변조건·경합·재시작·잘못된 모델 출력·증빙 변조·계약 우회·인증·HTTP·브라우저를 검사합니다. 기본 테스트의 모델은 명시적인 합성 fixture이며 실제 NPU 사용 증거로 세지 않습니다.
+Pre-funding policy failure produces `BLOCKED` or `EXPIRED`; a missing preview remains `PREVIEW_REQUIRED`. All unlisted transitions and all terminal-state escapes are rejected. Accepted Deal bodies and hashes have an SQLite immutable trigger. Amendments create new IDs and reference `supersedes_deal_id`.
 
-## 효율성과 한계
+`deadline` is an immutable duration in seconds. The funding contract fixes the absolute delivery deadline at `min(funding block timestamp + duration, expires_at)`. Both backend and contract reject late release. Expiry and mandate revocation do not prevent returning escrow to the buyer.
 
-이미 알려진 위반을 먼저 검사하고, 검증된 실패 범위에만 조기 견적을 요구하며, 유효한 서명 견적을 재사용합니다. `offer_selection`과 `negotiation`의 입력·출력 토큰, API 지연, 공급자 비용을 개별 기록합니다. 없는 사용량은 0 대신 `null`입니다. 조기 견적 거절에 따른 구매 기회 손실과 통제 생성 비용도 보고합니다.
+## 8. Kiln / FuriosaAI
 
-**NPU 전력과 실제 하드웨어 라우팅은 독립적으로 계측하지 않았습니다.** API 응답의 모델명·토큰은 확인하지만 토큰 감소를 에너지 절감률로 단정하지 않습니다. 실험 manifest에 에너지 산식·미확인 계수·제외 범위를 남깁니다.
+The client reads `KILN_MODEL`. On each live negotiation it calls `/models` when supported and rejects an unavailable configured model. The observed organizer endpoint listed `qwen3-32b` and another model; this run used the configured `qwen3-32b`. Model responses must match the requested model and contain exactly one approved tool call with strict arguments. Truncation, malformed JSON, extra authority fields and unknown tools fail closed.
 
-현재 체인은 실제 EVM **로컬 devnet**이며 공개 Sepolia 배포는 아닙니다. 다른 컴퓨터에서 새로 실행하면 새 주소와 거래가 생성됩니다. 예전 JSON의 체인 검증에는 원래 devnet과 배포 정보가 필요합니다. 온체인 해시는 앵커 이후 기록 일관성을 보여주며 상품 제공, 경제적 진실, 운영자 독립성까지 증명하지 않습니다. 판매자가 구조화된 서명 견적을 제공한다는 가정과 같은 운영자가 로컬 체인을 관리한다는 신뢰 한계가 있습니다.
+Each inference call records flow, request ID, prompt/completion/total tokens, timestamps, total latency, tool and result. Requests are non-streaming: TTFT is **not measured**. Model discovery is a management request and is not counted as an inference call.
 
-실서비스용 다중 tenant·SSO·HSM·다중 worker·공개 체인 finality/reorg·실자산 결제는 이 MVP 범위가 아닙니다. Ganache는 로컬 개발용이며 Node 24 Windows에서는 native µWS 대신 JS fallback을 사용할 수 있습니다.
+Natural-language reasoning can disagree with numeric fields. The observed Seller A prose mentioned three minutes while its structured duration was 90 seconds. Code bound the Deal to 90 seconds. This demonstrates why prose is not authoritative; it is not a claim of perfect negotiation quality.
 
-[초기 설계](docs/ARCHITECTURE.ko.md) · [Kiln 조사](docs/KILN-INTEGRATION.ko.md) · [연구 자료](research/README.md) · [Grok 비판과 판정](review/README.md). 초기 설계의 미구현 상태와 스택 후보는 현재 구현 문서로 갱신됐습니다.
+## 9. Blockchain read / write / settle
+
+| Action | Implementation |
+|---|---|
+| WRITE | `fund(dealHash, buyer, seller, amount, deliveryWindow, dealExpiry)` locks the exact test-asset amount and commits to the Deal hash |
+| READ | `escrows(dealHash)` and independently read transaction receipts/logs |
+| SETTLE | Controller `release(dealHash, evidenceHash)` or `refund(dealHash, reasonHash)` transfers only the locked amount |
+
+The evidence argument is a hash of the stored settlement attestation, including the Deal, mandate snapshot, delivery and validation, final policy checks and prior event hash. This is a direct commitment, not an optional Merkle system. It provides tamper evidence after the commitment point, not truth certification.
+
+Current end-to-end evidence is a **real local Ganache devnet**, chain ID 31338, persistent blocks/receipts and dedicated demo identities. One minor demo unit maps to 1 gwei of native test asset; 100 minor units display as 1.00 demo unit. This is not a USD exchange rate. Deployment plus four financial transactions are recorded in the real demo.
+
+The public Sepolia run is complete: actual fund, release and refund receipts are included in [the public proof](docs/PUBLIC-ESCROW-PROOF.ko.md). `pnpm ade:sepolia` resumes a durable local journal; a completed run is only rechecked, with no new inference or transfer. `pnpm ade:verify:public` uses a separate read-only RPC and finalized blocks, without the app or signer. Public execution only accepts chain ID 11155111. Existing free faucet assets funded the demo; no real ETH was bought.
+
+SQLite and external settlement are not distributed-atomic. Before broadcast, an operation claim and exact signed transaction are persisted privately. Unknown responses keep reservations; recovery reconciles the original transaction or an independently confirmed same-nonce replacement. Confirmed funding reverts release reservations; confirmed release reverts permit refund. Canonical block checks and configured finality precede local confirmation: local defaults to one confirmation and public Sepolia to two. A detected reorganization quarantines financial execution for operator review. These prototype checks are not production finality guarantees. One writer owns each runtime directory and shared Engine facades serialize the executor; this is not a distributed coordinator. The buyer has a contract refund escape after deadline, though this dedicated-wallet demo uses the same controller address as the buyer.
+
+A mined revert is distinguished from an unknown response using the exact signed transaction hash, controller, contract and status-0 receipt. A confirmed failed release is recorded as `REVERTED`, then refunded with reason `ESCROW_RELEASE_REVERTED`; recovery resumes this path after reopening the database. A successful release whose response was lost remains pending until reconciled and must never initiate a refund. Failed funding becomes `BLOCKED`. A reverted refund requires investigation; no automatic new signed retry or production finality guarantee is claimed.
+
+## 10. Two required stopping / failure runs
+
+**Budget:** an accepted 2.50-unit proposal exceeds a 2.00-unit maximum. `MAX_SINGLE` is recorded, state becomes `BLOCKED`, no funding transaction exists.
+
+**Delivery:** Seller B promises at least 40 rows and delivers 7. `DELIVERY_REQUIREMENT_FAILED` is recorded, funds return to the buyer, and `REQUIRE_PREVIEW` activates. A subsequent Deal cannot fund without a verified preview.
+
+The preview template requires 5 rows, the accepted schema and coverage, before Deal expiry. It binds to that Deal hash. It is an additional machine-verifiable precondition, not a guarantee of the final dataset's quality. Controls are company + seller scoped and have database triggers rejecting modification/deletion. Human-admin removal is future work only.
+
+The UI accepts preview and delivery JSON as files or text, reports failed checks, and resumes funding after a verified preview. New mandates bind human quality floors independently of model-generated terms. One default purchase intent persists per mandate; retries and concurrent callers reuse its Deal. Buying a separate dataset requires an explicit new purchase action. Historical mandates and delivery-v1 receipts retain their original interpretation, while the audit also reports whether their data meets current delivery-v2 checks.
+
+## 11. Approval & evidence
+
+Audit Receipt shows mandate, buyer/seller, immutable terms/hash, locked amount, policy checks, delivery raw data and evidence hash, recomputed validator result, release/refund reason, on-chain hashes and timestamps. It distinguishes absence of a submission from a failed submission.
+
+`node scripts/verify-deal-escrow.mjs receipt.json` runs offline. Add `--rpc URL --deployment trusted-deployment.json` for a separately configured RPC and a deployment manifest obtained independently of the untrusted receipt. No wallet key is needed.
+
+`verifyReceipt` can run without application state for structural verification (`STRUCTURALLY_VALID`). With the separately configured chain it checks receipts/logs, deployed address, exact amount, participants, deadline, outcome and attestation (`VALID`). It does not trust an RPC URL supplied by the receipt. Missing settlement receipts and changed data fail. Browser and API invoke the same deterministic verifier; no LLM invents numbers.
+
+Structured hash-linked events include mandate creation, negotiation, proposed/accepted Deal, policy checks, funding, submission, validation, release/refund, blocking and Control Memory activation. All financial events map to one specific Deal and transaction hash. This is not proof of completeness against a compromised controller or a cryptographic human approval system.
+
+## 12. Security invariant results
+
+`pnpm ade:test` exports actual Node runner output and a source fingerprint to `artifacts/deal-escrow/tests.json`. The UI reads this file, never a hand-written pass counter, and marks it stale when its tested source fingerprint differs from the current source. The current suite covers all ten requested invariants, every unlisted state transition, contract authorization, exact funding, concurrency budget reservation, unknown-broadcast recovery, malformed model outputs and receipt tampering. Deterministic fixtures and the paid live-model run are separate evidence.
+
+The ten required properties are: no model-selected settlement amount; immutable accepted Deal; hash mismatch cannot settle; expired Deal cannot fund/release; revoked/expired mandate cannot fund; no duplicate settlement; refund cannot later release; Control Memory cannot expand authority; machine cannot remove a gate; failed delivery cannot release. A passing fixture is not formal verification or a stochastic model-accuracy estimate.
+
+## 13. Kiln token / energy report
+
+The public run has **6 inference calls, 3,958 prompt tokens, 2,942 completion tokens, 6,900 total tokens**. Flow-level rows are in the [public report](artifacts/deal-escrow/sepolia/latest.json). The earlier local run had 6,541 tokens and is retained as historical evidence; totals from different workflows are not combined.
+
+Schema validation, policy, delivery validation and escrow authorization make zero LLM calls. No before/after token reduction claim is made without a measured baseline.
+
+**Energy Estimate — Assumption Based:** no application power telemetry or organizer-provided attributable power assumption is available. Accordingly Joules and assumed watts remain null. If the organizer supplies an appropriate power assumption `P`, the documented illustrative method is `P × API-duration-seconds`; queue/network time, utilization and batching make that a limited estimate, not measured NPU energy. Hardware benchmark values are not substituted for application measurements.
+
+## 14. Limitations
+
+- Does not prove semantic truth of a dataset; synthetic example values and URL strings are used.
+- Sellers are demo/adversarial actors, not a live marketplace or validated customer network.
+- Escrow and structured offers are not claimed as novel; blockchain does not prove truth.
+- Control Memory activates predefined trusted enforcement templates; it does not learn or relax financial policies.
+- No production KYC/AML, real money, production custody, enterprise identity or dispute arbitration.
+- No claim of formal verification, 100% security, perfect distributed atomicity, finality/reorg resilience, measured energy or guaranteed model accuracy.
+- Public testnet financial execution is verified, but not a production custody, legal compliance or data-truth guarantee. Task principal limits do not include operator-funded network gas.
+- No completed human-observer study. Receipt reconstruction is currently verified by automated checks and browser tests.
+
+## 15. Future work
+
+Within this narrow workflow: public testnet completion, stronger RPC finality reconciliation, controlled model robustness experiments, and a human audit-reconstruction observation. Optional Merkle anchoring and benchmark visualizations are deferred. Marketplace, ERP/accounting, credit cards, seller reputation networks, semantic truth verification and production custody remain out of scope.
+
+## Files and priority gates
+
+`src/deal-escrow/{domain,store,delivery,engine,kiln,audit}.ts`, `chain.mjs`, `server.mjs`; `contracts/AgentDealEscrow.sol`; `tests/deal-escrow`; `web/deal-escrow`; `scripts/*deal-escrow.mjs`.
+
+P0 schemas/policy/state tests → P1 contract lifecycle → P2 delivery integration → P3 real Kiln tools → P4 reconstructable receipt → P5 scoped gate → P6 UI/demo/README. Core local gates pass; the public-testnet portion of Definition of Done remains open. The optional safety benchmark and Merkle tree were not added.

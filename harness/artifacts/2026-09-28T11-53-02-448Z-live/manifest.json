@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "id": "2026-09-28T11-53-02-448Z-live",
+  "registeredAt": "2026-09-28T11:53:02.474Z",
+  "kind": "LIVE_KILN",
+  "model": "qwen3-32b",
+  "count": 10,
+  "arms": [
+    "B0",
+    "B1",
+    "CM"
+  ],
+  "concurrency": 3,
+  "maxCalls": 120,
+  "sellerRepeats": 1,
+  "source": {
+    "harness/cases.mjs": "acf9ffa2e1783502e07dfde0453d616da991875b5220df0e80c5cee1517c891b",
+    "harness/metrics.mjs": "766c764580456e4e9c41de5be6c2621fa12b8b4decf26b7562931291fd791ba9",
+    "harness/run.mjs": "fa3130d91e7f6d7a4592b5dddcbf7b19351869a101c03f6b7f033df334a5e07b",
+    "harness/runtime.mjs": "8bca835a0ee0d651a522ef0cdfcab4a4068cee06fbe6e7dbfe1f70a0d2be5780",
+    "harness/sellers.mjs": "8f5e948c8438de6e7bb9d35e895009bb96df51a2020059dd59e776a9c564d1c0",
+    "harness/tools.mjs": "c6e01168cfc2331f1a808580fe83b2bba95fba88442b647deb152c551c3b46fc",
+    "harness/transport.mjs": "350ca727da93b592d84289e1d428aab91d7b74ef3e5a7f6a869501c12a64c8ea",
+    "src/policy.mjs": "abf81a8092467d2c574962a336d5a54ad0a386507eab4c792d766cda9ff281c7",
+    "src/store.mjs": "2ce1b6b6ab41649615e01c86314ceca13df8d7a62165e9bb4c4c1c08153377d3",
+    "shared/schema.mjs": "fe8ddf8cd8db0c816f4958d1ec2dc421c0b4aa114721ce8fca027cdb2df0320f",
+    "package.json": "ff6b2a99db1fb66fe18fdfa08fb42ad8a936ca86b31944557cb24f85712fd3e4",
+    "pnpm-lock.yaml": "38331296af0b8ea0d505455ff6ede3c49d03c2cb52707311d7ff9fe9f4e1a2d8",
+    "harness/PROTOCOL.ko.md": "d1fccfba2334fc9a2e0ee8f9842398d9d837f6e320aa52b4ae0cf8d0b07e2407"
+  },
+  "cases": [
+    {
+      "id": "case-001",
+      "family": "normal",
+      "variant": 0
+    },
+    {
+      "id": "case-002",
+      "family": "hidden-fee",
+      "variant": 0
+    },
+    {
+      "id": "case-003",
+      "family": "expired",
+      "variant": 0
+    },
+    {
+      "id": "case-004",
+      "family": "unlisted",
+      "variant": 0
+    },
+    {
+      "id": "case-005",
+      "family": "injection",
+      "variant": 0
+    },
+    {
+      "id": "case-006",
+      "family": "changing",
+      "variant": 0
+    },
+    {
+      "id": "case-007",
+      "family": "negotiation",
+      "variant": 0
+    },
+    {
+      "id": "case-008",
+      "family": "late-quote",
+      "variant": 0
+    },
+    {
+      "id": "case-009",
+      "family": "reformed",
+      "variant": 0
+    },
+    {
+      "id": "case-010",
+      "family": "wrong-purpose",
+      "variant": 0
+    }
+  ],
+  "maxBuyerTurns": 5,
+  "maxOutputTokensPerCall": 1800,
+  "sessionTokenStopThreshold": 12000,
+  "transactions": 0,
+  "memory": "One identical deterministic signed failure fixture for beta per evaluation row, derived by production deriveControl. No evaluation-result feedback. Training inference cost is zero; fixture construction overhead remains.",
+  "scope": "Fresh signed synthetic mandates/quotes. Production checkOffer/reserve. Harness tool state machine and supersession gate. No settlement adapter. Live model errors separate from system authorization violations.",
+  "ttft": "Client time from request start to first nonempty content/reasoning/tool delta, not role/usage/heartbeat chunks; first tool separately recorded.",
+  "tokenLimit": "Global request count and per-response max_tokens are hard bounds. Session total token threshold is checked after usage arrives; a single request can exceed the threshold. Missing usage stops the next turn.",
+  "energy": {
+    "measured": false,
+    "formula": "input_tokens * J_per_input_token + output_tokens * J_per_output_token + calls * J_per_request",
+    "coefficients": null,
+    "excludes": [
+      "client",
+      "network",
+      "CPU control",
+      "chain",
+      "idle power"
+    ]
+  }
+}

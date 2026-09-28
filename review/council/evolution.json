@@ -1,0 +1,466 @@
+{
+  "schemaVersion": 1,
+  "version": "2026-09-28.2",
+  "createdAt": "2026-09-28T12:22:45.450Z",
+  "updatedAt": "2026-09-28T19:45:30.694Z",
+  "objective": "한 작업의 사용자 가치·권한 경계·기술 역할·실행 증거·데모 이해를 완료 답변마다 개선한다.",
+  "target": {
+    "threadId": "01a0e73b-176c-7403-81cd-305eb84b0196",
+    "hostId": "local",
+    "title": "기획 GWDC 챌린지 시스템 아키텍처"
+  },
+  "workflowFile": "review/council/EVOLUTION-LOOP.ko.md",
+  "patternsFile": "review/council/WINNING-PATTERNS.ko.md",
+  "maxActiveExperiments": 1,
+  "deadline": {
+    "value": null,
+    "status": "unknown",
+    "note": "공식 마감·영상 길이를 추정하지 않는다. 4분은 내부 대본 목표."
+  },
+  "research": {
+    "lastUpdatedAt": "2026-09-28",
+    "caseCount": 5,
+    "eventCount": 4,
+    "completedReviewsSinceRefresh": 4,
+    "refreshAfterMeaningfulReviews": 5,
+    "maxNewSourcesPerRefresh": 2,
+    "note": "목적 표본이며 인과적 승리 공식 아님. 수상 3건/결선 2건; 상격 구별."
+  },
+  "evidenceBoard": [
+    {
+      "id": "problem",
+      "patternIds": [
+        "WP1"
+      ],
+      "status": "planned",
+      "scope": "AI Platform Lead의 리서치 데이터 구매로 동결. 실고객 관찰 없음.",
+      "evidence": [
+        "review/council/ROUND-005.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-007.ko.md"
+      ],
+      "nextEvidence": "최근 업무·기존 대안·도입/거절 행동"
+    },
+    {
+      "id": "outcome",
+      "patternIds": [
+        "WP2"
+      ],
+      "status": "verified",
+      "scope": "공개 원문 지급/환불/차단 및 별도 구매자 회수의 저장 검증·영수증 hash 대조. 이번 검토의 신규 RPC 실행은 없음.",
+      "evidence": [
+        "review/council/ROUND-005.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-007.ko.md"
+      ],
+      "nextEvidence": "상품1건의 입력·합의·예치/지급·실제 결과·검사 연결"
+    },
+    {
+      "id": "technology",
+      "patternIds": [
+        "WP3"
+      ],
+      "status": "verified",
+      "scope": "실제 모델 tool calls와 결정적 정책·납품·escrow 검증. 물리 NPU 전력/라우팅 직접 관측 없음.",
+      "evidence": [
+        "review/council/ROUND-005.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-007.ko.md"
+      ],
+      "nextEvidence": "취소 경계·조건 해석 비교·근거 있는 라우팅"
+    },
+    {
+      "id": "reproduction",
+      "patternIds": [
+        "WP4"
+      ],
+      "status": "verified",
+      "scope": "개발 worktree의 현재 소스 지문과 저장된 101/101 CI 보고서 일치. 실제 제3자 인간 재구성은 미완료.",
+      "evidence": [
+        "review/council/ROUND-005.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-007.ko.md"
+      ],
+      "nextEvidence": "독립 실행 명령·고정 manifest·원 서버 밖 판정"
+    },
+    {
+      "id": "demo_comprehension",
+      "patternIds": [
+        "WP6"
+      ],
+      "status": "implemented",
+      "scope": "3분 영상 재생 기록 있음. API에서 검토된 사람 0, QA 1; 인간 이해 미확인.",
+      "evidence": [
+        "review/council/ROUND-005.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-007.ko.md"
+      ],
+      "nextEvidence": "처음 보는 사람의 한도/지급/결과 구분과 오답·도움 기록"
+    },
+    {
+      "id": "efficiency",
+      "patternIds": [
+        "WP3",
+        "WP5"
+      ],
+      "status": "verified",
+      "scope": "현재 원문 공개 2회/4495 토큰은 저장 실행 기록. 이전 로컬·구매 실증과 별개. AI 우위·전력 실측 미입증.",
+      "evidence": [
+        "review/council/ROUND-005.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-007.ko.md"
+      ],
+      "nextEvidence": "동일 정의의 모든 견적 시도·학습 비용과 정상 성공률"
+    }
+  ],
+  "activeExperimentId": null,
+  "experiments": [
+    {
+      "id": "EV-001",
+      "findingIds": [
+        "C-E02"
+      ],
+      "patternIds": [
+        "WP4",
+        "WP5"
+      ],
+      "hypothesis": "실패한 견적 시도와 성공 수를 분리하면 비용 비교의 누락을 바로잡을 수 있다.",
+      "baseline": {
+        "experimentId": "2026-09-28T11-23-54-460Z",
+        "label": "quoteCalls로 표시된 성공 수",
+        "B0": 16,
+        "B1": 25,
+        "CM": 14,
+        "CMWithTraining": 16
+      },
+      "expectedChange": {
+        "label": "고정 코드/fixture에서 재구성한 시도 수",
+        "B0": 16,
+        "B1": 27,
+        "CM": 16,
+        "CMWithTraining": 18
+      },
+      "minimumChange": "원본/해시를 보존한 정정 자료 + benchmark/UI/문서의 성공·시도·거절·캐시·학습 비용 정의 일치",
+      "acceptance": [
+        "거절1=시도1/거절1/성공0",
+        "캐시 hit=신규 요청0",
+        "사후 재구성값과 이후 직접 계측값 구별",
+        "실패 지연·공급자 비용 unknown을 0으로 추정하지 않음",
+        "기존 원본과 manifest 유지"
+      ],
+      "rejectionCondition": "기존 원본 덮어쓰기, 재구성값을 실측으로 표시, 성공률·학습 비용을 제외한 개선 주장",
+      "evidence": [
+        "review/council/ROUND-003.ko.md"
+      ],
+      "owner": "01a0e73b-176c-7403-81cd-305eb84b0196",
+      "status": "completed",
+      "sourceTurnId": "01a0e7d9-0f83-7fb0-9976-d5ebed5dd388",
+      "deliveryMarker": "COUNCIL-REVIEW:01a0e7d9-0f83-7fb0-9976-d5ebed5dd388",
+      "outcome": {
+        "classification": "improved",
+        "scope": "측정 정의와 검증 근거; 일반 성능 개선 아님",
+        "testsPassed": 5,
+        "reconstructedAttempts": [
+          16,
+          27,
+          16
+        ],
+        "cmWithTraining": 18,
+        "originalSourceHashesVerified": 12,
+        "evidence": [
+          "review/council/ROUND-004.ko.md",
+          "docs/QUOTE-ACCOUNTING.ko.md"
+        ]
+      },
+      "completedAt": "2026-09-28T12:43:27.462Z"
+    },
+    {
+      "id": "EV-007",
+      "findingIds": [
+        "C-P01"
+      ],
+      "patternIds": [
+        "WP1",
+        "WP2",
+        "WP3",
+        "WP4",
+        "WP5",
+        "WP6"
+      ],
+      "hypothesis": "리서치용 데이터 납품 한 건의 협상 조건·판정자·escrow 전이를 고정하면 사용자 선호를 좁은 데모와 검증 가능한 주장으로 연결할 수 있다.",
+      "baseline": {
+        "status": "planned",
+        "plan": "v3는 선지급 후 회수, escrow/납품판정 미구현",
+        "humanObservations": 0
+      },
+      "expectedChange": "상품1종과 정산판정·자금전이·근거 있는 데모 선택을 설명할 수 있음. 품질/우승 보장은 아님.",
+      "minimumChange": "합의 schema 한 개 + 상태표 + 정상/불량 고정 사례. 먼저 설계/오프라인 검증.",
+      "acceptance": [
+        "구매자 한 업무·실제 받을 결과·검사 가능한 조건",
+        "검사 입력·판정자·권한·미응답 시 손실 명시",
+        "release/refund 상호 배타·중복·기한 경합 검토",
+        "schema통과 무가치 데이터 반례",
+        "x402 표준 호환·escrow 실제 구현·품질은 미검증 표기",
+        "ERC-8183 Draft와의 차이를 명시; 신규성/호환 완료 주장 없음"
+      ],
+      "rejectionCondition": "검사할 수 없는 품질을 보장하거나 판매자/판정자 의존을 숨기면 후보 기각·축소",
+      "evidence": [
+        "review/council/IDEA-COMPARISON-002.ko.md"
+      ],
+      "owner": "01a0e73b-176c-7403-81cd-305eb84b0196",
+      "status": "superseded_by_direct_user_spec",
+      "sourceTurnId": "01a0e7f6-035f-75a2-9642-18f1a41e6ed6",
+      "ideaBatchFingerprint": "ea56497e14bc524ee35e16456d4a4e8d43cf24f76f442633a4ff2247eca98360",
+      "outcome": null,
+      "noEvidenceCompletionCount": 0,
+      "deferReason": "사용자 v3 구현 작업 중. 다음 완료에서 중복/방향을 다시 대조",
+      "result": "User froze Agent Deal Escrow. Do not send a new product-selection experiment."
+    },
+    {
+      "id": "EV-008",
+      "findingIds": [],
+      "patternIds": [
+        "WP4",
+        "WP5"
+      ],
+      "hypothesis": "동결 escrow 구현을 다른 개발 담당이 기존 코드와 증빙으로 대조하면 범위 재설계 없이 남은 필수 누락을 확인할 수 있다.",
+      "baseline": {
+        "status": "implemented_and_locally_verified",
+        "tests": 29,
+        "liveKilnCalls": 6,
+        "liveKilnTokens": 6541,
+        "publicEscrow": "not_completed",
+        "developerCrossReview": "not_recorded"
+      },
+      "expectedChange": "동결 명세와 코드·증거 사이의 실제 P0/P1 누락 여부를 재현 가능하게 기록",
+      "minimumChange": "src/deal-escrow, contracts/AgentDealEscrow.sol, tests/deal-escrow, 기존 성공/환불 영수증의 오프라인 대조. 문제 없으면 문서상 검토 결과만 기록.",
+      "acceptance": [
+        "성공·환불·preview funding 차단과 10개 불변조건의 실제 구현/검증 근거 대조",
+        "지급 revert와 성공 응답 유실을 구분하는 복구 경로 확인",
+        "새 P0/P1만 반례·위치·최소 수정으로 기록, 없으면 무조치 종료"
+      ],
+      "rejectionCondition": "상품 재선정·v3 복귀·새 기능 또는 무근거 반복 테스트로 확대",
+      "evidence": [
+        "docs/AGENT-DEAL-ESCROW-IMPLEMENTATION.ko.md",
+        "docs/AGENT-DEAL-ESCROW-STATUS.ko.md",
+        "review/council/ROUND-005.ko.md"
+      ],
+      "owner": "01a0e73b-176c-7403-81cd-305eb84b0196",
+      "status": "completed",
+      "sourceTurnId": "01a0e83b-3490-72a1-97bf-5e4a1c10711e",
+      "outcome": "improved",
+      "noEvidenceCompletionCount": 0,
+      "deliveryMarker": "COUNCIL-REVIEW:01a0e83b-3490-72a1-97bf-5e4a1c10711e",
+      "sentAt": "2026-09-28T14:21:07.513Z",
+      "completedAt": "2026-09-28T14:30:26.410Z",
+      "result": {
+        "reviewFile": "review/council/ROUND-006.ko.md",
+        "evidence": "review/council/round-006-verification.json",
+        "finding": "Frozen snapshot defect found; current fund replacement receipt structurally valid after concurrent fix",
+        "limits": "Offline fund adapter only; current full-suite result stale; no public chain or all-action replacement verification"
+      }
+    }
+  ],
+  "backlog": [
+    {
+      "id": "EV-002",
+      "patternIds": [
+        "WP3",
+        "WP4"
+      ],
+      "title": "executor에 의존하지 않는 소유자 직접 취소",
+      "priority": "existing_plan_P0-2",
+      "hypothesis": "서버 중단 시에도 소유자가 새 지급 권한을 회수할 수 있어야 통제 위임이 완성된다.",
+      "baseline": "revoke onlyExecutor; v2에 수정 계획 있음",
+      "minimumChange": "기존 contract/schema 버전을 보존한 직접/서명 relay 경로와 경계 검증",
+      "acceptance": "권한 없는 취소 거부·재사용/지급 경합·executor 없이 소유자 취소·후속 지급 거부. 상태와 범위가 증거에 연결.",
+      "rejectionCondition": "이미 포함된 지급을 환불/취소로 표시하거나 기존 receipt 도메인 재해석",
+      "status": "candidate",
+      "note": "동일 작업이 이미 진행 중이면 새 티켓/메시지를 만들지 않는다."
+    },
+    {
+      "id": "EV-003",
+      "patternIds": [
+        "WP4"
+      ],
+      "title": "원 서버 밖에서 승인 준수 재구성",
+      "status": "candidate",
+      "dependsOn": [
+        "EV-002"
+      ],
+      "note": "기존 기획 P0-3. 공개 배포/거래는 감시 채팅 범위 밖. 개발 세션 자체 권한과 실제 증거를 구분."
+    },
+    {
+      "id": "EV-004",
+      "patternIds": [
+        "WP1",
+        "WP2"
+      ],
+      "title": "실제 변환 결과 1개를 같은 작업 증빙과 연결",
+      "status": "candidate",
+      "note": "기존 P0-4. 팀 어댑터와 상용 판매자 구별, 결제/납품/품질 별도 판정."
+    },
+    {
+      "id": "EV-005",
+      "patternIds": [
+        "WP6"
+      ],
+      "title": "처음 보는 사람의 데모 이해",
+      "status": "deferred",
+      "note": "자료가 없어 보류. 자동 연락/재촉/새 기능 없이 기존 절차 대기.",
+      "sourceTurnId": "01a0e987-f5e4-7aa0-b293-cf177d962cef",
+      "baseline": "reviewed_humans=0; automated_qa=1",
+      "hypothesis": "초면 관객이 기록만으로 승인·정산·남은 신뢰를 설명할 수 있다.",
+      "expectedChange": "실제 관찰에서 이해/오해를 판별",
+      "minimumChange": "기존 버전 고정 질문지로 실제 응답과 관찰 수집",
+      "acceptance": "기존 초면 3명의 실제 응답과 이해 근거 기록",
+      "rejectionCondition": "반복 오해 또는 기록만으로 설명 불가",
+      "owner": "사용자/실제 참여자",
+      "evidence": [
+        "review/council/round-007-verification.json"
+      ],
+      "outcome": "inconclusive",
+      "noEvidenceCompletionCount": 3
+    },
+    {
+      "id": "EV-006",
+      "patternIds": [
+        "WP3",
+        "WP5"
+      ],
+      "title": "비정형 조건의 Qwen 대 규칙 기준선",
+      "status": "candidate",
+      "note": "기존 P1. 사전 고정 입력·정답·실패 포함; 유료 호출은 감시 채팅에서 실행하지 않음."
+    }
+  ],
+  "history": [
+    {
+      "at": "2026-09-28T12:22:45.451Z",
+      "event": "loop_configured",
+      "source": "2026-09-28 사용자: 수상작 특징 반영 및 개발 세션과 계속 소통",
+      "result": "기존 vc 확장. 새 실험 발송 전 EV-001 완료 검증."
+    },
+    {
+      "at": "2026-09-28T12:32:21.071Z",
+      "event": "idea_source_connected",
+      "comparison": "review/council/IDEA-COMPARISON-001.ko.md",
+      "sourceFingerprint": "a4dd540b1aaa5198e45931752b7789c771b69ae861277a47c6fb93bbd60ff89c"
+    },
+    {
+      "at": "2026-09-28T12:43:27.462Z",
+      "event": "EV-001_completed",
+      "result": "improved",
+      "review": "review/council/ROUND-004.ko.md"
+    },
+    {
+      "at": "2026-09-28T12:43:27.462Z",
+      "event": "EV-007_proposed",
+      "sourceFingerprint": "88dc7a03e2dd9a01f7a3293670e55f6fc8b61e483135416546d6eb6f645d6af6",
+      "review": "review/council/IDEA-COMPARISON-002.ko.md"
+    },
+    {
+      "at": "2026-09-28T12:45:45.119Z",
+      "event": "delivery_deferred",
+      "review": "review/council/ROUND-004.ko.md",
+      "targetTurnId": "01a0e80b-189e-70f1-8d36-060880eb4c56",
+      "reason": "new_work_before_send"
+    },
+    {
+      "at": "2026-09-28T13:48:09.414Z",
+      "event": "direct_user_frozen_spec_implemented",
+      "scope": "P0–P6 local evidence; public Sepolia awaiting test ETH",
+      "implementation": "docs/AGENT-DEAL-ESCROW-IMPLEMENTATION.ko.md"
+    },
+    {
+      "at": "2026-09-28T14:20:09.604Z",
+      "event": "completed_review",
+      "round": "005",
+      "sourceTurnId": "01a0e83b-3490-72a1-97bf-5e4a1c10711e",
+      "outcome": "improved",
+      "scope": "구매 공개 증거 확인 및 동결 escrow 개발 연결; 서로 다른 제품 완료 판정 분리",
+      "evidence": "review/council/round-005-verification.json"
+    },
+    {
+      "at": "2026-09-28T14:30:26.410Z",
+      "event": "completed_review",
+      "round": "006",
+      "sourceTurnId": "01a0e863-c64c-75f0-b095-b596722642c3",
+      "outcome": "improved",
+      "scope": "대체 거래 증빙 결함 발견과 현재 수정 대조. 중복 작업 요청 없음.",
+      "evidence": "review/council/round-006-verification.json"
+    },
+    {
+      "at": "2026-09-28T19:45:30.694Z",
+      "event": "completed_review",
+      "round": "007",
+      "sourceTurnId": "01a0e987-f5e4-7aa0-b293-cf177d962cef",
+      "sourceTurnIds": [
+        "01a0e987-f5e4-7aa0-b293-cf177d962cef",
+        "01a0e987-6014-70e1-bce5-55034a868ee9",
+        "01a0e986-49dc-73e3-b865-ecba054598aa",
+        "01a0e979-af5e-7952-a9ca-252849d94f1e",
+        "01a0e967-9593-75a1-ab16-9678224da0f4",
+        "01a0e95a-e012-7550-b0d1-8cb1cf4353c6",
+        "01a0e948-e0d4-7811-b0fb-27241324a2fe",
+        "01a0e940-8345-7d43-b1be-5c556de32f57",
+        "01a0e932-95f9-7300-b9c7-3afb1c0b730c",
+        "01a0e926-737b-7d41-bf51-8223ef310666",
+        "01a0e90d-0825-7e42-abbc-f2f5a6bd9e3c",
+        "01a0e8fd-315d-7f83-9cc5-9f4fa03222be",
+        "01a0e8e8-a9d4-7600-9bfc-979633831615",
+        "01a0e8c2-9403-7412-ad4c-6b8ca061fa0b",
+        "01a0e8a8-42ba-7b23-85b5-8e3f9f6c6b4e",
+        "01a0e878-f5a3-73a2-b731-ea919d8cdf6f"
+      ],
+      "outcome": "improved",
+      "humanEvidence": "unchanged",
+      "review": "review/council/ROUND-007.ko.md",
+      "evidence": "review/council/round-007-verification.json",
+      "delivery": "reviewed_no_action"
+    }
+  ],
+  "coordinationNotice": {
+    "id": "FROZEN-ADE-2026-09-28",
+    "status": "sent",
+    "reason": "Only deliver after the development chat is normally completed and idle.",
+    "message": "사용자가 현재 검토 세션에 Agent Deal Escrow 0–32절을 직접 고정하고 구현을 요청했습니다. src/deal-escrow, contracts/AgentDealEscrow.sol, tests/deal-escrow, web/deal-escrow에 구현했고 ade:* 명령과 README가 현재 명세입니다. 기존 purchase-* 코드는 보존했습니다. 이후 이 동결 명세를 바꾸거나 범위를 확장하지 말고 구현·검증만 개선해 주세요. 로컬 EVM+실제 Kiln 증거는 artifacts/deal-escrow/latest-demo.json, 테스트는 tests.json입니다. 별도 대화 답신은 필요 없습니다.",
+    "sentAt": "2026-09-28T14:21:07.513Z",
+    "marker": "COUNCIL-REVIEW:01a0e83b-3490-72a1-97bf-5e4a1c10711e"
+  },
+  "automation": {
+    "id": "vc",
+    "status": "ACTIVE",
+    "updatedAt": "2026-09-28T12:33:55.302Z",
+    "completionCheckIntervalMinutes": 5,
+    "name": "아이디어·개발 연동 기획 개선 루프"
+  },
+  "latestTargetObservation": {
+    "turnId": "01a0e987-f5e4-7aa0-b293-cf177d962cef",
+    "status": "completed",
+    "cursor": "5a4326be-9573-417f-9ab9-473248b30a32:106",
+    "at": "2026-09-28T19:45:30.694Z"
+  },
+  "ideaSource": {
+    "threadId": "6ab9ac74-c550-83ee-9f2b-af4ffc9e3f80",
+    "title": "해커톤 규칙 정리",
+    "stateFile": "review/council/ideas.json",
+    "workflowFile": "review/council/IDEA-SYNC.ko.md"
+  },
+  "deferredEvidence": [
+    {
+      "paths": [
+        "harness",
+        "learning",
+        "verification"
+      ],
+      "reason": "감시 범위 확장으로 baseline에 포함. 이번 개발 정정/기획 turn의 검증 대상 아님; 관련 완료에서 검토",
+      "status": "not_reviewed_this_round"
+    }
+  ],
+  "frozenSpecification": {
+    "product": "Agent Deal Escrow",
+    "source": "direct user message, sections 0–32",
+    "implementation": "docs/AGENT-DEAL-ESCROW-IMPLEMENTATION.ko.md",
+    "scope": "implement/test/measure/polish only; no product redesign"
+  }
+}

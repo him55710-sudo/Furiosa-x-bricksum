@@ -3,10 +3,10 @@ import { createHash, randomUUID } from 'node:crypto';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const roots = ['docs', 'scripts', 'tests', 'src', 'app', 'components', 'contracts', 'fixtures', 'research', 'artifacts/kiln', 'artifacts/runs', 'artifacts/experiments'];
-const fixed = ['README.md', 'package.json', 'package-lock.json', 'tsconfig.json', 'review/ROUND-1.ko.md', 'review/ROUND-2.ko.md', 'review/RESEARCH-TO-TESTS.ko.md'];
-const extensions = new Set(['.md', '.json', '.mjs', '.cjs', '.js', '.ts', '.tsx', '.jsx', '.sol', '.sql', '.yaml', '.yml']);
-const ownFiles = new Set(['docs/HACKATHON-PLAN.ko.md', 'scripts/council-snapshot.mjs', 'tests/council-snapshot.test.mjs']);
+const roots = ['docs', 'scripts', 'tests', 'src', 'app', 'components', 'web', 'shared', 'contracts', 'fixtures', 'research', 'verification', 'harness', 'learning', 'artifacts/kiln', 'artifacts/runs', 'artifacts/experiments', 'artifacts/demo', 'artifacts/contracts'];
+const fixed = ['README.md', 'package.json', 'package-lock.json', 'pnpm-lock.yaml', 'tsconfig.json', 'artifacts/devnet/deployment.json', 'review/ROUND-1.ko.md', 'review/ROUND-2.ko.md', 'review/RESEARCH-TO-TESTS.ko.md'];
+const extensions = new Set(['.md', '.json', '.mjs', '.cjs', '.js', '.ts', '.tsx', '.jsx', '.sol', '.sql', '.yaml', '.yml', '.css', '.html']);
+const ownFiles = new Set(['docs/HACKATHON-PLAN.ko.md', 'scripts/council-snapshot.mjs', 'tests/council-snapshot.test.mjs', 'scripts/council-ideas.mjs', 'tests/council-ideas.test.mjs']);
 const ignoredDirs = new Set(['node_modules', 'private', 'vendor', 'dist', 'build', 'archive', 'coverage']);
 const statePath = 'review/council/state.json';
 const hash = value => createHash('sha256').update(value).digest('hex');
@@ -18,6 +18,7 @@ async function exists(path) {
 export async function collectSnapshot(root) {
   const paths = new Set();
   async function visit(relative) {
+    if (relative === 'learning/review') return;
     const stat = await exists(join(root, relative));
     if (!stat || stat.isSymbolicLink()) return;
     if (stat.isDirectory()) {
