@@ -6,6 +6,8 @@ We built a verifiable escrow and financial-control layer for AI agents that nego
 
 This is the implementation of the user's frozen GWDC 2026 FuriosaAI × Bricksum Challenge B specification. The previous paid-resource recovery prototype is preserved in [the legacy README](docs/LEGACY-PURCHASE-README.ko.md), not the scope of this product.
 
+[Focused product plan and user-need evidence](docs/FOCUSED-PRODUCT-PLAN.ko.md): one paid financial-data extraction job, the developer accountable for its result and cost, and explicit limits of reference-based validation. This plan distinguishes the completed synthetic-data public proof below from the proposed source-backed workflow and pending customer validation.
+
 ## Public Sepolia proof and Korean demo
 
 The completed public run contains two fund transactions, one release, one refund, and four recorded stops. An independent RPC verified all six evidence bundles against finalized Sepolia state. The 9-step Korean demo is read-only and uses those exact records. It needs no API key or wallet.
@@ -72,11 +74,11 @@ Negotiate an immutable structured Deal, enforce delegated spending, lock test as
 6. Seller B submits 7 rows against a minimum of 40. Validation fails, escrow refunds, and a trusted mapping adds `REQUIRE_PREVIEW` for Seller B.
 7. Another Seller B Deal is denied funding until a preview is verified. Seller A remains unaffected.
 
-The recorded run negotiated Seller A at **2.00** units and Seller B at **1.50**. These are actual model outputs, not the prompt's example prices. Each is a separately approved 3.00-unit task with a 2.00-unit transaction limit. Spending both under one 3.00-unit mandate is correctly blocked. Control Memory persists at company + seller scope across tasks.
+The public Sepolia run negotiated both Seller A and Seller B at **1.80** test units. The earlier local run used **2.00** and **1.50** respectively; its prices are not the public proof's prices. Each public purchase is a separately approved 3.00-unit task with a 2.00-unit transaction limit. Two outstanding 1.80-unit purchases under one 3.00-unit mandate exceed the task budget. Control Memory persists at company + seller scope across tasks.
 
 The dataset is synthetic. Source URL coverage counts well-formed HTTP(S) strings without fetching pages or proving that they substantiate the values.
 
-The main UI shows current persisted state. `/?replay=1` presents the recorded evidence on the requested 3-minute sequence and clearly labels it **not live**. `pnpm ade:record` records that replay as a silent WebM; the recording script requires Microsoft Edge and Playwright's video encoder. See [demo script](docs/AGENT-DEAL-ESCROW-DEMO.ko.md).
+The main UI shows current persisted state. The separate read-only service at port 3410 presents the fixed public evidence in Korean and clearly labels it **not live**. `pnpm ade:record` assembles saved browser frames into a silent 3-minute WebM using FFmpeg; it does not perform new transactions or record a fresh live workflow. See [public proof and demo script](docs/PUBLIC-ESCROW-PROOF.ko.md).
 
 ## 5. AI vs Code
 
