@@ -1,0 +1,18 @@
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {randomUUID,createHash} from 'node:crypto';
+import {connectProvider} from '../src/dealtrace/procurement/client.mjs';
+import {runProcurement} from '../src/dealtrace/procurement/run.mjs';
+import {hash,ensure} from '../src/deal-escrow/domain.ts';
+const file=process.argv[2];ensure(file,'PRIVATE_CONNECTION_FILE_REQUIRED');
+const config=JSON.parse(readFileSync(file));ensure(new URL(config.url).protocol==='https:','HTTPS_REQUIRED');
+const seller=connectProvider(config),identity=await seller.request('/identity');ensure(identity.address===config.address,'IDENTITY_PIN');
+const before=await seller.request('/evidence');
+const unauthenticated=await fetch(config.url+'/evidence',{redirect:'error'});await unauthenticated.body?.cancel();ensure(unauthenticated.status===403,'EVIDENCE_AUTH_REQUIRED');
+const run=randomUUID(),directory=`artifacts/generalization/external/${run}`;mkdirSync(directory,{recursive:true});
+const report=await runProcurement({run,approved:true,live:false,publicNetwork:false,external:[config],allowedSellerIds:[config.id],requestedSellerIds:[config.id],failOne:false});
+const after=await seller.request('/evidence');
+writeFileSync(`${directory}/procurement.json`,JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+const proof={run,checked_at:new Date().toISOString(),transport:'HTTPS',origin:config.url,identity,unauthenticated_status:unauthenticated.status,buyer_process:'Local production runProcurement + isolated buyer worker',seller_process:'Separate Vercel project; server-generated key; dedicated private Blob state; private pricing in seller environment',storage_shared_with_buyer:false,pricing_state_shared_with_buyer:false,external_business_identity_claimed:false,chain_scope:'Local devnet 31339; these transaction hashes are not Sepolia explorer proofs.',status:report.status,verdict:report.verification?.verdict??null,before_evidence_hash:hash(before),after_evidence_hash:hash(after),new_commits:after.commits.filter(c=>!before.commits.includes(c)),transactions:report.transactions,source_sha256:createHash('sha256').update(readFileSync('scripts/verify-seller-lab-https.mjs')).digest('hex')};
+writeFileSync(`${directory}/proof.json`,JSON.stringify(proof,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({proof:`${directory}/proof.json`,status:report.status,error:report.error,verdict:proof.verdict,new_commits:proof.new_commits.length,transactions:report.transactions?.length}));
+if(report.status!=='PASS'||proof.verdict!=='VALID')process.exitCode=1;
