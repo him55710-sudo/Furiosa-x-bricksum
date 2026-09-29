@@ -7,6 +7,7 @@ export function checkRows(job,rows,time=Math.floor(Date.now()/1000)){
  add('VALID_JSON_ARRAY',Array.isArray(rows));add('MINIMUM_ROWS',rows.length>=job.source.length);add('REQUIRED_COLUMNS',typed);
  const safeURL=value=>{if(typeof value!=='string'||/[\u0000-\u0020\u007f]/.test(value))return false;try{const u=new URL(value);return ['http:','https:'].includes(u.protocol)&&u.hostname&&!u.username&&!u.password;}catch{return false;}};
  add('SOURCE_URL_COVERAGE',rows.length&&rows.every(r=>safeURL(r?.source_url)));
+ if(job.liveSession?.agreement)add('AGREED_SOURCE_COUNT',new Set(rows.filter(r=>safeURL(r?.source_url)).map(r=>r.source_url)).size>=job.liveSession.agreement.terms.sources);
  add('DELIVERY_DEADLINE',time<(job.deadline??time+job.deliveryMinutes*60));
  add('CAPEX_VALUE_TYPES',typed&&rows.every(r=>typeof r.company==='string'&&r.company.trim()&&typeof r.capex==='number'&&Number.isFinite(r.capex)&&r.capex>=0));
  add('CAPEX_QUARTER_RANGE',typed&&rows.every(r=>typeof r.quarter==='string'&&/^202[56]-Q[1-4]$/.test(r.quarter)));
