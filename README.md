@@ -2,6 +2,8 @@
 
 **From Agent Conversation to Verifiable Deal**
 
+[Next iteration: final product plan (Korean)](docs/DEALTRACE-FINAL-PLAN.ko.md) — negotiated document-processing work, a 40-budget / 26-committed / 31-invoiced demonstration, and delivery-to-billing evidence. This is the implementation plan; the evidence below belongs to the current prototype.
+
 DealTrace helps developers of research-buying agents turn agent conversations into source-linked, bilaterally confirmed Deals, enforce human spending authority, settle verified delivery, and turn a verified failure into stricter permissions for the next purchase.
 
 ## 1. Problem
