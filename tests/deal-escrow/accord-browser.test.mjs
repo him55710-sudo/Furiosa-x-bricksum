@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import {readFileSync,mkdtempSync,rmSync} from 'node:fs';
+import {readFileSync,mkdtempSync,rmSync,writeFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import path from 'node:path';
 import {tmpdir} from 'node:os';
 import {buildHostedSite} from '../../scripts/build-accord-vercel.mjs';
@@ -74,5 +75,12 @@ test('hosted release builds in isolation without a prebuilt dist or historical t
  const manifest=await buildHostedSite(process.cwd(),{outDir:out,stagingDir:path.join(directory,'stage'),testSummary:{status:'BUILD_FIXTURE',tests:0,passed:0}});
  assert.equal(manifest.mode,'BROWSER_EVM');assert.ok(manifest.files.some(f=>f.path==='vendor/ganache-7.9.2.min.js'));
  assert.ok(manifest.files.every(f=>/^(index.html|favicon.svg|vercel.json|assets\/|vendor\/|evidence\/)/.test(f.path)));
+ // Check actual ignore matching, not only the declared manifest. Stale Vite
+ // bundles and arbitrary files inside reopened asset directories stay private.
+ writeFileSync(path.join(out,'.gitignore'),readFileSync(path.join(out,'.vercelignore')));
+ assert.equal(spawnSync('git',['init','--quiet'],{cwd:out}).status,0);
+ const extras=['assets/stale-bundle.js','vendor/unlisted.json','evidence/private-key.json','.env'];
+ const ignored=spawnSync('git',['check-ignore','--no-index','--stdin'],{cwd:out,encoding:'utf8',input:[...manifest.files.map(f=>f.path),...extras].join('\n')+'\n'});
+ assert.equal(ignored.status,0);assert.deepEqual(ignored.stdout.trim().split(/\r?\n/),extras);
  const config=JSON.parse(readFileSync(path.join(out,'vercel.json')));assert.equal(config.buildCommand,null);const proof=JSON.parse(readFileSync(path.join(out,'evidence/dealtrace-summary.json')));assert.deepEqual([proof.budget,proof.agreement,proof.rejectedInvoice,proof.calls,proof.tokens],[40,20,25,5,7890]);assert.equal(proof.verification.checks,47);assert.equal(proof.transactions.find(t=>t.label==='overbill-blocked').status,0);assert.ok(config.headers[0].headers.find(h=>h.key==='Content-Security-Policy').value.includes("'wasm-unsafe-eval'"));
 });
