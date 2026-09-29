@@ -21,6 +21,8 @@ The customer and job stay narrow: a research automation team delegates one docum
 
 V1 and V2 have different revocation and budget semantics. They are not interchangeable adapters. Existing receipts, contract address, film and Kiln evidence are preserved. The ordinary workbench's Run button still executes V1. `/vault.html` presents the separate V2 public proof; `dealtrace:vault:demo` executes V2.
 
+Here V1/V2 identify settlement-contract generations. The preserved DealTrace application report itself uses workflow/schema version 3.
+
 ## What is signed
 
 1. **Mandate:** buyer, delegated agent, evaluator, hash of the permitted seller list, gross budget, per-deal maximum, expiry and one-use nonce.
@@ -52,6 +54,8 @@ This run adds **zero model calls**. The real Kiln experiment remains the separat
 
 Run `ade00002-2960-4000-8000-202609290001` completed on Sepolia. Contract **`0x3df2bFc764488Dd6AE85f98774255359b0520048`** has an exact creation and runtime match on [Sourcify](https://repo.sourcify.dev/11155111/0x3df2bFc764488Dd6AE85f98774255359b0520048). Source verification establishes correspondence to the published code, not a security audit. Automatic forwarding to Etherscan hit its submission limit; we do not claim Etherscan source verification.
 
+The independent read-only verifier passed **83 checks at finalized block 11,807,398**, using Tenderly RPC after execution through PublicNode. The browser's separate verifier also checks the pinned deployment. The [one-page Korean brief](../output/pdf/DealTrace-V2-upgrade.ko.pdf) explains the result without contract internals.
+
 | Outcome | Actual transaction |
 |---|---|
 | Authentic 31 claim reverted | [0x2f9bc02c…](https://sepolia.etherscan.io/tx/0x2f9bc02cb4e8199abb62a39a349de6c0d07af49d5f87780ee88dfdd3432b703b) |
@@ -63,6 +67,8 @@ Run `ade00002-2960-4000-8000-202609290001` completed on Sepolia. Contract **`0x3
 | Old signatures after revocation reverted | [0x87855308…](https://sepolia.etherscan.io/tx/0x87855308e8c6c2de9ddcae8618cdecc62b8af83edacadaf4281f1d1c7aafb840) |
 
 The 14 receipts include deployment and mandate registrations. Their measured gas fees total **0.003892359492797946 test ETH**; this is neither a fiat cost nor an NPU energy estimate. Tiny DEMO principal conversion is for testing and does not demonstrate economical production micropayments. Final locked principal and withdrawal credits are both zero. A completed-run resume reused all 14 hashes and left relayer nonce 27 and buyer nonce 2 unchanged.
+
+The [gas breakdown](../artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/gas-accounting.json) separates one-time deployment, mandate management, funding/settlement/withdrawal and deliberately failed attacks. It does not fold chain gas into a claim about inference efficiency.
 
 Evidence: [complete report](../artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/report.json), [independent finalized observation](../artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/finalized-verification.json), [source match](../artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/source-verification.json), [resume proof](../artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/resume-proof.json). The read-only verifier's pre-deployment-finality classification fix and original execution bytes are retained alongside the report.
 

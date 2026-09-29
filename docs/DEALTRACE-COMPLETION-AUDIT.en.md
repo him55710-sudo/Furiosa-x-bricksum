@@ -22,6 +22,8 @@ This audit distinguishes implementation, observed execution and evidence that st
 | Main integration preserves existing work | Both research modes and tool families retained; integration report and current full test suite | V1 139/139; with V2 153/153 local PASS |
 | Audit-screen altered-copy demonstration | Real browser click yields INVALID / DEAL_HASH_MISMATCH; original receipt preserved; `artifacts/dealtrace/audit-copy/browser.json` | PASS; no model, chain query or financial action |
 | Rules vs full-transcript vs incremental comparison | Frozen two-conversation, eight-turn experiment plus true full re-extraction follow-up; all 24 model attempts retained | Complete; rules 8/8, incremental 7/8, whole-transcript/newest-patch 3/8; true all-event re-extraction 4/8. Follow-up is not a new held-out evaluation |
+| V2 enforcement independent of application preflight | 14 Sepolia receipts, authentic excessive invoice plus evaluator signature, missing-preview and revoked-authority attacks | Three mined reverts; correct payout and refund withdrawn; 83 finalized verifier checks PASS |
+| V2 source correspondence and recovery accounting | Sourcify exact creation/runtime match; zero locked/credited principal; completed-run resume | PASS; no external security audit or production-custody claim |
 
 ## Version boundaries
 

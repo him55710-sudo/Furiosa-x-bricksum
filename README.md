@@ -12,6 +12,8 @@ The missing control is the agreement itself: what work was promised, at what pri
 
 **The stronger V2 demonstration bypasses our server entirely.** A seller and an intentionally permissive evaluator both sign the excessive invoice. The contract still rejects 31 against the bilaterally committed 26. It also carries a failed delivery into the next order as an on-chain preview requirement. [V2 design, attacks and trust boundary](docs/DEALTRACE-VAULT-V2.en.md).
 
+**Observed V2 proof:** 14 Sepolia transactions, three deliberate on-chain rejections, **83 independent finalized checks passed**, and an exact source/bytecode match on [Sourcify](https://repo.sourcify.dev/11155111/0x3df2bFc764488Dd6AE85f98774255359b0520048). [One-page V2 brief](output/pdf/DealTrace-V2-upgrade.ko.pdf) · [Finalized verification](artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/finalized-verification.json).
+
 [Watch the 3-minute demo](artifacts/dealtrace/film-v3/dealtrace-3min.ko.webm) · [One-page brief](output/pdf/DealTrace-brief.ko.pdf) · [Public proof](docs/DEALTRACE-PUBLIC-PROOF.ko.md) · [Try it](#try-it)
 
 The video and brief have Korean narration text. This README is the English overview for GWDC Challenge B.
