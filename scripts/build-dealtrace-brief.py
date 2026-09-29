@@ -54,7 +54,7 @@ p(f"실제 Qwen {summary['model_calls']}회 · 시나리오 {summary['passed']}/
 p(f"자동 검사 {tests['passed']}개 통과 · 로컬 체인 지급 1건 / 환불 1건<br/>서명·예산·정산·재거래 차단에는 추가 AI 호출 0회",56,638,480,9,'#DEEBE3')
 p('지금 확인한 범위',40,694,490,10,bold=True)
 p('시뮬레이션 공급자와 로컬 역할 키를 사용한 개발용 데모입니다. 실제 고객 검증·외부 Agent 인증·NPU 전력 절감은 아직 확인하지 않았습니다. 기존 Sepolia 증거는 이전 정산 계층의 별도 실행입니다. 앞선 실패 실행도 보존했습니다.',40,715,515,8.6,'#526B62',leading=12.5)
-url='https://github.com/him55710-sudo/Furiosa-x-bricksum/pull/1'
+url='https://github.com/him55710-sudo/Furiosa-x-bricksum/pull/2'
 p('코드와 실제 검증 기록 보기',40,776,460,9,'#287258',True)
 c.linkURL(url,(40,H-794,270,H-774),relative=0,thickness=0)
 p('2026.09.29  |  GWDC Challenge B  |  1 / 1',40,806,500,7,'#526B62')
