@@ -1,5 +1,6 @@
 We built a spending-control and escrow prototype for research-agent developers commissioning financial-data extraction: AI proposes the work, code checks the approved terms and pinned-source delivery, and blockchain escrow releases or refunds with reconstructable evidence.
 
+**Quick review:** [2-page Korean product brief](output/pdf/Agent-Deal-Escrow-brief.ko.pdf) · [portable demo ZIP](output/submission/Agent-Deal-Escrow-demo.zip) · [3-minute presentation guide](docs/SUBMISSION.ko.md). The ZIP needs no API key or wallet and replays retained evidence.
 # Agent Deal Escrow
 
 **Pay for the financial-data extraction you approved, with verifiable delivery and settlement.**
