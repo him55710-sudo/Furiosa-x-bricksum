@@ -2,6 +2,27 @@
 
 This audit distinguishes implementation, observed execution and evidence that still needs real participants. A green test suite does not close an unmet human gate.
 
+## Latest integrated procurement release - 2026-09-30
+
+The live negotiation and on-chain authorization paths now run together. The earlier evidence below remains a historical version; it is not relabeled as the new run.
+
+| Added scope | Observed result |
+|---|---|
+| Three registered provider processes, private role policies, model-selected quotes and buyer counteroffer | Actual Kiln responses generated the terms; no prescribed final price |
+| Live fixed job through Vault V2 | Run `fa5e107c`: 5 calls / 7,890 tokens, 5 Sepolia transactions, 20 agreed, signed 25 rejected, 20 withdrawn |
+| Independent finalized verification of that same workflow | VALID, 47 checks, block 11808905 |
+| Bundle and success-unit metering | Hardened V3 run `11ba8d29`: 5 calls / 10,398 tokens, 27.40 maximum, 26.40 paid and 1.00 returned on a real local EVM |
+| Metering downgrade attacks | Ordinary V3 funding and ordinary release cannot omit/bypass the signed unit schedule; authentic overbill also rejected |
+| Idempotent execution and recovery | Same unit key returns identical evidence; durable transaction intent precedes broadcast; completed public recovery sent zero new transactions |
+| Optional quantity range | Code and boundary regression implemented; live flexible attempt did not converge and stopped before funding |
+| Portable workbench | Approval gate, Stop, source jump, receipt download, altered-copy INVALID, finalized public verification; mobile layout checked |
+| Full regression and builds | 176/176 local tests pass; existing workbench and evidence replay build successfully |
+| Honest development usage | All five live attempts retained: 24 calls / 45,593 tokens, including truncation and non-convergence |
+
+[Implementation and commands](DEALTRACE-PROCUREMENT.en.md), [actual run evidence](../artifacts/dealtrace/procurement/usage-audit.json), [new brief](../output/pdf/DealTrace-Procurement.en.pdf).
+
+The first metered contract was hardened after identifying a funding-path downgrade. Its original source is archived, and the corrected contract was rerun with actual Kiln. [The source-change record](../artifacts/dealtrace/procurement/post-run-changes.json) distinguishes these bytes. The deployed V2 source and original Sepolia transaction data did not change.
+
 ## Implemented and demonstrated
 
 | Requirement | Authoritative evidence | Result |
@@ -42,6 +63,9 @@ The public V2 run's original verifier bytes are retained beside its report. A su
 | Explicit planned gate | Current evidence | What closes it |
 |---|---|---|
 | Three first-time people reconstruct the workflow | No real participant responses | At least three anonymized original responses to the final-plan questions, recorded with the version shown |
+| Independent external business integration | Pinned HTTPS connector implemented; bundled providers remain local | An actual supplier endpoint, identity pin and supported validation profile, followed by a retained run |
+| Real internet search or rented GPU units | Bounded corpus search and CPU work execute | Provider integration and a validator for those actual services; changing a UI label is not sufficient |
+| Hardware energy comparison | Actual tokens and API latency; power scenarios labeled assumptions | Provider power/occupancy measurements and a controlled baseline |
 
 These missing observations are not converted into passing requirements. The software and repository can be released as a testnet prototype while the full evidence goal remains open.
 

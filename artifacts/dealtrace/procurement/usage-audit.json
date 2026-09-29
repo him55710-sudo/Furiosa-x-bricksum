@@ -1,0 +1,253 @@
+{
+  "schema": "DEALTRACE_PROCUREMENT_USAGE_AUDIT_V1",
+  "scope": "All five live procurement attempts in this implementation session, including both failures. No statistical generalization.",
+  "runs": [
+    {
+      "run": "fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9",
+      "status": "PASS",
+      "error": null,
+      "model_calls": 5,
+      "total_tokens": 7890,
+      "flows": {
+        "Procurement / seller-a": {
+          "calls": 2,
+          "input_tokens": 1730,
+          "output_tokens": 1648,
+          "latency_ms": 27253,
+          "results": [
+            "VALID_TOOL_PROPOSAL",
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-b": {
+          "calls": 1,
+          "input_tokens": 793,
+          "output_tokens": 658,
+          "latency_ms": 10865,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-c": {
+          "calls": 1,
+          "input_tokens": 797,
+          "output_tokens": 923,
+          "latency_ms": 16431,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / buyer": {
+          "calls": 1,
+          "input_tokens": 825,
+          "output_tokens": 516,
+          "latency_ms": 9507,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        }
+      },
+      "transactions": 5,
+      "principal_funded": true
+    },
+    {
+      "run": "62b04a02-8286-4098-93ad-cca523783635",
+      "status": "PASS",
+      "error": null,
+      "model_calls": 5,
+      "total_tokens": 9592,
+      "flows": {
+        "Procurement / seller-a": {
+          "calls": 2,
+          "input_tokens": 1999,
+          "output_tokens": 1651,
+          "latency_ms": 30744,
+          "results": [
+            "VALID_TOOL_PROPOSAL",
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-b": {
+          "calls": 1,
+          "input_tokens": 901,
+          "output_tokens": 754,
+          "latency_ms": 13180,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-c": {
+          "calls": 1,
+          "input_tokens": 905,
+          "output_tokens": 1217,
+          "latency_ms": 19087,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / buyer": {
+          "calls": 1,
+          "input_tokens": 960,
+          "output_tokens": 1205,
+          "latency_ms": 20816,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        }
+      },
+      "transactions": 7,
+      "principal_funded": true
+    },
+    {
+      "run": "11ba8d29-1b86-4cb4-8758-3ccb95fb89e8",
+      "status": "PASS",
+      "error": null,
+      "model_calls": 5,
+      "total_tokens": 10398,
+      "flows": {
+        "Procurement / seller-a": {
+          "calls": 1,
+          "input_tokens": 941,
+          "output_tokens": 1615,
+          "latency_ms": 24801,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-b": {
+          "calls": 1,
+          "input_tokens": 937,
+          "output_tokens": 570,
+          "latency_ms": 10320,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-c": {
+          "calls": 2,
+          "input_tokens": 2062,
+          "output_tokens": 2306,
+          "latency_ms": 36317,
+          "results": [
+            "VALID_TOOL_PROPOSAL",
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / buyer": {
+          "calls": 1,
+          "input_tokens": 991,
+          "output_tokens": 976,
+          "latency_ms": 15857,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        }
+      },
+      "transactions": 7,
+      "principal_funded": true
+    },
+    {
+      "run": "3d3daebd-0fa3-4808-9156-08c79f277d03",
+      "status": "FAIL",
+      "error": "KILN_OUTPUT_TRUNCATED",
+      "model_calls": 4,
+      "total_tokens": 8774,
+      "flows": {
+        "Procurement / seller-a": {
+          "calls": 1,
+          "input_tokens": 847,
+          "output_tokens": 791,
+          "latency_ms": 13196,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-b": {
+          "calls": 1,
+          "input_tokens": 843,
+          "output_tokens": 998,
+          "latency_ms": 15993,
+          "results": [
+            "SELLER_CAPABILITY"
+          ]
+        },
+        "Procurement / seller-c": {
+          "calls": 1,
+          "input_tokens": 847,
+          "output_tokens": 1117,
+          "latency_ms": 17578,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / buyer": {
+          "calls": 1,
+          "input_tokens": 931,
+          "output_tokens": 2400,
+          "latency_ms": 35408,
+          "results": [
+            "KILN_OUTPUT_TRUNCATED"
+          ]
+        }
+      },
+      "transactions": 1,
+      "principal_funded": false,
+      "original_report_undercount": "Original report has 3 calls. Durable worker journal has 4, including truncated buyer output. Catch-path aggregation was corrected before the successful runs. Original report retained unchanged."
+    },
+    {
+      "run": "ed9551dc-ff7e-4cec-b617-2ed9abecf350",
+      "status": "FAIL",
+      "error": "NEGOTIATION_DID_NOT_CONVERGE",
+      "model_calls": 5,
+      "total_tokens": 8939,
+      "flows": {
+        "Procurement / seller-a": {
+          "calls": 1,
+          "input_tokens": 952,
+          "output_tokens": 672,
+          "latency_ms": 11774,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-b": {
+          "calls": 1,
+          "input_tokens": 948,
+          "output_tokens": 1057,
+          "latency_ms": 17176,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / seller-c": {
+          "calls": 2,
+          "input_tokens": 2092,
+          "output_tokens": 1459,
+          "latency_ms": 24078,
+          "results": [
+            "VALID_TOOL_PROPOSAL",
+            "VALID_TOOL_PROPOSAL"
+          ]
+        },
+        "Procurement / buyer": {
+          "calls": 1,
+          "input_tokens": 1011,
+          "output_tokens": 748,
+          "latency_ms": 12236,
+          "results": [
+            "VALID_TOOL_PROPOSAL"
+          ]
+        }
+      },
+      "transactions": 1,
+      "principal_funded": false
+    }
+  ],
+  "calls": 24,
+  "tokens": 45593,
+  "energy": {
+    "measured_hardware_power": false,
+    "assumption_only": "Example allocation: 150 W or 300 W continuously assigned during the reported API latency. E_Wh = assumed_W * latency_ms / 3600000. Latency includes network/queue time, and neither power nor device occupancy was measured. These examples are not device energy estimates or evidence of savings.",
+    "no_comparative_npu_claim": true
+  }
+}

@@ -1,174 +1,135 @@
 # DealTrace
 
-### An agent can stay under budget and still pay the wrong bill.
+### The agreement decides what gets paid.
 
-**DealTrace turns negotiated agent work into a mutually signed deal, pays only when delivery and billing match that deal within human authority, and preserves the evidence behind every outcome.**
+**DealTrace turns agent-to-agent procurement into a mutually signed deal, pays only for delivery and billing that match the deal within human authority, and exports the evidence behind the payment.**
 
-An operator allows **40 DEMO**. Two agents agree on **26**. The seller sends a signed invoice for **31**.
+A human allows **40 DEMO**. Kiln-powered agents negotiate **20**. The seller submits a genuinely signed bill for **25**.
 
-A budget check passes. **DealTrace stops the payment.**
+The bill fits the budget. **The Sepolia contract still rejects it.** The corrected 20 is paid and withdrawn.
 
-The missing control is the agreement itself: what work was promised, at what price, by when, with which evidence—and who confirmed it.
+This is our narrow problem: when agents negotiate changing work, a budget alone cannot tell you what they actually agreed to buy.
 
-**The stronger V2 demonstration bypasses our server entirely.** A seller and an intentionally permissive evaluator both sign the excessive invoice. The contract still rejects 31 against the bilaterally committed 26. It also carries a failed delivery into the next order as an on-chain preview requirement. [V2 design, attacks and trust boundary](docs/DEALTRACE-VAULT-V2.en.md).
+[One-page brief](output/pdf/DealTrace-Procurement.en.pdf) · [Run the workbench](#try-it) · [Technical design](docs/DEALTRACE-PROCUREMENT.en.md) · [Finalized public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json)
 
-**Observed V2 proof:** 14 Sepolia transactions, three deliberate on-chain rejections, **83 independent finalized checks passed**, and an exact source/bytecode match on [Sourcify](https://repo.sourcify.dev/11155111/0x3df2bFc764488Dd6AE85f98774255359b0520048). [One-page V2 brief](output/pdf/DealTrace-V2-upgrade.ko.pdf) · [Finalized verification](artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/finalized-verification.json).
+## The first user
 
-[Watch the 3-minute demo](artifacts/dealtrace/film-v3/dealtrace-3min.ko.webm) · [One-page brief](output/pdf/DealTrace-brief.ko.pdf) · [Public proof](docs/DEALTRACE-PUBLIC-PROOF.ko.md) · [Try it](#try-it)
+A research automation team buys short-lived document-processing capacity from worker agents. Each job can have different quantities, source requirements, delivery windows and rates. Someone still has to explain the final invoice.
 
-The video and brief have Korean narration text. This README is the English overview for GWDC Challenge B.
+The supported job extracts four quarterly actual facility-investment values with original source references. The bundle adds three searches over that pinned corpus and two CPU hash batches. These operations execute and their outputs are recomputed before payment. They are **not** external web search, rented GPU-hours or purchased data licenses. Paid outsourcing demand is a customer hypothesis; the small reference job could also be done locally.
 
-## The first customer and the smallest useful job
-
-A small research automation team delegates document-processing work to an external worker agent. The job changes from order to order: which documents, which metric, how much source evidence, and how quickly the result is needed. The operator cannot supervise every exchange, but remains accountable for the bill.
-
-Our first workflow is specific: **extract four quarterly actual facility-investment values from designated official documents, attach the original document/page/table evidence, and return usable JSON.** The buyer pays for completing that job under agreed conditions.
-
-The fixed sample can also be processed locally for free. Paid outsourcing demand is a customer hypothesis, not a result of this demo. The wedge is accountable delegation when a team already uses external capacity and variable job requirements.
-
-## Watch one deal become enforceable
-
-| Moment | What happens | What you can inspect |
-|---|---|---|
-| **Negotiate** | Seller asks 30, Buyer counters 25, Seller offers 26; delivery changes from 10 to 5 minutes | Real Kiln messages, revisions, and the exact message behind each final field |
-| **Commit** | Buyer and Seller review the complete Deal and sign the same version | Two role signatures bound to the Deal, source profile and human mandate |
-| **Stop** | A genuine seller signature requests 31, still below the 40 allowance | Exact-price mismatch; 26 stays in escrow; no extra funding or payout |
-| **Correct and pay** | Valid delivery plus a new signed invoice for 26 satisfies the agreement | One Sepolia payout, a four-row result, and an exportable audit receipt |
-
-The second loop matters too: an intentionally incorrect delivery is refunded. A company-and-seller `REQUIRE_PREVIEW` rule then blocks the next order—even under a new mandate—until a sample is verified. A past outcome changes a future permission.
-
-**Three primitives:** conversation → confirmed deal; deal → traceable evidence; verified outcome → future permission.
-
-## Why this is more than a chat log or a wallet limit
-
-A chat log preserves what agents said. A budget limit caps how much they can spend. DealTrace connects the changing terms in between to the actual execution:
-
-- **Every term has a source.** Click the price or deadline to return to the original message, rather than generating a retrospective explanation.
-- **Agreement and authority are separate.** Two agents can agree to something the human never authorized; that agreement still cannot fund.
-- **Delivery and billing are separate.** A valid result alone cannot release money, and a correctly signed invoice cannot change the agreed total.
-- **The receipt can leave the application.** Another process can check the messages, signatures, authorization, delivery, claims and finalized chain result without the app database or secret keys.
-
-In the audit appendix, **change a receipt copy's price and verify it** to see `INVALID / DEAL_HASH_MISMATCH`. This runs the real verifier on an in-memory copy; it makes no model call or transaction and preserves the exported original. An offline integrity check does not independently confirm settlement finality.
-
-Our longer-term thesis is an integration layer for teams whose agents buy variable digital work. The reusable asset would be a consistent model of terms, provenance, execution and outcome-driven controls across providers. That is a product hypothesis—not a claim of market leadership, traction or a proven moat.
-
-## Kiln powers the conversation; code controls the money
-
-The workflow uses Bricksum's Kiln API with **`qwen3-32b`**, following this project's updated model choice. The model generates outward negotiation and proposes the meaning of incoming messages. Its responses affect the price, deadline and semantic-conflict record.
-
-Code owns units, evidence spans, signatures, authority, budget reservations, exact billing, supported delivery validation, duplicate prevention and settlement. Models receive **no financial signing key or payment tool**.
-
-This makes efficient inference a service-design question: spend tokens where language varies, then reuse the structured evidence. Fixed approved openings, signatures, price matching, budget arithmetic, settlement, receipt verification and completed-run resume require no additional inference. A live workflow has a ten-call cap.
-
-| Actual public flow | Calls | Input tokens | Output tokens |
-|---|---:|---:|---:|
-| Seller A negotiation | 2 | 954 | 164 |
-| Buyer negotiation | 2 | 1,079 | 121 |
-| Seller B conflicting offer | 1 | 402 | 184 |
-| Message-to-terms interpretation | 5 | 5,910 | 3,259 |
-| **Total** | **10** | **8,345** | **3,728** |
-
-**12,073 tokens**, with individual attempts and latency retained. Hardware energy was not measured. With 56.772 seconds of summed API latency, assumed attributable power of 25/50/100 W gives 0.39425/0.7885/1.577 Wh. Queue time, networking, batching and utilization are unknown. These are assumptions, not a measured NPU/GPU comparison.
-
-A separate authored eight-case expression test scored Qwen **7/8**, versus **8/8** for an explicit deterministic baseline using zero calls. In a second frozen comparison of eight turns across two conversations, rules passed **8/8**, incremental interpretation **7/8** (12,669 tokens), and full-transcript input **3/8** (15,358 tokens) on exact changes, accumulated state and provenance. Both model arms made eight calls; failed attempts remain counted. Full-transcript input still emitted only the newest patch, not a complete re-extraction. These small authored tests support a bounded design choice, not general AI superiority or a universal savings claim. [Comparison protocol and results](docs/DEALTRACE-CONTEXT-COMPARISON.en.md).
-
-A subsequent **true full re-extraction** returned all event interpretations at every turn: **4/8**, eight calls and **18,984 tokens**, including every failed attempt. It used the unchanged dataset and was designed after the first comparison, so it is follow-up evidence, not a new held-out test. The measured difference supports keeping inference incremental for this workflow; code and bilateral review still determine whether a proposed interpretation can become executable.
-
-## Blockchain carries the money and the commitment
+## One integrated workflow
 
 ```mermaid
 flowchart LR
-  H[Human mandate] --> G[Authority gate]
-  B[Buyer service] <-->|Signed messages| S[Seller service]
-  B --> L[Terms and provenance]
-  S --> L
-  L --> C[Same Deal, two confirmations]
-  C --> G --> E[Sepolia escrow]
-  S --> V[Delivery and signed invoice]
-  V --> E
-  E --> R[Portable receipt]
-  E --> M[Verified failure: preview required]
-  M --> G
+    H[Human mandate] --> R[RFQ]
+    R --> P[Three provider agents]
+    P --> N[Kiln offers and counteroffer]
+    N --> D[Same deal, two signatures]
+    D --> V[On-chain authority and escrow]
+    V --> W[Execute and validate work]
+    W --> S[Exact settlement or refund]
+    S --> E[Portable evidence]
 ```
 
-The chain **locks**, **releases** and **refunds** test assets against a Deal hash and stores the settlement evidence commitment. The workflow reads canonical transactions, receipts, funding-block timestamps and final escrow state. Both parties get a shared record of where the money ended up.
+| Step | Implemented behavior |
+|---|---|
+| Discover | Challenge-response discovery of registered, pinned provider identities |
+| Negotiate | Three separate seller processes with private cost/capability constraints; buyer counteroffer; final terms chosen by Kiln rather than a prescribed final price |
+| Commit | Signed event sequence, field provenance, complete packet review by each party and EIP-712 signatures bound to network, mandate and recipient |
+| Authorize | Human budget, per-deal cap, permitted sellers, deadline, nonces, revocation and gross session allocation |
+| Execute | Signed unit results; stable request IDs; retry returns the same result without a second billable unit |
+| Settle | V2 enforces the fixed agreed total; V3 enforces jointly signed unit rates/caps and returns unused principal |
+| Audit | Verify original messages, signatures, supported work, invoice, exact chain calldata, events, transfers and finality without app DB or private keys |
 
-The Deal binds the source-manifest hash, validator profile, all-in price, recipient, chain, contract, asset conversion and deadline rule. Delivery time starts at the actual funding block. An off-chain controller still decides whether delivery passes; the chain does not certify language meaning or arbitrary factual truth.
+One bounded counteroffer round is intentional. A rejected offer, incompatible quality or unfinished agreement stops before funding. Quantities are fixed by default; `--flex-quantity` explicitly permits a minimum/maximum range. The retained flexible-quantity live attempt did not converge and stopped. We do not replace unsuccessful model output with a fabricated agreement.
 
-Buyer and Seller use separate HTTP processes, keys and durable stores, but all demo roles share one operator. This is process separation, not external business-identity verification. No A2A, AP2 or ERC-8183 interoperability is claimed.
+The outward message includes qualitative prose and structured commercial terms. Exact numbers come from the signed fields. The earlier natural-language interpretation ledger remains available in the original workbench; this new path does not claim to compile arbitrary legal prose.
 
-### V2: a compromised submitter cannot change the agreed price
+## What actually ran
 
-The separate **DealTraceVault** contract verifies buyer-signed EIP-712 mandates, both agents' execution signatures, the allowed seller, atomic session allocation, full delivery window, exact invoice amount/payee and evaluator approval. Domain separation, one-use mandate nonces and terminal escrow states reject replay. A delivery-mismatch refund creates a buyer–seller preview requirement that a new mandate cannot erase.
+| Evidence | Observed outcome |
+|---|---|
+| [Live fixed job on Sepolia](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) | 5 actual Kiln calls; 22 → 20 negotiation; 5 public transactions; signed 25 bill reverted; 20 withdrawn |
+| [Independent public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) | **47 checks, VALID at finalized block 11808905** |
+| [Hardened V3 bundle](artifacts/dealtrace/procurement/runs/11ba8d29-1b86-4cb4-8758-3ccb95fb89e8/report.json) | 5 actual Kiln calls; seller C selected; 27.40 maximum, 26.40 paid, 1.00 returned; 56 checks on a real local EVM |
+| [Full automated suite](artifacts/deal-escrow/tests.json) | **176/176 pass**; original workbench and evidence replay builds also pass |
+| [Failed live attempts and all flow usage](artifacts/dealtrace/procurement/usage-audit.json) | Both truncation and non-convergence retained; neither funded a purchase |
 
-Settlement credits and withdrawal are separate events. A receiver that rejects ETH cannot block the settlement decision; the beneficiary can redirect its withdrawal. Anyone can finalize an expired escrow to the fixed buyer. No administrator can sweep principal or edit the contract.
+Inspect the actual Sepolia [rejected invoice](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59), [correct settlement](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f) and [seller withdrawal](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc).
 
-The evaluator still decides whether the supported delivery is correct. It can approve bad work at the agreed price; it cannot increase that price or redirect the recipient. V2 does not claim trustless semantic judgment. Its authored-dialogue chain experiment adds **zero model calls**; the actual Kiln conversation evidence above remains a separate, preserved V1 run. [Threat model, exact signed fields, recovery and version differences](docs/DEALTRACE-VAULT-V2.en.md).
+V3 blocks both forms of metering bypass: ordinary funding cannot omit a signed unit schedule, and ordinary release cannot bypass usage settlement. Its latest proof is local, not a claim of V3 public deployment. The old 29.00/27.50 bundle run is preserved as an earlier version; [source changes and original execution bytes](artifacts/dealtrace/procurement/post-run-changes.json) keep these versions distinct.
 
-## Evidence you can follow
+## Kiln where language matters; code where money moves
 
-Public run **`34d1da0d-e842-4f44-acfd-4d97728c81f0`** passed **17/17 workflow checks** and made four real Sepolia transactions: two fundings, one payout, one refund. Five exported receipts passed independent finalized verification.
+The actual model is **`qwen3-32b` through Kiln**, following the project's updated model choice. It generates the offers, counteroffer and response. It has no signing key or payment tool. Code chooses the cheapest eligible initial quote, validates terms, signs, executes supported work and computes settlement.
 
-- [Successful payout](https://sepolia.etherscan.io/tx/0xd321f5ff9b4852aeafea3403142faa9943c3024f807980680a77c27d377cc2fd)
-- [Incorrect-delivery refund](https://sepolia.etherscan.io/tx/0x9d79a27fdaa7c56f349b688a52c051a105dc8515d7af8abffff410c4e78d3613)
-- [Workflow and recorded stops](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/report.json)
-- [Independent finalized verification](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/independent-verification.json)
-- [Valid, altered and incomplete portable receipts](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/portable-verifier-cases)
-- [Resume without additional payment or inference](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/resume-proof.json)
+| Live Sepolia flow | Calls | Input tokens | Output tokens |
+|---|---:|---:|---:|
+| Seller A offer and response | 2 | 1,730 | 1,648 |
+| Seller B conflicting offer | 1 | 793 | 658 |
+| Seller C offer | 1 | 797 | 923 |
+| Buyer counteroffer | 1 | 825 | 516 |
+| **Total** | **5** | **4,145** | **3,745** |
 
-The filmed version passed **129/129 tests**; the integrated V1 suite reached **139/139**. V2 adds EVM signature/replay/budget attacks, ERC-1271 receivers, reentrancy, sponsored withdrawal, a full conversation-to-vault tamper test and a pre-finality classification regression: **153/153 pass**. These versions remain distinct: [current tests](artifacts/deal-escrow/tests.json), [presentation tests](artifacts/dealtrace/integration/pre-merge-tests.json), [integration audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md).
+The hardened bundle used 10,398 tokens. Across all five live development attempts, including both failures, the retained ledger counts **24 calls / 45,593 tokens**. One early failure report undercounted the truncated call; its durable journal telemetry and explicit correction are retained without rewriting the original report.
 
-The film is a 180-second, silent edit of real saved-run screenshots, not live transaction footage. Prices, excess billing and incorrect delivery are controlled scenarios. The expiry test injects policy time; it is not a real-time wait.
+Bounded dialogue, structured commercial fields and deterministic verification avoid model calls for signatures, billing, retry, settlement and audit. This is a design choice, not a measured energy-savings percentage. We have **no NPU power telemetry**. As an assumption-only example, assigning 150 or 300 W continuously to the fixed run's 64.056 seconds of API latency gives 2.67 or 5.34 Wh. That latency includes network/queue time; neither power nor occupancy was measured. These numbers are illustrative accounting scenarios, not measured device energy or a GPU comparison.
 
 ## Try it
 
-Node 24+:
+Node 24+ and pnpm:
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm dealtrace:demo       # Authored dialogue; real local EVM; no API key
-pnpm dealtrace:start      # Open http://127.0.0.1:3420/
+pnpm dealtrace:procurement:compile
+pnpm dealtrace:procurement                 # fixed job, authored quotes, real local V2 EVM
+pnpm dealtrace:procurement --metered       # bundle and real local V3 EVM
+pnpm dealtrace:procurement:start          # http://127.0.0.1:3421
 pnpm ade:test
 ```
 
-The screen replays saved evidence. New runs require explicit approval. Stop revokes active authority; already signed transactions must still be reconciled.
-
-For actual inference, configure ignored `.env.local` with `KILN_API_KEY`, `KILN_MODEL=qwen3-32b` and optional `KILN_BASE_URL`, then run `pnpm dealtrace:demo --live`. Credentials and financial keys are never committed.
-
-Public execution needs an already provisioned Sepolia-only directory, `DEALTRACE_SEPOLIA_DIR` and `SEPOLIA_RPC_URL`; run `pnpm dealtrace:demo --live --sepolia`. Bound operator gas separately with `DEALTRACE_MAX_GAS_WEI` (the retained run used 400000000000000 wei per operation). Do not share its signer with another running process. Resume requires the same execution source, mode and directory; never make a fresh payment because observation timed out.
+For actual inference, configure ignored `.env.local` with `KILN_API_KEY`, `KILN_MODEL=qwen3-32b` and optional `KILN_BASE_URL`:
 
 ```sh
-pnpm dealtrace:verify:public
-pnpm dealtrace:verify:receipt path/to/exported-receipt.json
+pnpm dealtrace:procurement --live
+pnpm dealtrace:procurement --live --metered
+pnpm dealtrace:procurement --live --metered --flex-quantity
 ```
 
-The standalone verifier pins `artifacts/dealtrace/trusted-deployment.json` and reads finalized Sepolia state. It needs no app DB, agent key or model credential. Exit 0 = VALID, 1 = INVALID, 2 = INCOMPLETE. An offline check cannot certify a chain settlement.
+The browser supports approval, live/local selection, watching, stopping, receipt export, source navigation and verification of an altered copy. A local offline check reports INCOMPLETE / CHAIN_NOT_QUERIED; a saved success badge alone is not a fresh chain check.
 
-For the separate V2 execution module:
+Public execution requires an already provisioned **Sepolia-only** identity directory, `DEALTRACE_SEPOLIA_DIR` and `SEPOLIA_RPC_URL`. Existing V2 is pinned; metered public mode would deploy V3. Per-operation and cumulative gas caps apply. DEMO is an accounting unit backed here by tiny test-ETH amounts, not USD or a newly issued token. Gas is a separate operator expense.
 
 ```sh
-pnpm dealtrace:vault:compile
-pnpm dealtrace:vault:demo       # Real local EVM, three deliberately reverted attacks
-pnpm dealtrace:vault:verify     # Independent finalized public-proof verification
-# In the running workbench: http://127.0.0.1:3420/vault.html
+pnpm dealtrace:procurement --live --sepolia
+pnpm dealtrace:procurement --live --sepolia --run=<same-id> --resume
+pnpm dealtrace:procurement:verify report.json trusted-deployment.json
+node scripts/recover-dealtrace-procurement.mjs <run-id>
 ```
 
-## Challenge B acceptance map
+Signed transaction bytes are saved before broadcast. An observation timeout reconciles the same hash; it does not authorize a new payment. Stop revokes new commitments; existing funded work retains its signed deadline. Anyone can trigger an expired refund to the immutable buyer, and the recovery command can sponsor its withdrawal. Local chains are ephemeral.
 
-| Requirement | Demonstration |
+## Existing controls remain
+
+The earlier [Vault V2 adversarial proof](docs/DEALTRACE-VAULT-V2.en.md) retains 14 Sepolia transactions, three mined attack reverts, 83 finalized checks and a [Sourcify exact source match](https://repo.sourcify.dev/11155111/0x3df2bFc764488Dd6AE85f98774255359b0520048). It demonstrates failed delivery → refund → on-chain `REQUIRE_PREVIEW`, including a new mandate. These are additional retained scenarios, not transactions attributed to the five-call procurement run.
+
+`pnpm dealtrace:start` opens the original workbench on port 3420. The [earlier three-minute film](artifacts/dealtrace/film-v3/dealtrace-3min.ko.webm) is an edit of saved evidence screenshots, not live transaction footage, and describes its original version. [Legacy escrow and research modes](README.legacy-escrow.md) remain available.
+
+## Challenge B and remaining trust
+
+| Criterion | Evidence |
 |---|---|
-| Function and user need | One document-processing job with a usable result |
-| Boundaries and stopping | Exact-price mismatch, missing preview, revoked authority and expired mandate; recorded reasons and no prohibited payment |
-| Kiln and efficiency | Actual messages and interpretations, per-flow tokens, bounded inference, explicit energy assumptions |
-| Blockchain | Deal-linked funding, payout and refund hashes, independently verified against finalized state |
-| Human approval and evidence | Approval, observation, stop and export UI; original messages through settlement in one receipt |
+| Declared function and user need | One research job or bounded work bundle; usable outputs and complete receipt |
+| Boundaries and stopping | Overbilling, source mismatch, budget/fee limits, seller restriction, expiry, revocation and recorded failure cases |
+| Kiln and efficiency | Actual model output changes terms; usage per role includes failed attempts |
+| Blockchain | One live workflow reaches finalized Sepolia settlement and withdrawal; V3 unit billing executes locally |
+| Approval and evidence | Approve/watch/stop/export UI; portable reconstruction; independently verified chain state |
 
-## What is ready, and what still needs people
+This is a **testnet prototype**, with registered local provider processes under one operator. A pinned HTTPS provider adapter is implemented, but no independent supplier company has been integrated. The selected evaluator still attests off-chain outcomes; signatures do not prove business identity or the truth of arbitrary content.
 
-This is an end-to-end **testnet prototype for supported documents and registered demo providers**. V1 trusts its controller; V2 puts defined authorization and billing checks on-chain while retaining a selected delivery evaluator. Both trust pinned source annotations and locally registered identities. DEMO is a test accounting unit, not USD or a newly issued token; gas is a separate operator expense.
+Three real first-time-user responses, customer demand, external provider operations, production custody/security review and hardware energy measurements remain unverified. The [study kit](docs/DEALTRACE-HUMAN-STUDY.ko.md) is ready; automated checks are not human responses.
 
-Customer demand, independent first-time-user comprehension, external supplier identity, production custody and hardware energy savings are not established. The planned three-person comprehension test needs real responses; automated browser checks are not a substitute. Production also needs organizational key management, provider onboarding, evidence retention and payment operations.
+Our product hypothesis is an evidence and enforcement layer for negotiated machine work: **what was agreed, what was delivered, and why that amount moved**. We do not claim a new payment protocol, proven moat or production readiness.
 
-[Architecture](docs/DEALTRACE.ko.md) · [Final scope](docs/DEALTRACE-FINAL-PLAN.ko.md) · [Completion audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md) · [Preserved escrow and research modes](README.legacy-escrow.md)
-
-**What the agents agreed should determine what the money can do—and every payment should carry the evidence that explains it.**
+[Architecture and provider interface](docs/DEALTRACE-PROCUREMENT.en.md) · [Completion audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md) · [Original final plan](docs/DEALTRACE-FINAL-PLAN.ko.md)
