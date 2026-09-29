@@ -6,7 +6,7 @@
 
 1. **Public GitHub:** https://github.com/him55710-sudo/Furiosa-x-bricksum. README 첫 문장은 선언이다. 행사 전·중 제작 구분, 실행 방법, Kiln flow별 로그와 전체 tx hash를 포함했다.
 2. **영상:** `artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4`. 2분 45초, 1920×1080, 한국어 합성 음성. 실제 새 로컬 작업 두 개를 조작하고 마지막에 별도 과거 Kiln/Sepolia 실증을 연다. 마우스 클릭을 표시하는 원은 촬영 보조 표시다.
-3. **Deck:** `output/pdf/accord-lock-track-b.pdf`, 8쪽. 현재 40 / 20 / 25 제품과 공개 증거를 설명한다.
+3. **제출용 Deck (단일 기준본):** `output/pdf/accord-lock-track-b.pdf`, 8쪽, SHA-256 `31e2aa50e9684f363c3c778060def49f4ffa1fc57cbcaa2961390b188267a273`. 현재 40 / 20 / 25 제품과 공개 증거를 설명한다. 제출폼·README·영상과 함께 이 파일을 사용한다.
 4. **온체인 증거:** [공개 report](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json), [finalized 47검사](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json), README flow별 hash 표.
 
 대표 거절: `0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59`.

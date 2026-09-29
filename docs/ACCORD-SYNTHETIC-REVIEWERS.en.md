@@ -1,4 +1,4 @@
-> Provenance: user-supplied synthetic scripts, preserved verbatim below. Not three observed participants. Real human responses remain zero.
+> Provenance: user-supplied synthetic scripts, preserved verbatim below. These are examples, not observed participants.
 >
 > Evidence correction: the canonical public run fa5e107c selected **seller-a**, not Seller C as the supplied scenario says. Use Seller A in factual narration. The original text is retained to make this discrepancy reviewable; these scripts are illustrative explanations, not execution evidence.
 
