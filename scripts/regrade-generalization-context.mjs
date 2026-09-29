@@ -1,0 +1,11 @@
+// Corrects object-key-order grading only. Never changes raw attempts or ground truth.
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {hash,ensure} from '../src/deal-escrow/domain.ts';
+const dir=process.argv[2];ensure(/^artifacts\/generalization\/context\/[a-f0-9-]{36}$/.test(dir),'REPORT_PATH');
+const originalBytes=readFileSync(`${dir}/report.json`),original=JSON.parse(originalBytes),manifest=JSON.parse(readFileSync(`${dir}/manifest.json`));
+const bytes=readFileSync('verification/generalization/context-scenarios.json'),dataset=JSON.parse(bytes);
+const sha=b=>createHash('sha256').update(b).digest('hex');ensure(sha(bytes)===manifest.dataset_sha256,'DATASET_CHANGED');
+const rows=original.results.map(r=>{const expected=dataset.scenarios.find(s=>s.id===r.id).expected;const matches=Object.fromEntries(Object.keys(expected).map(k=>[k,r.proposal!==null&&hash(r.proposal[k])===hash(expected[k])]));return {id:r.id,repeat:r.repeat,matches,correct:Object.values(matches).every(Boolean),commercial_terms_correct:['price_minor','quantity','deadline_seconds','seller','status'].every(k=>matches[k]),original_correct:r.model_correct,safety:r.safety};});
+const summary={...original.summary,semantic_errors:rows.filter(r=>!r.correct).length,commercial_term_errors:rows.filter(r=>!r.commercial_terms_correct).length,exact_matches:Object.fromEntries(Object.keys(dataset.scenarios[0].expected).map(k=>[k,rows.filter(r=>r.matches[k]).length])),convergence:{expected_agreements:original.results.filter(r=>r.expected_status==='AGREED').length,correct_commercial_agreements:rows.filter((r,i)=>original.results[i].expected_status==='AGREED'&&r.commercial_terms_correct).length,correct_including_provenance:rows.filter((r,i)=>original.results[i].expected_status==='AGREED'&&r.correct).length}};
+writeFileSync(`${dir}/grade-v2.json`,JSON.stringify({correction:'Original grader used JSON.stringify for equality, making object key order significant. This append-only correction uses canonical hash equality. Evidence arrays remain exact. No model response, failure, expected value or original report was changed.',original_report_sha256:sha(originalBytes),dataset_sha256:sha(bytes),summary,rows},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(summary));
