@@ -76,7 +76,7 @@ The outward message includes qualitative prose and structured commercial terms. 
 | [Live fixed job on Sepolia](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) | 5 actual Kiln calls; 22 → 20 negotiation; 5 public transactions; signed 25 bill reverted; 20 withdrawn |
 | [Independent public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) | **47 checks, VALID at finalized block 11808905** |
 | [Hardened V3 bundle](artifacts/dealtrace/procurement/runs/11ba8d29-1b86-4cb4-8758-3ccb95fb89e8/report.json) | 5 actual Kiln calls; seller C selected; 27.40 maximum, 26.40 paid, 1.00 returned; 56 checks on a real local EVM |
-| [Full automated suite](artifacts/deal-escrow/tests.json) | **214/214 pass** after submission integration; original workbench and evidence replay builds also pass |
+| [Full automated suite](artifacts/deal-escrow/tests.json) | **218/218 pass** on current main; workbench and evidence replay builds also pass |
 | [Failed live attempts and all flow usage](artifacts/dealtrace/procurement/usage-audit.json) | Both truncation and non-convergence retained; neither funded a purchase |
 
 Inspect the actual Sepolia [rejected invoice](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59), [correct settlement](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f) and [seller withdrawal](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc).
@@ -151,7 +151,7 @@ The earlier [Vault V2 adversarial proof](docs/DEALTRACE-VAULT-V2.en.md) retains 
 
 This is a **testnet prototype**, with registered local provider processes under one operator. A pinned HTTPS provider adapter is implemented, but no independent supplier company has been integrated. The selected evaluator still attests off-chain outcomes; signatures do not prove business identity or the truth of arbitrary content.
 
-Three real first-time-user responses, customer demand, external provider operations, production custody/security review and hardware energy measurements remain unverified. The [study kit](docs/DEALTRACE-HUMAN-STUDY.ko.md) is ready; automated checks are not human responses.
+Customer demand, external provider operations, production custody/security review and hardware energy measurements remain unverified.
 
 Our product hypothesis is an evidence and enforcement layer for negotiated machine work: **what was agreed, what was delivered, and why that amount moved**. We do not claim a new payment protocol, proven moat or production readiness.
 

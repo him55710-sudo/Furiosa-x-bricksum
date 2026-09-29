@@ -4,7 +4,7 @@
 
 [Open the demo](https://agent-spending-firewall.vercel.app/) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Three-minute walkthrough](docs/ACCORD-LOCK-DEMO-3MIN.en.md)
 
-[Watch the 165-second Korean demo](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) · [Current 8-page deck](output/pdf/accord-lock-track-b.pdf) · [Track B submission guide](docs/TRACK-B-SUBMISSION.ko.md)
+[Submission video · 165 seconds](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) · [Submission deck · 8 pages](output/pdf/accord-lock-track-b.pdf) · [Track B submission guide](docs/TRACK-B-SUBMISSION.ko.md)
 
 **Human budget 40 → negotiated deal 20 → invoice 25 BLOCKED → 20 PAID.**
 
@@ -17,7 +17,7 @@
 | Kiln & efficiency | [Five-call public negotiation and per-flow usage](artifacts/dealtrace/procurement/usage-audit.json) · [Output-ceiling experiment](docs/ACCORD-ACCEPTANCE-READINESS.en.md) |
 | Blockchain | [Five Sepolia transactions; signed 25 invoice reverted, 20 settled and withdrawn; 47 finalized checks](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) |
 | Human control & reconstruction | Budget, watch, stop, receipt export and verification in the workspace. [Inspect the settled local receipt](artifacts/accord-lock/submission/run2-receipt.json) |
-| Regression | **214/214 pass** · [current source-bound automated test report](artifacts/deal-escrow/tests.json) |
+| Regression | **Current main: 218/218 pass** · [source-bound automated test report](artifacts/deal-escrow/tests.json) |
 
 ## One product, two explicit execution modes
 
@@ -27,7 +27,7 @@
 
 Browser amounts are test units (1 local gwei each). Public proof uses DEMO accounting units (100 Sepolia gwei each). Neither has a cash price; operator gas is separate. The chosen public run is `fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9`.
 
-**Current efficiency check:** 1,200-token output ceiling; 160-character messages. Three successful runs used four calls each. Capability prefiltering reduced measured total tokens by **20.57%** versus the matched full-history cohort. Failed experiments are retained; no measured NPU energy savings are claimed.
+**Separate efficiency cohort:** 1,200-token output ceiling; 160-character messages. Three successful runs used four calls each. Capability prefiltering reduced measured total tokens by **20.57%** versus the matched full-history cohort. These are not the five calls in the canonical public run. Failed experiments are retained; no measured NPU energy savings are claimed.
 
 ## Run and verify
 

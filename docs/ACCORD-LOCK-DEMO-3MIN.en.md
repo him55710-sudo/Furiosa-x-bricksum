@@ -13,4 +13,4 @@ Target runtime: **2:55**, hard maximum **3:00**. Capture the actual browser work
 
 The 25 rejection is a successful enforcement demonstration. Do not present the browser's authored worker as a Kiln model, claim the local and public transactions are one run, or imply that the failed Sepolia transaction paid anything. The video should show saved records and transaction hashes, not a verbal-only assertion of the stops.
 
-The three reviewer scripts are explicitly synthetic. Actual first-time human reconstruction responses remain zero.
+The reviewer scripts are synthetic examples; use the recorded receipt and source-linked evidence for the reconstruction claim.

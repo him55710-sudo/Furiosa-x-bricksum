@@ -32,7 +32,7 @@ The primary public run is `fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9`: budget 40, agr
 
 Measured API usage: 4,145 input + 3,745 output = 7,890 tokens and 64.056 seconds. NPU power, device occupancy and PUE were not measured. Energy estimates use assumed allocated watts multiplied by API duration. **We do not claim measured NPU energy savings.**
 
-The user's three reviewer scripts are preserved with their explicit synthetic disclosure and a correction for Seller C versus the actual Seller A. **Real human responses remain zero.** Neither the synthetic exercise nor automated verification counts as a human reconstruction or customer-demand study. Those require actual participants; no third party was contacted in this pass.
+The three reviewer scripts are preserved as synthetic examples, with Seller C corrected to the actual Seller A. They are illustrations of receipt reconstruction, not measured usability results.
 
 ## Final measured decision
 
@@ -45,4 +45,4 @@ Use **1,200 output tokens**, at most **160 message characters**, full bounded hi
 
 Observed token reduction: **20.57%** across these cohorts. This is a token measurement, not an energy measurement or a causal estimate independent of model-output variance. Baseline retained one rejected nonselected seller proposal. Initial and refined failures, exact terms, source hashes and an interrupted duplicate's partial usage are retained in the comparison links.
 
-Validation: **212/212 product tests**, **55/55 legacy tests**, TypeScript and all application builds passed. Existing compiled contract artifacts are unchanged.
+Historical acceptance pass: **212/212 product tests** and **55/55 legacy tests** passed. The current `main` source-bound report is **218/218**; TypeScript and application builds pass, and CI checks the compiled contract artifacts.
