@@ -2,7 +2,9 @@
 
 **Accord Lock controls delegated agent spending by binding payment to the deal the agents actually agreed on, while DealTrace preserves and verifies the agreement, delivery, invoice, and settlement evidence.**
 
-[Open the demo](https://agent-spending-firewall.vercel.app/) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Three-minute walkthrough](docs/ACCORD-LOCK-DEMO-3MIN.ko.md)
+[Open the demo](https://agent-spending-firewall.vercel.app/) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Three-minute walkthrough](docs/ACCORD-LOCK-DEMO-3MIN.en.md)
+
+[Submission deck](output/pdf/Accord-Lock-Submission.en.pdf) · [Track B stop records and evidence guide](docs/TRACK-B-SUBMISSION.en.md)
 
 **Human budget 40 → negotiated deal 20 → invoice 25 BLOCKED → 20 PAID.**
 
@@ -11,7 +13,7 @@
 | Acceptance criterion | Inspect the evidence |
 |---|---|
 | Function | [Negotiated agreement, delivery, invoices and payment](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) |
-| Boundaries & stopping | [Seller, all-in budget and expiry blocked before inference or funding](artifacts/dealtrace/procurement/boundaries/report.json); **STOP AGENT** in each workspace task preserves existing funded work |
+| Boundaries & stopping | [Seller, all-in budget and expiry blocked before inference or funding](artifacts/dealtrace/procurement/boundaries/report.json); [Two additional DealEngine stop records](artifacts/accord-lock/track-b-stops.json); **STOP AGENT** in each workspace task preserves existing funded work |
 | Kiln & efficiency | [Five-call public negotiation and per-flow usage](artifacts/dealtrace/procurement/usage-audit.json) · [Output-ceiling experiment](docs/ACCORD-ACCEPTANCE-READINESS.en.md) |
 | Blockchain | [Five Sepolia transactions; signed 25 invoice reverted, 20 settled and withdrawn; 47 finalized checks](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) |
 | Human control & reconstruction | Budget, watch, stop, receipt export and verification in the workspace. [Three supplied synthetic reviewer scripts](docs/ACCORD-SYNTHETIC-REVIEWERS.en.md); **real first-time human responses: 0** |
