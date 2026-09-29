@@ -1,4 +1,5 @@
-import {BrowserProvider,Contract,ContractFactory,Wallet,keccak256,toUtf8Bytes,getCreateAddress,randomBytes,hexlify} from 'ethers';
+import {checkLiveAgreement} from './live-proof.mjs';
+import {BrowserProvider,Contract,ContractFactory,Wallet,keccak256,toUtf8Bytes,getCreateAddress,randomBytes,hexlify,getBytes,verifyMessage} from 'ethers';
 import artifact from '../../artifacts/deal-escrow/contract.json' with {type:'json'};
 export const digest=value=>keccak256(toUtf8Bytes(JSON.stringify(value)));
 let loading;
@@ -36,7 +37,7 @@ export async function openBrowserChain(state,save,{ganacheLoader=loadGanache,dbP
   async function transact(job,kind){
    progress(`Checking the ${kind==='fund'?'escrow funding':kind==='release'?'seller payment':'buyer refund'} transaction…`);
    const records=state.operations[job.id]??=Object.create(null);let op=records[kind];
-   if(!op){const value=BigInt(job.agreedPrice)*1000000000n;const args=kind==='fund'?[job.dealHash,buyer,sellers[job.selected],value,job.deliveryMinutes*60,job.agreement.expiresAt]:[job.dealHash,job.attestationHash];
+   if(!op){const value=BigInt(job.agreedPrice)*1000000000n;const args=kind==='fund'?[job.dealHash,buyer,sellers[job.selected],value,job.agreement.deliveryMinutes*60,job.agreement.expiresAt]:[job.dealHash,job.attestationHash];
     op=records[kind]=await signed({to:network.contract,data:contract.interface.encodeFunctionData(kind,args),value:kind==='fund'?value:0n});
     job.transactions.push({kind,status:'PENDING',hash:op.hash,block:null,amount:job.agreedPrice});await save();
    }
@@ -49,20 +50,25 @@ export async function openBrowserChain(state,save,{ganacheLoader=loadGanache,dbP
   async function verify(job){
    const checks=[];const ensure=(ok,label)=>{if(!ok)throw Error(label);checks.push(label);};
    try{
+    if(job.liveSession){const a=checkLiveAgreement(job,job.liveSession);ensure(job.agreement.agentAgreementHash===a.hash&&job.agreement.deliveryMinutes===a.terms.deliveryMinutes,'Live agent signatures and transcript bind the escrow agreement');}
     ensure(digest(job.agreement)===job.dealHash,'Agreement hash matches the escrow');
+    if(job.agreementSignatures){const a=job.agreementSignatures;ensure(a.hash===job.dealHash&&verifyMessage(getBytes(a.hash),a.buyerSignature)===buyer&&verifyMessage(getBytes(a.hash),a.sellerSignature)===sellers[job.selected],'Both workspace signatures bind the escrow agreement');}
     ensure(job.agreement.price===job.agreedPrice&&job.agreement.seller===job.selected,'Amount and seller match the agreement');
     ensure(job.agreement.sourceHash===digest(job.source),'Source table matches the committed input');
     const escrow=await contract.escrows(job.dealHash);ensure(escrow.amount===BigInt(job.agreedPrice)*1000000000n&&escrow.buyer===buyer&&escrow.seller===sellers[job.selected],'Exact principal and participants match the contract');
     ensure(Number(escrow.status)===({COMPLETED:2,REFUNDED:3}[job.status]??1),'Stored outcome matches the contract');
     for(const tx of job.transactions){ensure(tx.status==='CONFIRMED','Transaction is confirmed');const r=await provider.getTransactionReceipt(tx.hash);const op=state.operations[job.id]?.[tx.kind];ensure(r?.status===1&&r.blockHash===op?.receipt?.blockHash,'Canonical receipt matches the stored block');
+     if(tx.kind==='fund'){const block=await provider.getBlock(r.blockNumber);ensure(Number(escrow.deadline)===block.timestamp+job.agreement.deliveryMinutes*60,'Escrow deadline enforces the agreed delivery window');}
      const log=r.logs.filter(l=>l.address.toLowerCase()===network.contract.toLowerCase()).map(l=>{try{return contract.interface.parseLog(l);}catch{return null;}}).find(l=>l?.name===({fund:'Funded',release:'Released',refund:'Refunded'}[tx.kind]));
      ensure(log&&log.args[0]===job.dealHash,'Contract event binds the deal');
      if(tx.kind!=='fund')ensure(log.args[1]===job.attestationHash&&digest(job.attestation)===job.attestationHash,'Settlement binds its evidence');
     }
+    if(job.status==='COMPLETED'&&job.liveSession)ensure(new Set(job.output.map(row=>row.source_url)).size>=job.liveSession.agreement.terms.sources,'Delivered source count satisfies signed terms');
     if(job.status==='COMPLETED')ensure(job.attestation.outputHash===digest(job.output)&&job.attestation.invoice===job.agreedPrice,'Paid result and invoice match the approved evidence');
     return {verdict:'VALID',scope:'Receipts and contract state on this browser’s private EVM. The browser controller is trusted; this is not public-chain consensus.',checks:[...new Set(checks)],checked_at:new Date().toISOString()};
    }catch(error){return {verdict:'INVALID',reason:error.message,checks:[...new Set(checks)],scope:'Browser EVM verification'};}
   }
-  return {network,transact,verify,close:async()=>{provider.destroy();await transport.disconnect();}};
+  async function signAgreement(job){const buyerWallet=new Wallet(accounts[1].secretKey),sellerWallet=new Wallet(job.selected==='seller-c'?digest({seed:state.chain.seed,role:'seller-c'}):accounts[job.selected==='seller-a'?2:3].secretKey);return {hash:job.dealHash,buyer:buyerWallet.address,seller:sellerWallet.address,buyerSignature:await buyerWallet.signMessage(getBytes(job.dealHash)),sellerSignature:await sellerWallet.signMessage(getBytes(job.dealHash)),scope:'Deterministic workspace wallets on a private test chain'};}
+  return {network,transact,verify,signAgreement,close:async()=>{provider.destroy();await transport.disconnect();}};
  }catch(error){provider.destroy();await transport.disconnect();throw error;}
 }

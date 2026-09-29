@@ -1,6 +1,6 @@
 import {createHmac,randomUUID,timingSafeEqual} from 'node:crypto';
 import {Wallet,keccak256,toUtf8Bytes,getBytes,verifyMessage} from 'ethers';
-import {KilnClient} from '../deal-escrow/kiln.ts';
+import {LiveKilnClient} from './live-kiln.mjs';
 
 const requireValue=(ok,message)=>{if(!ok)throw Error(message);};
 const digest=value=>keccak256(toUtf8Bytes(JSON.stringify(value)));
@@ -15,7 +15,7 @@ const fields=['action','price','rows','sources','deliveryMinutes','message'];
 const spec={name:'send_negotiation_message',description:'Propose complete public terms or accept the preceding terms. This cannot move funds.',parameters:{type:'object',properties:{action:{type:'string',enum:['offer','accept','decline']},price:{type:'integer',minimum:1},rows:{type:'integer',minimum:1},sources:{type:'integer',minimum:1},deliveryMinutes:{type:'integer',minimum:1,maximum:60},message:{type:'string',maxLength:160}},required:fields,additionalProperties:false}};
 const terms=q=>({price:q.price,rows:q.rows,sources:q.sources,deliveryMinutes:q.deliveryMinutes});
 
-export function createLiveNegotiation({secret,model=process.env.KILN_MODEL,clientFactory=onRecord=>new KilnClient({model,onRecord}),now=Date.now}={}){
+export function createLiveNegotiation({secret,model=process.env.KILN_MODEL,clientFactory=onRecord=>new LiveKilnClient({model,onRecord}),now=Date.now}={}){
  requireValue(typeof secret==='string'&&secret.length>=32,'LIVE_SIGNING_SECRET_REQUIRED');
  const keyFor=role=>new Wallet('0x'+createHmac('sha256',secret).update('accord-live-agent-v1:'+role).digest('hex'));
  const identities=Object.fromEntries(Object.keys(names).map(id=>[id,{name:names[id],address:keyFor(id).address}]));
