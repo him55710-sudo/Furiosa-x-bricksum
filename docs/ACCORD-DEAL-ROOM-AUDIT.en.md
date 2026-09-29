@@ -45,3 +45,13 @@ Final UI artifact: index-VqtpDt7l.js / index-DmbklS-X.css. Final preview: https:
 - Production browser rendering was inspected and its error log was empty. Screenshot: artifacts/accord-lock/deal-room/production-live-release.png.
 - Main includes the release commit 83a91ff and merges the concurrent validation evidence at dc0d93d. That merge adds verification scripts and evidence only; deployed application files are unchanged.
 - Post-deploy runtime log inspection showed the production Live GET returning 200 and no error entries in the observed release window. Long-term monitoring/drains were not configured by this task.
+
+## Final UX acceptance refinements
+
+Live Agents now uses the same illustrated participants and two named Gate panels as Guided Demo, with a mobile mandate summary and a transaction timeline. CSV/JSON can also be pasted into custom-task creation; a four-row/four-source synthetic table was created through the actual preview UI and bound to Live negotiation.
+
+A real 1,200-token custom-task response was truncated and safely rejected. Its screenshot is retained as live-truncated-response.png. The completed 20-case comparison in the validation worktree showed nine truncations at 1,200 and none at 2,400; this release raises only the Live output ceiling to 2,400. This prevents observed truncation, not all model mistakes, and does not establish general negotiation reliability. Historical procurement settings stay unchanged.
+
+The durable Live coordinator now retains every reserved model attempt, completion/failure/Stop status and allowlisted usage metadata. Late responses after Stop cannot apply a proposal, but their measured usage remains inspectable. The Proof drawer exposes this attempt ledger; private prompts are not exported.
+
+All 45 targeted tests passed again after these refinements, followed by a focused failure-telemetry/Stop regression. A browser extension setting prevented automated file-picker injection; the existing file-input path remains, and the actual paste/import workflow was verified without changing browser permissions. Three-minute presentation instructions are in ACCORD-THREE-MINUTE-DEMO.en.md.

@@ -6,7 +6,7 @@ Permanent URL: https://agent-spending-firewall.vercel.app/. Share this domain, w
 
 ## Vercel edition
 
-The hosted edition runs the same task workflow without installing a local server. It processes uploaded CSV/JSON data in the browser, executes the real escrow bytecode on a private browser EVM, and persists tasks and chain history in IndexedDB. It never uses public funds, sends model requests or synchronizes data between devices.
+The hosted edition runs the same task workflow without installing a local server. It processes uploaded CSV/JSON data in the browser, executes the real escrow bytecode on a private browser EVM, and persists tasks and chain history in IndexedDB. It never uses public funds or synchronizes browser source rows between devices. Guided Demo uses deterministic workers; Live Agents sends the public brief and negotiation to actual Kiln qwen3-32b inference through the protected server endpoint.
 
 Use the same production domain and browser to reopen saved work. Preview deployment URLs have separate browser storage. Download task results and receipts before clearing site data. The browser controls this private chain, so verification proves consistency with that browser's chain; it is not independent public-network consensus.
 
@@ -20,7 +20,7 @@ pnpm ade:hosted:test
 pnpm ade:spending:test
 ```
 
-`dist-vercel` contains only built assets and public evidence, with an explicit `.vercelignore` allowlist. Link that directory to the existing `agent-spending-firewall` Vercel project. Deploy a preview, test the user workflow, then promote the verified deployment. No database, secret or private key is uploaded with the release.
+`dist-vercel` contains built assets, allowlisted public evidence and the server-only Live API bundle, with an explicit `.vercelignore` allowlist. Link that directory to the existing `agent-spending-firewall` Vercel project. Deploy a preview, test the user workflow, then promote the verified deployment. No database file, secret or private key is uploaded with the release. Vercel environment variables supply the server credentials; a private Blob store holds the durable Live session ledger.
 
 ## Local service edition
 
@@ -33,8 +33,8 @@ Open http://127.0.0.1:3440/#workspace. Keep the process running. Existing `#demo
 
 ## Do the work
 
-1. Create a task. Set its name, brief, total budget, per-deal limit and delivery window. Upload a CSV or JSON array, or choose **Try with a sample task**.
-2. Request offers. Choose Atlas or Meridian. Send a counteroffer if needed; the local worker accepts or declines using its disclosed pricing rules.
+1. Create a task. Set its name, brief, total budget, per-deal limit and delivery window. Upload or paste a CSV/JSON table, or choose **Start the guided deal**.
+2. Request offers. Choose Atlas, Nexus or Orbit. Send a counteroffer if needed; the local worker accepts or declines using its disclosed pricing rules.
 3. Approve and lock funds. The workspace checks the spending limits before signing a private EVM transaction. A blocked offer signs nothing.
 4. Run the worker. It reads the actual input, normalizes the table and compares output fields with the original source rows.
 5. Review the returned table. Open a row's source, inspect the acceptance checks, download JSON/CSV or submit a replacement delivery for validation.
@@ -51,12 +51,12 @@ Files must contain 1–1,000 rows and be smaller than 1 MB. Use 2025–2026 quar
 
 The worker normalizes supplied data; it does not retrieve arbitrary websites, parse arbitrary PDFs or independently establish the truth of imported claims. The included LG Energy Solution sample preserves the existing reference dataset's values and citations. CAPEX units belong to the dataset; payment amounts are labeled test units: 1 unit equals 1 local gwei, with no cash price. The public proof uses 100 gwei per DEMO, a separately disclosed scale.
 
-## Three-minute live walkthrough
+## Three-minute guided walkthrough
 
 | Approximate time | Operator action | What the audience sees |
 | --- | --- | --- |
 | 0:00–0:25 | Load the sample (Demo assist turns on) and create the task. | A concrete research brief, four source rows and explicit spending limits. |
-| 0:25–0:55 | Request offers: the 35-unit sample offer is blocked. Select Atlas and counter 22 with 20. | Budget 40 and per-deal limit 30. The automatic block signs nothing; the counteroffer changes the agreement. |
+| 0:25–0:55 | Request offers: the 35-unit sample offer is blocked. Select Atlas, counter 18, then accept the revised 20. | Budget 40 and per-deal limit 30. The automatic block signs nothing; the counteroffer changes the agreement. |
 | 0:55–1:15 | Approve and lock funds, then run the worker. | A real local escrow receipt followed by an inspectable output table. |
 | 1:15–2:10 | Open a source. The sample automatically submits an authored invoice for 25. | The original and delivered values, then a blocked payment: inside both limits does not mean the agreed bill. |
 | 2:10–2:40 | Choose Use agreed invoice: 20, then approve payment. | Human approval, exact settlement and a transaction recorded on the local chain. |
@@ -66,7 +66,7 @@ These are presentation suggestions, not timers. The operator controls the pace. 
 
 ## Execution and trust
 
-- Atlas and Meridian are deterministic local worker adapters, not external AI services or independent counterparties. No paid model calls are made.
+- Guided Demo uses deterministic Atlas, Nexus and Orbit workers. Hosted Live Agents uses actual Kiln qwen3-32b calls with distinct private policies, inspectable public model messages and bilateral agreement signatures. These are operator-owned roles. The default service allowance is 60 model attempts per environment and eight per session; failures count. The older localhost service retains Guided execution; the Live endpoint runs on Vercel.
 - Escrow, settlement and refund use the existing Agent Deal Escrow contract on a persistent private local EVM, chain 31338. There are no public funds or explorer links for these transactions.
 - Invoice and source comparisons run in the browser for the hosted edition, and in the server for the local service edition. The escrow controller remains trusted for those checks and operator-requested refunds. This UI does not claim to run DealTrace V2's bilateral on-chain invoice enforcement.
 - Historical Sepolia proof is clearly separated in the Evidence library. It is not generated by the current task.

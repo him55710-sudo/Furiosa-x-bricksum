@@ -18,8 +18,8 @@ export function createLiveService({store,negotiation,callBudget=60,now=Date.now}
   throw Error('LIVE_BUSY_TRY_AGAIN');
  }
  function owned(ledger,owner,id){const s=ledger.sessions[id];need(s&&s.owner===hash(owner),'LIVE_SESSION_NOT_FOUND');return s;}
- const view=s=>({session:s.envelope.state,revision:s.revision,attempts:s.attempts,pending:s.pending?{action:s.pending.action,startedAt:s.pending.startedAt}:null,error:s.error??null,authorization:s.authorization??null});
- function expirePending(s){if(s.pending&&now()>s.pending.startedAt+100000){s.pending=null;s.error='LIVE_INTERRUPTED_REQUEST';s.revision++;}}
+ const view=s=>({session:s.envelope.state,revision:s.revision,attempts:s.attempts,attemptLog:s.attemptLog??[],pending:s.pending?{action:s.pending.action,startedAt:s.pending.startedAt}:null,error:s.error??null,authorization:s.authorization??null});
+ function expirePending(s){if(s.pending&&now()>s.pending.startedAt+100000){const attempt=s.attemptLog?.find(a=>a.id===s.pending.id);if(attempt)attempt.result='LIVE_INTERRUPTED_REQUEST';s.pending=null;s.error='LIVE_INTERRUPTED_REQUEST';s.revision++;}}
  return {
   async state(owner,id){
    const info=negotiation.info();
@@ -54,6 +54,7 @@ export function createLiveService({store,negotiation,callBudget=60,now=Date.now}
     // Stop intentionally supersedes an in-flight model call, even at an older revision.
     if(action==='stop'){
      need(!s.authorization,'LIVE_ALREADY_AUTHORIZED');
+     const attempt=s.attemptLog?.find(a=>a.id===s.pending?.id);if(attempt)attempt.result='STOPPED';
      s.envelope=await negotiation.execute({action:'stop',session:s.envelope});s.pending=null;s.revision++;
      s.operations[operationId]={fingerprint};return {done:true,result:view(s)};
     }
@@ -66,16 +67,22 @@ export function createLiveService({store,negotiation,callBudget=60,now=Date.now}
      s.operations[operationId]={fingerprint};return {done:true,result:view(s)};
     }
     need(!s.authorization,'LIVE_ALREADY_AUTHORIZED');
-    if(inference.has(action)){need(s.attempts<8,'LIVE_SESSION_CALL_LIMIT');need(ledger.calls<callBudget,'LIVE_SERVICE_CALL_LIMIT');ledger.calls++;s.attempts++;}
+    if(inference.has(action)){need(s.attempts<8,'LIVE_SESSION_CALL_LIMIT');need(ledger.calls<callBudget,'LIVE_SERVICE_CALL_LIMIT');ledger.calls++;s.attempts++;(s.attemptLog??=[]).push({id:operationId,action,seller,at:now(),result:'PENDING'});}
     s.pending={id:operationId,fingerprint,action,startedAt:now()};s.error=null;s.revision++;
     return {done:false,envelope:s.envelope};
    });
    if(reservation.done)return reservation.result;
-   let result,error;
+   let result,error,usage;
    try{result=await negotiation.execute({action,session:reservation.envelope,seller});}
-   catch(e){error=/^[A-Z0-9_]{3,100}$/.test(e.message)?e.message:'LIVE_REQUEST_FAILED';}
+   catch(e){error=/^[A-Z0-9_]{3,100}$/.test(e.message)?e.message:'LIVE_REQUEST_FAILED';usage=e.liveUsage;}
    return update(ledger=>{
     const s=owned(ledger,owner,id);
+    const attempt=s.attemptLog?.find(a=>a.id===operationId);
+    if(attempt){
+     const record=usage??result?.state.messages.at(-1)?.usage;
+     attempt.completedAt=now();attempt.usage=Object.fromEntries(['model','request_id','prompt_tokens','completion_tokens','total_tokens','latency_ms','prompt_hash'].filter(k=>record?.[k]!=null).map(k=>[k,record[k]]));
+     if(attempt.result==='PENDING')attempt.result=error??'VALID_TOOL_PROPOSAL';
+    }
     if(s.pending?.id!==operationId||s.envelope.state.stopped)return view(s);
     if(result)s.envelope=result;
     s.error=error??null;s.operations[operationId]={fingerprint,error:error??null};s.pending=null;s.revision++;

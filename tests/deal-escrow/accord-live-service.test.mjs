@@ -12,8 +12,8 @@ const owner=randomUUID(),request={title:'CAPEX request',brief:'Four referenced r
 function fixture(t,{callBudget=60}={}){
  const file=path.join(mkdtempSync(path.join(os.tmpdir(),'accord-live-')),'live.sqlite');
  const store=sqliteLiveStore(file);t.after(()=>store.close());let count=0,release,fail=false,delay=false;
- const negotiation=createLiveNegotiation({secret:'test-only-private-policy-service-secret',model:'qwen3-32b',clientFactory:()=>({payload:(_system,input)=>({input}),async request(_flow,payload,validate){
-  count++;if(delay)await new Promise(r=>{release=r;});if(fail)throw Error('KILN_NETWORK_ERROR');
+ const negotiation=createLiveNegotiation({secret:'test-only-private-policy-service-secret',model:'qwen3-32b',clientFactory:onRecord=>({payload:(_system,input)=>({input}),async request(_flow,payload,validate){
+  count++;if(delay)await new Promise(r=>{release=r;});if(fail){onRecord({model:'qwen3-32b',request_id:'failed-test-'+count,total_tokens:1200,private_policy:'must not be exported'});throw Error('KILN_NETWORK_ERROR');}
   const q={action:'offer',price:payload.input.private_policy.minimum_price??18,rows:4,sources:4,deliveryMinutes:8,message:'Referenced coverage with the requested delivery.'};
   validate('',q);return {args:q,model:'qwen3-32b',request_id:'test-'+count};
  }})});
@@ -31,6 +31,8 @@ test('durable live service charges failures, handles retry once and rejects stal
  await assert.rejects(f.service.execute(randomUUID(),{...command,operationId:randomUUID()}),/NOT_FOUND/);
  await assert.rejects(f.service.execute(owner,{...command,operationId:randomUUID()}),/REVISION_CHANGED/);
  f.fail();s=await act(f.service,s,'counter');assert.equal(s.error,'KILN_NETWORK_ERROR');assert.equal(s.attempts,2);
+ assert.equal(s.attemptLog.length,2);assert.equal(s.attemptLog[1].result,'KILN_NETWORK_ERROR');
+ assert.equal(s.attemptLog[1].usage.request_id,'failed-test-2');assert.equal(s.attemptLog[1].usage.total_tokens,1200);assert.doesNotMatch(JSON.stringify(s.attemptLog),/private_policy|must not be exported/);
  await assert.rejects(act(f.service,s,'counter'),/SERVICE_CALL_LIMIT/);
  const reopened=sqliteLiveStore(f.file);t.after(()=>reopened.close());const other=createLiveService({store:reopened,negotiation:f.negotiation,callBudget:2});
  assert.equal((await other.state(owner,s.session.id)).attempts,2);assert.equal((await other.state(owner)).remainingCalls,0);
@@ -42,6 +44,7 @@ test('Stop supersedes concurrent inference and persisted old revisions cannot re
  while(f.count===0)await new Promise(r=>setTimeout(r,2));
  const duplicate=await act(f.service,s,'stop');assert.equal(duplicate.session.stopped,true);
  f.release();const finished=await pending;assert.equal(finished.session.stopped,true);assert.equal(finished.session.messages.length,0);
+ assert.equal(finished.attemptLog[0].result,'STOPPED');assert.ok(finished.attemptLog[0].completedAt);
  await assert.rejects(act(f.service,s,'offer'),/AUTHORITY_REVOKED/);
 });
 
