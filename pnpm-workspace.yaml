@@ -2,3 +2,8 @@ allowBuilds:
   esbuild: true
   bufferutil: false
   utf-8-validate: false
+
+# Patched transitive dependencies used by the compiler and local EVM.
+overrides:
+  'solc>tmp': 0.2.7
+  '@trufflesuite/uws-js-unofficial>ws': 8.22.0

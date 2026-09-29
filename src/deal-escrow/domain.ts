@@ -17,7 +17,7 @@ export function canonical(v:unknown):string {
 }
 export const hash=(v:unknown)=>keccak256(toUtf8Bytes(canonical(v)));
 export const now=()=>Math.floor(Date.now()/1000);
-export function exact(v:any,keys:string[]){ensure(v&&typeof v==='object'&&!Array.isArray(v),'SCHEMA_OBJECT');ensure(Object.keys(v).sort().join('|')===[...keys].sort().join('|'),'SCHEMA_FIELDS');}
+export function exact(v:any,keys:string[]){ensure(v&&typeof v==='object'&&!Array.isArray(v)&&Object.getPrototypeOf(v)===Object.prototype,'SCHEMA_OBJECT');const actual=Object.keys(v);ensure(actual.length===keys.length&&actual.every(k=>keys.includes(k)),'SCHEMA_FIELDS');}
 export function integer(v:unknown,min:number,max:number){ensure(Number.isSafeInteger(v)&&Number(v)>=min&&Number(v)<=max,'SCHEMA_INTEGER');}
 export function identifier(v:unknown){ensure(typeof v==='string'&&/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$/.test(v),'SCHEMA_ID');}
 export function validateRequirements(r:any):Requirements {
@@ -67,7 +67,7 @@ export function policy(m:Mandate,d:Deal,{time=now(),spent=0,reserved=0,dealHash=
     {name:'MANDATE_NOT_EXPIRED',pass:time<m.expires_at,actual:time,expected:m.expires_at},
     {name:'DEAL_NOT_EXPIRED',pass:time<d.expires_at,actual:time,expected:d.expires_at},
     {name:'BUYER_ALLOWED',pass:d.buyer_id===m.buyer_id,actual:d.buyer_id,expected:m.buyer_id},
-    {name:'SELLER_ALLOWED',pass:m.allowed_sellers.length===0||m.allowed_sellers.includes(d.seller_id),actual:d.seller_id,expected:m.allowed_sellers},
+    {name:'SELLER_ALLOWED',pass:m.allowed_sellers.includes(d.seller_id),actual:d.seller_id,expected:m.allowed_sellers},
     {name:'MAX_SINGLE',pass:d.price_minor<=m.max_single_minor,actual:d.price_minor,expected:m.max_single_minor},
     {name:'TASK_BUDGET',pass:spent+reserved+d.price_minor<=m.task_budget_minor,actual:spent+reserved+d.price_minor,expected:m.task_budget_minor},
     {name:'DEAL_HASH',pass:hash(d)===dealHash,actual:hash(d),expected:dealHash},

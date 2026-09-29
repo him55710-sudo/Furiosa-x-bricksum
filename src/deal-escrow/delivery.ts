@@ -4,6 +4,13 @@ import {reference,referenceChecks,referenceDigest} from './reference.ts';
 import {sourceChecks,sourceDescriptor,sourcePolicyHash} from './source-document.ts';
 export type DeliveryVersion='delivery-v1'|'delivery-v2'|'delivery-reference-v1'|'delivery-source-v1'|'delivery-source-preview-v1';
 export const DELIVERY_VALIDATOR_VERSION='delivery-v2';
+// Attribution is separate from the historical validator output. A clock-only
+// failure or unavailable verifier does not establish seller content fault.
+export function confirmedDeliveryMismatch(validation:any){
+  return validation?.verified===false&&validation.failure_reason_code==='DELIVERY_REQUIREMENT_FAILED'
+    &&Array.isArray(validation.checks)&&validation.checks.some((c:any)=>c.name==='DELIVERY_DEADLINE'&&c.pass===true)
+    &&validation.checks.some((c:any)=>c.name!=='DELIVERY_DEADLINE'&&c.pass===false);
+}
 // This is a syntax/quality gate. URLs are never fetched and values are not fact checked.
 function safeSource(value:unknown){
   if(typeof value!=='string'||!value.trim()||value!==value.trim())return false;
