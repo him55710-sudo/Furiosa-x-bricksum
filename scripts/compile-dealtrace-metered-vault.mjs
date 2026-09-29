@@ -1,0 +1,14 @@
+import solc from 'solc';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const sourceName='contracts/DealTraceMeteredVault.sol',source=readFileSync(sourceName,'utf8');
+const settings={optimizer:{enabled:true,runs:200},viaIR:true,evmVersion:'shanghai',outputSelection:{'*':{'*':['abi','evm.bytecode.object','evm.deployedBytecode.object','metadata']}}};
+const input={language:'Solidity',sources:{[sourceName]:{content:source}},settings};
+const dependencies={};
+const output=JSON.parse(solc.compile(JSON.stringify(input),{import:name=>{try{const content=readFileSync(`node_modules/${name}`,'utf8');dependencies[name]={content};return {contents:content};}catch{return {error:`Missing dependency ${name}`};}}}));
+const errors=(output.errors??[]).filter(e=>e.severity==='error');if(errors.length)throw new Error(errors.map(e=>e.formattedMessage).join('\n'));
+const c=output.contracts[sourceName].DealTraceMeteredVault;
+mkdirSync('artifacts/dealtrace/metered-vault',{recursive:true});
+writeFileSync('artifacts/dealtrace/metered-vault/contract.json',JSON.stringify({contractName:'DealTraceMeteredVault',compiler:solc.version(),sourceSha256:createHash('sha256').update(source).digest('hex'),settings,abi:c.abi,bytecode:'0x'+c.evm.bytecode.object,runtimeTemplate:'0x'+c.evm.deployedBytecode.object},null,2)+'\n');
+writeFileSync('artifacts/dealtrace/metered-vault/standard-input.json',JSON.stringify({...input,sources:{...input.sources,...dependencies}},null,2)+'\n');
+console.log(`Compiled DealTraceMeteredVault: ${c.evm.deployedBytecode.object.length/2} runtime bytes`);
