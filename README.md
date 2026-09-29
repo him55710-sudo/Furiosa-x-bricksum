@@ -2,7 +2,7 @@
 
 **Accord Lock controls delegated agent spending by binding payment to the deal the agents actually agreed on, while DealTrace preserves and verifies the agreement, delivery, invoice, and settlement evidence.**
 
-[Open the demo](https://agent-spending-firewall.vercel.app/) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Three-minute walkthrough](docs/ACCORD-THREE-MINUTE-DEMO.en.md)
+[Open the demo](https://agent-spending-firewall.vercel.app/#presentation) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Four-action presentation](docs/PRESENTATION-FLOW.en.md)
 
 [Submission video · 165 seconds](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) · [Submission deck · 8 pages](output/pdf/accord-lock-track-b.pdf) · [Track B submission guide](docs/TRACK-B-SUBMISSION.ko.md)
 

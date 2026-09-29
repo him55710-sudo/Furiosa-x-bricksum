@@ -1,0 +1,454 @@
+{
+  "schema": "accord-browser-evm-v1",
+  "product": "accord lock",
+  "mode": "BROWSER_EVM",
+  "network": {
+    "name": "Browser EVM",
+    "chainId": 31338,
+    "contract": "0x80c94311Ea06303853882b8cEcEF26d81f4b9E44",
+    "unit": "gwei",
+    "mode": "BROWSER_EVM",
+    "description": "Private-EVM test settlement and source-table processing in this browser. Live negotiation uses the separate Kiln service. No public funds.",
+    "controller": "0x554ea987097c15859496494425553f2d976E8D4b",
+    "buyer": "0xAf9D8Bb487f30855d45d2BD953Be0cf0bb5a7f48",
+    "sellers": {
+      "seller-a": "0xdBc172f4a969b7aff8dc8DE90C8F09bBdb8EDE3f",
+      "seller-b": "0xf7e8D1573a1A2357c8F4CB50F07a66a8408FB921",
+      "seller-c": "0x2Ecb1b15a86A5E6823aacB9b5A80dCfa9CF64C89"
+    },
+    "unitWei": "1000000000"
+  },
+  "task": {
+    "demoMode": true,
+    "title": "Quarterly CAPEX research",
+    "brief": "Normalize quarterly facility-investment data into a clean table. Preserve the company, quarter, value, currency and source URL for every row. Return JSON and CSV with a verifiable receipt.",
+    "budget": 40,
+    "perDeal": 30,
+    "deliveryMinutes": 10,
+    "source": [
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q1",
+        "capex": 3014,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -3014
+      },
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q2",
+        "capex": 2717,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -2717
+      },
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q3",
+        "capex": 2171,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -2171
+      },
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q4",
+        "capex": 2515,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -2515
+      }
+    ],
+    "sourceName": "LG Energy Solution · reference dataset.json",
+    "id": "8d00ac05-5535-4f80-aeba-0067288971a6",
+    "revision": 10,
+    "status": "COMPLETED",
+    "offers": [
+      {
+        "seller": "seller-a",
+        "name": "Atlas",
+        "role": "Source-aware data worker",
+        "price": 20,
+        "floor": 20,
+        "description": "Normalize the table, preserve source references and compare every result with your input."
+      },
+      {
+        "seller": "seller-b",
+        "name": "Nexus",
+        "role": "Fast delivery",
+        "price": 35,
+        "floor": 30,
+        "deliveryMinutes": 4,
+        "description": "A speed-first worker that prioritizes short delivery windows and margin."
+      },
+      {
+        "seller": "seller-c",
+        "name": "Orbit",
+        "role": "Premium research",
+        "price": 27,
+        "floor": 24,
+        "deliveryMinutes": 6,
+        "description": "A quality-first worker that preserves the complete source metadata with every row."
+      }
+    ],
+    "selected": "seller-a",
+    "events": [
+      {
+        "id": "c915a667-ae7c-4f07-a1f9-d797d4488910",
+        "at": "2026-09-29T23:30:48.332Z",
+        "actor": "human",
+        "title": "Task created",
+        "detail": "4 source rows saved in this browser. Budget 40 test units."
+      },
+      {
+        "id": "e56c54cd-8196-43af-bfeb-6fc3e17b0fed",
+        "at": "2026-09-29T23:30:49.001Z",
+        "actor": "buyer",
+        "title": "Requested offers",
+        "detail": "4 source rows; 30 test units per-deal limit."
+      },
+      {
+        "id": "b5016269-c8de-488e-8f58-cb306b0c6f9a",
+        "at": "2026-09-29T23:30:49.001Z",
+        "actor": "seller-a",
+        "title": "Atlas offered 22 test units",
+        "detail": "All-in fixed price, calculated by the local worker’s pricing rules."
+      },
+      {
+        "id": "18d735af-32c5-42bb-9fd0-d5fff2f84857",
+        "at": "2026-09-29T23:30:49.001Z",
+        "actor": "seller-b",
+        "title": "Nexus offered 35 test units",
+        "detail": "All-in fixed price, calculated by the local worker’s pricing rules."
+      },
+      {
+        "id": "6438e9d3-26be-4358-9b1d-cc0f23e64124",
+        "at": "2026-09-29T23:30:49.001Z",
+        "actor": "seller-c",
+        "title": "Orbit offered 27 test units",
+        "detail": "All-in fixed price, calculated by the local worker’s pricing rules."
+      },
+      {
+        "id": "e5a38d32-4a43-4f9a-8709-0642c96c0edb",
+        "at": "2026-09-29T23:30:49.001Z",
+        "actor": "policy",
+        "title": "Sample offer blocked",
+        "detail": "Nexus: 35 test units exceeds the 30 per-deal limit. Automatic sample check; no transaction was signed. Choose Atlas and negotiate 20."
+      },
+      {
+        "id": "6e12144c-83d4-41f5-84bb-76208480e606",
+        "at": "2026-09-29T23:31:00.746Z",
+        "actor": "human",
+        "title": "Offer selected",
+        "detail": "Atlas selected. Funds have not moved."
+      },
+      {
+        "id": "e0ba59e3-88da-4d47-8a4e-56cdabb84629",
+        "at": "2026-09-29T23:31:01.405Z",
+        "actor": "buyer",
+        "title": "Counteroffer: 18 test units",
+        "detail": "Requested an all-in fixed price."
+      },
+      {
+        "id": "797db3fb-c8f6-4a55-a5d6-d9e06ef505eb",
+        "at": "2026-09-29T23:31:01.405Z",
+        "actor": "seller-a",
+        "title": "Revised offer: 20 test units",
+        "detail": "I cannot accept 18 for the same scope. I can do 20, with all 4 referenced rows."
+      },
+      {
+        "id": "6276e52b-532a-4921-b8a0-b281a65f11e4",
+        "at": "2026-09-29T23:31:12.156Z",
+        "actor": "buyer",
+        "title": "Counteroffer: 20 test units",
+        "detail": "Requested an all-in fixed price."
+      },
+      {
+        "id": "0775d568-6140-42d5-8c63-0da29b719d0c",
+        "at": "2026-09-29T23:31:12.156Z",
+        "actor": "seller-a",
+        "title": "Counteroffer accepted",
+        "detail": "20 test units for the complete task."
+      },
+      {
+        "id": "28c19f89-5e6a-494b-984a-15bd04d5a0dd",
+        "at": "2026-09-29T23:31:14.988Z",
+        "actor": "policy",
+        "title": "Authority checks passed",
+        "detail": "20 test units fits both approved spending limits."
+      },
+      {
+        "id": "86cb9a82-9f80-494f-a5ca-a0a482569e04",
+        "at": "2026-09-29T23:31:14.988Z",
+        "actor": "chain",
+        "title": "Funds locked in escrow",
+        "detail": "The escrow contract executed on this browser’s private EVM. No public funds were used."
+      },
+      {
+        "id": "0258c888-4996-4097-b8f0-46b67a0d320a",
+        "at": "2026-09-29T23:31:15.649Z",
+        "actor": "policy",
+        "title": "Sample overcharge blocked",
+        "detail": "Authored demo invoice: 25 test units; agreement: 20. Payment blocked by the application before signing. Escrow remains locked."
+      },
+      {
+        "id": "44a6fce5-f84c-4389-ad31-bc8a7845bb92",
+        "at": "2026-09-29T23:31:15.650Z",
+        "actor": "seller-a",
+        "title": "Worker completed the task",
+        "detail": "Read 4 rows, normalized fields and preserved citations and units."
+      },
+      {
+        "id": "86b6daa3-b246-4187-ac7f-e6bfa42d7e6d",
+        "at": "2026-09-29T23:31:15.650Z",
+        "actor": "policy",
+        "title": "Delivery ready for review",
+        "detail": "10/10 checks passed. Inspect the output before paying."
+      },
+      {
+        "id": "8e60a2ae-00b2-4298-918c-aee826bff659",
+        "at": "2026-09-29T23:32:17.977Z",
+        "actor": "policy",
+        "title": "Invoice matches the agreement",
+        "detail": "20 test units requested; 20 test units agreed. A spending limit does not authorize an overcharge."
+      },
+      {
+        "id": "2be69175-3739-4210-887f-612048455f1d",
+        "at": "2026-09-29T23:32:18.872Z",
+        "actor": "chain",
+        "title": "Payment confirmed",
+        "detail": "20 test units paid once to Atlas on this browser’s private EVM."
+      }
+    ],
+    "createdAt": "2026-09-29T23:30:48.332Z",
+    "updatedAt": "2026-09-29T23:32:18.873Z",
+    "agreedPrice": 20,
+    "dealId": "b29b938d-151c-44c8-b58b-8aa5b4db9a14",
+    "agreement": {
+      "id": "b29b938d-151c-44c8-b58b-8aa5b4db9a14",
+      "task": "8d00ac05-5535-4f80-aeba-0067288971a6",
+      "seller": "seller-a",
+      "price": 20,
+      "budget": 40,
+      "perDeal": 30,
+      "sourceHash": "0xa2c0302758b6641c17e74848246ac5f209257166ab90461201dea7c5be07cd3b",
+      "brief": "Normalize quarterly facility-investment data into a clean table. Preserve the company, quarter, value, currency and source URL for every row. Return JSON and CSV with a verifiable receipt.",
+      "deliveryMinutes": 10,
+      "expiresAt": 1790811072
+    },
+    "dealHash": "0x3513871b9893ef5a2346eef1899c213a1e9eb4e11ab4f4a4782e00d824211bde",
+    "transactions": [
+      {
+        "kind": "fund",
+        "status": "CONFIRMED",
+        "hash": "0x2870be8415e767e5c36d2a2d3da089bf5e4f5b1735df6c171b13ca8fa19004fe",
+        "block": 2,
+        "amount": 20
+      },
+      {
+        "kind": "release",
+        "status": "CONFIRMED",
+        "hash": "0x5494bdbde87719c0e2e3ceec4629aa877a79d53cc4a0ff79e4e384ec0b00276c",
+        "block": 3,
+        "amount": 20
+      }
+    ],
+    "agreementSignatures": {
+      "hash": "0x3513871b9893ef5a2346eef1899c213a1e9eb4e11ab4f4a4782e00d824211bde",
+      "buyer": "0xAf9D8Bb487f30855d45d2BD953Be0cf0bb5a7f48",
+      "seller": "0xdBc172f4a969b7aff8dc8DE90C8F09bBdb8EDE3f",
+      "buyerSignature": "0xbecc1d54bf483fec039aab227b6e59ea0c1abd99f1e778681450729b3d13dcc605b362d3a99d3d08a5db2f332b90edf4fcfd5a4e96dd96e0c2d1f8609c7681051b",
+      "sellerSignature": "0xbdcdfe620741e70967de3b71e4570a5547a3dcade849c6eb579ac0ef9eccd77d164bd10d162ccdf217ac6b1737e08a34b93fbe4d7f167361d0c86f51491d79531b",
+      "scope": "Deterministic workspace wallets on a private test chain"
+    },
+    "deadline": 1790725274,
+    "chainState": "SETTLED",
+    "output": [
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q1",
+        "capex": 3014,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -3014
+      },
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q2",
+        "capex": 2717,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -2717
+      },
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q3",
+        "capex": 2171,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -2171
+      },
+      {
+        "company": "LG Energy Solution",
+        "quarter": "2025-Q4",
+        "capex": 2515,
+        "currency": "KRW",
+        "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+        "unit": "billion",
+        "source_page": 16,
+        "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+        "source_label": "Investment in Facilities",
+        "source_value": -2515
+      }
+    ],
+    "invoice": 20,
+    "validation": {
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true
+        },
+        {
+          "name": "SOURCE_VALUES_MATCH",
+          "pass": true
+        }
+      ],
+      "semantic_truth_verified": false
+    },
+    "attestation": {
+      "dealHash": "0x3513871b9893ef5a2346eef1899c213a1e9eb4e11ab4f4a4782e00d824211bde",
+      "outputHash": "0xa2c0302758b6641c17e74848246ac5f209257166ab90461201dea7c5be07cd3b",
+      "invoice": 20,
+      "reason": "DELIVERY_VERIFIED",
+      "outcome": "release"
+    },
+    "attestationHash": "0xb771845fb341b64f7c62b84268baf13427ea50f8036751490412dc568758045b"
+  },
+  "receipt": {
+    "agreement": {
+      "id": "b29b938d-151c-44c8-b58b-8aa5b4db9a14",
+      "task": "8d00ac05-5535-4f80-aeba-0067288971a6",
+      "seller": "seller-a",
+      "price": 20,
+      "budget": 40,
+      "perDeal": 30,
+      "sourceHash": "0xa2c0302758b6641c17e74848246ac5f209257166ab90461201dea7c5be07cd3b",
+      "brief": "Normalize quarterly facility-investment data into a clean table. Preserve the company, quarter, value, currency and source URL for every row. Return JSON and CSV with a verifiable receipt.",
+      "deliveryMinutes": 10,
+      "expiresAt": 1790811072
+    },
+    "attestation": {
+      "dealHash": "0x3513871b9893ef5a2346eef1899c213a1e9eb4e11ab4f4a4782e00d824211bde",
+      "outputHash": "0xa2c0302758b6641c17e74848246ac5f209257166ab90461201dea7c5be07cd3b",
+      "invoice": 20,
+      "reason": "DELIVERY_VERIFIED",
+      "outcome": "release"
+    },
+    "transactions": {
+      "fund": {
+        "hash": "0x2870be8415e767e5c36d2a2d3da089bf5e4f5b1735df6c171b13ca8fa19004fe",
+        "status": "CONFIRMED",
+        "receipt": {
+          "transactionHash": "0x2870be8415e767e5c36d2a2d3da089bf5e4f5b1735df6c171b13ca8fa19004fe",
+          "blockNumber": 2,
+          "blockHash": "0x3f7d94358d2785055742d1678476dcd4108d50cad6cd3d84b9d2bb44202e4f61",
+          "status": 1,
+          "logs": [
+            {
+              "address": "0x80c94311Ea06303853882b8cEcEF26d81f4b9E44",
+              "topics": [
+                "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+                "0x3513871b9893ef5a2346eef1899c213a1e9eb4e11ab4f4a4782e00d824211bde",
+                "0x000000000000000000000000af9d8bb487f30855d45d2bd953be0cf0bb5a7f48",
+                "0x000000000000000000000000dbc172f4a969b7aff8dc8de90c8f09bbdb8ede3f"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000000004a817c800000000000000000000000000000000000000000000000000000000006abc4c9a"
+            }
+          ]
+        }
+      },
+      "release": {
+        "hash": "0x5494bdbde87719c0e2e3ceec4629aa877a79d53cc4a0ff79e4e384ec0b00276c",
+        "status": "CONFIRMED",
+        "receipt": {
+          "transactionHash": "0x5494bdbde87719c0e2e3ceec4629aa877a79d53cc4a0ff79e4e384ec0b00276c",
+          "blockNumber": 3,
+          "blockHash": "0xe16687574886775a11444f4264111b7170312575629a3818ef106eeec4ce42a7",
+          "status": 1,
+          "logs": [
+            {
+              "address": "0x80c94311Ea06303853882b8cEcEF26d81f4b9E44",
+              "topics": [
+                "0x0e334fd11ab7bea6d2bda89338c0f25674e099b70dd28aaaee262fbecba48882",
+                "0x3513871b9893ef5a2346eef1899c213a1e9eb4e11ab4f4a4782e00d824211bde"
+              ],
+              "data": "0xb771845fb341b64f7c62b84268baf13427ea50f8036751490412dc568758045b00000000000000000000000000000000000000000000000000000004a817c800"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "trust": "This browser controls its private test chain. Receipts are verifiable against this browser storage, not independently against a public network. No cloud sync. Export records before clearing site data."
+}

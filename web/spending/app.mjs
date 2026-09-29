@@ -1,9 +1,14 @@
+import {renderPresentation,presentationInspect} from './presentation-view.mjs';
+import {runGuidedStory,presentationModel} from './presentation-model.mjs';
 import {liveRequest} from './live-client.mjs';
 import {parseSource,csv,normalizeRows} from './workspace-model.mjs';
 import {renderWorkspace,briefForm,esc as e,amount,button} from './workspace-view.mjs';
 import {request,executionMode} from './workspace-client.mjs';
 const $=s=>document.querySelector(s),empty={title:'',brief:'',budget:40,perDeal:30,deliveryMinutes:10};
 let proof=null;
+let story={reduceMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,mode:'guided',receipt:null,verification:null,pending:null,animate:false},storyRenderKey='',storyProjection=null;
+const isStory=()=>route==='presentation'||route==='presentation-live';
+const storyState=()=>({job,live,mode:story.mode,receipt:story.receipt,verification:story.verification,pending:story.pending,story});
 let creating=false,live=null;
 let renderedDeal=null,renderedStage=null;
 let token='',network=null,tasks=[],job=null,busy=false,present=false,route='workspace',sourceText='',sourceName='',lastFocus=null,draft={...empty};
@@ -12,10 +17,10 @@ async function api(url,body){return request(url,body,token);}
 function announce(message){$('#toast').textContent=message;$('#toast').hidden=false;setTimeout(()=>{$('#toast').hidden=true;},5500);}
 function showError(message){const box=$('#error');if(box){box.textContent=message;box.hidden=false;box.scrollIntoView({block:'nearest'});}else announce(message);}
 async function refreshList(){const state=await api('/api/workspace');token=state.token;network=state.network;tasks=state.tasks;}
-async function operate(label,fn){if(busy)return;busy=true;const bar=$('#operation');bar.textContent=label;bar.hidden=false;const previousDisabled=new Map([...document.querySelectorAll('button:not([data-close])')].map(b=>[b,b.disabled]));previousDisabled.forEach((_was,b)=>b.disabled=true);document.querySelector('[data-action="live-stop"]')?.removeAttribute('disabled');try{await fn();await refreshList();render();}catch(err){if(job){try{job=await api('/api/tasks/'+job.id);}catch{}}render();showError(err.message);}finally{busy=false;previousDisabled.forEach((was,b)=>{if(b.isConnected)b.disabled=was;});}}
+async function operate(label,fn){if(busy)return;busy=true;story.error=null;const bar=$('#operation');bar.textContent=label;bar.hidden=false;const previousDisabled=new Map([...document.querySelectorAll('button:not([data-close])')].map(b=>[b,b.disabled]));previousDisabled.forEach((_was,b)=>b.disabled=true);document.querySelector('[data-action="live-stop"]')?.removeAttribute('disabled');try{await fn();await refreshList();render();}catch(err){story.error=err.message;if(job){try{job=await api('/api/tasks/'+job.id);}catch{}}render();showError(err.message);}finally{busy=false;story.pending=null;if(isStory()){render();document.querySelector('.story-actions .primary')?.focus({preventScroll:true});}previousDisabled.forEach((was,b)=>{if(b.isConnected)b.disabled=was;});}}
 async function mutate(action,fields={}){job=await api(`/api/tasks/${job.id}/${action}`,{revision:job.revision,...fields});}
 function captureDraft(form=$('#brief-form')){if(form){const d=new FormData(form);draft={demoMode:draft.demoMode===true,title:d.get('title'),brief:d.get('brief'),budget:Number(d.get('budget')),perDeal:Number(d.get('perDeal')),deliveryMinutes:Number(d.get('deliveryMinutes'))};}}
-function render(){const changed=renderedDeal!==job?.id||renderedStage!==job?.status;renderedDeal=job?.id;renderedStage=job?.status;document.body.classList.toggle('presentation-mode',present);$('#app').innerHTML=renderWorkspace({job,tasks,route,present,network,proof,draft,sourceText,sourceName,creating,live});const stream=$('.negotiation-stream');if(stream)stream.scrollTop=stream.scrollHeight;if(changed)window.scrollTo({top:0,behavior:'instant'});if(job?.authorityRevoked){for(const action of ['edit','quotes','select','counter','negotiate','accept-counter',...(!job.dealId?['fund']:[])])document.querySelectorAll(`[data-action="${action}"]`).forEach(b=>b.disabled=true);document.querySelectorAll('[data-select],#counter-form button').forEach(b=>b.disabled=true);}if(!job&&route==='workspace'&&$('#brief-form'))bindForm();$('#counter-form')?.addEventListener('submit',ev=>{ev.preventDefault();operate('Sending your counteroffer…',()=>mutate('counter',{price:Number(new FormData(ev.currentTarget).get('price'))}));});$('#invoice-form')?.addEventListener('submit',ev=>{ev.preventDefault();const n=Number(new FormData(ev.currentTarget).get('amount'));operate('Checking the invoice against the agreement…',()=>mutate('invoice',{amount:n}));});}
+function render(){const changed=renderedDeal!==job?.id||renderedStage!==job?.status;renderedDeal=job?.id;renderedStage=job?.status;document.body.classList.toggle('presentation-mode',present);const storyKey=[job?.id,job?.revision,live?.current?.revision,story.receipt?.task?.id,story.verification?.verdict].join(':');const nextProjection=isStory()?presentationModel(storyState()):null;story.motionNodes=nextProjection&&storyProjection?Object.keys(nextProjection.nodes).filter(id=>nextProjection.nodes[id]&&(!storyProjection.nodes[id]||id==='invoice'&&nextProjection.invoice!==storyProjection.invoice||id==='negotiation'&&JSON.stringify(nextProjection.packets)!==JSON.stringify(storyProjection.packets)||id==='authority'&&nextProjection.proposed!==storyProjection.proposed)):[];story.animate=isStory()&&storyRenderKey!==storyKey;storyProjection=nextProjection;storyRenderKey=storyKey;$('#app').innerHTML=isStory()?renderPresentation(storyState()):renderWorkspace({job,tasks,route,present,network,proof,draft,sourceText,sourceName,creating,live});if(isStory()&&story.error){$('#error').textContent=story.error;$('#error').hidden=false;}if(isStory()&&busy)document.querySelectorAll('.story-actions button:not([data-action="live-stop"])').forEach(b=>b.disabled=true);const stream=$('.negotiation-stream');if(stream)stream.scrollTop=stream.scrollHeight;if(changed&&!isStory())window.scrollTo({top:0,behavior:'instant'});if(job?.authorityRevoked){for(const action of ['edit','quotes','select','counter','negotiate','accept-counter',...(!job.dealId?['fund']:[])])document.querySelectorAll(`[data-action="${action}"]`).forEach(b=>b.disabled=true);document.querySelectorAll('[data-select],#counter-form button').forEach(b=>b.disabled=true);}if(!job&&route==='workspace'&&$('#brief-form'))bindForm();$('#counter-form')?.addEventListener('submit',ev=>{ev.preventDefault();operate('Sending your counteroffer…',()=>mutate('counter',{price:Number(new FormData(ev.currentTarget).get('price'))}));});$('#invoice-form')?.addEventListener('submit',ev=>{ev.preventDefault();const n=Number(new FormData(ev.currentTarget).get('amount'));operate('Checking the invoice against the agreement…',()=>mutate('invoice',{amount:n}));});}
 function bindFile(scope=document){scope.querySelector('#source-file')?.addEventListener('change',async ev=>{const form=scope.querySelector('#brief-form');captureDraft(form);try{const file=ev.target.files[0];if(!file)return;if(file.size>1_000_000)throw Error('Choose a file smaller than 1 MB.');const raw=await file.text();parseSource(raw);draft.demoMode=false;sourceText=raw;sourceName=file.name;scope.querySelector('#source-name').textContent=sourceName;scope.querySelector('#source-count').textContent=`${parseSource(raw).length} rows · stored on this computer`;}catch(err){announce(err.message);}});}
 function bindForm(){bindFile();$('#brief-form').addEventListener('submit',ev=>{ev.preventDefault();captureDraft();if(!sourceText){showError('Choose a source file, or use the sample task.');return;}const spec={...draft,sourceText,sourceName};operate('Saving your task and source table…',async()=>{job=await api('/api/tasks',spec);history.replaceState(null,'',`#task/${job.id}`);});});}
 function modal(html,drawer=false){lastFocus=document.activeElement;$('#detail').classList.toggle('proof-detail',drawer);$('#dialog-content').innerHTML=`<button class="dialog-close" data-close aria-label="Close dialog">×</button>${html}`;if(!$('#detail').open)$('#detail').showModal();}
@@ -46,7 +51,53 @@ async function liveAction(action){
  }
  live.current=await liveRequest({action:action.slice(5),id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),seller:live.seller??'atlas'});
 }
+
+async function loadStory(mode){
+ story={reduceMotion:story.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches,mode,receipt:null,verification:null,pending:null,animate:false};storyRenderKey='';storyProjection=null;
+ if(mode==='guided'){
+  const id=localStorage.getItem('accord-story-guided');job=null;
+  if(id){try{const saved=await api('/api/tasks/'+id);if(saved.demoMode&&!saved.liveSessionId)job=saved;}catch{localStorage.removeItem('accord-story-guided');}}
+ }else{
+  // Never relabel a Guided job as a Live transaction.
+  if(!job?.liveSessionId)job=null;
+  try{await loadLive();if(!job&&live?.current){const saved=JSON.parse(localStorage.getItem('accord-live-current')??'null');if(saved?.id===live.current.session.id)job=await api('/api/tasks/'+saved.taskId);}}catch(error){live={available:false,error:error.message};}
+ }
+ if(job?.status==='COMPLETED'){story.receipt=await api('/api/tasks/'+job.id+'/receipt');story.verification=await api('/api/tasks/'+job.id+'/verify');}
+}
+async function storyCheckpoint(){
+ story.pending=null;render();
+ if(!story.reduceMotion&&!matchMedia('(prefers-reduced-motion: reduce)').matches)await new Promise(resolve=>setTimeout(resolve,650));
+}
+async function storyReceipt(){
+ story.receipt=await api('/api/tasks/'+job.id+'/receipt');
+ story.verification=await api('/api/tasks/'+job.id+'/verify');
+}
+async function storyAction(action){
+ if(action==='new'){
+  if(story.mode==='live')await liveAction('live-new');else localStorage.removeItem('accord-story-guided');
+  job=null;story.receipt=null;story.verification=null;return;
+ }
+ const labels={delegate:'Creating your mandate and requesting offers…',negotiate:'Buyer and Atlas are exchanging terms…',approve:'Confirming signatures, escrow and delivery…',pay:'Checking the corrected invoice and confirming settlement…',receipt:'Verifying the actual receipt…','live-start':'Delegating your mandate…','live-offer':'Seller is preparing an offer…','live-counter':'Buyer is comparing the terms…','live-respond':'Seller is evaluating the counteroffer…','live-agree':'Verifying terms and creating both signatures…','live-execute':'Funding the approved agreement and executing the source-table worker…','live-pay':'Checking the actual invoice before settlement…'};
+ story.pending={action,label:labels[action]??'Reading the current transaction…'};render();
+ if(story.mode==='guided')return runGuidedStory(action,{
+  getJob:()=>job,
+  create:async()=>{const sample=await api('/api/sample');job=await api('/api/tasks',sample);localStorage.setItem('accord-story-guided',job.id);},
+  mutate:async(name,fields)=>{story.pending={action:name,label:({quotes:'Requesting the three deterministic offers…',select:'Buyer is choosing Atlas…',counter:'Buyer and Atlas are exchanging terms…',fund:'Confirming both signatures and funding escrow…',run:'Reading the source table and validating delivery…',invoice:'Checking the corrected invoice against the signed deal…',settle:'Confirming the private-EVM settlement…'})[name]};render();await mutate(name,fields);},checkpoint:storyCheckpoint,receipt:storyReceipt
+ });
+ if(action==='receipt'){await storyReceipt();return;}
+ if(action==='live-execute'){
+  if(!job?.dealId||job.status==='FUNDING'){await liveAction('live-fund');route='presentation-live';history.replaceState(null,'','#presentation-live');await storyCheckpoint();}
+  if(job.status==='LOCKED'){await mutate('run');await storyCheckpoint();}
+ }else if(action==='live-pay'){
+  await mutate('settle');await storyCheckpoint();if(job.status==='COMPLETED')await storyReceipt();
+ }else await liveAction(action);
+}
+document.addEventListener('change',ev=>{if(ev.target.id==='story-motion'){story.reduceMotion=ev.target.checked;render();document.querySelector('#story-motion')?.focus();return;}if(ev.target.id==='story-seller'&&!busy){live.seller=ev.target.value;render();}});
+
 document.addEventListener('click',async ev=>{
+ if(isStory()&&busy&&ev.target.closest('a[href^="#"]')){ev.preventDefault();return;}
+ const inspection=ev.target.closest('[data-story-inspect]');if(inspection){modal(presentationInspect(inspection.dataset.storyInspect,storyState()),true);return;}
+
  if(ev.target.closest('[data-close]')){$('#detail').close();return;}
  if(ev.target.closest('[data-action="import-paste"]')){
   const form=ev.target.closest('#brief-form'),raw=form?.querySelector('#source-paste')?.value??'';
@@ -58,13 +109,16 @@ document.addEventListener('click',async ev=>{
  const tx=ev.target.closest('[data-tx]');if(tx){const item=job.transactions.find(x=>x.kind===tx.dataset.tx);modal(`<span class="eyebrow">LOCAL EVM RECEIPT</span><h2>${item.kind==='fund'?'Escrow funding':item.kind==='release'?'Seller payment':'Buyer refund'}</h2><dl><dt>Amount</dt><dd>${amount(item.amount)}</dd><dt>Status</dt><dd>${e(item.status)}</dd><dt>Transaction</dt><dd class="hash">${e(item.hash)}</dd><dt>Block</dt><dd>${item.block??'Pending'}</dd><dt>Contract</dt><dd class="hash">${e(network.contract)}</dd></dl><p>Chain ${network.chainId}. Local transactions have no public explorer URL.</p>`);return;}
  const liveSeller=ev.target.closest('[data-live-seller]');if(liveSeller&&!busy){live.seller=liveSeller.dataset.liveSeller;render();return;}
  const liveMessage=ev.target.closest('[data-live-message]');if(liveMessage){const m=live.current.session.messages.find(m=>m.sequence===Number(liveMessage.dataset.liveMessage));modal(`<span class="eyebrow">ACTUAL MODEL RESPONSE</span><h2>${e(m.actor)} · ${e(m.model)}</h2><dl><dt>Request ID</dt><dd class="hash">${e(m.requestId)}</dd><dt>Input scope</dt><dd>${e(m.inputScope)}</dd></dl><h3>Public input</h3><pre>${e(JSON.stringify(m.input,null,2))}</pre><h3>Model output</h3><pre>${e(JSON.stringify(m.quote,null,2))}</pre><h3>Measured usage</h3><pre>${e(JSON.stringify(m.usage,null,2))}</pre>`,true);return;}
- const name=ev.target.closest('[data-action]')?.dataset.action;if(!name)return;
+ let name=ev.target.closest('[data-action]')?.dataset.action;if(!name)return;
+ if(name==='story-inspect-proof')name=live?.current&&story.mode==='live'&&!job?.dealId?'live-proof':'proof';
+ if(name.startsWith('story-')&&!busy){await operate('Applying your next transaction decision…',()=>storyAction(name.slice(6)));return;}
+
  if(name==='live-stop'&&live?.current){try{await liveAction(name);render();}catch(error){showError(error.message);}return;}
  if(busy)return;
  if(name==='live-proof'){modal(`<span class="eyebrow">LIVE AGREEMENT PROOF</span><h2>${live.current.session.agreement?'Both agents signed.':'No agreement signed yet.'}</h2><p>Actual model proposals. Separate operator-owned signing identities. Private-EVM funding requires your approval.</p><pre>${e(JSON.stringify(live.current.session.agreement??{session:live.current.session.id,signers:live.current.session.identities},null,2))}</pre><h3>Model attempts</h3><p>Every attempted call counts. Rejected responses cannot authorize funds.</p><pre>${e(JSON.stringify(live.current.attemptLog??[],null,2))}</pre>`,true);return;}
  if(name.startsWith('live-')){await operate({'live-offer':'Kiln is reading the brief and the seller’s private policy…','live-counter':'Buyer is comparing the public terms with your mandate…','live-respond':'The seller is evaluating the counteroffer against its own policy…','live-agree':'Checking both policies and creating two signatures…','live-fund':'Binding the live agreement to your task and funding its escrow…'}[name]??'Updating the live negotiation…',()=>liveAction(name));return;}
  if(name==='pause-scene'){const scene=document.querySelector('.hero-scene');const paused=scene.classList.toggle('scene-paused');const b=ev.target.closest('button');b.setAttribute('aria-pressed',String(paused));b.textContent=paused?'Play illustration':'Pause illustration';return;}
- if(name==='launch-demo'){await operate('Preparing the guided deal…',async()=>{await newTask(true);creating=false;job=await api('/api/tasks',{...draft,sourceText,sourceName});history.replaceState(null,'',`#task/${job.id}`);});return;}
+ if(name==='launch-demo'){location.hash='presentation';return;}
  if(name==='create-custom'){await operate('Preparing your mandate…',async()=>{await newTask();creating=true;});$('#brief-form')?.scrollIntoView({block:'start'});return;}
  if(name==='negotiate'){await operate('Opening negotiations with Atlas…',()=>mutate('select',{seller:'seller-a'}));return;}
  if(name==='accept-counter'){const offer=job.offers.find(o=>o.seller===job.selected);await operate('Confirming the revised terms…',()=>mutate('counter',{price:offer.counterPrice}));return;}
@@ -83,8 +137,8 @@ document.addEventListener('click',async ev=>{
  const labels={stop:'Revoking future spending authority for this task…',quotes:'Reading your brief and calculating offers…',fund:'Checking authority, then confirming the local escrow transaction…',run:'Reading source rows, normalizing the table and checking each output…',settle:'Rechecking the delivery and invoice, then confirming the local payment…',refund:'Submitting and confirming your local refund…'};
  if(Object.hasOwn(labels,name))await operate(labels[name],()=>mutate(name));
 });
-$('#detail').addEventListener('close',()=>lastFocus?.isConnected&&lastFocus.focus());
-async function loadRoute(){const hash=location.hash.slice(1);$('#detail').close();if(hash.startsWith('task/')){job=await api('/api/tasks/'+hash.slice(5));route=job.liveSessionId&&!job.dealId?'live':'workspace';}else{route=['overview','workspace','deals','agents','evidence','live'].includes(hash)?hash:'overview';if(hash==='demo'){present=true;route='workspace';history.replaceState(null,'','#workspace');}}if(route==='workspace'&&job?.liveSessionId&&!job.dealId)route='live';if(hash==='guided'){job=null;route='workspace';present=false;creating=false;}if(route==='live'){try{await loadLive();}catch(error){live={available:false,error:error.message};}}render();}
+$('#detail').addEventListener('close',()=>{if(lastFocus?.isConnected)lastFocus.focus();else document.querySelector('.story-actions .primary')?.focus({preventScroll:true});});
+async function loadRoute(){const hash=location.hash.slice(1);$('#detail').close();if(hash.startsWith('task/')){job=await api('/api/tasks/'+hash.slice(5));route=job.liveSessionId&&!job.dealId?'live':'workspace';}else{route=['presentation','presentation-live','overview','workspace','deals','agents','evidence','live'].includes(hash)?hash:'presentation';if(hash==='demo'){route='presentation';history.replaceState(null,'','#presentation');}}if(route==='workspace'&&job?.liveSessionId&&!job.dealId)route='live';if(hash==='guided'){job=null;route='workspace';present=false;creating=false;}if(isStory()){await loadStory(route==='presentation-live'?'live':'guided');}if(route==='live'){try{await loadLive();}catch(error){live={available:false,error:error.message};}}render();}
 window.addEventListener('hashchange',()=>loadRoute().catch(err=>showError(err.message)));
 async function init(){try{const clean=new URL(location.href);if(clean.searchParams.has('shem')){clean.searchParams.delete('shem');history.replaceState(null,'',clean.pathname+clean.search+clean.hash);}try{const r=await fetch('/evidence/dealtrace-summary.json');if(r.ok)proof=await r.json();}catch{}await refreshList();await loadRoute();}catch(err){$('#app').innerHTML=`<div class="boot"><span class="brand-symbol">a</span><h1>${executionMode==='browser'?'Open your browser workspace':'Start your Accord Lock workspace'}</h1>${executionMode==='browser'?'<p>Use a recent browser with site storage enabled. No local server is required.</p>':'<p>This workspace needs its local task and escrow service.</p><code>pnpm ade:spending:view</code>'}<p>${e(err.message)}</p><button class="button primary" id="retry">Retry connection</button></div>`;$('#retry').onclick=init;}}
 init();
