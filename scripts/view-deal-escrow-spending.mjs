@@ -1,0 +1,11 @@
+import express from 'express';
+import path from 'node:path';
+import {buildSpendingSite} from './build-deal-escrow-spending.mjs';
+import {localBoundary} from '../src/deal-escrow/http-security.mjs';
+import {allowlistedStatic,PUBLIC_CSP} from '../src/deal-escrow/public-files.mjs';
+const manifest=buildSpendingSite();
+const app=express();
+const port=Number(process.env.ADE_SPENDING_PORT??3440);
+app.disable('x-powered-by');app.use(localBoundary({port,readOnly:true,csp:PUBLIC_CSP}));
+app.use(allowlistedStatic(path.resolve('dist-spending'),[...manifest.files.map(f=>f.path).filter(p=>p!=='vercel.json'),'evidence/site-manifest.json']));
+const server=app.listen(port,'127.0.0.1',error=>{if(error){console.error('SPENDING_DEMO_LISTEN_FAILED:'+error.code);process.exitCode=1;return;}console.log(`Canonical spending demo: http://127.0.0.1:${port}`);});

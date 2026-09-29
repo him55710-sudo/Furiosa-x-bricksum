@@ -1,4 +1,9 @@
-# DealTrace
+# accord lock
+
+**New illustrated demo:** Run `pnpm install --frozen-lockfile` and `pnpm ade:spending:view`, then open [the 3-minute presentation](http://127.0.0.1:3440/#demo). Keep the server running while viewing. Cobalt seller and red buyer agents explain the task, buyer authority, escrow settlement, failure memory and direct recovery. [Korean presenter script](docs/ACCORD-LOCK-DEMO-3MIN.ko.md) · [Design notes](docs/ACCORD-LOCK-DESIGN.ko.md).
+
+This presentation replays the recorded buyer-budget Sepolia run. The DealTrace V2 implementation and its separate evidence below are preserved; the presentation does not claim to demonstrate the V2 contract. Pushing this source does not update the previously published Vercel site or videos.
+
 
 ### An agent can stay under budget and still pay the wrong bill.
 
