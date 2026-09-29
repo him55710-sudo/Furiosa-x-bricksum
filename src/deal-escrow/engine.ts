@@ -4,6 +4,7 @@ import {DealStore} from './store.ts';
 import {validateDelivery,validatePreview} from './delivery.ts';
 import {sourceDocument} from './source-document.ts';
 import {agreementCheck} from '../dealtrace/ledger.mjs';
+import {assertProfile,recordClaim,matchingClaim,claimHistory} from '../dealtrace/claims.mjs';
 
 // Multiple facades in one process share the executor queue. Cross-process
 // ownership is enforced by openChain's runtime lock, not by this WeakMap.
@@ -42,6 +43,8 @@ export class DealEngine {
     ensure(!this.store.list().some(row=>row.details.reconciliation_required),'CHAIN_RECONCILIATION_REQUIRED');
     const alreadySigned=!!op.raw;
     if(!op.raw){
+      assertProfile(r.deal,this.chain.deployment);
+      if(kind==='release'&&r.deal.assurance)ensure(matchingClaim(this.store,r,this.chain.deployment,this.clock()),'MATCHING_CLAIM_REQUIRED');
       if(kind!=='fund'&&await this.reconcileBuyerRefund(id))return;
       const unresolved=this.store.list().some(row=>['fund','release','refund'].some(action=>{const other=this.store.operation(row.deal.deal_id,action);return (row.deal.deal_id!==id||action!==kind)&&other?.status==='PENDING'&&other.raw;}));
       ensure(!unresolved,'CHAIN_PREDECESSOR_UNRESOLVED');
@@ -54,7 +57,7 @@ export class DealEngine {
       }}
       let signed;
       try{signed=await this.chain.prepare(kind,r.dealHash,r.deal,r.details.attestation_hash);}catch(error){
-        if(error instanceof Error&&error.message==='DELIVERY_WINDOW_BELOW_FINALITY_BUDGET')this.store.transaction(()=>{this.store.saveOperation(id,kind,{...op,status:'CANCELLED',reason:error.message});this.store.move(id,'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:error.message});});
+        if(error instanceof Error&&['DELIVERY_WINDOW_BELOW_FINALITY_BUDGET','DELIVERY_WINDOW_TRUNCATED','OPERATOR_GAS_BUDGET_EXCEEDED'].includes(error.message)&&kind==='fund')this.store.transaction(()=>{this.store.saveOperation(id,kind,{...op,status:'CANCELLED',reason:error.message});this.store.move(id,'BLOCKED');this.store.event(id,'TRANSACTION_BLOCKED',{reason:error.message});});
         throw error;
       }
       op={...op,...signed};this.store.saveOperation(id,kind,op);
@@ -84,10 +87,12 @@ export class DealEngine {
     // Reconstruct the operation at its own canonical block. The escrow can have
     // advanced after a lost response; a later settlement must not hide funding.
     const onchain=await this.chain.inspect(r.dealHash,receipt.blockNumber);
+    const fundingTimestamp=kind==='fund'&&r.deal.assurance?(await this.chain.provider.getBlock(receipt.blockNumber)).timestamp:null;
     ensure(onchain.status===({fund:1,release:2,refund:3}[kind]),'CHAIN_STATE_MISMATCH');
     this.store.transaction(()=>{
       this.store.saveOperation(id,kind,{...op,status:'CONFIRMED',receipt});
       this.store.details(id,{escrow:onchain,[`${kind}_tx`]:receipt.transactionHash});
+      if(fundingTimestamp!==null)this.store.details(id,{funding_block_timestamp:fundingTimestamp,delivery_window_intact:onchain.deadline===fundingTimestamp+r.deal.deadline});
       const target=kind==='fund'?'ESCROW_FUNDED':kind==='release'?'SETTLED':'REFUNDED';
       if(this.store.get(id).state!==target)this.store.move(id,target);
       this.store.event(id,kind==='fund'?'ESCROW_FUNDED':kind==='release'?'ESCROW_RELEASED':'ESCROW_REFUNDED',{deal_hash:r.dealHash,amount_minor:r.deal.price_minor,tx_hash:receipt.transactionHash,chain_id:this.chain.deployment.chainId,contract:this.chain.deployment.contract,reason:kind==='fund'?'POLICY_APPROVED':r.details.settlement_reason,attestation_hash:kind==='fund'?null:r.details.attestation_hash});
@@ -105,14 +110,20 @@ export class DealEngine {
     if(await this.reconcileBuyerRefund(id))return;
     const r=this.store.get(id);ensure(['DELIVERY_SUBMITTED','DELIVERY_VERIFIED','ESCROW_FUNDED'].includes(r.state),'INVALID_STATE_TRANSITION');
     const time=this.clock(),checks=this.checks(id,time),failed=checks.find(c=>!c.pass);const expired=time>=r.details.escrow.deadline;
-    ensure(r.details.validation||expired,'DELIVERY_REQUIRED');
+    const truncated=r.deal.assurance&&r.details.delivery_window_intact===false;
+    ensure(r.details.validation||expired||truncated,'DELIVERY_REQUIRED');
     const releaseFailed=['REVERTED','CANCELLED'].includes(this.store.operation(id,'release')?.status);
-    const kind=r.details.validation?.verified&&!failed&&!expired&&!releaseFailed?'release':'refund';
+    const kind=r.details.validation?.verified&&!failed&&!expired&&!releaseFailed&&!truncated?'release':'refund';
+    const selectedClaim=kind==='release'&&r.deal.assurance?matchingClaim(this.store,r,this.chain.deployment,time):null;
+    if(kind==='release'&&r.deal.assurance&&!selectedClaim){
+      if(this.store.events(id).at(-1)?.event_type!=='SETTLEMENT_AWAITING_CLAIM')this.store.event(id,'SETTLEMENT_AWAITING_CLAIM',{reason:'MATCHING_CLAIM_REQUIRED',deal_hash:r.dealHash});
+      return;
+    }
     const opposite=this.store.operation(id,kind==='release'?'refund':'release');ensure(!opposite||['CANCELLED','REVERTED'].includes(opposite.status),'SETTLEMENT_ALREADY_CLAIMED');
-    const reason=kind==='release'?'DELIVERY_VERIFIED':releaseFailed?(this.store.operation(id,'release')?.status==='REVERTED'?'ESCROW_RELEASE_REVERTED':'ESCROW_RELEASE_CANCELLED'):r.details.validation?.failure_reason_code??failed?.name??'DELIVERY_DEADLINE_EXPIRED';
+    const reason=kind==='release'?'DELIVERY_VERIFIED':truncated?'DELIVERY_WINDOW_TRUNCATED':releaseFailed?(this.store.operation(id,'release')?.status==='REVERTED'?'ESCROW_RELEASE_REVERTED':'ESCROW_RELEASE_CANCELLED'):r.details.validation?.failure_reason_code??failed?.name??'DELIVERY_DEADLINE_EXPIRED';
     if(!this.store.operation(id,kind))this.store.transaction(()=>{
       this.store.event(id,'FINAL_AUTHORIZATION',{checks,time,mandate:this.store.mandate(r.mandateId),accounting:this.store.accounting(r.mandateId,id)});
-      const attestation={deal:r.deal,deal_hash:r.dealHash,mandate:this.store.mandate(r.mandateId),delivery:r.details.delivery??null,validation:r.details.validation??null,final_checks:checks,reason,outcome:kind,prior_event_hash:this.store.events(id).at(-1)?.event_hash,preview:r.details.preview??null};
+      const attestation={deal:r.deal,deal_hash:r.dealHash,mandate:this.store.mandate(r.mandateId),delivery:r.details.delivery??null,validation:r.details.validation??null,final_checks:checks,reason,outcome:kind,prior_event_hash:this.store.events(id).at(-1)?.event_hash,preview:r.details.preview??null,...(r.deal.assurance?{settlement_claim_hash:selectedClaim?hash(selectedClaim):null,claim_history_hash:hash(claimHistory(this.store,id))}:{})};
       this.store.details(id,{settlement_reason:reason,attestation,attestation_hash:hash(attestation)});this.store.saveOperation(id,kind,{status:'PENDING',created_at:this.clock()});
     });
     try{await this.execute(id,kind);}catch(error){
@@ -120,6 +131,11 @@ export class DealEngine {
       if(kind==='release'&&['CANCELLED','REVERTED'].includes(this.store.operation(id,kind)?.status))await this.settle(id);else throw error;
     }
   }
+  async claim(id:string,input:any){return this.serial(async()=>{
+    const result=this.store.transaction(()=>recordClaim(this,id,input));
+    if(result.decision.verdict==='ACCEPTED'&&this.store.get(id).state==='DELIVERY_VERIFIED')await this.settle(id);
+    return result;
+  });}
   async reconcileBuyerRefund(id:string){
     const r=this.store.get(id),fund=this.store.operation(id,'fund');
     if(!this.chain.observeBuyerRefund||!['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED'].includes(r.state)||fund?.status!=='CONFIRMED')return false;

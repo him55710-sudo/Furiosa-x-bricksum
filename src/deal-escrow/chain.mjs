@@ -54,6 +54,7 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
   deployment.finality=finalityPolicy;
   if(deploymentFile)writeFileSync(deploymentFile,JSON.stringify(deployment,null,2)+'\n');
   async function prepare(kind,dealHash,deal,attestation){
+    if(kind==='fund'&&deal.assurance){const latest=await provider.getBlock('latest');if(!latest||latest.timestamp+deal.deadline+60>=deal.expires_at)throw new Error('DELIVERY_WINDOW_TRUNCATED');}
     if(kind==='fund'&&publicNetwork){
       // Conservative planning estimate, not a guarantee of block timing.
       const confirmationSeconds=finalityPolicy.mode==='finalized'?900:(finalityPolicy.confirmations-1)*12;
@@ -62,7 +63,9 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
     }
     let request;if(kind==='fund')request=await contract.fund.populateTransaction(dealHash,deployment.buyer,sellers[deal.seller_id],BigInt(deal.price_minor)*UNIT_WEI,deal.deadline,deal.expires_at,{value:BigInt(deal.price_minor)*UNIT_WEI});
     else request=await contract[kind].populateTransaction(dealHash,attestation);
-    const populated=await wallet.populateTransaction(request);const raw=await wallet.signTransaction(populated);return {txHash:keccak256(raw),raw,nonce:populated.nonce,preparedBlock:await provider.getBlockNumber(),chainId,contract:deployment.contract};
+    const populated=await wallet.populateTransaction(request);
+    if(deal.assurance){const cap=BigInt(process.env.DEALTRACE_MAX_GAS_WEI??(publicNetwork?'200000000000000':'5000000000000000'));if(cap<=0n||!populated.gasLimit||BigInt(populated.gasLimit)*BigInt(populated.maxFeePerGas??populated.gasPrice??0)>cap)throw new Error('OPERATOR_GAS_BUDGET_EXCEEDED');}
+    const raw=await wallet.signTransaction(populated);return {txHash:keccak256(raw),raw,nonce:populated.nonce,preparedBlock:await provider.getBlockNumber(),chainId,contract:deployment.contract};
   }
   function signedIntent(op){const tx=Transaction.from(op.raw);if(tx.hash!==op.txHash||tx.from?.toLowerCase()!==wallet.address.toLowerCase()||tx.to?.toLowerCase()!==deployment.contract.toLowerCase()||Number(tx.chainId)!==chainId)throw new Error('SIGNED_INTENT_MISMATCH');return tx;}
   async function checkedReceipt(op,r){

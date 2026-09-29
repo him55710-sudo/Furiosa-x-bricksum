@@ -56,8 +56,9 @@
     "ade:pdf:verify": "node scripts/verify-deal-research-documents.mjs",
     "dealtrace:start": "node --env-file-if-exists=.env.local src/dealtrace/server.mjs",
     "dealtrace:demo": "node --env-file-if-exists=.env.local scripts/run-dealtrace.mjs",
-    "dealtrace:test": "node --test tests/deal-escrow/dealtrace.test.mjs",
-    "dealtrace:verify:public": "node src/dealtrace/verify-public.mjs"
+    "dealtrace:test": "node --test tests/deal-escrow/dealtrace.test.mjs tests/deal-escrow/assurance.test.mjs tests/deal-escrow/agent-process.test.mjs",
+    "dealtrace:verify:public": "node src/dealtrace/verify-public.mjs",
+    "dealtrace:verify:receipt": "node scripts/verify-dealtrace-receipt.mjs"
   },
   "dependencies": {
     "ethers": "^6.17.0",
