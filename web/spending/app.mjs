@@ -1,8 +1,10 @@
 import {parseSource,csv,normalizeRows} from './workspace-model.mjs';
 import {renderWorkspace,briefForm,esc as e,amount,button} from './workspace-view.mjs';
+import {request,executionMode} from './workspace-client.mjs';
 const $=s=>document.querySelector(s),empty={title:'',brief:'',budget:300,perDeal:200,deliveryMinutes:10};
 let token='',network=null,tasks=[],job=null,busy=false,present=false,route='workspace',sourceText='',sourceName='',lastFocus=null,draft={...empty};
-async function api(url,body){const r=await fetch(url,{...(body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-ADE-Token':token},body:JSON.stringify(body)})});const result=await r.json().catch(()=>({error:'The workspace server is unavailable. Start it with pnpm ade:spending:view.'}));if(!r.ok)throw Error(result.error??'The request could not complete.');return result;}
+window.addEventListener('accord-operation-progress',event=>{if(busy&&$('#operation'))$('#operation').textContent=event.detail;});
+async function api(url,body){return request(url,body,token);}
 function announce(message){$('#toast').textContent=message;$('#toast').hidden=false;setTimeout(()=>{$('#toast').hidden=true;},5500);}
 function showError(message){const box=$('#error');if(box){box.textContent=message;box.hidden=false;box.scrollIntoView({block:'nearest'});}else announce(message);}
 async function refreshList(){const state=await api('/api/workspace');token=state.token;network=state.network;tasks=state.tasks;}
@@ -38,5 +40,5 @@ document.addEventListener('click',async ev=>{
 $('#detail').addEventListener('close',()=>lastFocus?.isConnected&&lastFocus.focus());
 async function loadRoute(){const hash=location.hash.slice(1);if(hash.startsWith('task/')){job=await api('/api/tasks/'+hash.slice(5));route='workspace';}else{route=['agents','evidence'].includes(hash)?hash:'workspace';if(hash==='demo'){present=true;history.replaceState(null,'','#workspace');}}render();}
 window.addEventListener('hashchange',()=>loadRoute().catch(err=>showError(err.message)));
-async function init(){try{await refreshList();await loadRoute();}catch(err){$('#app').innerHTML=`<div class="boot"><span class="brand-symbol">a</span><h1>Start your Accord Lock workspace</h1><p>This workspace needs its local task and escrow service.</p><code>pnpm ade:spending:view</code><p>${e(err.message)}</p><button class="button primary" id="retry">Retry connection</button></div>`;$('#retry').onclick=init;}}
+async function init(){try{await refreshList();await loadRoute();}catch(err){$('#app').innerHTML=`<div class="boot"><span class="brand-symbol">a</span><h1>${executionMode==='browser'?'Open your browser workspace':'Start your Accord Lock workspace'}</h1>${executionMode==='browser'?'<p>Use a recent browser with site storage enabled. No local server is required.</p>':'<p>This workspace needs its local task and escrow service.</p><code>pnpm ade:spending:view</code>'}<p>${e(err.message)}</p><button class="button primary" id="retry">Retry connection</button></div>`;$('#retry').onclick=init;}}
 init();

@@ -2,7 +2,9 @@
 
 **English task workspace:** Run `pnpm install --frozen-lockfile` and `pnpm ade:spending:view`, then open [Accord Lock](http://127.0.0.1:3440/#workspace). Upload a CSV/JSON table, request and negotiate offers, approve escrow, run a local data worker, inspect the result and invoice, then pay or refund. Tasks and transaction receipts persist on this computer. [Workspace guide and three-minute walkthrough](docs/ACCORD-LOCK-WORKSPACE.en.md).
 
-**Demo assist** provides optional presenter prompts inside the same usable workspace. Every stage advances through your actions. The new workspace uses deterministic local workers and a private EVM with test funds. The historical Sepolia evidence and the separate DealTrace V2 implementation below remain available; they are not the workspace's current transactions. Static hosting alone cannot run the workspace service, and pushing this source does not update previously published Vercel sites or videos.
+**Demo assist** provides optional presenter prompts inside the same usable workspace. Every stage advances through your actions. The workspace uses deterministic local workers and a private EVM with test funds. The historical Sepolia evidence and the separate DealTrace V2 implementation below remain available; they are not the workspace's current transactions.
+
+**Vercel edition:** `pnpm ade:hosted:build` produces a standalone hosted client in `dist-vercel`. It runs data processing and real private-EVM escrow in the visitor's browser, with IndexedDB persistence and no local installation. Work stays in that browser; no cloud sync or public funds. `pnpm ade:hosted:test` verifies the browser bundle. The separate `ade:spending:build` output still requires its local service. Pushing source alone does not update manually published Vercel deployments or videos.
 
 
 ### The agreement decides what gets paid.

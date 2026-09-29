@@ -3,8 +3,8 @@ import {assertPublicJson,vercelAllowlist,PUBLIC_CSP} from '../src/deal-escrow/pu
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 export const PUBLIC_EVIDENCE=['report','buyer-transactions','normal','over-limit','wrong-delivery','preview-first','app-off','buyer-refund','independent-refund','independent'];
-export function buildSpendingSite(root=process.cwd()) {
- const out=path.join(root,'dist-spending'),source=path.join(root,'artifacts/deal-escrow/spending-proof');
+export function buildSpendingSite(root=process.cwd(),{outDir='dist-spending'}={}) {
+ const out=path.join(root,outDir),source=path.join(root,'artifacts/deal-escrow/spending-proof');
  const read=name=>JSON.parse(readFileSync(path.join(source,name+'.json'),'utf8'));
  const finalized=existsSync(path.join(source,'independent-finalized.json'));
  const report=read('report'),independent=read(finalized?'independent-finalized':'independent'),preview=read('preview-first');
@@ -20,7 +20,7 @@ export function buildSpendingSite(root=process.cwd()) {
  // Stage in memory first: invalid evidence must not partially replace a prior build.
  const staged=new Map();
  function publish(name,bytes){if(name.endsWith('.json'))assertPublicJson(JSON.parse(String(bytes)));staged.set(name,bytes);files.push({path:name,bytes:Buffer.byteLength(bytes),sha256:createHash('sha256').update(bytes).digest('hex')});}
- for(const name of ['index.html','workspace.css','app.mjs','workspace-model.mjs','workspace-view.mjs','policy-simulator.mjs','favicon.svg'])publish(name,readFileSync(path.join(root,'web/spending',name)));
+ for(const name of ['index.html','workspace.css','app.mjs','workspace-client.mjs','workspace-model.mjs','workspace-view.mjs','policy-simulator.mjs','favicon.svg'])publish(name,readFileSync(path.join(root,'web/spending',name)));
  for(const name of PUBLIC_EVIDENCE)publish(`evidence/${name}.json`,readFileSync(path.join(source,(name==='independent'&&finalized?'independent-finalized':name)+'.json')));
  if(existsSync(path.join(source,'independent-finalized.json')))publish('evidence/independent-finalized.json',readFileSync(path.join(source,'independent-finalized.json')));
  // Keep the complete local test report. The public summary excludes stack

@@ -79,7 +79,9 @@
     "dealtrace:procurement:verify": "node scripts/verify-dealtrace-procurement.mjs",
     "ade:spending:view": "node scripts/view-deal-escrow-spending.mjs",
     "ade:spending:build": "node scripts/build-deal-escrow-spending.mjs",
-    "ade:spending:test": "node --test tests/deal-escrow/accord-workspace.test.mjs tests/deal-escrow/spending-site.test.mjs"
+    "ade:spending:test": "node --test tests/deal-escrow/accord-workspace.test.mjs tests/deal-escrow/spending-site.test.mjs",
+    "ade:hosted:build": "node scripts/build-accord-vercel.mjs",
+    "ade:hosted:test": "node scripts/build-accord-vercel.mjs && node --test tests/deal-escrow/accord-browser.test.mjs"
   },
   "dependencies": {
     "ethers": "^6.17.0",
@@ -93,6 +95,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.7.0",
+    "fake-indexeddb": "^6.2.5",
     "ganache": "7.9.2",
     "playwright": "1.62.1",
     "solc": "0.8.30",
