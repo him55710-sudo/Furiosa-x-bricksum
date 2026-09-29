@@ -2,7 +2,9 @@ import {Transaction,Interface} from 'ethers';
 import {hash,ensure,validateDeal,validateMandate,policy,transitions} from './domain.ts';
 import {validateDelivery,validatePreview,DELIVERY_VALIDATOR_VERSION} from './delivery.ts';
 import {SourceDependencyError} from './source-document.ts';
+import {exportedNegotiation,verifyNegotiationPacket} from '../dealtrace/ledger.mjs';
 import type {DealEngine} from './engine.ts';
+import {sourceManifest,verifyClaims} from '../dealtrace/claims.mjs';
 const financialEvents:Record<string,string>={fund:'ESCROW_FUNDED',release:'ESCROW_RELEASED',refund:'ESCROW_REFUNDED'};
 const fundedStates=['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED','SETTLED','REFUNDED'];
 const escrowEvents=new Interface(['event Funded(bytes32 indexed dealHash,address indexed buyer,address indexed seller,uint256 amount,uint64 deadline)','event Released(bytes32 indexed dealHash,bytes32 evidenceHash,uint256 amount)','event Refunded(bytes32 indexed dealHash,bytes32 reasonHash,uint256 amount)']);
@@ -24,6 +26,8 @@ export function receipt(engine:DealEngine,id:string){
     ensure(!seen.has(dealId)&&seen.size<8,'CONTROL_SOURCE_CYCLE');const next=new Set(seen).add(dealId),r=engine.store.get(dealId),control=engine.gate(r);
     return {schema_version:r.details.buyer_refund?(r.details.controller_settlement?4:3):2,product:'Agent Deal Escrow',exported_at:new Date().toISOString(),network:engine.chain.deployment,mandate:engine.store.mandate(r.mandateId),mandate_history:engine.store.events(r.mandateId),deal:r.deal,deal_hash:r.dealHash,state:r.state,evidence:r.details,events:engine.store.events(dealId),control,
       control_source:control&&control.origin_deal_id!==dealId?exportOne(control.origin_deal_id,next):null,
+      ...(r.details.dealtrace?{negotiation:exportedNegotiation(engine.store,dealId)}:{}),
+      ...(r.deal.assurance?{source_manifest:sourceManifest}:{}),
       transactions:Object.fromEntries(['fund','release','refund'].flatMap(kind=>{const op=engine.store.operation(dealId,kind);return op?[[kind,exportOperation(op)]]:[];})),
       ...(r.details.controller_settlement?{controller_attempts:['release','refund'].flatMap(kind=>{const op=engine.store.operation(dealId,'controller_'+kind);return op?[{kind,...exportOperation(op)}]:[];})}:{}),kiln:engine.store.usage(dealId),limitations};
   };return exportOne(id,new Set());
@@ -83,6 +87,9 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
   need(event('NEGOTIATION_STARTED'),'NEGOTIATION_ORIGIN_MISSING');ensure(event('NEGOTIATION_STARTED').structured_payload.mandate_id===r.mandate.mandate_id,'MANDATE_BINDING_MISMATCH');
   const accepted=event('DEAL_ACCEPTED');if(fundedStates.includes(r.state)||['DEAL_ACCEPTED','PREVIEW_REQUIRED','PREVIEW_VERIFIED','POLICY_APPROVED'].includes(r.state))need(accepted,'ACCEPTANCE_MISSING');if(accepted)ensure(accepted.structured_payload.deal_hash===r.deal_hash,'ACCEPTANCE_MISMATCH');
   checks.push('hash-linked events bound to the Deal and mandate');
+  const bilateral=event('BILATERAL_DEAL_COMMITTED');
+  if(r.deal.assurance){need(r.source_manifest&&r.negotiation,'ASSURANCE_EVIDENCE_MISSING');verifyClaims(r);checks.push('signed claims, corrections and exact Deal-bound payment with source manifest');}
+  if(bilateral||r.negotiation||r.evidence.dealtrace){need(r.negotiation&&bilateral&&r.evidence.dealtrace,'NEGOTIATION_EVIDENCE_MISSING');ensure(verifyNegotiationPacket(r.negotiation).verdict==='VALID','NEGOTIATION_EVIDENCE_INVALID');const commit=r.negotiation.commit;ensure(commit&&commit.deal_hash===r.deal_hash&&commit.mandate_hash===hash(original)&&hash(commit)===hash(bilateral.structured_payload)&&hash(commit)===hash(r.evidence.dealtrace),'NEGOTIATION_BINDING_MISMATCH');checks.push('signed messages, field provenance and bilateral normalized Deal confirmation');}
   if(direct){const observed=event('BUYER_REFUND_OBSERVED');need(observed,'BUYER_REFUND_EVENT_MISSING');ensure(hash(observed.structured_payload)===hash(direct)&&observed.actor_type==='buyer'&&same(observed.actor_id,r.network.buyer),'BUYER_REFUND_EVENT_MISMATCH');checks.push('buyer deadline refund recorded independently of controller delivery attestation');}
   if(controller){
     ensure(['ESCROW_FUNDED','DELIVERY_SUBMITTED','DELIVERY_VERIFIED'].includes(controller.prior_state),'CONTROLLER_HISTORY_STATE');
@@ -117,7 +124,9 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
     // A control created after this Deal's settlement must not retroactively change its policy.
     if(control&&control.origin_deal_id!==r.deal.deal_id&&Date.parse(control.created_at)<=Date.parse(e.timestamp))ensure(pc.expected===true,'CONTROL_GATE_OMITTED');
     ensure(Number.isSafeInteger(p.accounting?.spent)&&p.accounting.spent>=0&&Number.isSafeInteger(p.accounting?.reserved)&&p.accounting.reserved>=0,'ACCOUNTING_INVALID');
-    const expected=policy(p.mandate,r.deal,{time:p.time,...p.accounting,dealHash:r.deal_hash,previewRequired:pc.expected,previewVerified:hasPreview});ensure(hash(expected)===hash(p.checks),'POLICY_CHECK_MISMATCH');
+    const agreement=p.checks.find((c:any)=>c.name==='BILATERAL_AGREEMENT');
+    if(bilateral)need(agreement,'AGREEMENT_CHECK_MISSING');
+    const expected=[...(agreement?[{name:'BILATERAL_AGREEMENT',pass:!!bilateral,actual:bilateral?'BILATERAL_COMMIT_VERIFIED':'BILATERAL_COMMIT_REQUIRED',expected:'BILATERAL_COMMIT_VERIFIED'}]:[]),...policy(p.mandate,r.deal,{time:p.time,...p.accounting,dealHash:r.deal_hash,previewRequired:pc.expected,previewVerified:hasPreview})];ensure(hash(expected)===hash(p.checks),'POLICY_CHECK_MISMATCH');
   }
   checks.push('policy arithmetic; preview flags checked against actual preview evidence');
   const transactionEntries:[string,any,boolean][]=[...Object.entries(r.transactions).map(([kind,op]):[string,any,boolean]=>[kind,op,false]),...(r.controller_attempts??[]).map((op:any):[string,any,boolean]=>[op.kind,op,true])];
@@ -173,6 +182,7 @@ async function verify(r:any,chain:any,seen:Set<string>,checks:string[],quality:a
   if(chain){ensure(same(chain.deployment.contract,r.network.contract)&&chain.deployment.chainId===r.network.chainId,'UNTRUSTED_DEPLOYMENT');
     ensure(same(chain.deployment.controller,r.network.controller)&&same(chain.deployment.buyer,r.network.buyer)&&same(chain.deployment.sellers[r.deal.seller_id],r.network.sellers[r.deal.seller_id])&&chain.deployment.unitWei===r.network.unitWei,'CHAIN_DEPLOYMENT_IDENTITY_MISMATCH');
     for(const [kind,op] of transactionEntries){if(!['CONFIRMED','REVERTED'].includes(op.status))continue;const tx=await checkChainReceipt(chain,op);if(op.status==='REVERTED')continue;
+      if(kind==='fund'&&r.deal.assurance){const b:any=await rpc(()=>chain.provider.getBlock(tx.blockNumber));need(b,'FUNDING_BLOCK_UNAVAILABLE');ensure(b.timestamp===r.evidence.funding_block_timestamp,'FUNDING_TIMESTAMP_MISMATCH');}
       const log=tx.logs.filter((l:any)=>same(l.address,chain.deployment.contract)).map((l:any)=>{try{return chain.contract.interface.parseLog(l);}catch{return null;}}).find((l:any)=>l?.name===({fund:'Funded',release:'Released',refund:'Refunded'} as any)[kind]);ensure(log&&log.args[0]===r.deal_hash,'CHAIN_EVENT_MISMATCH');
       ensure(log.args.amount===BigInt(r.deal.price_minor)*BigInt(chain.deployment.unitWei),'CHAIN_AMOUNT_MISMATCH');
       if(kind==='fund'){ensure(same(log.args.buyer,chain.deployment.buyer)&&same(log.args.seller,chain.deployment.sellers[r.deal.seller_id]),'CHAIN_PARTY_MISMATCH');ensure(Number(log.args.deadline)===r.evidence.escrow.deadline,'CHAIN_DEADLINE_MISMATCH');}else ensure(log.args[1]===r.evidence.attestation_hash,'CHAIN_ATTESTATION_MISMATCH');

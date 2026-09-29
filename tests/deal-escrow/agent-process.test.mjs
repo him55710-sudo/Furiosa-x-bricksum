@@ -1,0 +1,20 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {mkdtempSync,rmSync} from 'node:fs';import {tmpdir} from 'node:os';import path from 'node:path';
+import {startAgent} from '../../src/dealtrace/agent-client.mjs';import {DealStore} from '../../src/deal-escrow/store.ts';import {DealEngine} from '../../src/deal-escrow/engine.ts';import {openChain} from '../../src/deal-escrow/chain.mjs';import {NegotiationLedger,expectedTerms} from '../../src/dealtrace/ledger.mjs';import {newMandate,priceInterpretation} from '../../src/dealtrace/scenario.mjs';import {procurementOpening} from '../../src/dealtrace/run.mjs';import {assuranceProfile} from '../../src/dealtrace/claims.mjs';import {hash} from '../../src/deal-escrow/domain.ts';
+
+test('HTTP agents preserve their own signed transcript and review complete terms before acknowledging',async()=>{
+ const directory=mkdtempSync(path.join(tmpdir(),'dealtrace-process-')),chain=await openChain(),store=new DealStore(':memory:'),engine=new DealEngine(store,chain),ledger=new NegotiationLedger(engine);let buyer,seller;
+ try{
+  buyer=await startAgent(directory+'/buyer','buyer-agent');seller=await startAgent(directory+'/seller','seller-a');assert.notEqual(buyer.pid,seller.pid);assert(!Object.hasOwn(buyer.identity,'private_key'));
+  const m=newMandate(engine,{task_budget_minor:4000,max_single_minor:4000,deal_assurance_required:true}),s=ledger.create(m.mandate_id,buyer.identity,seller.identity,assuranceProfile(chain.deployment,'seller-a'));
+  for(const a of [buyer,seller])await a.request('/open',{...s,network:chain.deployment});
+  async function message(a,peer,key,text){const input={session_id:s.session_id,request_id:key,scripted:text,instruction:'',live:false};const first=await a.request('/speak',input),repeat=await a.request('/speak',input);assert.deepEqual(first,repeat);ledger.append(s.session_id,first.event);await peer.request('/receive',{session_id:s.session_id,event:first.event});return first.event;}
+  const e=await message(buyer,seller,'open',procurementOpening);ledger.interpret(s.session_id,{event_id:e.event_id,kind:'propose',patch:[...Object.entries(expectedTerms).map(([field,value])=>({field,value,quote:procurementOpening})),{field:'deadline_seconds',value:300,quote:'5 minutes'}]});
+  const o=await message(seller,buyer,'offer','26.00 DEMO, same requested conditions.');ledger.interpret(s.session_id,priceInterpretation(o,2600));const yes=await message(buyer,seller,'accept','Agreed.');ledger.interpret(s.session_id,{event_id:yes.event_id,kind:'accept',patch:[]});
+  const packet=ledger.packet(s.session_id),changed=structuredClone(packet);changed.events.pop();await assert.rejects(buyer.request('/confirm',{packet:changed}),/LOCAL_TRANSCRIPT_DIVERGENCE/);
+  const key=seller.identity.public_key;await seller.close();seller=await startAgent(directory+'/seller','seller-a');assert.equal(seller.identity.public_key,key);
+  for(const a of [buyer,seller]){const reviewed=await a.request('/confirm',{packet});assert(reviewed.review.reviewed_fields.includes('assurance'));ledger.confirm(s.session_id,reviewed.ack);}
+  ledger.commit(s.session_id);assert.equal(store.get(s.deal_id).dealHash,hash(packet.revisions.at(-1).deal));
+  await assert.rejects(seller.request('/speak',{session_id:s.session_id,request_id:'offer',scripted:'31 DEMO',instruction:'',live:false}),/REQUEST_ID_CONTENT_MISMATCH/);
+  const raw=await seller.request('/delivery',{session_id:s.session_id});const c=await seller.request('/claim',{session_id:s.session_id,delivery_hash:raw.hash,amount_minor:3100,claim_id:'claim-one'});assert(c.signature);await assert.rejects(buyer.request('/claim',{session_id:s.session_id,delivery_hash:raw.hash,amount_minor:3100,claim_id:'fake'}),/SELLER_ONLY/);
+ }finally{await buyer?.close();await seller?.close();store.close();await chain.close();const resolved=path.resolve(directory);assert(resolved.startsWith(path.resolve(tmpdir())+path.sep)&&path.basename(resolved).startsWith('dealtrace-process-'));rmSync(resolved,{recursive:true,force:true});}
+});

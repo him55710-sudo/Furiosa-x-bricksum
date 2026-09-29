@@ -3,8 +3,8 @@ import {sourcePolicyHash} from './source-catalog.mjs';
 
 export type Requirements = {minimum_rows:number; required_columns:string[]; minimum_source_coverage:number; format:'JSON';reference_dataset_id?:string;source_document_id?:string;source_policy_hash?:string};
 export type TaskRequirements = Requirements & {version:1;max_delivery_seconds:number};
-export type Deal = {deal_id:string; buyer_id:string; seller_id:string; price_minor:number; currency_or_demo_asset:'DEMO'; deliverable_type:'CAPEX_DATASET'; requirements:Requirements; deadline:number; created_at:number; expires_at:number; supersedes_deal_id:string|null};
-export type Mandate = {mandate_id:string; company_id:string; buyer_id:string; task_budget_minor:number; max_single_minor:number; allowed_sellers:string[]; category:'RESEARCH_DATA'; status:'ACTIVE'|'REVOKED'; created_at:number; expires_at:number;task_requirements?:TaskRequirements};
+export type Deal = {deal_id:string; buyer_id:string; seller_id:string; price_minor:number; currency_or_demo_asset:'DEMO'; deliverable_type:'CAPEX_DATASET'; requirements:Requirements; deadline:number; created_at:number; expires_at:number; supersedes_deal_id:string|null;assurance?:any};
+export type Mandate = {mandate_id:string; company_id:string; buyer_id:string; task_budget_minor:number; max_single_minor:number; allowed_sellers:string[]; category:'RESEARCH_DATA'; status:'ACTIVE'|'REVOKED'; created_at:number; expires_at:number;task_requirements?:TaskRequirements;deal_assurance_required?:true};
 export type State = 'NEGOTIATING'|'DEAL_PROPOSED'|'DEAL_ACCEPTED'|'PREVIEW_REQUIRED'|'PREVIEW_VERIFIED'|'POLICY_APPROVED'|'ESCROW_FUNDED'|'DELIVERY_SUBMITTED'|'DELIVERY_VERIFIED'|'SETTLED'|'REJECTED'|'BLOCKED'|'REFUNDED'|'EXPIRED';
 export class Fault extends Error { code:string; constructor(code:string){super(code);this.code=code;} }
 export function ensure(condition:unknown, code:string):asserts condition {if(!condition)throw new Fault(code);}
@@ -31,14 +31,16 @@ export function validateRequirements(r:any):Requirements {
   ensure(r.format==='JSON','SCHEMA_FORMAT');return structuredClone(r);
 }
 export function validateDeal(d:any):Deal {
-  exact(d,['deal_id','buyer_id','seller_id','price_minor','currency_or_demo_asset','deliverable_type','requirements','deadline','created_at','expires_at','supersedes_deal_id']);
+  exact(d,['deal_id','buyer_id','seller_id','price_minor','currency_or_demo_asset','deliverable_type','requirements','deadline','created_at','expires_at','supersedes_deal_id',...(Object.hasOwn(d??{},'assurance')?['assurance']:[])]);
+  if(d.assurance){const a=d.assurance;exact(a,['version','source_manifest_hash','validator_profile','pricing','claim_required','payee','chain_id','contract','unit_wei','deadline_rule']);ensure(a.version===1&&a.claim_required===true&&a.pricing==='ALL_IN_FIXED_PRICE'&&a.validator_profile==='PINNED_CAPEX_REFERENCE_V1'&&a.deadline_rule==='FUNDING_BLOCK_PLUS_WINDOW','ASSURANCE_PROFILE');ensure(/^0x[a-f0-9]{64}$/.test(a.source_manifest_hash)&&[a.payee,a.contract].every(v=>/^0x[a-f0-9]{40}$/.test(v))&&/^[1-9][0-9]*$/.test(a.unit_wei),'ASSURANCE_BINDING');integer(a.chain_id,1,Number.MAX_SAFE_INTEGER);}
   [d.deal_id,d.buyer_id,d.seller_id].forEach(identifier);integer(d.price_minor,1,1_000_000_000);ensure(d.currency_or_demo_asset==='DEMO'&&d.deliverable_type==='CAPEX_DATASET','SCHEMA_PRODUCT');
   validateRequirements(d.requirements);integer(d.deadline,1,3600);integer(d.created_at,0,9_000_000_000);integer(d.expires_at,d.created_at+1,9_000_000_000);
   if(d.supersedes_deal_id!==null){identifier(d.supersedes_deal_id);ensure(d.supersedes_deal_id!==d.deal_id,'SELF_SUPERSESSION');}
   return structuredClone(d);
 }
 export function validateMandate(m:any):Mandate {
-  exact(m,['mandate_id','company_id','buyer_id','task_budget_minor','max_single_minor','allowed_sellers','category','status','created_at','expires_at',...(Object.hasOwn(m??{},'task_requirements')?['task_requirements']:[])]);
+  exact(m,['mandate_id','company_id','buyer_id','task_budget_minor','max_single_minor','allowed_sellers','category','status','created_at','expires_at',...(Object.hasOwn(m??{},'task_requirements')?['task_requirements']:[]),...(Object.hasOwn(m??{},'deal_assurance_required')?['deal_assurance_required']:[])]);
+  if(Object.hasOwn(m,'deal_assurance_required'))ensure(m.deal_assurance_required===true,'ASSURANCE_MANDATE_FLAG');
   [m.mandate_id,m.company_id,m.buyer_id].forEach(identifier);integer(m.task_budget_minor,1,1_000_000_000);integer(m.max_single_minor,1,m.task_budget_minor);
   ensure(Array.isArray(m.allowed_sellers)&&m.allowed_sellers.length<=20,'SCHEMA_SELLERS');m.allowed_sellers.forEach(identifier);ensure(new Set(m.allowed_sellers).size===m.allowed_sellers.length,'DUPLICATE_SELLER');
   ensure(m.category==='RESEARCH_DATA'&&['ACTIVE','REVOKED'].includes(m.status),'SCHEMA_MANDATE');integer(m.created_at,0,9_000_000_000);integer(m.expires_at,m.created_at+1,9_000_000_000);
@@ -60,6 +62,7 @@ export type Check={name:string;pass:boolean;actual:unknown;expected:unknown};
 export function policy(m:Mandate,d:Deal,{time=now(),spent=0,reserved=0,dealHash=hash(d),previewRequired=false,previewVerified=false}={}):Check[]{
   validateMandate(m);validateDeal(d);
   return [
+    ...(m.deal_assurance_required?[{name:'DEAL_ASSURANCE_REQUIRED',pass:d.assurance?.claim_required===true,actual:!!d.assurance?.claim_required,expected:true}]:[]),
     {name:'MANDATE_ACTIVE',pass:m.status==='ACTIVE',actual:m.status,expected:'ACTIVE'},
     {name:'MANDATE_NOT_EXPIRED',pass:time<m.expires_at,actual:time,expected:m.expires_at},
     {name:'DEAL_NOT_EXPIRED',pass:time<d.expires_at,actual:time,expected:d.expires_at},

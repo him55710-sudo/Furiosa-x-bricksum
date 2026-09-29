@@ -1,0 +1,88 @@
+{
+  "purpose": "One-call regression for duplicate interpretation on recorded Seller B input",
+  "source_run": "d76bd700-f0e2-4b6d-9d51-b7c38e8c8b4e",
+  "source_fingerprint": "ee0a7cd1d9f509c453b88996646dca8e52e59bf2f77de9169071465866a96748",
+  "usage": [
+    {
+      "flow_name": "Semantics / conversation to terms",
+      "model": "qwen3-32b",
+      "request_id": "chat-a4c8c07cd56c4079aa6b6e66e7178645",
+      "prompt_tokens": 1029,
+      "completion_tokens": 621,
+      "total_tokens": 1650,
+      "start_time": "2026-09-29T02:45:36.597Z",
+      "first_token_time": null,
+      "end_time": "2026-09-29T02:45:55.246Z",
+      "latency_ms": 18649,
+      "tool_called": "extract_negotiation",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x96427fd16525b27706d925b6f2026479f83abc75a718d144717b37e1cdf9bcbf",
+      "streaming": false
+    }
+  ],
+  "proposals": [
+    {
+      "event_ids": [
+        "f5005537-888a-4b1a-9119-abe4dc717bfd"
+      ],
+      "args": {
+        "event_id": "f5005537-888a-4b1a-9119-abe4dc717bfd",
+        "kind": "propose",
+        "patch": [
+          {
+            "evidence_span_id": "f5005537-888a-4b1a-9119-abe4dc717bfd:0",
+            "field": "price_minor",
+            "value": 150
+          },
+          {
+            "evidence_span_id": "f5005537-888a-4b1a-9119-abe4dc717bfd:0",
+            "field": "metric",
+            "value": "ANNUAL_CAPEX_FORECAST"
+          },
+          {
+            "evidence_span_id": "f5005537-888a-4b1a-9119-abe4dc717bfd:0",
+            "field": "periods",
+            "value": [
+              "2025"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "public_chain_transactions": 0,
+  "response": {
+    "tool": "extract_negotiation",
+    "args": {
+      "interpretations": [
+        {
+          "event_id": "f5005537-888a-4b1a-9119-abe4dc717bfd",
+          "kind": "propose",
+          "patch": [
+            {
+              "field": "price_minor",
+              "value": 150,
+              "quote": "I can offer an approximate annual CAPEX forecast for 2025, not realized quarterly cash outflows, for 1.50 DEMO. "
+            },
+            {
+              "field": "metric",
+              "value": "ANNUAL_CAPEX_FORECAST",
+              "quote": "I can offer an approximate annual CAPEX forecast for 2025, not realized quarterly cash outflows, for 1.50 DEMO. "
+            },
+            {
+              "field": "periods",
+              "value": [
+                "2025"
+              ],
+              "quote": "I can offer an approximate annual CAPEX forecast for 2025, not realized quarterly cash outflows, for 1.50 DEMO. "
+            }
+          ]
+        }
+      ]
+    },
+    "model": "qwen3-32b",
+    "request_id": "chat-a4c8c07cd56c4079aa6b6e66e7178645"
+  },
+  "status": "PASS",
+  "completed_at": "2026-09-29T02:45:55.256Z"
+}

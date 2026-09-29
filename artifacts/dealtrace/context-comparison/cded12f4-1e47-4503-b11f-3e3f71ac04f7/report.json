@@ -1,0 +1,724 @@
+{
+  "run": "cded12f4-1e47-4503-b11f-3e3f71ac04f7",
+  "created_at": "2026-09-29T10:34:56.472Z",
+  "dataset_sha256": "0a6c7cbc860d04e9c22a8b7a33e45363b2dbdb07f5d8f1e63451b982a274e363",
+  "source_hashes": {
+    "verification/dealtrace-context-comparison.json": "0a6c7cbc860d04e9c22a8b7a33e45363b2dbdb07f5d8f1e63451b982a274e363",
+    "scripts/compare-dealtrace-context.mjs": "609d16e6f7043cd6ba8d5e308ff8e85270f42ca9bb8c19f0ff392fe4c62c347e",
+    "src/dealtrace/kiln.mjs": "84aeeaf72a2a6dc956e815fd3a613475a025c8fdc677d562e6f919fe83a0a7ed",
+    "src/deal-escrow/kiln.ts": "04ba75c64abbd5607c3a6f272c546d736fccb7bec25d2d119bb57598ebd7efab",
+    "src/dealtrace/ledger.mjs": "d1c91688b70721065b805084034d24c1117e0c584b0ed83df6b63fd67dbeaf9d"
+  },
+  "initial_terms": {
+    "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+    "periods": [
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4"
+    ],
+    "source_required": true,
+    "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+    "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+    "price_minor": 2600,
+    "deadline_seconds": 300
+  },
+  "dataset": {
+    "version": 1,
+    "scope": "Two authored four-turn conversations, frozen before this comparison. Not held-out customer data. Initial terms are the same for every arm. No tuning or retries after observing results.",
+    "conversations": [
+      {
+        "id": "renegotiation",
+        "events": [
+          {
+            "id": "quote",
+            "sender": "seller-a",
+            "text": "The all-in price is 30.00 DEMO. Delivery takes 10 minutes from escrow funding.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 3000,
+              "deadline_seconds": 600
+            }
+          },
+          {
+            "id": "counter",
+            "sender": "buyer",
+            "text": "I offer 25.00 DEMO for the same job. I need delivery in 5 minutes from escrow funding.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 2500,
+              "deadline_seconds": 300
+            }
+          },
+          {
+            "id": "revised",
+            "sender": "seller-a",
+            "text": "I can do 26.00 DEMO instead. The latest delivery terms and all other requirements stay unchanged.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 2600
+            }
+          },
+          {
+            "id": "accept",
+            "sender": "buyer",
+            "text": "I accept the seller's latest offer without any changes.",
+            "kind": "accept",
+            "patch": {}
+          }
+        ]
+      },
+      {
+        "id": "scope-and-ambiguity",
+        "events": [
+          {
+            "id": "annual",
+            "sender": "seller-b",
+            "text": "For 15.00 DEMO I will provide an annual CAPEX forecast for 2025, not quarterly actuals.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 1500,
+              "metric": "ANNUAL_CAPEX_FORECAST",
+              "periods": [
+                "2025"
+              ]
+            }
+          },
+          {
+            "id": "sources",
+            "sender": "seller-b",
+            "text": "I cannot include original official source cells. All my other proposed terms remain unchanged.",
+            "kind": "propose",
+            "patch": {
+              "source_required": false
+            }
+          },
+          {
+            "id": "repair",
+            "sender": "seller-b",
+            "text": "I will instead provide actual quarterly facility investment cash outflow for 2025-Q1, 2025-Q2, 2025-Q3 and 2025-Q4. Original official source cells are included. The price stays as last quoted.",
+            "kind": "propose",
+            "patch": {
+              "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+              "periods": [
+                "2025-Q1",
+                "2025-Q2",
+                "2025-Q3",
+                "2025-Q4"
+              ],
+              "source_required": true
+            }
+          },
+          {
+            "id": "ambiguous",
+            "sender": "seller-b",
+            "text": "It could be 25.00 DEMO or 28.00 DEMO; I have not chosen a price.",
+            "must_stop": true,
+            "patch": {}
+          }
+        ]
+      }
+    ]
+  },
+  "arms": [
+    "rules"
+  ],
+  "status": "COMPLETE",
+  "results": [
+    {
+      "conversation": "renegotiation",
+      "event_id": "renegotiation:quote",
+      "arm": "rules",
+      "kind": "propose",
+      "expected_kind": "propose",
+      "output": {
+        "kind": "propose",
+        "patch": [
+          {
+            "field": "price_minor",
+            "value": 3000,
+            "quote": "The all-in price is 30.00 DEMO. "
+          },
+          {
+            "field": "deadline_seconds",
+            "value": 600,
+            "quote": "Delivery takes 10 minutes from escrow funding."
+          }
+        ]
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 3000,
+        "deadline_seconds": 600
+      },
+      "provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:quote",
+        "deadline_seconds": "renegotiation:quote"
+      },
+      "expected_terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 3000,
+        "deadline_seconds": 600
+      },
+      "expected_provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:quote",
+        "deadline_seconds": "renegotiation:quote"
+      }
+    },
+    {
+      "conversation": "renegotiation",
+      "event_id": "renegotiation:counter",
+      "arm": "rules",
+      "kind": "propose",
+      "expected_kind": "propose",
+      "output": {
+        "kind": "propose",
+        "patch": [
+          {
+            "field": "price_minor",
+            "value": 2500,
+            "quote": "I offer 25.00 DEMO for the same job. "
+          },
+          {
+            "field": "deadline_seconds",
+            "value": 300,
+            "quote": "I need delivery in 5 minutes from escrow funding."
+          }
+        ]
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 2500,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:counter",
+        "deadline_seconds": "renegotiation:counter"
+      },
+      "expected_terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 2500,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:counter",
+        "deadline_seconds": "renegotiation:counter"
+      }
+    },
+    {
+      "conversation": "renegotiation",
+      "event_id": "renegotiation:revised",
+      "arm": "rules",
+      "kind": "propose",
+      "expected_kind": "propose",
+      "output": {
+        "kind": "propose",
+        "patch": [
+          {
+            "field": "price_minor",
+            "value": 2600,
+            "quote": "I can do 26.00 DEMO instead. "
+          }
+        ]
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 2600,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:revised",
+        "deadline_seconds": "renegotiation:counter"
+      },
+      "expected_terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 2600,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:revised",
+        "deadline_seconds": "renegotiation:counter"
+      }
+    },
+    {
+      "conversation": "renegotiation",
+      "event_id": "renegotiation:accept",
+      "arm": "rules",
+      "kind": "accept",
+      "expected_kind": "accept",
+      "output": {
+        "kind": "accept",
+        "patch": []
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 2600,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:revised",
+        "deadline_seconds": "renegotiation:counter"
+      },
+      "expected_terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 2600,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "initial",
+        "periods": "initial",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "renegotiation:revised",
+        "deadline_seconds": "renegotiation:counter"
+      }
+    },
+    {
+      "conversation": "scope-and-ambiguity",
+      "event_id": "scope-and-ambiguity:annual",
+      "arm": "rules",
+      "kind": "propose",
+      "expected_kind": "propose",
+      "output": {
+        "kind": "propose",
+        "patch": [
+          {
+            "field": "price_minor",
+            "value": 1500,
+            "quote": "For 15.00 DEMO I will provide an annual CAPEX forecast for 2025, not quarterly actuals."
+          },
+          {
+            "field": "metric",
+            "value": "ANNUAL_CAPEX_FORECAST",
+            "quote": "For 15.00 DEMO I will provide an annual CAPEX forecast for 2025, not quarterly actuals."
+          },
+          {
+            "field": "periods",
+            "value": [
+              "2025"
+            ],
+            "quote": "For 15.00 DEMO I will provide an annual CAPEX forecast for 2025, not quarterly actuals."
+          }
+        ]
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ANNUAL_CAPEX_FORECAST",
+        "periods": [
+          "2025"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "scope-and-ambiguity:annual",
+        "periods": "scope-and-ambiguity:annual",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      },
+      "expected_terms": {
+        "metric": "ANNUAL_CAPEX_FORECAST",
+        "periods": [
+          "2025"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "scope-and-ambiguity:annual",
+        "periods": "scope-and-ambiguity:annual",
+        "source_required": "initial",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      }
+    },
+    {
+      "conversation": "scope-and-ambiguity",
+      "event_id": "scope-and-ambiguity:sources",
+      "arm": "rules",
+      "kind": "propose",
+      "expected_kind": "propose",
+      "output": {
+        "kind": "propose",
+        "patch": [
+          {
+            "field": "source_required",
+            "value": false,
+            "quote": "I cannot include original official source cells. "
+          }
+        ]
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ANNUAL_CAPEX_FORECAST",
+        "periods": [
+          "2025"
+        ],
+        "source_required": false,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "scope-and-ambiguity:annual",
+        "periods": "scope-and-ambiguity:annual",
+        "source_required": "scope-and-ambiguity:sources",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      },
+      "expected_terms": {
+        "metric": "ANNUAL_CAPEX_FORECAST",
+        "periods": [
+          "2025"
+        ],
+        "source_required": false,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "scope-and-ambiguity:annual",
+        "periods": "scope-and-ambiguity:annual",
+        "source_required": "scope-and-ambiguity:sources",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      }
+    },
+    {
+      "conversation": "scope-and-ambiguity",
+      "event_id": "scope-and-ambiguity:repair",
+      "arm": "rules",
+      "kind": "propose",
+      "expected_kind": "propose",
+      "output": {
+        "kind": "propose",
+        "patch": [
+          {
+            "field": "metric",
+            "value": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+            "quote": "I will instead provide actual quarterly facility investment cash outflow for 2025-Q1, 2025-Q2, 2025-Q3 and 2025-Q4. "
+          },
+          {
+            "field": "periods",
+            "value": [
+              "2025-Q1",
+              "2025-Q2",
+              "2025-Q3",
+              "2025-Q4"
+            ],
+            "quote": "I will instead provide actual quarterly facility investment cash outflow for 2025-Q1, 2025-Q2, 2025-Q3 and 2025-Q4. "
+          },
+          {
+            "field": "source_required",
+            "value": true,
+            "quote": "Original official source cells are included. "
+          }
+        ]
+      },
+      "error": null,
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "scope-and-ambiguity:repair",
+        "periods": "scope-and-ambiguity:repair",
+        "source_required": "scope-and-ambiguity:repair",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      },
+      "expected_terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "scope-and-ambiguity:repair",
+        "periods": "scope-and-ambiguity:repair",
+        "source_required": "scope-and-ambiguity:repair",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      }
+    },
+    {
+      "conversation": "scope-and-ambiguity",
+      "event_id": "scope-and-ambiguity:ambiguous",
+      "arm": "rules",
+      "kind": null,
+      "expected_kind": "stop",
+      "output": null,
+      "error": "AMBIGUOUS_NUMERIC_EVIDENCE",
+      "patch_pass": true,
+      "state_and_provenance_pass": true,
+      "pass": true,
+      "terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "provenance": {
+        "metric": "scope-and-ambiguity:repair",
+        "periods": "scope-and-ambiguity:repair",
+        "source_required": "scope-and-ambiguity:repair",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      },
+      "expected_terms": {
+        "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+        "periods": [
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4"
+        ],
+        "source_required": true,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+        "price_minor": 1500,
+        "deadline_seconds": 300
+      },
+      "expected_provenance": {
+        "metric": "scope-and-ambiguity:repair",
+        "periods": "scope-and-ambiguity:repair",
+        "source_required": "scope-and-ambiguity:repair",
+        "deadline_anchor": "initial",
+        "refund_policy": "initial",
+        "price_minor": "scope-and-ambiguity:annual",
+        "deadline_seconds": "initial"
+      }
+    }
+  ],
+  "proposals": [],
+  "usage": [],
+  "by_arm": {
+    "rules": {
+      "turns": 8,
+      "exact_state_and_provenance_passed": 8,
+      "exact_patch_passed": 8,
+      "errors": 1,
+      "false_acceptances": 0,
+      "usage": {
+        "flows": {},
+        "model_ids": [],
+        "total_calls": 0,
+        "total_tokens": 0,
+        "energy": {
+          "measured": false,
+          "formula": "Wh = assumed attributable watts × sum(API latency milliseconds) / 3,600,000",
+          "scenarios": [
+            {
+              "assumed_attributable_watts": 25,
+              "estimated_wh": 0
+            },
+            {
+              "assumed_attributable_watts": 50,
+              "estimated_wh": 0
+            },
+            {
+              "assumed_attributable_watts": 100,
+              "estimated_wh": 0
+            }
+          ],
+          "limitations": "Queue/network time is included. Shared NPU utilization, batching and actual hardware power are unknown. These are assumptions, not hardware measurements or a GPU comparison."
+        },
+        "avoided_inference": [
+          "Human-approved fixed opening compiled without inference",
+          "Signatures, budgets, exact invoice matching and settlement: zero model calls",
+          "Receipt verification and completed-run resume: zero model calls"
+        ],
+        "comparison_claim": "No measured claim of general AI superiority. Known fixed source values are validated deterministically."
+      }
+    }
+  },
+  "limitations": [
+    "Eight turns in two authored conversations, not held-out or external customer traffic.",
+    "Single attempt per turn and arm, no automatic retry; all malformed responses and consumed tokens remain counted.",
+    "Full-transcript arm sends the growing prefix but emits only the newest event patch. It does not request a complete transcript re-extraction. Both model arms use the same output schema and numeric/evidence validators.",
+    "Incremental arm receives the previous parsed state and newest message. Full-transcript arm receives initial terms and the full prefix, without previous parsed state.",
+    "Rules are explicit and tailored to these expressions; no claim of general language understanding or hardware energy reduction."
+  ]
+}
