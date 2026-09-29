@@ -25,6 +25,8 @@ jobs:
         run: |
           pnpm run ade:contracts
           git diff --exit-code -- artifacts/deal-escrow/contract.json
+          pnpm run dealtrace:vault:compile
+          git diff --exit-code -- artifacts/dealtrace/vault/contract.json artifacts/dealtrace/vault/standard-input.json
       - name: Verify escrow invariants, recovery, evidence and application startup
         run: pnpm run ade:test
       - name: Build the live workbench

@@ -10,6 +10,10 @@ A budget check passes. **DealTrace stops the payment.**
 
 The missing control is the agreement itself: what work was promised, at what price, by when, with which evidence—and who confirmed it.
 
+**The stronger V2 demonstration bypasses our server entirely.** A seller and an intentionally permissive evaluator both sign the excessive invoice. The contract still rejects 31 against the bilaterally committed 26. It also carries a failed delivery into the next order as an on-chain preview requirement. [V2 design, attacks and trust boundary](docs/DEALTRACE-VAULT-V2.en.md).
+
+**Observed V2 proof:** 14 Sepolia transactions, three deliberate on-chain rejections, **83 independent finalized checks passed**, and an exact source/bytecode match on [Sourcify](https://repo.sourcify.dev/11155111/0x3df2bFc764488Dd6AE85f98774255359b0520048). [One-page V2 brief](output/pdf/DealTrace-V2-upgrade.ko.pdf) · [Finalized verification](artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/finalized-verification.json).
+
 [Watch the 3-minute demo](artifacts/dealtrace/film-v3/dealtrace-3min.ko.webm) · [One-page brief](output/pdf/DealTrace-brief.ko.pdf) · [Public proof](docs/DEALTRACE-PUBLIC-PROOF.ko.md) · [Try it](#try-it)
 
 The video and brief have Korean narration text. This README is the English overview for GWDC Challenge B.
@@ -93,6 +97,14 @@ The Deal binds the source-manifest hash, validator profile, all-in price, recipi
 
 Buyer and Seller use separate HTTP processes, keys and durable stores, but all demo roles share one operator. This is process separation, not external business-identity verification. No A2A, AP2 or ERC-8183 interoperability is claimed.
 
+### V2: a compromised submitter cannot change the agreed price
+
+The separate **DealTraceVault** contract verifies buyer-signed EIP-712 mandates, both agents' execution signatures, the allowed seller, atomic session allocation, full delivery window, exact invoice amount/payee and evaluator approval. Domain separation, one-use mandate nonces and terminal escrow states reject replay. A delivery-mismatch refund creates a buyer–seller preview requirement that a new mandate cannot erase.
+
+Settlement credits and withdrawal are separate events. A receiver that rejects ETH cannot block the settlement decision; the beneficiary can redirect its withdrawal. Anyone can finalize an expired escrow to the fixed buyer. No administrator can sweep principal or edit the contract.
+
+The evaluator still decides whether the supported delivery is correct. It can approve bad work at the agreed price; it cannot increase that price or redirect the recipient. V2 does not claim trustless semantic judgment. Its authored-dialogue chain experiment adds **zero model calls**; the actual Kiln conversation evidence above remains a separate, preserved V1 run. [Threat model, exact signed fields, recovery and version differences](docs/DEALTRACE-VAULT-V2.en.md).
+
 ## Evidence you can follow
 
 Public run **`34d1da0d-e842-4f44-acfd-4d97728c81f0`** passed **17/17 workflow checks** and made four real Sepolia transactions: two fundings, one payout, one refund. Five exported receipts passed independent finalized verification.
@@ -104,7 +116,7 @@ Public run **`34d1da0d-e842-4f44-acfd-4d97728c81f0`** passed **17/17 workflow ch
 - [Valid, altered and incomplete portable receipts](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/portable-verifier-cases)
 - [Resume without additional payment or inference](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/resume-proof.json)
 
-The filmed version passed **129/129 tests**. After integrating the existing research workbench from main and adding regressions for failed-inference accounting and read-only receipt-copy verification, the combined suite passed **139/139**. These versions remain distinct: [current tests](artifacts/deal-escrow/tests.json), [presentation tests](artifacts/dealtrace/integration/pre-merge-tests.json), [integration audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md).
+The filmed version passed **129/129 tests**; the integrated V1 suite reached **139/139**. V2 adds EVM signature/replay/budget attacks, ERC-1271 receivers, reentrancy, sponsored withdrawal, a full conversation-to-vault tamper test and a pre-finality classification regression: **153/153 pass**. These versions remain distinct: [current tests](artifacts/deal-escrow/tests.json), [presentation tests](artifacts/dealtrace/integration/pre-merge-tests.json), [integration audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md).
 
 The film is a 180-second, silent edit of real saved-run screenshots, not live transaction footage. Prices, excess billing and incorrect delivery are controlled scenarios. The expiry test injects policy time; it is not a real-time wait.
 
@@ -132,6 +144,15 @@ pnpm dealtrace:verify:receipt path/to/exported-receipt.json
 
 The standalone verifier pins `artifacts/dealtrace/trusted-deployment.json` and reads finalized Sepolia state. It needs no app DB, agent key or model credential. Exit 0 = VALID, 1 = INVALID, 2 = INCOMPLETE. An offline check cannot certify a chain settlement.
 
+For the separate V2 execution module:
+
+```sh
+pnpm dealtrace:vault:compile
+pnpm dealtrace:vault:demo       # Real local EVM, three deliberately reverted attacks
+pnpm dealtrace:vault:verify     # Independent finalized public-proof verification
+# In the running workbench: http://127.0.0.1:3420/vault.html
+```
+
 ## Challenge B acceptance map
 
 | Requirement | Demonstration |
@@ -144,7 +165,7 @@ The standalone verifier pins `artifacts/dealtrace/trusted-deployment.json` and r
 
 ## What is ready, and what still needs people
 
-This is an end-to-end **testnet prototype for supported documents and registered demo providers**. It trusts a controller, pinned source annotations and locally registered identities. DEMO is a test accounting unit, not USD or a newly issued token; gas is a separate operator expense.
+This is an end-to-end **testnet prototype for supported documents and registered demo providers**. V1 trusts its controller; V2 puts defined authorization and billing checks on-chain while retaining a selected delivery evaluator. Both trust pinned source annotations and locally registered identities. DEMO is a test accounting unit, not USD or a newly issued token; gas is a separate operator expense.
 
 Customer demand, independent first-time-user comprehension, external supplier identity, production custody and hardware energy savings are not established. The planned three-person comprehension test needs real responses; automated browser checks are not a substitute. Production also needs organizational key management, provider onboarding, evidence retention and payment operations.
 
