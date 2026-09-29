@@ -1,4 +1,9 @@
-# DealTrace
+# accord lock
+
+**English task workspace:** Run `pnpm install --frozen-lockfile` and `pnpm ade:spending:view`, then open [Accord Lock](http://127.0.0.1:3440/#workspace). Upload a CSV/JSON table, request and negotiate offers, approve escrow, run a local data worker, inspect the result and invoice, then pay or refund. Tasks and transaction receipts persist on this computer. [Workspace guide and three-minute walkthrough](docs/ACCORD-LOCK-WORKSPACE.en.md).
+
+**Demo assist** provides optional presenter prompts inside the same usable workspace. Every stage advances through your actions. The new workspace uses deterministic local workers and a private EVM with test funds. The historical Sepolia evidence and the separate DealTrace V2 implementation below remain available; they are not the workspace's current transactions. Static hosting alone cannot run the workspace service, and pushing this source does not update previously published Vercel sites or videos.
+
 
 ### The agreement decides what gets paid.
 
@@ -53,7 +58,7 @@ The outward message includes qualitative prose and structured commercial terms. 
 | [Live fixed job on Sepolia](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) | 5 actual Kiln calls; 22 → 20 negotiation; 5 public transactions; signed 25 bill reverted; 20 withdrawn |
 | [Independent public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) | **47 checks, VALID at finalized block 11808905** |
 | [Hardened V3 bundle](artifacts/dealtrace/procurement/runs/11ba8d29-1b86-4cb4-8758-3ccb95fb89e8/report.json) | 5 actual Kiln calls; seller C selected; 27.40 maximum, 26.40 paid, 1.00 returned; 56 checks on a real local EVM |
-| [Full automated suite](artifacts/deal-escrow/tests.json) | **176/176 pass**; original workbench and evidence replay builds also pass |
+| [Full automated suite](artifacts/deal-escrow/tests.json) | **199/199 pass**; original workbench and evidence replay builds also pass |
 | [Failed live attempts and all flow usage](artifacts/dealtrace/procurement/usage-audit.json) | Both truncation and non-convergence retained; neither funded a purchase |
 
 Inspect the actual Sepolia [rejected invoice](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59), [correct settlement](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f) and [seller withdrawal](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc).

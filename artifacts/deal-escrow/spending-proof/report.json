@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "created_at": "2026-09-29T01:57:13.024Z",
+  "run": "54355f8f-5b94-4dc5-a8a4-7e3ba8b2653e",
+  "network": "sepolia",
+  "funding_mode": "buyer-vault",
+  "deployment": {
+    "schemaVersion": 1,
+    "chainId": 11155111,
+    "network": "sepolia",
+    "contract": "0x93741724253BF7A7Ae0C2036b3A54640bab7821b",
+    "controller": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+    "buyer": "0x7c29080975c4dBFEBACbAA79CEFD3bD16deEE953",
+    "fundingMode": "buyer-vault",
+    "sellers": {
+      "seller-a": "0x96A606Bf973fcE999493A944Ea412c71Cb4d6ac6",
+      "seller-b": "0x5e37537304A27183f703C3019D4F90a3F81C91A5"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "d508752cb1314f50694313d1554d2f52380ea4612e2ff26f6c2f3aaf062a0d1c",
+    "runtimeHash": "0xa83b740440bae33ddaef51084d12dd6d2e4f52c73287e7b6b7bb78b852f5c619",
+    "deploymentTx": "0x832f930534bc6601d16e137a32a36b747ec18c497831e44daedecbc5601e6666",
+    "createdAt": "2026-09-29T01:42:13.481Z",
+    "finality": {
+      "mode": "confirmations",
+      "confirmations": 2
+    }
+  },
+  "deposit_minor": 1000,
+  "authority_minor": 300,
+  "per_deal_minor": 200,
+  "available_minor": 730,
+  "remaining_authority_minor": 30,
+  "app_stop": {
+    "pid": 30340,
+    "origin": "http://127.0.0.1:55513",
+    "exit": {
+      "code": null,
+      "signal": "SIGTERM"
+    },
+    "http_unavailable": true,
+    "stopped_at": "2026-09-29T01:55:11.978Z"
+  },
+  "development_attempts": [
+    {
+      "scenario": "wrong-delivery",
+      "deal_id": "3b39ae6f-e92b-4b33-9200-8bf8daf512b9",
+      "reason": "Missing purchase intent in demo harness; no signed funding"
+    }
+  ],
+  "buyer_refund_filesystem_isolated": true,
+  "preview_gate": {
+    "status": "PASS",
+    "no_sample_signed_operations": 0,
+    "wrong_sample_signed_operations": 0,
+    "origin_deal_id": "114cdf27-1d65-4cbc-8c17-84c24b06e7e7"
+  },
+  "chain_limit_check": {
+    "status": "PASS",
+    "kind": "on-chain staticCall rejection; no gas or transaction",
+    "per_deal_attempt_minor": 201
+  },
+  "results": [
+    {
+      "scenario": "normal",
+      "id": "17fdc872-f67c-449e-8114-fec7614c0b97",
+      "state": "SETTLED"
+    },
+    {
+      "scenario": "over-limit",
+      "id": "9760390d-ecf0-4074-be03-70f9f86b364d",
+      "state": "BLOCKED"
+    },
+    {
+      "scenario": "wrong-delivery",
+      "id": "114cdf27-1d65-4cbc-8c17-84c24b06e7e7",
+      "state": "REFUNDED"
+    },
+    {
+      "scenario": "preview-first",
+      "id": "d1bd3db5-2683-4f8b-ba7a-ca3eb8137b3f",
+      "state": "SETTLED"
+    },
+    {
+      "scenario": "app-off",
+      "id": "0b827484-8e65-41c2-81d4-3e11c518023b",
+      "state": "REFUNDED"
+    }
+  ],
+  "model_calls": [
+    {
+      "flow_name": "Buyer offer content review",
+      "model": "qwen3-32b",
+      "request_id": "chat-664ba3a40ab44103a55170fde278910a",
+      "prompt_tokens": 869,
+      "completion_tokens": 528,
+      "total_tokens": 1397,
+      "start_time": "2026-09-29T01:46:14.948Z",
+      "first_token_time": null,
+      "end_time": "2026-09-29T01:46:22.422Z",
+      "latency_ms": 7475,
+      "tool_called": "review_offers",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x07bf65d985dc6516f1ca64b192a988974c732d389612f48e6ea5daad620a18f1",
+      "streaming": false
+    }
+  ],
+  "limitations": [
+    "Operator provisioned test assets; buyer and suppliers are simulated commercial participants.",
+    "Buyer signs deposit and authority separately; controller runtime has no buyer key.",
+    "Trusted off-chain policy/delivery verifier; blockchain does not establish source truth.",
+    "Refund returns to buyer wallet and does not replenish gross allocation allowance.",
+    "Current run uses confirmation finality until separately verified as finalized.",
+    "No actual human responses or customer interviews."
+  ]
+}

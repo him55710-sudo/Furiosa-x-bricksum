@@ -1,5 +1,5 @@
 {
-  "name": "gwdc-control-memory",
+  "name": "accord-lock",
   "private": true,
   "type": "module",
   "engines": {
@@ -76,7 +76,10 @@
     "dealtrace:procurement:compile": "node scripts/compile-dealtrace-metered-vault.mjs",
     "dealtrace:procurement": "node --env-file-if-exists=.env.local scripts/run-dealtrace-procurement.mjs",
     "dealtrace:procurement:start": "node --env-file-if-exists=.env.local src/dealtrace/procurement-server.mjs",
-    "dealtrace:procurement:verify": "node scripts/verify-dealtrace-procurement.mjs"
+    "dealtrace:procurement:verify": "node scripts/verify-dealtrace-procurement.mjs",
+    "ade:spending:view": "node scripts/view-deal-escrow-spending.mjs",
+    "ade:spending:build": "node scripts/build-deal-escrow-spending.mjs",
+    "ade:spending:test": "node --test tests/deal-escrow/accord-workspace.test.mjs tests/deal-escrow/spending-site.test.mjs"
   },
   "dependencies": {
     "ethers": "^6.17.0",

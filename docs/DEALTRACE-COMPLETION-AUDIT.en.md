@@ -16,8 +16,10 @@ The live negotiation and on-chain authorization paths now run together. The earl
 | Idempotent execution and recovery | Same unit key returns identical evidence; durable transaction intent precedes broadcast; completed public recovery sent zero new transactions |
 | Optional quantity range | Code and boundary regression implemented; live flexible attempt did not converge and stopped before funding |
 | Portable workbench | Approval gate, Stop, source jump, receipt download, altered-copy INVALID, finalized public verification; mobile layout checked |
-| Full regression and builds | 176/176 local tests pass; existing workbench and evidence replay build successfully |
+| Full regression and builds | 199/199 tests pass after preserving the concurrent Accord Lock workspace; all three builds pass (176/176 before integration) |
 | Honest development usage | All five live attempts retained: 24 calls / 45,593 tokens, including truncation and non-convergence |
+
+The concurrent main changes at 5a05212 were merged without removing the Accord Lock workspace or commands. The final fingerprint includes its source and UI. The pre-integration 176-test report is retained at artifacts/dealtrace/procurement/pre-integration-tests.json.
 
 [Implementation and commands](DEALTRACE-PROCUREMENT.en.md), [actual run evidence](../artifacts/dealtrace/procurement/usage-audit.json), [new brief](../output/pdf/DealTrace-Procurement.en.pdf).
 
