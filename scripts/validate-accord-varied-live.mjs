@@ -6,7 +6,7 @@ import {parseSource} from '../web/spending/workspace-model.mjs';
 import {LiveKilnClient} from '../src/accord/live-kiln.mjs';
 if(!process.argv.includes('--live'))throw Error('Explicit --live required; actual paid Kiln only.');
 if(!process.env.KILN_API_KEY)throw Error('KILN_API_KEY_REQUIRED');
-const maxTokens=Number(process.argv.find(a=>a.startsWith('--ceiling='))?.slice(10)??1200);
+const maxTokens=Number(process.argv.find(a=>a.startsWith('--ceiling='))?.slice(10)??2400);
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7).split(',').map(Number);
 if(only&&(!only.length||only.some(n=>!Number.isInteger(n)||n<1||n>20)||new Set(only).size!==only.length))throw Error('CASE_SELECTION');
 const digest=x=>keccak256(toUtf8Bytes(JSON.stringify(x)));
@@ -51,6 +51,6 @@ for(const c of cases.filter(c=>!only||only.includes(c.id))){
  console.log(JSON.stringify({case:c.id,feasible:c.feasible,converged:!!agreement,price:agreement?.terms.price,error,calls:usage.length}));
 }
 const total=key=>report.results.flatMap(r=>r.usage).reduce((sum,u)=>sum+(u[key]??0),0);
-report.summary={cases:report.results.length,feasible:cases.filter(c=>c.feasible).length,converged:report.results.filter(r=>r.converged).length,signedPolicyViolations:report.results.filter(r=>r.signedPolicyViolation).length,invalidOutputs:report.results.reduce((n,r)=>n+r.invalidOutputs,0),wrongAcceptanceProposals:report.results.reduce((n,r)=>n+r.wrongAcceptanceProposals,0),policyViolationProposals:report.results.reduce((n,r)=>n+r.policyViolationProposals,0),calls:report.results.reduce((n,r)=>n+r.calls,0),inputTokens:total('prompt_tokens'),outputTokens:total('completion_tokens'),totalTokens:total('total_tokens'),apiLatencyMs:total('latency_ms'),missingUsage:report.results.flatMap(r=>r.usage).filter(u=>u.total_tokens==null).length,unauthorizedSettlements:null};
+report.summary={cases:report.results.length,feasible:report.results.filter(r=>r.feasible).length,converged:report.results.filter(r=>r.converged).length,signedPolicyViolations:report.results.filter(r=>r.signedPolicyViolation).length,invalidOutputs:report.results.reduce((n,r)=>n+r.invalidOutputs,0),wrongAcceptanceProposals:report.results.reduce((n,r)=>n+r.wrongAcceptanceProposals,0),policyViolationProposals:report.results.reduce((n,r)=>n+r.policyViolationProposals,0),calls:report.results.reduce((n,r)=>n+r.calls,0),inputTokens:total('prompt_tokens'),outputTokens:total('completion_tokens'),totalTokens:total('total_tokens'),apiLatencyMs:total('latency_ms'),missingUsage:report.results.flatMap(r=>r.usage).filter(u=>u.total_tokens==null).length,unauthorizedSettlements:null};
 report.status='NEGOTIATION_COMPLETE_FINANCIAL_PENDING';report.completedAt=new Date().toISOString();report.sourceUnchanged=source.every(f=>createHash('sha256').update(readFileSync(f.path)).digest('hex')===f.sha256);save();
 console.log(JSON.stringify({report:`${dir}/report.json`,summary:report.summary}));
