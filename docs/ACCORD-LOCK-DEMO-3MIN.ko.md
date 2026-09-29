@@ -1,18 +1,65 @@
-# Accord Lock — Track B 최종 3분 시연 계획
+# Accord Lock · Track B · 2분 45초 촬영
 
-[영문 기준 원고](ACCORD-LOCK-DEMO-3MIN.en.md) · [두 정지 실행의 원본 기록](../artifacts/accord-lock/track-b-stops.json) · [공개 실행 보고서](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json)
+**최대 3분, 목표 165초.** 2분 30초 이상이고 180초 상한에 15초 여유를 둔다. 새 기능 소개보다 두 독립 실행의 중단과 합의 원리를 우선한다.
 
-목표 길이 2분 55초, 최대 3분. 화면에 `RUN 1`, `RUN 2`, `STOPPED`, 실제 엔진 상태 `BLOCKED` 및 이유 코드를 반드시 표시한다. 이전 영상은 과거 버전의 역사적 자료다.
+실행: `pnpm install --frozen-lockfile`, `pnpm ade:spending:view`, `http://127.0.0.1:3440/#demo`. 이번 격리 체크아웃의 검증 서버는 3443 포트다. PowerShell에서 `$env:ADE_SPENDING_PORT='3443'; pnpm ade:spending:view`로 재실행할 수 있다.
 
-| 시간 | 화면과 설명 |
-|---|---|
-| **0:00–0:15 문제** | 인간 예산 40, 협상된 Deal 20, 청구 25. “예산 안의 금액도 합의한 거래가 아니면 지급할 수 없습니다.” |
-| **0:15–0:50 RUN 1** | [브라우저 샘플](https://agent-spending-firewall.vercel.app/)에서 예산 40, 거래당 한도 30, Meridian의 35 제안과 남은 `Sample offer blocked` 활동 로그를 보여준다. 별도 [엔진 실행 기록](../artifacts/accord-lock/track-b-stops.json)의 `MAX_SINGLE`, `POLICY_CHECKED`, `TRANSACTION_BLOCKED`를 보여준다. 이 기록에서는 Kiln 호출·자금 잠금·지급·Deal 거래가 모두 0이다. |
-| **0:50–1:20 RUN 2** | 허용 판매자 A/B/C와 등록되었으나 허용되지 않은 D의 20 제안을 [두 번째 실행 기록](../artifacts/accord-lock/track-b-stops.json)에서 보여준다. `SELLER_ALLOWED` 실패, `BLOCKED`, `TRANSACTION_BLOCKED`를 눈에 띄게 둔다. Kiln 호출·자금 잠금·지급·Deal 거래가 모두 0이다. 브라우저 셀러 선택 화면이 아니라 엔진 기록임을 말한다. |
-| **1:20–1:40 사람의 Stop** | 미리 20을 잠근 브라우저 작업에서 **STOP AGENT**를 누른다. 새 지출 권한 중단과 기존 약정 20 유지를 보여준다. 이는 해당 작업의 로컬 권한 취소이며 전역 온체인 취소가 아니다. |
-| **1:40–2:30 실제 Kiln + Sepolia** | [공개 V2 보고서](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json)의 Kiln 5회, 22→20 협상, [25 청구 실패 거래](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59), [20 정산](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f), [판매자 출금](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc)을 보여준다. 브라우저는 로컬·규칙 기반, 공개 증거는 실제 Kiln·Sepolia 실행으로 서로 다른 런타임과 거래다. |
-| **2:30–3:00 증거 요약** | 한 화면에 정지 2회, Kiln 5회, 입력 4,145·출력 3,745 토큰, Sepolia 거래 5개, [finalized 47개 검증](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json)을 표시한다. “Accord Lock makes the negotiated agreement the boundary for agent payment.” |
+1920×1080, 배율 100%, Demo assist를 켠다. 작업 이름을 정확히 RUN 1 — Budget boundary, RUN 2 — Agreement boundary로 쓴다. **Run 1을 고치지 말고 차단 상태로 남긴 뒤 새 Task를 만든다.** 두 Task ID와 두 중단 이벤트를 확인한다.
 
-정지 사례는 말로만 주장하지 않고 보존된 이벤트를 보여준다. Sepolia의 실패 거래는 컨트랙트 집행 증거이며 지급 성공으로 표현하지 않는다.
+| 시간 | 조작/장면 | 원리 |
+|---|---|---|
+| 00:00–00:12 | 첫 화면 40 / 20 / 25 | 예산과 합의는 다름 |
+| 00:12–00:43 | Sample → 이름 RUN 1 → Create → Request offers → STOP | 35 > 건당 30, 예치 전 차단과 기록 |
+| 00:43–01:15 | 새 Sample → 이름 RUN 2 → Create → Request offers → Atlas → Counteroffer 20 | 서로 다른 Task, 22 → 20 합의 |
+| 01:15–01:35 | Approve & lock → Run worker | 20 잠금, 실제 로컬 데이터 작업 |
+| 01:35–02:00 | 두 번째 STOP, 40 / 30 / 20 / 25 비교 | 25는 예산 이내지만 합의 밖, 지급 서명 0 |
+| 02:00–02:20 | Correct to 20 → Pay → Verify → Export | 정확한 합의 금액만 지급, 영수증 유지 |
+| 02:20–02:45 | Evidence library → Kiln/서명된25 revert/20 지급·출금 | 별도 공개 실증의 5회 호출·5개 tx·47검사 |
 
-세 재구성 대본은 합성 평가이며 실제 사람 이해도 검증으로 집계하지 않는다. 실제 최초 사용자 응답은 0명이다.
+## 읽을 대본
+
+### 00:00–00:12 · 문제
+
+예산이 사십이고 합의는 이십인데, 판매자가 이십오를 청구했다면 지급해도 될까요? 어코드 락은 예산뿐 아니라 합의한 금액을 결제의 경계로 만듭니다.
+
+### 00:12–00:43 · RUN 1
+
+첫 번째 실행입니다. 리서치 데이터 작업의 예산은 사십, 건당 한도는 삼십입니다. 제안을 요청하면 삼십오짜리 제안이 범위를 넘습니다. 정책이 서명 전에 중단합니다. 위쪽에 스톱 표시와 실제 태스크 아이디, 중단 이벤트가 보입니다. 자금을 잠그는 서명은 영 건, 판매자 지급도 영입니다. 이 작업은 차단 상태로 그대로 남겨두겠습니다.
+
+### 00:43–01:15 · 새 RUN 2와 합의
+
+이제 새 작업을 만듭니다. 왼쪽에는 첫 실행이 남아 있고, 두 번째 실행은 다른 태스크 아이디를 갖습니다. 아틀라스의 이십이 제안에 이십으로 역제안합니다. 판매자가 받아들이면 합의 금액은 이십입니다. 예산 사십과 건당 한도 삼십은 그대로입니다. 이 화면의 워커는 규칙 기반이며, 실제 킬른 호출과 공개 체인 증거는 마지막에 별도로 보여드립니다.
+
+### 01:15–01:35 · 잠금과 작업
+
+구매자가 승인하면 합의한 이십만 에스크로에 잠깁니다. 워커를 실행해 네 분기의 데이터를 정리하고, 원문과 납품 결과를 확인합니다. 하지만 시연 입력으로 청구한 금액은 이십오입니다. 결과가 맞아도 청구가 합의와 다르면 지급할 수 없습니다.
+
+### 01:35–02:00 · RUN 2 중단
+
+두 번째 실행의 중단입니다. 이십오는 예산 사십보다 작고, 건당 한도 삼십보다도 작습니다. 그래도 합의한 이십과 다르기 때문에 지급을 막습니다. 자금은 잠긴 상태로 유지되고 판매자에게 나간 돈은 없습니다. 중단 이유와 이벤트 아이디가 기록됩니다. 이것이 예산만 확인하는 결제와의 차이입니다.
+
+### 02:00–02:20 · 수정 후 지급
+
+청구를 합의 금액 이십으로 수정합니다. 납품과 청구가 모두 일치할 때만 지급을 승인합니다. 로컬 체인 영수증을 검증하고 내보낼 수 있습니다. 앞선 두 실행의 중단 기록은 그대로 남습니다.
+
+### 02:20–02:45 · Kiln과 Sepolia 증거
+
+별도의 공개 실증입니다. 실제 킬른 호출 다섯 번으로 이십이에 이십을 역제안했고, 양측이 같은 합의에 서명했습니다. 세폴리아 계약은 서명된 이십오 청구도 거절했습니다. 수정한 이십은 정산과 출금을 마쳤고, 독립 검증 사십칠 항목이 통과했습니다. 어코드 락은 무엇을 합의했고 왜 그 금액이 움직였는지 증거로 남깁니다.
+
+## 조작 속도와 시각화
+
+- 커서 이동 약 0.15초, 클릭 피드백 확인 약 0.2초. 같은 버튼 위에서 몇 초씩 기다리지 않는다.
+- 판단 결과는 읽을 시간을 준다. RUN 1은 약 15초 이상, RUN 2 청구 불일치는 약 20초 확보한다.
+- 동작이 끝나는 시점을 기다린다. 확인되지 않은 결제를 화면 전환으로 숨기지 않는다.
+- Demo assist의 상단 패널은 현재 Task ID와 실제 이벤트를 사용한다. 예산/건당 한도/합의/청구를 동시에 보여준다.
+- 브라우저 차단은 앱 검사다. Sepolia의 25 거절은 별도 공개 실행의 컨트랙트 revert다. 두 체인과 거래를 같은 것으로 말하지 않는다.
+- 로컬 거래 단위는 1 unit = 1 local gwei. 공개 실증은 1 DEMO = 100 Sepolia gwei. 현금 가격이나 매출로 표현하지 않는다.
+- 공개 실증의 검수자는 신뢰 대상이고, 독립 공급자·유료 고객은 아직 없다. 발표에서 근거 없는 우월성이나 시장 검증을 추가하지 않는다.
+
+## 재현 및 촬영
+
+`node scripts/record-track-b.mjs`는 빠르게 두 실행·수정·검증·내보내기를 확인하고 스크린샷과 실행 기록을 저장한다. `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/narrate-track-b.ps1`로 합성 음성을 만든 뒤 `node scripts/record-track-b.mjs --record`로 165초 연속 녹화와 음성 결합을 수행한다. 기본 촬영 서버는 3443이며 `ADE_SPENDING_ORIGIN`으로 지정할 수 있다. 실제 새 로컬 테스트 작업을 만들지만 공개 체인이나 유료 Kiln을 호출하지 않는다.
+
+공유용 영상의 음성은 Microsoft Heami 합성 음성이다. 직접 낭독한 음성으로 교체하려면 같은 구간을 유지한다. 주최 측에 제출할 최종 업로드 파일 길이를 다시 확인한다.
+
+촬영 도구 의존성: Playwright와 Microsoft Edge, Windows System.Speech 한국어 음성, FFmpeg가 필요하다. `ADE_FFMPEG`에 FFmpeg 실행 파일 경로를 지정하거나 Python 환경에 `imageio-ffmpeg`를 설치한다. `ADE_PYTHON`으로 Python 경로를 지정할 수 있다. 최종 제공 MP4를 재생할 때에는 이 도구들이 필요 없다.

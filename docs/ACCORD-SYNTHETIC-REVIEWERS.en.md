@@ -4,7 +4,7 @@
 
 # Accord Lock — Synthetic Reviewer Reconstruction
 
-**Status:** Synthetic evaluation generated for demonstration purposes.  
+**Status:** Synthetic evaluation generated for demonstration purposes.<br>
 **This is not a real human usability study and must not be presented as one.**
 
 ## Scenario shown to reviewers
@@ -196,7 +196,7 @@ Matches the signed Deal and verified delivery.
 
 # Key takeaway
 
-> **Budget tells the agent how far it may go.  
+> **Budget tells the agent how far it may go.<br>
 > The signed Deal tells the system what this specific payment is actually allowed to be.**
 
 Accord Lock preserves the chain from:

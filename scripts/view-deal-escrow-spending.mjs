@@ -4,7 +4,7 @@ import {createWorkspace} from '../src/accord/workspace.mjs';
 import {workspaceApp} from '../src/accord/http.mjs';
 const manifest=buildSpendingSite();
 const port=Number(process.env.ADE_SPENDING_PORT??3440);
-const workspace=await createWorkspace();
+const workspace=await createWorkspace({directory:process.env.ADE_WORKSPACE_DIR??'data/private/accord-workspace'});
 const app=workspaceApp({workspace,port,root:path.resolve('dist-spending'),files:[...manifest.files.map(f=>f.path).filter(p=>p!=='vercel.json'),'evidence/site-manifest.json']});
 const server=app.listen(port,'127.0.0.1',()=>console.log(`Accord Lock workspace: http://127.0.0.1:${port} · Local EVM · no real funds`));
 server.on('error',async error=>{console.error('WORKSPACE_LISTEN_FAILED:'+error.code);await workspace.close();process.exitCode=1;});
