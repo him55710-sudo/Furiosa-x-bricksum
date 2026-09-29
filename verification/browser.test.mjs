@@ -47,7 +47,12 @@ test(title('BROWSER-001'),{timeout:150000},async t=>{
     await drawer.getByText('변조 / 불일치',{exact:true}).waitFor();await page.screenshot({path:path.join(dir,'browser-tamper.png'),fullPage:true});
     await page.getByRole('button',{name:'거래 상세 닫기'}).click();
     await page.getByRole('button',{name:'에이전트 예산',exact:true}).click();
+    // Polling can render local STOPPED before the revoke transaction is mined.
+    // Require the stop response and confirmed receipt before checking chain state.
+    const stopping=page.waitForResponse(response=>response.url()===`${http.origin}/api/sessions/${bundle.session.id}/stop`&&response.request().method()==='POST');
     await page.getByRole('button',{name:'중지',exact:true}).click();
+    const stopped=await stopping;assert.equal(stopped.status(),200);
+    assert.equal((await stopped.json()).revocation?.status,1,'stop must return a mined successful revocation');
     await page.getByText('중지됨',{exact:true}).waitFor();
     assert.equal(await l.chain.vault.active(bundle.session.id),false);
     assert.deepEqual(errors,[],'browser runtime errors');
