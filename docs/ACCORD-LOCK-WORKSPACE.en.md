@@ -2,6 +2,8 @@
 
 Accord Lock connects a concrete data task to a price, human spending authority, inspectable output and an escrow receipt. The English interface is a working local application. Demo assist adds guidance to that application without changing its execution.
 
+Permanent URL: https://agent-spending-firewall.vercel.app/. Share this domain, without tracking parameters.
+
 ## Vercel edition
 
 The hosted edition runs the same task workflow without installing a local server. It processes uploaded CSV/JSON data in the browser, executes the real escrow bytecode on a private browser EVM, and persists tasks and chain history in IndexedDB. It never uses public funds, sends model requests or synchronizes data between devices.
@@ -47,18 +49,18 @@ Required columns: `company`, `quarter`, `capex`, `currency`, `source_url`.
 
 Files must contain 1–1,000 rows and be smaller than 1 MB. Use 2025–2026 quarters, nonnegative finite CAPEX values, three-letter currencies and HTTP(S) citations without credentials. Duplicate company/quarter/currency observations are rejected. Quoted CSV commas and newlines are supported. Numeric comma grouping is normalized, and spreadsheet exports escape formula-like cell text.
 
-The worker normalizes supplied data; it does not retrieve arbitrary websites, parse arbitrary PDFs or independently establish the truth of imported claims. The included LG Energy Solution sample preserves the existing reference dataset's values and citations. CAPEX units belong to the dataset; payment amounts are gwei of a local native test asset, never USD.
+The worker normalizes supplied data; it does not retrieve arbitrary websites, parse arbitrary PDFs or independently establish the truth of imported claims. The included LG Energy Solution sample preserves the existing reference dataset's values and citations. CAPEX units belong to the dataset; payment amounts are labeled test units: 1 unit equals 1 local gwei, with no cash price. The public proof uses 100 gwei per DEMO, a separately disclosed scale.
 
 ## Three-minute live walkthrough
 
 | Approximate time | Operator action | What the audience sees |
 | --- | --- | --- |
-| 0:00–0:25 | Turn on Demo assist, load the sample and create the task. | A concrete research brief, four source rows and explicit spending limits. |
-| 0:25–0:55 | Request offers, select Atlas and counter with 150 gwei. | The seller's price changes after the buyer's counteroffer. No funds have moved. |
+| 0:00–0:25 | Load the sample (Demo assist turns on) and create the task. | A concrete research brief, four source rows and explicit spending limits. |
+| 0:25–0:55 | Request offers: the 35-unit sample offer is blocked. Select Atlas and counter 22 with 20. | Budget 40 and per-deal limit 30. The automatic block signs nothing; the counteroffer changes the agreement. |
 | 0:55–1:15 | Approve and lock funds, then run the worker. | A real local escrow receipt followed by an inspectable output table. |
-| 1:15–2:10 | Open a source. Set the invoice to 180 and check it. | The original and delivered values, then a blocked payment: under budget does not mean the agreed bill. |
-| 2:10–2:40 | Restore 150, check the invoice and approve payment. | Human approval, exact settlement and a transaction recorded on the local chain. |
-| 2:40–3:00 | Verify the receipt and download the result. | A useful file and evidence that survives a refresh. |
+| 1:15–2:10 | Open a source. The sample automatically submits an authored invoice for 25. | The original and delivered values, then a blocked payment: inside both limits does not mean the agreed bill. |
+| 2:10–2:40 | Choose Use agreed invoice: 20, then approve payment. | Human approval, exact settlement and a transaction recorded on the local chain. |
+| 2:40–3:00 | Verify/export the receipt, then open the matching Sepolia proof. | A useful file, a persistent private-chain receipt and the separate 5-call / 5-transaction / 47-check public proof. |
 
 These are presentation suggestions, not timers. The operator controls the pace. For a failed-delivery demonstration, use **Replace delivery** to alter a value or remove a citation, validate it, then choose **Reject & refund**.
 
@@ -84,3 +86,9 @@ pnpm ade:spending:build
 The test suite covers input parsing, policy blocks without a transaction, negotiated price, output matching, invalid deliveries, invoice mismatch, real local payment/refund verification, lost-response recovery without duplicate transactions, restart persistence, English rendering and escaping, same-origin session checks, and allowlisted static serving from a managed checkout.
 
 The local API and rendering modules are covered by the local suite. The browser suite additionally executes the exact Ganache web bundle with IndexedDB, including interruptions after mined transactions, payment/refund verification, reload persistence, stale decisions and private-key exclusion from exported receipts. The deployed HTTPS edition is checked through browser interactions. The earlier localhost browser restriction was not bypassed.
+
+## First-use and CI feedback incorporated
+
+The sample is explicitly authored, uses a 40 budget / 30 per-deal cap, and records its 35-unit offer block and 25-unit invoice block. Ordinary uploaded tasks do not inject an overcharge. A sample completion links directly to the 40 / 20 / 25 public proof, retaining token usage by flow, real transaction hashes and the finalized verdict. The earlier escrow scenarios remain under a separate history disclosure.
+
+The hosted-artifact test builds into a fresh temporary directory with an explicit BUILD_FIXTURE test summary. It never reads a pre-existing dist or a historical PASS report. CI builds the actual release after the current complete suite produces its report. A missing public-proof summary shows a loading failure rather than a fabricated verification result.

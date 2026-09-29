@@ -4,6 +4,7 @@ import {mkdtempSync,cpSync,mkdirSync,readFileSync,writeFileSync,rmSync,readdirSy
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {simulatePolicy,minorToWei,formatNativeAmount,gweiInputToMinor} from '../../web/spending/policy-simulator.mjs';
+import {PROCUREMENT_RUN} from '../../scripts/accord-public-proof.mjs';
 import {buildSpendingSite,PUBLIC_EVIDENCE} from '../../scripts/build-deal-escrow-spending.mjs';
 const proposal={priceMinor:180,remainingMinor:300,perDealMinor:200,allowedSeller:true,active:true,previewRequired:false,previewPassed:false};
 test('native currency display matches the recorded funding principal without inventing balances',()=>{
@@ -35,10 +36,10 @@ test('passing a preview cannot override a financial restriction',()=>{
  assert.equal(simulatePolicy({...proposal,previewRequired:true,previewPassed:true}).allowed,true);
  assert.equal(simulatePolicy({...proposal,priceMinor:201,previewRequired:true,previewPassed:true}).allowed,false);
 });
-function fixture(t){const root=mkdtempSync(path.join(tmpdir(),'spending-site-'));t.after(()=>{assert.ok(path.resolve(root).startsWith(path.resolve(tmpdir())+path.sep+'spending-site-'));rmSync(root,{recursive:true,force:true});});cpSync('web/spending',path.join(root,'web/spending'),{recursive:true});mkdirSync(path.join(root,'artifacts/deal-escrow/spending-proof'),{recursive:true});for(const name of PUBLIC_EVIDENCE)cpSync(`artifacts/deal-escrow/spending-proof/${name}.json`,path.join(root,`artifacts/deal-escrow/spending-proof/${name}.json`));writeFileSync(path.join(root,'artifacts/deal-escrow/tests.json'),JSON.stringify({status:'PASS',tests:1,passed:1}));return root;}
+function fixture(t){const root=mkdtempSync(path.join(tmpdir(),'spending-site-'));t.after(()=>{assert.ok(path.resolve(root).startsWith(path.resolve(tmpdir())+path.sep+'spending-site-'));rmSync(root,{recursive:true,force:true});});cpSync('web/spending',path.join(root,'web/spending'),{recursive:true});mkdirSync(path.join(root,'artifacts/deal-escrow/spending-proof'),{recursive:true});for(const name of PUBLIC_EVIDENCE)cpSync(`artifacts/deal-escrow/spending-proof/${name}.json`,path.join(root,`artifacts/deal-escrow/spending-proof/${name}.json`));writeFileSync(path.join(root,'artifacts/deal-escrow/tests.json'),JSON.stringify({status:'PASS',tests:1,passed:1}));const dir=`artifacts/dealtrace/procurement/runs/${PROCUREMENT_RUN}`;mkdirSync(path.join(root,dir),{recursive:true});for(const name of ['report.json','finalized-verification.json'])cpSync(path.join(dir,name),path.join(root,dir,name));cpSync('artifacts/dealtrace/procurement/usage-audit.json',path.join(root,'artifacts/dealtrace/procurement/usage-audit.json'));return root;}
 test('deployment publishes an explicit file allowlist, never private files or arbitrary evidence',t=>{
  const root=fixture(t);writeFileSync(path.join(root,'artifacts/deal-escrow/spending-proof/private-key.json'),'DO_NOT_PUBLISH');writeFileSync(path.join(root,'web/spending/.env'),'DO_NOT_PUBLISH');
- const manifest=buildSpendingSite(root);assert.equal(manifest.files.length,20);assert.equal(manifest.files.some(f=>/private|\.env/.test(f.path)),false);assert.equal(readdirSync(path.join(root,'dist-spending/evidence')).includes('private-key.json'),false);assert.equal(manifest.files.every(f=>f.sha256.length===64),true);
+ const manifest=buildSpendingSite(root);assert.equal(manifest.files.length,24);assert.equal(manifest.files.some(f=>/private|\.env/.test(f.path)),false);assert.equal(readdirSync(path.join(root,'dist-spending/evidence')).includes('private-key.json'),false);assert.equal(manifest.files.every(f=>f.sha256.length===64),true);
 });
 
 test('public test summary excludes host paths while preserving the full local report',t=>{
@@ -52,3 +53,5 @@ test('public test summary excludes host paths while preserving the full local re
 test('public build refuses inconsistent failure origins instead of showing a successful memory loop',t=>{
  const root=fixture(t),file=path.join(root,'artifacts/deal-escrow/spending-proof/preview-first.json'),bundle=JSON.parse(readFileSync(file));bundle.control.origin_deal_id='unrelated';writeFileSync(file,JSON.stringify(bundle));assert.throws(()=>buildSpendingSite(root),/MEMORY_ORIGIN_MISMATCH/);
 });
+
+test('public proof refuses inconsistent settlement amounts',t=>{const root=fixture(t),file=path.join(root,`artifacts/dealtrace/procurement/runs/${PROCUREMENT_RUN}/report.json`),report=JSON.parse(readFileSync(file));report.paid_wei='1';writeFileSync(file,JSON.stringify(report));assert.throws(()=>buildSpendingSite(root),/PROCUREMENT_PROOF_BINDING/);});

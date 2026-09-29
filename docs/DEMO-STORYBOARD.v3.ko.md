@@ -1,3 +1,5 @@
+> 이전 버전 자료입니다. 현재 제품·데모·발표는 [Accord Lock 발표 원고](DEALTRACE-PITCH.ko.md)와 [워크스페이스 안내](ACCORD-LOCK-WORKSPACE.en.md)를 기준으로 합니다. 아래 과거 실행 기록은 당시 값 그대로 보존합니다.
+
 # 데모 v3 — 결제 직후 연결을 끊어보세요
 
 2026-09-28 / **구매 복구 구현용 발표 대본**. 구현은 [구매 복구 실행서](PURCHASE-IMPLEMENTATION.ko.md), 실제 숫자는 [공개 실행 증빙](../artifacts/purchase-sepolia/README.md)을 따른다. 아래 시간은 발표 배분이며 실측 처리시간이 아니다. 별도 Agent Deal Escrow의 release/refund 시나리오와 구별한다.

@@ -4,8 +4,9 @@ import {createHash} from 'node:crypto';
 import {build} from 'vite';
 import {buildSpendingSite} from './build-deal-escrow-spending.mjs';
 import {PUBLIC_CSP,vercelAllowlist} from '../src/deal-escrow/public-files.mjs';
-const root=process.cwd(),out=path.join(root,'dist-vercel');
-const proof=buildSpendingSite(root,{outDir:'data/private/accord-hosted-staging'}),stage=path.join(root,'data/private/accord-hosted-staging');
+export async function buildHostedSite(root=process.cwd(),{outDir='dist-vercel',stagingDir='data/private/accord-hosted-staging',testSummary}={}){
+const out=path.resolve(root,outDir),stage=path.resolve(root,stagingDir);
+const proof=buildSpendingSite(root,{outDir:stage,testSummary});
 const result=await build({configFile:false,root:path.join(root,'web/spending'),publicDir:false,resolve:{alias:{'./workspace-client.mjs':path.join(root,'web/spending/browser-workspace.mjs')}},build:{outDir:out,emptyOutDir:false,target:'es2022',sourcemap:false,rollupOptions:{input:path.join(root,'web/spending/index.html')}}});
 const files=result.output.map(item=>item.fileName);
 function copy(source,destination){mkdirSync(path.dirname(path.join(out,destination)),{recursive:true});copyFileSync(source,path.join(out,destination));files.push(destination);}
@@ -19,3 +20,7 @@ const manifest={product:'accord lock',mode:'BROWSER_EVM',scope:'Data processing 
 mkdirSync(path.join(out,'evidence'),{recursive:true});writeFileSync(path.join(out,'evidence/hosted-manifest.json'),JSON.stringify(manifest,null,2));files.push('evidence/hosted-manifest.json');
 writeFileSync(path.join(out,'.vercelignore'),vercelAllowlist(files));
 console.log(JSON.stringify({status:'BUILT',out,mode:manifest.mode,files:files.length}));
+
+return manifest;
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===path.resolve('scripts/build-accord-vercel.mjs'))await buildHostedSite();

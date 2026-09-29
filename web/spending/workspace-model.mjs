@@ -33,7 +33,7 @@ export function normalizeRows(rows){
  return rows.map(r=>({...r,company:String(r.company).trim().replace(/\s+/g,' '),quarter:String(r.quarter).trim().toUpperCase(),currency:String(r.currency).trim().toUpperCase(),capex:numeric(r.capex),source_url:String(r.source_url).trim()}));
 }
 export function offersFor(count){return [
- {seller:'seller-a',name:'Atlas',role:'Source-aware data worker',price:100+count*20,floor:80+count*15,description:'Normalize the table, preserve source references and compare every result with your input.'},
- {seller:'seller-b',name:'Meridian',role:'Lean data worker',price:80+count*15,floor:65+count*12,description:'Normalize the same fields in a compact output. All acceptance checks still apply.'}
+ {seller:'seller-a',name:'Atlas',role:'Source-aware data worker',price:14+count*2,floor:12+count*2,description:'Normalize the table, preserve source references and compare every result with your input.'},
+ {seller:'seller-b',name:'Meridian',role:'Lean data worker',price:27+count*2,floor:18+count*2,description:'Normalize the same fields in a compact output. All acceptance checks still apply.'}
  ];}
 export function csv(rows){const keys=[...columns,...['unit','source_page','source_sha256','source_label','source_value'].filter(k=>rows.some(r=>r&&Object.hasOwn(r,k)))];const cell=v=>{let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};return [keys.join(','),...rows.map(r=>keys.map(k=>cell(r?.[k])).join(','))].join('\r\n');}

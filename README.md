@@ -1,11 +1,25 @@
-# accord lock
+# Accord Lock
 
-**English task workspace:** Run `pnpm install --frozen-lockfile` and `pnpm ade:spending:view`, then open [Accord Lock](http://127.0.0.1:3440/#workspace). Upload a CSV/JSON table, request and negotiate offers, approve escrow, run a local data worker, inspect the result and invoice, then pay or refund. Tasks and transaction receipts persist on this computer. [Workspace guide and three-minute walkthrough](docs/ACCORD-LOCK-WORKSPACE.en.md).
+**Accord Lock helps research teams pay worker agents only for CAPEX table work that matches their agreement and human spending authority, with a receipt explaining the outcome.**
 
-**Demo assist** provides optional presenter prompts inside the same usable workspace. Every stage advances through your actions. The workspace uses deterministic local workers and a private EVM with test funds. The historical Sepolia evidence and the separate DealTrace V2 implementation below remain available; they are not the workspace's current transactions.
+[Open the permanent demo](https://agent-spending-firewall.vercel.app/) · [Public Kiln / Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [Five-minute pitch](docs/DEALTRACE-PITCH.ko.md) · [Workspace guide](docs/ACCORD-LOCK-WORKSPACE.en.md)
 
-**Vercel edition:** `pnpm ade:hosted:build` produces a standalone hosted client in `dist-vercel`. It runs data processing and real private-EVM escrow in the visitor's browser, with IndexedDB persistence and no local installation. Work stays in that browser; no cloud sync or public funds. `pnpm ade:hosted:test` verifies the browser bundle. The separate `ade:spending:build` output still requires its local service. Pushing source alone does not update manually published Vercel deployments or videos.
+**One product, two explicit execution paths:** Accord Lock is the usable workspace. DealTrace is the signed agreement and public settlement proof path. They demonstrate the same payment boundary with different runtimes.
 
+| | Interactive browser demo | Recorded DealTrace public proof |
+|---|---|---|
+| Work | Normalize four quarterly CAPEX rows | Extract the pinned quarterly CAPEX references |
+| Negotiation | Authored worker pricing rules; no live model calls | Five actual Kiln `qwen3-32b` calls, 22 → 20 |
+| Main example | Budget 40, per-deal limit 30, agreement 20, invoice 25 blocked | Budget 40, agreement 20, genuinely signed invoice 25 reverted |
+| Enforcement | Application checks before signing; trusted private-EVM controller | Bilateral signed terms and authority checked by the Sepolia V2 contract |
+| Outcome | Correct to 20, pay, verify and export a private-chain receipt | Correct 20 settled and withdrawn; 47 finalized verification checks |
+| Units | 1 test unit = 1 local gwei | 1 DEMO = 100 Sepolia gwei; gas separately recorded |
+
+Neither unit has a cash price. The browser demo's **35-unit offer** is automatically blocked first against the 30-unit per-deal limit. Select Atlas, negotiate 22 down to 20, lock funds and run the worker. The authored sample bill is 25: **inside both spending limits, but outside the agreement**. Correct it to 20 and finish at the receipt and public-proof links. Every step is an operator action; no autoplay or wallet signup.
+
+Only source-linked quarterly CAPEX table work is supported in this first-use experience. It is not a general marketplace or production financial custody service. Imported tables are compared with their input; source URLs do not certify factual truth.
+
+**Run locally:** `pnpm install --frozen-lockfile`, then `pnpm ade:spending:view` and open http://127.0.0.1:3440. **Hosted build:** `pnpm ade:hosted:build` creates the self-contained `dist-vercel` browser client. `pnpm ade:hosted:test` builds its test artifact in an isolated temporary directory. Browser work persists in IndexedDB on the same origin; export receipts before clearing storage. Source pushes do not automatically publish this manually managed Vercel project.
 
 ### The agreement decides what gets paid.
 
@@ -17,7 +31,7 @@ The bill fits the budget. **The Sepolia contract still rejects it.** The correct
 
 This is our narrow problem: when agents negotiate changing work, a budget alone cannot tell you what they actually agreed to buy.
 
-[One-page brief](output/pdf/DealTrace-Procurement.en.pdf) · [Run the workbench](#try-it) · [Technical design](docs/DEALTRACE-PROCUREMENT.en.md) · [Finalized public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json)
+[Public-proof technical brief](output/pdf/DealTrace-Procurement.en.pdf) · [Run the workbench](#try-it) · [Technical design](docs/DEALTRACE-PROCUREMENT.en.md) · [Finalized public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json)
 
 ## The first user
 
@@ -60,7 +74,7 @@ The outward message includes qualitative prose and structured commercial terms. 
 | [Live fixed job on Sepolia](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) | 5 actual Kiln calls; 22 → 20 negotiation; 5 public transactions; signed 25 bill reverted; 20 withdrawn |
 | [Independent public verification](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) | **47 checks, VALID at finalized block 11808905** |
 | [Hardened V3 bundle](artifacts/dealtrace/procurement/runs/11ba8d29-1b86-4cb4-8758-3ccb95fb89e8/report.json) | 5 actual Kiln calls; seller C selected; 27.40 maximum, 26.40 paid, 1.00 returned; 56 checks on a real local EVM |
-| [Full automated suite](artifacts/deal-escrow/tests.json) | **199/199 pass**; original workbench and evidence replay builds also pass |
+| [Full automated suite](artifacts/deal-escrow/tests.json) | **209/209 pass**; original workbench and evidence replay builds also pass |
 | [Failed live attempts and all flow usage](artifacts/dealtrace/procurement/usage-audit.json) | Both truncation and non-convergence retained; neither funded a purchase |
 
 Inspect the actual Sepolia [rejected invoice](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59), [correct settlement](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f) and [seller withdrawal](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc).
