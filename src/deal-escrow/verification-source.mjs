@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 import path from 'node:path';
 
 export function verificationSource(root=process.cwd()){
-  const files=['scripts/build-accord-vercel.mjs','scripts/accord-public-proof.mjs'];
+  const files=['scripts/benchmark-procurement-tokens.mjs','scripts/verify-procurement-boundaries.mjs','scripts/build-accord-vercel.mjs','scripts/accord-public-proof.mjs'];
   for(const file of ['contracts/DealTraceMeteredVault.sol','artifacts/dealtrace/metered-vault/contract.json','artifacts/dealtrace/metered-vault/standard-input.json','scripts/compile-dealtrace-metered-vault.mjs','scripts/run-dealtrace-procurement.mjs','scripts/verify-dealtrace-procurement.mjs','scripts/recover-dealtrace-procurement.mjs'])if(existsSync(path.join(root,file)))files.push(file);
   for(const file of ['contracts/DealTraceVault.sol','artifacts/dealtrace/vault/contract.json','artifacts/dealtrace/vault/standard-input.json','scripts/compile-dealtrace-vault.mjs','scripts/demo-dealtrace-vault.mjs','scripts/verify-dealtrace-vault.mjs'])if(existsSync(path.join(root,file)))files.push(file);
   for(const file of ['artifacts/dealtrace/vault/public-latest.json','artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/report.json'])if(existsSync(path.join(root,file)))files.push(file);

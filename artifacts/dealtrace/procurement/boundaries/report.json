@@ -1,0 +1,228 @@
+{
+  "schema": "ACCORD_PREFLIGHT_BOUNDARIES_V1",
+  "status": "PASS",
+  "generated_at": "2026-09-29T19:51:49.214Z",
+  "mode": "Actual live-enabled runner stopped before inference and chain setup; no simulated token usage",
+  "results": [
+    {
+      "scenario": "SELLER_NOT_ALLOWED",
+      "explanation": "The human permits sellers A, B and C. Seller X is requested and blocked before worker discovery.",
+      "report": {
+        "schema": "DEALTRACE_PROCUREMENT_PROOF_V1",
+        "run": "7c1c9677-d555-43b5-9c7b-d115e77bb82c",
+        "status": "STOPPED",
+        "mode": "LIVE_KILN",
+        "billing": "FIXED_ALL_OR_REFUND",
+        "source_hash": "0x03f0c372cbe3a6fbdffc8a9c1a197bd89de04601f9d7144b70b62a518832609e",
+        "started_at": "2026-09-29T19:51:48.998Z",
+        "transactions": [],
+        "usage": [],
+        "limits": [
+          "All bundled default providers are separate local processes under one operator. External endpoints require an explicit identity pin.",
+          "Search operates on the pinned source corpus; compute executes a CPU hash batch, not an internet search service or rented GPU.",
+          "The evaluator attests off-chain delivery and successful usage. Cryptography does not establish business identity or semantic truth.",
+          "Failed units and overbilling are labeled injected adversarial scenarios. All chain assets are test assets.",
+          "This run is automated validation, not a human comprehension study."
+        ],
+        "rfq": {
+          "schema": "DEALTRACE_RFQ_V1",
+          "run": "7c1c9677-d555-43b5-9c7b-d115e77bb82c",
+          "task": "Extract quarterly actual facility investment with source evidence; optionally search and process the returned records.",
+          "budget_minor": 4000,
+          "max_delivery_seconds": 600,
+          "asset": "DEMO",
+          "billing": "FIXED_ALL_OR_REFUND",
+          "items": [
+            {
+              "service": "document",
+              "units": 1,
+              "input": {
+                "periods": [
+                  "2025-Q1",
+                  "2025-Q2",
+                  "2025-Q3",
+                  "2025-Q4"
+                ],
+                "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT"
+              }
+            }
+          ],
+          "required_evidence": "ORIGINAL_SOURCE_CELLS",
+          "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+          "failed_units_billable": false
+        },
+        "authority": {
+          "allowed_seller_ids": [
+            "seller-a",
+            "seller-b",
+            "seller-c"
+          ],
+          "requested_seller_ids": [
+            "seller-x"
+          ],
+          "budget_minor": 4000,
+          "expires_at": 1790718708937,
+          "fee_reserve_minor": 0
+        },
+        "negotiation": null,
+        "model_calls": 0,
+        "error": "SELLER_NOT_ALLOWED",
+        "resume_same_run": false,
+        "financial_intents": []
+      },
+      "kiln_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "funding_transactions": 0,
+      "chain_opened": false
+    },
+    {
+      "scenario": "BUDGET_EXCEEDED",
+      "explanation": "Minimum compatible registered work is 18; an explicit fee reserve of 23 makes the all-in minimum 41, above authority 40. The reserve is not a fee transfer.",
+      "report": {
+        "schema": "DEALTRACE_PROCUREMENT_PROOF_V1",
+        "run": "b3d0bb6e-9442-4149-8934-c3d594b04729",
+        "status": "STOPPED",
+        "mode": "LIVE_KILN",
+        "billing": "FIXED_ALL_OR_REFUND",
+        "source_hash": "0x03f0c372cbe3a6fbdffc8a9c1a197bd89de04601f9d7144b70b62a518832609e",
+        "started_at": "2026-09-29T19:51:49.092Z",
+        "transactions": [],
+        "usage": [],
+        "limits": [
+          "All bundled default providers are separate local processes under one operator. External endpoints require an explicit identity pin.",
+          "Search operates on the pinned source corpus; compute executes a CPU hash batch, not an internet search service or rented GPU.",
+          "The evaluator attests off-chain delivery and successful usage. Cryptography does not establish business identity or semantic truth.",
+          "Failed units and overbilling are labeled injected adversarial scenarios. All chain assets are test assets.",
+          "This run is automated validation, not a human comprehension study."
+        ],
+        "rfq": {
+          "schema": "DEALTRACE_RFQ_V1",
+          "run": "b3d0bb6e-9442-4149-8934-c3d594b04729",
+          "task": "Extract quarterly actual facility investment with source evidence; optionally search and process the returned records.",
+          "budget_minor": 4000,
+          "max_delivery_seconds": 600,
+          "asset": "DEMO",
+          "billing": "FIXED_ALL_OR_REFUND",
+          "items": [
+            {
+              "service": "document",
+              "units": 1,
+              "input": {
+                "periods": [
+                  "2025-Q1",
+                  "2025-Q2",
+                  "2025-Q3",
+                  "2025-Q4"
+                ],
+                "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT"
+              }
+            }
+          ],
+          "required_evidence": "ORIGINAL_SOURCE_CELLS",
+          "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+          "failed_units_billable": false
+        },
+        "authority": {
+          "allowed_seller_ids": [
+            "seller-a",
+            "seller-b",
+            "seller-c"
+          ],
+          "requested_seller_ids": [
+            "seller-a",
+            "seller-b",
+            "seller-c"
+          ],
+          "budget_minor": 4000,
+          "expires_at": 1790718709029,
+          "fee_reserve_minor": 2300
+        },
+        "negotiation": null,
+        "model_calls": 0,
+        "error": "BUDGET_EXCEEDED",
+        "resume_same_run": false,
+        "financial_intents": []
+      },
+      "kiln_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "funding_transactions": 0,
+      "chain_opened": false
+    },
+    {
+      "scenario": "MANDATE_EXPIRED",
+      "explanation": "The human authority expired before any provider or chain was opened.",
+      "report": {
+        "schema": "DEALTRACE_PROCUREMENT_PROOF_V1",
+        "run": "7c4df36c-b952-466d-816a-baad245bda6a",
+        "status": "STOPPED",
+        "mode": "LIVE_KILN",
+        "billing": "FIXED_ALL_OR_REFUND",
+        "source_hash": "0x03f0c372cbe3a6fbdffc8a9c1a197bd89de04601f9d7144b70b62a518832609e",
+        "started_at": "2026-09-29T19:51:49.184Z",
+        "transactions": [],
+        "usage": [],
+        "limits": [
+          "All bundled default providers are separate local processes under one operator. External endpoints require an explicit identity pin.",
+          "Search operates on the pinned source corpus; compute executes a CPU hash batch, not an internet search service or rented GPU.",
+          "The evaluator attests off-chain delivery and successful usage. Cryptography does not establish business identity or semantic truth.",
+          "Failed units and overbilling are labeled injected adversarial scenarios. All chain assets are test assets.",
+          "This run is automated validation, not a human comprehension study."
+        ],
+        "rfq": {
+          "schema": "DEALTRACE_RFQ_V1",
+          "run": "7c4df36c-b952-466d-816a-baad245bda6a",
+          "task": "Extract quarterly actual facility investment with source evidence; optionally search and process the returned records.",
+          "budget_minor": 4000,
+          "max_delivery_seconds": 600,
+          "asset": "DEMO",
+          "billing": "FIXED_ALL_OR_REFUND",
+          "items": [
+            {
+              "service": "document",
+              "units": 1,
+              "input": {
+                "periods": [
+                  "2025-Q1",
+                  "2025-Q2",
+                  "2025-Q3",
+                  "2025-Q4"
+                ],
+                "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT"
+              }
+            }
+          ],
+          "required_evidence": "ORIGINAL_SOURCE_CELLS",
+          "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+          "failed_units_billable": false
+        },
+        "authority": {
+          "allowed_seller_ids": [
+            "seller-a",
+            "seller-b",
+            "seller-c"
+          ],
+          "requested_seller_ids": [
+            "seller-a",
+            "seller-b",
+            "seller-c"
+          ],
+          "budget_minor": 4000,
+          "expires_at": 1790711507936,
+          "fee_reserve_minor": 0
+        },
+        "negotiation": null,
+        "model_calls": 0,
+        "error": "MANDATE_EXPIRED",
+        "resume_same_run": false,
+        "financial_intents": []
+      },
+      "kiln_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "funding_transactions": 0,
+      "chain_opened": false
+    }
+  ]
+}

@@ -48,6 +48,7 @@ test('English workspace carries user decisions through real local escrow, recove
   await act('fund');assert.equal(job.status,'LOCKED');assert.equal(job.dealId,id);assert.equal(job.transactions[0].hash,tx);assert.equal(job.transactions.length,1);assert.equal(job.transactions[0].status,'CONFIRMED');
  });
  await t.test('actual worker output matches the input; invalid delivery and overcharge cannot pay',async()=>{
+  await act('stop');assert.equal(job.authorityRevoked,true);assert.equal(job.status,'LOCKED');
   await act('run');assert.equal(job.status,'REVIEW');assert.equal(job.invoice,25);assert.ok(job.events.some(e=>e.title==='Sample overcharge blocked'));assert.equal(job.validation.verified,true);assert.deepEqual(job.output,normalizeRows(job.source));
   await act('invoice',{amount:25});await assert.rejects(act('settle'),/exactly match/);assert.equal(job.transactions.length,1);
   await act('invoice',{amount:20});const good=JSON.stringify(job.output);const bad=structuredClone(job.output);bad[0].capex+=1;
@@ -67,7 +68,7 @@ test('English workspace carries user decisions through real local escrow, recove
  await t.test('English views expose real actions and escape imported data',()=>{
   const state={job:null,tasks:workspace.list(),network:workspace.network(),route:'workspace',present:false,draft:sample,sourceText:sample.sourceText,sourceName:sample.sourceName};
   for(const route of ['workspace','agents','evidence']){const html=renderWorkspace({...state,route});assert.doesNotMatch(html,/[\uac00-\ud7af]/);assert.ok(html.includes('data-action="tasks"'));}
-  const html=renderWorkspace({...state,job:{...job,title:'<img src=x onerror=alert(1)>'},present:true});assert.ok(html.includes('&lt;img'));assert.ok(html.includes('Verify on local chain'));assert.ok(html.includes('DEMO ASSIST'));
+  const html=renderWorkspace({...state,job:{...job,title:'<img src=x onerror=alert(1)>'},present:true});assert.ok(html.includes('&lt;img'));assert.ok(html.includes('Verify on local chain'));assert.ok(html.includes('aria-label="Payment boundary"'));
   const client=readFileSync('web/spending/app.mjs','utf8');assert.doesNotMatch(client,/setInterval|autoplay|requestAnimationFrame/);assert.match(client,/hash===\x27demo\x27/);
  });
  await t.test('refund rejection has a bound attestation and retries its original transaction',async()=>{
@@ -78,6 +79,10 @@ test('English workspace carries user decisions through real local escrow, recove
  await t.test('tasks and local chain receipts survive a service restart',async()=>{
   await workspace.close();workspace=null;workspace=await createWorkspace({directory});
   assert.equal(workspace.get(completedId).status,'COMPLETED');assert.equal(workspace.get(job.id).status,'REFUNDED');assert.equal((await workspace.verify(completedId)).verdict,'VALID');
+ });
+ await t.test('stopped unfunded authority cannot be revived by editing or funding',async()=>{
+  await prepare();await act('stop');assert.equal(job.authorityRevoked,true);
+  await assert.rejects(act('fund'),/authority revoked/);await assert.rejects(act('edit',sample),/authority revoked/);assert.equal(job.dealId,undefined);
  });
  await t.test('HTTP API enforces local origin and session, serves only listed files',async()=>{
   let handler;const server=createServer((req,res)=>handler(req,res));await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));

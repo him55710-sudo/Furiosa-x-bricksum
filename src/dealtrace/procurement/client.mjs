@@ -21,7 +21,7 @@ export async function startWorker(directory,config){
  const state=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{child.kill();reject(new Error('WORKER_START_TIMEOUT'));},15000);child.once('message',s=>{clearTimeout(timer);resolve(s);});child.once('exit',()=>{clearTimeout(timer);reject(new Error('WORKER_START_FAILED '+diagnostic));});});
  const client=connectProvider({id:config.id,url:`http://127.0.0.1:${state.port}`,token});
  const identity=await client.request('/identity');ensure(identity.id===config.id&&identity.role===config.role,'WORKER_IDENTITY');
- return {...client,address:identity.address,pid:identity.pid,async close(){if(child.exitCode!==null)return;await new Promise(resolve=>{const timer=setTimeout(()=>{child.kill();resolve();},5000);child.once('exit',()=>{clearTimeout(timer);resolve();});child.send('shutdown');});}};
+ return {...client,address:identity.address,pid:identity.pid,localPolicy:config.role==='seller'?config.policy:null,async close(){if(child.exitCode!==null)return;await new Promise(resolve=>{const timer=setTimeout(()=>{child.kill();resolve();},5000);child.once('exit',()=>{clearTimeout(timer);resolve();});child.send('shutdown');});}};
 }
 export async function discover(client){
  const challenge=randomUUID(),packet=await client.request('/discover',{request_id:challenge,challenge});

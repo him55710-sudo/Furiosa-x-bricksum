@@ -39,6 +39,7 @@ test('deployed browser bundle executes and persists real EVM work without a back
   assert.equal((await request('/api/workspace')).network.chainId,31338);
  });
  await t.test('source alterations and invoice mismatch block a payment',async()=>{
+  await act('stop');assert.equal(job.authorityRevoked,true);assert.equal(job.status,'LOCKED');
   await act('run');assert.equal(job.validation.verified,true);assert.equal(job.budget,40);assert.equal(job.invoice,25);assert.ok(job.invoice<job.perDeal&&job.invoice<job.budget);await assert.rejects(act('settle'),/exactly match/);assert.equal(job.transactions.length,1);assert.ok(job.events.some(e=>e.title==='Sample overcharge blocked'));await act('invoice',{amount:20});const output=JSON.stringify(job.output);
   const bad=JSON.parse(output);bad[0].unit='million';await act('delivery',{raw:JSON.stringify(bad)});await assert.rejects(act('settle'),/every check/);
   await act('delivery',{raw:'[null]'});assert.equal(job.validation.verified,false);
@@ -66,6 +67,7 @@ test('deployed browser bundle executes and persists real EVM work without a back
   await prepare();const oldRevision=job.revision;await act('counter',{price:220});await act('fund');assert.equal(job.status,'BLOCKED');assert.equal(job.dealId,undefined);
   await assert.rejects(request(`/api/tasks/${job.id}/fund`,{revision:oldRevision}),/another tab/);
   await act('edit',{...(await request('/api/sample')),title:'Corrected task'});assert.equal(job.status,'DRAFT');
+  await act('stop');await assert.rejects(request(`/api/tasks/${job.id}/fund`,{revision:job.revision}),/authority revoked/);assert.equal(job.dealId,undefined);
  });
 });
 

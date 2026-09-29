@@ -1,0 +1,156 @@
+{
+  "schema": "ACCORD_EFFICIENCY_COMPARISON_V1",
+  "status": "MEASURED",
+  "generated_at": "2026-09-29T19:51:48.499548+00:00",
+  "selected_ceiling": 1200,
+  "message_max_length": 160,
+  "production_context": "Full signed history, bounded to one counteroffer round. Complete transcript also retained outside inference.",
+  "baseline": {
+    "report": "artifacts/dealtrace/procurement/efficiency/f672485c-35af-488e-822f-817188768f01.json",
+    "description": "Same refined role prompts, fixed RFQ, full history, 1200 ceiling, three sellers, no capability prefilter",
+    "attempts": 3,
+    "agreements": 3,
+    "calls": 15,
+    "input_tokens": 14364,
+    "output_tokens": 8029,
+    "total_tokens": 22393,
+    "api_latency_ms": 142868,
+    "truncations": 0,
+    "invalid_calls": 1,
+    "retries": 0
+  },
+  "accord": {
+    "report": "artifacts/dealtrace/procurement/efficiency/22549dfc-ffff-422f-afcd-cff0bb6ff670.json",
+    "description": "Same settings, operator-pinned incompatible quality rejected before inference",
+    "attempts": 3,
+    "agreements": 3,
+    "calls": 12,
+    "input_tokens": 12209,
+    "output_tokens": 5578,
+    "total_tokens": 17787,
+    "api_latency_ms": 91878,
+    "truncations": 0,
+    "invalid_calls": 0,
+    "retries": 0
+  },
+  "observed_token_reduction_percent": 20.57,
+  "observed_calls_per_successful_run": {
+    "baseline": 5,
+    "accord": 4
+  },
+  "experiments": [
+    {
+      "report": "artifacts/dealtrace/procurement/efficiency/22549dfc-ffff-422f-afcd-cff0bb6ff670.json",
+      "context": "full",
+      "status": "COMPLETE",
+      "summary": [
+        {
+          "cap": 1200,
+          "attempts": 3,
+          "successful": 3,
+          "clean_successful": 3,
+          "total_tokens": 17787,
+          "truncations": 0
+        }
+      ],
+      "source_unchanged": true
+    },
+    {
+      "report": "artifacts/dealtrace/procurement/efficiency/2eb7257f-5ffa-4c2d-8b23-5039967d6036.json",
+      "context": "initial structured history",
+      "status": "INTERRUPTED",
+      "summary": null,
+      "source_unchanged": null
+    },
+    {
+      "report": "artifacts/dealtrace/procurement/efficiency/6dc88844-955c-4344-b6ce-18015bb8c64f.json",
+      "context": "initial structured history",
+      "status": "COMPLETE",
+      "summary": [
+        {
+          "cap": 5000,
+          "attempts": 3,
+          "successful": 2,
+          "clean_successful": 1,
+          "total_tokens": 21378,
+          "truncations": 0
+        },
+        {
+          "cap": 1800,
+          "attempts": 3,
+          "successful": 1,
+          "clean_successful": 1,
+          "total_tokens": 20672,
+          "truncations": 0
+        },
+        {
+          "cap": 1200,
+          "attempts": 3,
+          "successful": 2,
+          "clean_successful": 2,
+          "total_tokens": 22077,
+          "truncations": 0
+        },
+        {
+          "cap": 800,
+          "attempts": 3,
+          "successful": 2,
+          "clean_successful": 0,
+          "total_tokens": 21468,
+          "truncations": 2
+        }
+      ],
+      "source_unchanged": true
+    },
+    {
+      "report": "artifacts/dealtrace/procurement/efficiency/a7f1a6d3-3ba4-4906-9aad-cef468998a16.json",
+      "context": "compact",
+      "status": "COMPLETE",
+      "summary": [
+        {
+          "cap": 1200,
+          "attempts": 3,
+          "successful": 2,
+          "clean_successful": 2,
+          "total_tokens": 18951,
+          "truncations": 0
+        },
+        {
+          "cap": 800,
+          "attempts": 3,
+          "successful": 2,
+          "clean_successful": 2,
+          "total_tokens": 19104,
+          "truncations": 1
+        }
+      ],
+      "source_unchanged": true
+    },
+    {
+      "report": "artifacts/dealtrace/procurement/efficiency/f672485c-35af-488e-822f-817188768f01.json",
+      "context": "full",
+      "status": "COMPLETE",
+      "summary": [
+        {
+          "cap": 1200,
+          "attempts": 3,
+          "successful": 3,
+          "clean_successful": 2,
+          "total_tokens": 22393,
+          "truncations": 0
+        }
+      ],
+      "source_unchanged": true
+    }
+  ],
+  "limitations": [
+    "Three runs per configuration are not a population reliability guarantee.",
+    "Independent negotiations may select different sellers and prices; canonical public 40/20/25 evidence is unchanged.",
+    "Token and API latency telemetry do not measure NPU power or energy savings.",
+    "The failed compact-latest-state and 800-token attempts are retained; neither was adopted.",
+    "One duplicate benchmark was interrupted after an editing error; retained partial usage is incomplete for in-flight billing. It is excluded from comparisons.",
+    "Baseline includes one rejected nonselected seller proposal; all three baseline agreements completed."
+  ],
+  "funding_transactions": 0,
+  "new_public_chain_transactions": 0
+}
