@@ -63,3 +63,5 @@ pnpm ade:test
 The raw source snapshots retain working-tree byte order and line endings. Git's normalized files can differ bytewise; use the snapshots to reproduce the measured implementation. The earlier and deployed clients build identical bounded negotiation requests, covered by regression tests; the final client also has separate actual-call smoke evidence.
 
 These observations support fail-closed payment behavior in the tested cases, not a universal security guarantee. Negotiation reliability remains limited. Signer identities and seller policies are operator-controlled; no independent supplier company or real-money custody is claimed. No dollar billing, device power consumption, energy savings or new public-chain execution is inferred from these measurements.
+
+Final production release and browser verification: [deployment record](../artifacts/accord-lock/varied-live/deployment.json), [UI audit](ACCORD-DEAL-ROOM-AUDIT.en.md). Integrated regression: **233/233 pass**; secret/dependency checks and all application builds passed.
