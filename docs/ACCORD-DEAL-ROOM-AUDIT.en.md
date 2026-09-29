@@ -36,3 +36,12 @@ Inspected the user-specified Stripe sandbox dashboard in the signed-in browser. 
 - Current automated checks passed: 22 local workspace/public-build tests, 10 browser-EVM/build tests, 2 live-negotiation protocol tests with an explicitly stubbed model. The third seller has its own payout address and settles correctly in both editions.
 - `src/accord/live-negotiation.mjs` now implements sealed session envelopes, actor-specific private prompts, actual Kiln client calls, public message inspection fields and bilateral signature generation. Its test adapter verifies buyer privacy and tamper rejection. It is not connected to HTTP, UI or a deployed live service yet, and no fresh actual Kiln call has been claimed.
 - Live API authentication, bounded paid-model access, retry handling and durable stop/revision checks must be implemented before exposing it publicly. A signed old session alone does not establish current revocation state. Browser financial authority must still be checked before every commitment.
+
+## Production checkpoint — 2026-09-30
+
+The tested Agent Deal Room checkpoint was merged with the latest main submission/security work and pushed to main as `ec33d2e`. Production is `https://agent-spending-firewall.vercel.app`, deployment `dpl_8ZHHV1b4t81jrkQMDv8rmvQ9DxoS` (READY, production alias confirmed).
+
+- 43 targeted tests passed after merging, including workspace/EVM execution, receipt recovery, Stop, third-seller payout, static allowlist, model validation, origin/signing security and submission boundaries. Live tests in this count use a stub, not actual inference.
+- The exact preview artifact completed a fresh interactive browser walkthrough: authority block 35 > 30, counter 18, revised/accepted 20, funding, worker execution, invoice 25 blocked with the payment button disabled, correction to 20, payment, refresh persistence, and receipt verification VALID. Browser error log was empty.
+- Production HTTP returned 200. HTML, JavaScript and CSS SHA-256 hashes matched the locally built artifact. The actual production overview rendered in the browser. Screenshot: `artifacts/accord-lock/deal-room/production-overview.png`.
+- This release executes uploaded-table processing and a private browser EVM with test units. The Live Agents connection and bilateral current-agreement signatures remain outstanding as documented above. Deployment is complete for this checkpoint; the full goal remains active.
