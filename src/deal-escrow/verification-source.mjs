@@ -4,6 +4,8 @@ import path from 'node:path';
 
 export function verificationSource(root=process.cwd()){
   const files=[];
+  for(const file of ['contracts/DealTraceVault.sol','artifacts/dealtrace/vault/contract.json','artifacts/dealtrace/vault/standard-input.json','scripts/compile-dealtrace-vault.mjs','scripts/demo-dealtrace-vault.mjs','scripts/verify-dealtrace-vault.mjs'])if(existsSync(path.join(root,file)))files.push(file);
+  for(const file of ['artifacts/dealtrace/vault/public-latest.json','artifacts/dealtrace/vault/runs/ade00002-2960-4000-8000-202609290001/report.json'])if(existsSync(path.join(root,file)))files.push(file);
   function walk(relative){if(!existsSync(path.join(root,relative)))return;for(const entry of readdirSync(path.join(root,relative),{withFileTypes:true})){const name=path.posix.join(relative,entry.name);if(entry.isDirectory())walk(name);else if(/\.(mjs|js|ts|tsx|html|css)$/.test(name))files.push(name);}}
   for(const directory of ['src/deal-escrow','src/dealtrace','tests/deal-escrow','web/dealtrace','web/deal-escrow','web/deal-escrow-public'])walk(directory);
   for(const file of ['tsconfig.deal-escrow-public.json','vite.deal-escrow-public.config.ts','requirements-pdf.txt','data/reference/capex/source-documents.json','scripts/read-deal-research-pdf.py','scripts/run-dealtrace.mjs','scripts/verify-dealtrace-receipt.mjs','scripts/benchmark-dealtrace-semantics.mjs','verification/dealtrace-semantics.json','verification/source-document.integration.mjs'])if(existsSync(path.join(root,file)))files.push(file);
