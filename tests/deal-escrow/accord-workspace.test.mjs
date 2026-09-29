@@ -36,10 +36,10 @@ test('English workspace carries user decisions through real local escrow, recove
   assert.equal(workspace.list().length,0);
  });
  await t.test('spending limit blocks funds; human counteroffer changes the agreement',async()=>{
-  await prepare({...sample,perDeal:100});await act('fund');assert.equal(job.status,'BLOCKED');assert.equal(job.dealId,undefined);
+  await prepare({...sample,perDeal:20});await act('fund');assert.equal(job.status,'BLOCKED');assert.equal(job.dealId,undefined);
   await act('edit',{...sample});await act('quotes');await act('select',{seller:'seller-a'});
   await act('counter',{price:1});assert.match(job.events.at(-1).title,/declined/);
-  await act('counter',{price:150});assert.equal(job.offers[0].price,150);
+  await act('counter',{price:20});assert.equal(job.offers[0].price,20);
   await assert.rejects(workspace.act(job.id,'fund',{revision:0}),/another tab/);
  });
  await t.test('lost funding response retries one durable deal and one mined transaction',async()=>{
@@ -48,9 +48,9 @@ test('English workspace carries user decisions through real local escrow, recove
   await act('fund');assert.equal(job.status,'LOCKED');assert.equal(job.dealId,id);assert.equal(job.transactions[0].hash,tx);assert.equal(job.transactions.length,1);assert.equal(job.transactions[0].status,'CONFIRMED');
  });
  await t.test('actual worker output matches the input; invalid delivery and overcharge cannot pay',async()=>{
-  await act('run');assert.equal(job.status,'REVIEW');assert.equal(job.validation.verified,true);assert.deepEqual(job.output,normalizeRows(job.source));
-  await act('invoice',{amount:151});await assert.rejects(act('settle'),/exactly match/);assert.equal(job.transactions.length,1);
-  await act('invoice',{amount:150});const good=JSON.stringify(job.output);const bad=structuredClone(job.output);bad[0].capex+=1;
+  await act('run');assert.equal(job.status,'REVIEW');assert.equal(job.invoice,25);assert.ok(job.events.some(e=>e.title==='Sample overcharge blocked'));assert.equal(job.validation.verified,true);assert.deepEqual(job.output,normalizeRows(job.source));
+  await act('invoice',{amount:25});await assert.rejects(act('settle'),/exactly match/);assert.equal(job.transactions.length,1);
+  await act('invoice',{amount:20});const good=JSON.stringify(job.output);const bad=structuredClone(job.output);bad[0].capex+=1;
   await act('delivery',{raw:JSON.stringify(bad)});assert.equal(job.validation.verified,false);await assert.rejects(act('settle'),/every check/);
   const wrongUnit=JSON.parse(good);wrongUnit[0].unit='million';await act('delivery',{raw:JSON.stringify(wrongUnit)});assert.equal(job.validation.verified,false);assert.match(csv(JSON.parse(good)),/unit,source_page/);
   await act('delivery',{raw:'[null]'});assert.equal(job.validation.verified,false);await assert.rejects(act('settle'),/every check/);
@@ -71,7 +71,7 @@ test('English workspace carries user decisions through real local escrow, recove
   const client=readFileSync('web/spending/app.mjs','utf8');assert.doesNotMatch(client,/setInterval|autoplay|requestAnimationFrame/);assert.match(client,/hash===\x27demo\x27/);
  });
  await t.test('refund rejection has a bound attestation and retries its original transaction',async()=>{
-  await prepare();await act('fund');failKind='refund';await assert.rejects(act('refund'),/lost response/);job=workspace.get(job.id);assert.equal(job.status,'REFUNDING');const tx=job.transactions.find(x=>x.kind==='refund').hash;
+  await prepare();await act('counter',{price:20});await act('fund');failKind='refund';await assert.rejects(act('refund'),/lost response/);job=workspace.get(job.id);assert.equal(job.status,'REFUNDING');const tx=job.transactions.find(x=>x.kind==='refund').hash;
   await act('refund');assert.equal(job.status,'REFUNDED');assert.equal(job.transactions.find(x=>x.kind==='refund').hash,tx);
   const verification=await workspace.verify(job.id);assert.equal(verification.verdict,'VALID',JSON.stringify(verification));
  });

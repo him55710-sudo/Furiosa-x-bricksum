@@ -35,8 +35,10 @@ jobs:
         run: pnpm run ade:build
       - name: Build the evidence replay
         run: pnpm run ade:replay:build
-      - name: Build the Accord Lock presentation
+      - name: Build the Accord Lock local client
         run: pnpm run ade:spending:build
+      - name: Build the deployable browser workspace with the current test report
+        run: pnpm run ade:hosted:build
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -20,9 +20,9 @@ export function checkRows(job,rows,time=Math.floor(Date.now()/1000)){
 export function taskSpec(input){
  requireValue(typeof input.title==='string'&&input.title.trim().length>=3&&input.title.length<=100,'Give this task a title between 3 and 100 characters.');
  requireValue(typeof input.brief==='string'&&input.brief.trim().length>=10&&input.brief.length<=4000,'Describe the required work in 10 to 4,000 characters.');
- requireValue(whole(input.budget)&&whole(input.perDeal,1,input.budget),'Use whole gwei amounts. The per-deal limit cannot exceed the task budget.');
+ requireValue(whole(input.budget)&&whole(input.perDeal,1,input.budget),'Use whole test-unit amounts. The per-deal limit cannot exceed the task budget.');
  requireValue(whole(input.deliveryMinutes,1,60),'Set a delivery window from 1 to 60 minutes.');
  const source=parseSource(input.sourceText);
  requireValue(checkRows({source,deliveryMinutes:input.deliveryMinutes},normalizeRows(source)).verified,'The source table has invalid values, duplicate rows or missing HTTP(S) citations. Use 2025–2026 quarters and three-letter currencies.');
- return {title:input.title.trim(),brief:input.brief.trim(),budget:input.budget,perDeal:input.perDeal,deliveryMinutes:input.deliveryMinutes,source,sourceName:String(input.sourceName??'Source table').slice(0,120)};
+ return {demoMode:input.demoMode===true,title:input.title.trim(),brief:input.brief.trim(),budget:input.budget,perDeal:input.perDeal,deliveryMinutes:input.deliveryMinutes,source,sourceName:String(input.sourceName??'Source table').slice(0,120)};
 }

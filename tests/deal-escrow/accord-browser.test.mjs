@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdtempSync,rmSync,writeFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import path from 'node:path';
+import {tmpdir} from 'node:os';
+import {buildHostedSite} from '../../scripts/build-accord-vercel.mjs';
 import {IDBFactory,IDBKeyRange} from 'fake-indexeddb';
 import {browserStore} from '../../web/spending/browser-store.mjs';
 import {createBrowserWorkspace} from '../../web/spending/browser-workspace.mjs';
@@ -23,11 +27,11 @@ test('deployed browser bundle executes and persists real EVM work without a back
  const request=(url,body)=>workspace.request(url,body);
  let job;
  const act=async(action,body={})=>job=await request(`/api/tasks/${job.id}/${action}`,{revision:job.revision,...body});
- const prepare=async()=>{job=await request('/api/tasks',await request('/api/sample'));await act('quotes');await act('select',{seller:'seller-a'});await act('counter',{price:150});};
+ const prepare=async(demoMode=true)=>{job=await request('/api/tasks',{...await request('/api/sample'),demoMode});await act('quotes');if(demoMode){assert.equal(job.status,'BLOCKED');assert.equal(job.dealId,undefined);assert.ok(job.events.some(e=>e.title==='Sample offer blocked'));await act('fund');assert.equal(job.status,'BLOCKED');assert.equal(job.dealId,undefined);}else{assert.equal(job.status,'QUOTED');assert.equal(job.selected,null);}await act('select',{seller:'seller-a'});await act('counter',{price:20});};
  await t.test('usable task creation and input validation work before the EVM loads',async()=>{
   const state=await request('/api/workspace');assert.equal(state.network.mode,'BROWSER_EVM');assert.equal(state.network.contract,null);
   const sample=await request('/api/sample');await assert.rejects(request('/api/tasks',{...sample,perDeal:301}),/limit/);
-  await prepare();assert.equal(job.offers[0].price,150);assert.equal((await storage.load()).chain,null);
+  await prepare();assert.equal(job.offers[0].price,20);assert.equal((await storage.load()).chain,null);
  });
  await t.test('browser EVM funds exactly once and survives an interrupted response',async()=>{
   failAfter='fund';await assert.rejects(act('fund'),/Interrupted/);job=await request(`/api/tasks/${job.id}`);assert.equal(job.status,'FUNDING');const tx=job.transactions[0].hash;
@@ -35,11 +39,11 @@ test('deployed browser bundle executes and persists real EVM work without a back
   assert.equal((await request('/api/workspace')).network.chainId,31338);
  });
  await t.test('source alterations and invoice mismatch block a payment',async()=>{
-  await act('run');assert.equal(job.validation.verified,true);const output=JSON.stringify(job.output);
+  await act('run');assert.equal(job.validation.verified,true);assert.equal(job.budget,40);assert.equal(job.invoice,25);assert.ok(job.invoice<job.perDeal&&job.invoice<job.budget);await assert.rejects(act('settle'),/exactly match/);assert.equal(job.transactions.length,1);assert.ok(job.events.some(e=>e.title==='Sample overcharge blocked'));await act('invoice',{amount:20});const output=JSON.stringify(job.output);
   const bad=JSON.parse(output);bad[0].unit='million';await act('delivery',{raw:JSON.stringify(bad)});await assert.rejects(act('settle'),/every check/);
   await act('delivery',{raw:'[null]'});assert.equal(job.validation.verified,false);
-  await act('delivery',{raw:output});await act('invoice',{amount:180});await assert.rejects(act('settle'),/exactly match/);
-  await act('invoice',{amount:150});
+  await act('delivery',{raw:output});await act('invoice',{amount:25});await assert.rejects(act('settle'),/exactly match/);
+  await act('invoice',{amount:20});
  });
  await t.test('payment recovers without a duplicate and its receipt verifies',async()=>{
   failAfter='release';await assert.rejects(act('settle'),/Interrupted/);job=await request(`/api/tasks/${job.id}`);assert.equal(job.status,'SETTLING');
@@ -55,7 +59,7 @@ test('deployed browser bundle executes and persists real EVM work without a back
   assert.equal((await request('/api/workspace')).tasks.length,1);
  });
  await t.test('an explicit rejection executes a verifiable browser-chain refund',async()=>{
-  await prepare();await act('fund');await act('run');failAfter='refund';await assert.rejects(act('refund'),/Interrupted/);job=await request(`/api/tasks/${job.id}`);await act('refund');assert.equal(job.status,'REFUNDED');
+  await prepare(false);await act('fund');await act('run');assert.equal(job.invoice,job.agreedPrice);assert.ok(!job.events.some(e=>e.title==='Sample overcharge blocked'));failAfter='refund';await assert.rejects(act('refund'),/Interrupted/);job=await request(`/api/tasks/${job.id}`);await act('refund');assert.equal(job.status,'REFUNDED');
   const result=await request(`/api/tasks/${job.id}/verify`);assert.equal(result.verdict,'VALID',JSON.stringify(result));
  });
  await t.test('concurrent tabs reject stale decisions and above-limit offers sign nothing',async()=>{
@@ -65,9 +69,18 @@ test('deployed browser bundle executes and persists real EVM work without a back
  });
 });
 
-test('hosted release contains only built client assets and public evidence',()=>{
- const manifest=JSON.parse(readFileSync('dist-vercel/evidence/hosted-manifest.json'));
+test('hosted release builds in isolation without a prebuilt dist or historical test report',async t=>{
+ const directory=mkdtempSync(path.join(tmpdir(),'accord-build-'));t.after(()=>{assert.ok(path.resolve(directory).startsWith(path.resolve(tmpdir())+path.sep+'accord-build-'));rmSync(directory,{recursive:true,force:true});});
+ const out=path.join(directory,'release');
+ const manifest=await buildHostedSite(process.cwd(),{outDir:out,stagingDir:path.join(directory,'stage'),testSummary:{status:'BUILD_FIXTURE',tests:0,passed:0}});
  assert.equal(manifest.mode,'BROWSER_EVM');assert.ok(manifest.files.some(f=>f.path==='vendor/ganache-7.9.2.min.js'));
  assert.ok(manifest.files.every(f=>/^(index.html|favicon.svg|vercel.json|assets\/|vendor\/|evidence\/)/.test(f.path)));
- const config=JSON.parse(readFileSync('dist-vercel/vercel.json'));assert.equal(config.buildCommand,null);assert.ok(config.headers[0].headers.find(h=>h.key==='Content-Security-Policy').value.includes("'wasm-unsafe-eval'"));
+ // Check actual ignore matching, not only the declared manifest. Stale Vite
+ // bundles and arbitrary files inside reopened asset directories stay private.
+ writeFileSync(path.join(out,'.gitignore'),readFileSync(path.join(out,'.vercelignore')));
+ assert.equal(spawnSync('git',['init','--quiet'],{cwd:out}).status,0);
+ const extras=['assets/stale-bundle.js','vendor/unlisted.json','evidence/private-key.json','.env'];
+ const ignored=spawnSync('git',['check-ignore','--no-index','--stdin'],{cwd:out,encoding:'utf8',input:[...manifest.files.map(f=>f.path),...extras].join('\n')+'\n'});
+ assert.equal(ignored.status,0);assert.deepEqual(ignored.stdout.trim().split(/\r?\n/),extras);
+ const config=JSON.parse(readFileSync(path.join(out,'vercel.json')));assert.equal(config.buildCommand,null);const proof=JSON.parse(readFileSync(path.join(out,'evidence/dealtrace-summary.json')));assert.deepEqual([proof.budget,proof.agreement,proof.rejectedInvoice,proof.calls,proof.tokens],[40,20,25,5,7890]);assert.equal(proof.verification.checks,47);assert.equal(proof.transactions.find(t=>t.label==='overbill-blocked').status,0);assert.ok(config.headers[0].headers.find(h=>h.key==='Content-Security-Policy').value.includes("'wasm-unsafe-eval'"));
 });

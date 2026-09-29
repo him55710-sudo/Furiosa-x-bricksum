@@ -16,7 +16,12 @@ export function vercelAllowlist(files){
  const paths=[...new Set(files)].sort();
  if(paths.some(p=>!/^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/.test(p)||p.split('/').some(s=>s==='..'||s==='.'||s.startsWith('.'))))throw Error('INVALID_PUBLIC_PATH');
  // Deny unknown files even when they were left in the distribution by a prior run.
- return '/*\n'+paths.filter(p=>p.includes('/')).map(p=>'!'+p.slice(0,p.lastIndexOf('/'))+'\n').filter((p,i,a)=>a.indexOf(p)===i).join('')+'/evidence/*\n'+paths.map(p=>'!'+p).join('\n')+'\n';
+ const directories=new Set();
+ for(const file of paths){const parts=file.split('/');for(let i=1;i<parts.length;i++)directories.add(parts.slice(0,i).join('/'));}
+ // Reopening a directory also reopens its descendants in gitignore syntax.
+ // Deny its children again before allowing exact files (including nested assets).
+ const parents=[...directories].sort((a,b)=>a.split('/').length-b.split('/').length||a.localeCompare(b));
+ return '/*\n'+parents.map(dir=>`!${dir}\n/${dir}/*\n`).join('')+paths.map(p=>'!'+p).join('\n')+'\n';
 }
 export function allowlistedStatic(root,files){
  const base=realpathSync(root),allowed=new Set(files);

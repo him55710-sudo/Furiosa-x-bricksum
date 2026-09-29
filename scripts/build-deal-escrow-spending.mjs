@@ -2,9 +2,10 @@ import {readFileSync,writeFileSync,mkdirSync,existsSync,lstatSync} from 'node:fs
 import {assertPublicJson,vercelAllowlist,PUBLIC_CSP} from '../src/deal-escrow/public-files.mjs';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
+import {procurementEvidence} from './accord-public-proof.mjs';
 export const PUBLIC_EVIDENCE=['report','buyer-transactions','normal','over-limit','wrong-delivery','preview-first','app-off','buyer-refund','independent-refund','independent'];
-export function buildSpendingSite(root=process.cwd(),{outDir='dist-spending'}={}) {
- const out=path.join(root,outDir),source=path.join(root,'artifacts/deal-escrow/spending-proof');
+export function buildSpendingSite(root=process.cwd(),{outDir='dist-spending',testSummary:providedSummary}={}) {
+ const out=path.resolve(root,outDir),source=path.join(root,'artifacts/deal-escrow/spending-proof');
  const read=name=>JSON.parse(readFileSync(path.join(source,name+'.json'),'utf8'));
  const finalized=existsSync(path.join(source,'independent-finalized.json'));
  const report=read('report'),independent=read(finalized?'independent-finalized':'independent'),preview=read('preview-first');
@@ -25,7 +26,8 @@ export function buildSpendingSite(root=process.cwd(),{outDir='dist-spending'}={}
  if(existsSync(path.join(source,'independent-finalized.json')))publish('evidence/independent-finalized.json',readFileSync(path.join(source,'independent-finalized.json')));
  // Keep the complete local test report. The public summary excludes stack
  // traces/stdout/stderr, which can contain host paths or incidental inputs.
- const {output,stderr,runner_error,...testSummary}=JSON.parse(readFileSync(path.join(root,'artifacts/deal-escrow/tests.json'),'utf8'));
+ const {output,stderr,runner_error,...testSummary}=providedSummary??JSON.parse(readFileSync(path.join(root,'artifacts/deal-escrow/tests.json'),'utf8'));
+ for(const [name,value] of Object.entries(procurementEvidence(root)))publish(`evidence/${name}.json`,JSON.stringify(value,null,2));
  publish('evidence/tests.json',JSON.stringify({...testSummary,public_summary:true},null,2));
  const config={framework:null,buildCommand:null,outputDirectory:'.',headers:[{source:'/(.*)',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'DENY'},{key:'Content-Security-Policy',value:"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"}]},{source:'/evidence/(.*)',headers:[{key:'Cache-Control',value:'public, max-age=0, must-revalidate'}]}]};
  publish('vercel.json',JSON.stringify(config,null,2));
