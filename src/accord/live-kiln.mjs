@@ -2,7 +2,7 @@ import {createHash} from 'node:crypto';
 const need=(ok,code)=>{if(!ok)throw Error(code);};
 export class LiveKilnClient {
  constructor({model=process.env.KILN_MODEL,key=process.env.KILN_API_KEY,onRecord=()=>{},fetchImpl=fetch}={}){need(model==='qwen3-32b','KILN_MODEL_REQUIRED');need(key,'KILN_API_KEY_REQUIRED');Object.assign(this,{model,key,onRecord,fetchImpl});}
- payload(system,input,tools){return {model:this.model,max_tokens:1200,stream:false,tool_choice:'auto',messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(input)}],tools:tools.map(spec=>({type:'function',function:spec}))};}
+ payload(system,input,tools){return {model:this.model,max_tokens:2400,stream:false,tool_choice:'auto',messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(input)}],tools:tools.map(spec=>({type:'function',function:spec}))};}
  async request(flow,payload,validate){
   need(payload.tools.length===1&&payload.tools[0].function.name==='send_negotiation_message','KILN_TOOL_NOT_ALLOWED');
   const start=Date.now();let body,result='KILN_NETWORK_ERROR',tool=null;

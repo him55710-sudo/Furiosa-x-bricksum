@@ -8,7 +8,7 @@ test('Live transport constrains destination and preserves actual response teleme
  const records=[];
  const c=new LiveKilnClient({model:'qwen3-32b',key:'test-only',onRecord:r=>records.push(r),fetchImpl:async(url,options)=>{
   assert.equal(url,'https://api.bricksum.com/v1/chat/completions');assert.equal(options.redirect,'error');
-  assert.equal(JSON.parse(options.body).max_tokens,1200);return Response.json(answer());
+  assert.equal(JSON.parse(options.body).max_tokens,2400);return Response.json(answer());
  }});
  const r=await c.request('seller',payload(c),(tool,args)=>{assert.equal(args.price,20);});
  assert.equal(r.request_id,'test-request');assert.equal(records[0].total_tokens,24);assert.equal(records[0].result,'VALID_TOOL_PROPOSAL');
