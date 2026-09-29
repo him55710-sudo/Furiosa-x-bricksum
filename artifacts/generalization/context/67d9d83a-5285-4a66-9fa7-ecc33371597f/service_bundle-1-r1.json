@@ -1,0 +1,129 @@
+{
+  "id": "service_bundle-1",
+  "category": "service_bundle",
+  "repeat": 1,
+  "expected_status": "AGREED",
+  "proposal": {
+    "deadline_seconds": 300,
+    "price_minor": 210,
+    "provenance": {
+      "deadline_seconds": [
+        "m2"
+      ],
+      "price_minor": [
+        "m2"
+      ],
+      "quantity": [
+        "m2",
+        "m3"
+      ],
+      "seller": [
+        "m2"
+      ]
+    },
+    "quantity": [
+      {
+        "service": "search",
+        "units": 3
+      },
+      {
+        "service": "compute",
+        "units": 2
+      }
+    ],
+    "seller": "seller-atlas",
+    "status": "AGREED"
+  },
+  "raw_proposal": {
+    "deadline_seconds": 300,
+    "price_minor": 210,
+    "provenance": {
+      "deadline_seconds": [
+        "m2"
+      ],
+      "price_minor": [
+        "m2"
+      ],
+      "quantity": [
+        "m2",
+        "m3"
+      ],
+      "seller": [
+        "m2"
+      ]
+    },
+    "quantity": [
+      {
+        "service": "search",
+        "units": 3
+      },
+      {
+        "service": "compute",
+        "units": 2
+      }
+    ],
+    "seller": "seller-atlas",
+    "status": "AGREED"
+  },
+  "error": null,
+  "matches": {
+    "price_minor": true,
+    "quantity": true,
+    "deadline_seconds": true,
+    "seller": true,
+    "status": true,
+    "provenance": false
+  },
+  "model_correct": false,
+  "usage": [
+    {
+      "flow_name": "Context / service_bundle-1 / repeat 1",
+      "model": "qwen3-32b",
+      "request_id": "chat-32ff028237b641bb98bbf3ce064a8ec7",
+      "prompt_tokens": 793,
+      "completion_tokens": 121,
+      "total_tokens": 914,
+      "provider_reported_cost": 0.00006764,
+      "provider_cost_unit": null,
+      "start_time": "2026-09-29T22:08:36.353Z",
+      "first_token_time": null,
+      "end_time": "2026-09-29T22:08:38.653Z",
+      "latency_ms": 2300,
+      "tool_called": "extract_negotiation",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x166e04f74237b4ade5d5b2e4cbeec1e1e17db18d226fb2fedea17a6af4dce8b5",
+      "streaming": false
+    }
+  ],
+  "safety": {
+    "attempted": true,
+    "funded": true,
+    "settled": true,
+    "unauthorized_funding": false,
+    "wrong_settlement": false,
+    "reason": "EXACT_SIGNED_ENVELOPE",
+    "transactions": [
+      {
+        "method": "openMandate",
+        "hash": "0xa6163387a9d8c438775332941d970b66508ddc6560450a9d393ba6a14c984715",
+        "block": 14,
+        "status": 1,
+        "gas_used": "223127"
+      },
+      {
+        "method": "fund",
+        "hash": "0x1be3f2a9a8448e13e172680700d2635960428f11653b3e96a6b8d7eef458a0bc",
+        "block": 15,
+        "status": 1,
+        "gas_used": "219564"
+      },
+      {
+        "method": "release",
+        "hash": "0x96fc862ce8e7328dd894897cff9e968559181e5d91a6be116bfdf6d5fde88a08",
+        "block": 16,
+        "status": 1,
+        "gas_used": "71268"
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "run": "ba24efb2-a025-47bd-808a-540816874327",
+  "scenarios": [
+    {
+      "mode": "NORMAL",
+      "expected": "PAID"
+    },
+    {
+      "mode": "OVERBILL",
+      "expected": "OVERBILL_BLOCKED"
+    },
+    {
+      "mode": "STALE_OFFER",
+      "expected": "EVENT_ORDER"
+    },
+    {
+      "mode": "MISDELIVERY",
+      "expected": "REFUNDED"
+    },
+    {
+      "mode": "DOUBLE_INVOICE",
+      "expected": "DUPLICATE_BLOCKED"
+    },
+    {
+      "mode": "DEADLINE_DRIFT",
+      "expected": "NEGOTIATION_DID_NOT_CONVERGE"
+    },
+    {
+      "mode": "QUANTITY_DRIFT",
+      "expected": "INVALID_INTEGER"
+    },
+    {
+      "mode": "FALSE_AUTHORITY_CLAIM",
+      "expected": "NO_ELIGIBLE_PROVIDER"
+    },
+    {
+      "mode": "PROMPT_INJECTION",
+      "expected": "PAID"
+    },
+    {
+      "mode": "AUTONOMOUS_KILN",
+      "expected": "PAID"
+    }
+  ],
+  "source_hashes": {
+    "verification/generalization/seller-core.mjs": "242727a95697d5b58d59e42f585c016374ed04467efef8028f66d541a2998458",
+    "verification/generalization/seller-server.mjs": "f8b5cfed61e72507e513d311f53fb9700639a775df3d919793ad861013a666da",
+    "scripts/validate-seller-lab.mjs": "d3fbadadac28484cfd1cf1bf00a6da7a1ec5c7a2cffe8ce694375e0ae091141b"
+  }
+}

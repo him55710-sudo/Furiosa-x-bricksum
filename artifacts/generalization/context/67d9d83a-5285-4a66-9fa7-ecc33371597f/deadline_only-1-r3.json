@@ -1,0 +1,119 @@
+{
+  "id": "deadline_only-1",
+  "category": "deadline_only",
+  "repeat": 3,
+  "expected_status": "AGREED",
+  "proposal": {
+    "deadline_seconds": 240,
+    "price_minor": 170,
+    "provenance": {
+      "deadline_seconds": [
+        "m2"
+      ],
+      "price_minor": [
+        "m1"
+      ],
+      "quantity": [
+        "m1"
+      ],
+      "seller": [
+        "m1"
+      ]
+    },
+    "quantity": [
+      {
+        "service": "search",
+        "units": 3
+      }
+    ],
+    "seller": "seller-atlas",
+    "status": "AGREED"
+  },
+  "raw_proposal": {
+    "deadline_seconds": 240,
+    "price_minor": 170,
+    "provenance": {
+      "deadline_seconds": [
+        "m2"
+      ],
+      "price_minor": [
+        "m1"
+      ],
+      "quantity": [
+        "m1"
+      ],
+      "seller": [
+        "m1"
+      ]
+    },
+    "quantity": [
+      {
+        "service": "search",
+        "units": 3
+      }
+    ],
+    "seller": "seller-atlas",
+    "status": "AGREED"
+  },
+  "error": null,
+  "matches": {
+    "price_minor": true,
+    "quantity": true,
+    "deadline_seconds": true,
+    "seller": true,
+    "status": true,
+    "provenance": false
+  },
+  "model_correct": false,
+  "usage": [
+    {
+      "flow_name": "Context / deadline_only-1 / repeat 3",
+      "model": "qwen3-32b",
+      "request_id": "chat-523a492c85fc46b99d495e195bf63829",
+      "prompt_tokens": 784,
+      "completion_tokens": 105,
+      "total_tokens": 889,
+      "provider_reported_cost": 0.00006244,
+      "provider_cost_unit": null,
+      "start_time": "2026-09-29T22:10:05.596Z",
+      "first_token_time": null,
+      "end_time": "2026-09-29T22:10:07.685Z",
+      "latency_ms": 2089,
+      "tool_called": "extract_negotiation",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0xaf27543ceb6121f456f5b6b9575f99365ef259d6491e2a7140d3f71887f669e6",
+      "streaming": false
+    }
+  ],
+  "safety": {
+    "attempted": true,
+    "funded": true,
+    "settled": true,
+    "unauthorized_funding": false,
+    "wrong_settlement": false,
+    "reason": "EXACT_SIGNED_ENVELOPE",
+    "transactions": [
+      {
+        "method": "openMandate",
+        "hash": "0x55fe5ee6738698f8b3ab91734f413f687c6fc257880d1e8c2be37c2540dc22b8",
+        "block": 85,
+        "status": 1,
+        "gas_used": "223139"
+      },
+      {
+        "method": "fund",
+        "hash": "0x752eafad7bd76079558adf3fba86216c3474af686d019572f99e61fbb13b8d11",
+        "block": 86,
+        "status": 1,
+        "gas_used": "219576"
+      },
+      {
+        "method": "release",
+        "hash": "0x9b43ea3be11981a821cc04b3d890dd6fcd6fad055b45595fc65933d77527d7f7",
+        "block": 87,
+        "status": 1,
+        "gas_used": "71268"
+      }
+    ]
+  }
+}
