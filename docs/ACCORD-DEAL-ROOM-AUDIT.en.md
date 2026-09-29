@@ -81,3 +81,9 @@ The numbered rows correspond to the supplied 17-part design brief. Financial exe
 | 17 | White/pale-gray surfaces, cobalt primary, red buyer/violations, blue sellers, muted green success and amber escrow. | Production and mobile screenshots, shared typography/layout and illustration styles. |
 
 The current presentation plan uses one story and explicit clicks. It does not depend on real-model convergence within three minutes. A completed real-model negotiation and its test settlement are retained separately, while failed model runs are preserved rather than replaced with simulated success.
+
+### Custom-input Live UI acceptance
+
+The operator pasted a synthetic four-row, four-source CSV, created “Example Energy CAPEX review,” and ran six actual model calls through the deployed UI. Atlas proposed 35, Buyer countered 30, and Atlas revised to 32. A subsequent invalid Buyer response was rejected with `LIVE_BUYER_AUTHORITY`. Switching to Nexus produced 40 followed by Buyer's 30 counter. All six attempts and 8,889 measured tokens are retained, including the rejected response. The operator then stopped this session without signing or funding it. This run demonstrates custom-source binding, inspectable actual inference, authority protection, seller switching and Stop; it does not demonstrate a completed agreement or payment.
+
+Public evidence: `artifacts/accord-lock/live/custom-negotiation.json`, `custom-attempts.json`, and `custom-demo-input.csv`. Both new JSON artifacts passed the public-data validator. `artifacts/accord-lock/deal-room/live-custom-stopped.png` records the stopped state and failure timeline; `live-mobile.png` records the 390px layout. The full public session is exported without owner hashes, HMAC envelopes, operation records or private policies.
