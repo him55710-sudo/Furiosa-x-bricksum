@@ -137,7 +137,7 @@ The earlier [Vault V2 adversarial proof](docs/DEALTRACE-VAULT-V2.en.md) retains 
 
 `pnpm dealtrace:start` opens the original workbench on port 3420. The [earlier three-minute film](artifacts/dealtrace/film-v3/dealtrace-3min.ko.webm) is an edit of saved evidence screenshots, not live transaction footage, and describes its original version. [Legacy escrow and research modes](README.legacy-escrow.md) remain available.
 
-## Challenge B and remaining trust
+## Challenge B evidence
 
 | Criterion | Evidence |
 |---|---|
@@ -148,8 +148,6 @@ The earlier [Vault V2 adversarial proof](docs/DEALTRACE-VAULT-V2.en.md) retains 
 | Approval and evidence | Approve/watch/stop/export UI; portable reconstruction; independently verified chain state |
 
 This is a **testnet prototype**, with registered local provider processes under one operator. A pinned HTTPS provider adapter is implemented, but no independent supplier company has been integrated. The selected evaluator still attests off-chain outcomes; signatures do not prove business identity or the truth of arbitrary content.
-
-Three real first-time-user responses, customer demand, external provider operations, production custody/security review and hardware energy measurements remain unverified. The [study kit](docs/DEALTRACE-HUMAN-STUDY.ko.md) is ready; automated checks are not human responses.
 
 Our product hypothesis is an evidence and enforcement layer for negotiated machine work: **what was agreed, what was delivered, and why that amount moved**. We do not claim a new payment protocol, proven moat or production readiness.
 
