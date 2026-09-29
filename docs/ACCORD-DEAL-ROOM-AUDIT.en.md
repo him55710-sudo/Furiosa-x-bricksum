@@ -42,3 +42,6 @@ Final UI artifact: index-VqtpDt7l.js / index-DmbklS-X.css. Final preview: https:
 - HTML, JS, CSS and favicon returned HTTP 200 with SHA-256 equality to the tested local build.
 - Production /api/live returned HTTP 200, available=true, qwen3-32b and its fresh 60-attempt allowance.
 - Final-preview Live session creation and Stop persistence were verified without extra model calls.
+- Production browser rendering was inspected and its error log was empty. Screenshot: artifacts/accord-lock/deal-room/production-live-release.png.
+- Main includes the release commit 83a91ff and merges the concurrent validation evidence at dc0d93d. That merge adds verification scripts and evidence only; deployed application files are unchanged.
+- Post-deploy runtime log inspection showed the production Live GET returning 200 and no error entries in the observed release window. Long-term monitoring/drains were not configured by this task.
