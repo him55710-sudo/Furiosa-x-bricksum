@@ -1,8 +1,8 @@
 # accord lock
 
-**New illustrated demo:** Run `pnpm install --frozen-lockfile` and `pnpm ade:spending:view`, then open [the 3-minute presentation](http://127.0.0.1:3440/#demo). Keep the server running while viewing. Cobalt seller and red buyer agents explain the task, buyer authority, escrow settlement, failure memory and direct recovery. [Korean presenter script](docs/ACCORD-LOCK-DEMO-3MIN.ko.md) · [Design notes](docs/ACCORD-LOCK-DESIGN.ko.md).
+**English task workspace:** Run `pnpm install --frozen-lockfile` and `pnpm ade:spending:view`, then open [Accord Lock](http://127.0.0.1:3440/#workspace). Upload a CSV/JSON table, request and negotiate offers, approve escrow, run a local data worker, inspect the result and invoice, then pay or refund. Tasks and transaction receipts persist on this computer. [Workspace guide and three-minute walkthrough](docs/ACCORD-LOCK-WORKSPACE.en.md).
 
-This presentation replays the recorded buyer-budget Sepolia run. The DealTrace V2 implementation and its separate evidence below are preserved; the presentation does not claim to demonstrate the V2 contract. Pushing this source does not update the previously published Vercel site or videos.
+**Demo assist** provides optional presenter prompts inside the same usable workspace. Every stage advances through your actions. The new workspace uses deterministic local workers and a private EVM with test funds. The historical Sepolia evidence and the separate DealTrace V2 implementation below remain available; they are not the workspace's current transactions. Static hosting alone cannot run the workspace service, and pushing this source does not update previously published Vercel sites or videos.
 
 
 ### An agent can stay under budget and still pay the wrong bill.

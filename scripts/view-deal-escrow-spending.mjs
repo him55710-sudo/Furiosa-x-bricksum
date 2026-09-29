@@ -1,11 +1,11 @@
-import express from 'express';
 import path from 'node:path';
 import {buildSpendingSite} from './build-deal-escrow-spending.mjs';
-import {localBoundary} from '../src/deal-escrow/http-security.mjs';
-import {allowlistedStatic,PUBLIC_CSP} from '../src/deal-escrow/public-files.mjs';
+import {createWorkspace} from '../src/accord/workspace.mjs';
+import {workspaceApp} from '../src/accord/http.mjs';
 const manifest=buildSpendingSite();
-const app=express();
 const port=Number(process.env.ADE_SPENDING_PORT??3440);
-app.disable('x-powered-by');app.use(localBoundary({port,readOnly:true,csp:PUBLIC_CSP}));
-app.use(allowlistedStatic(path.resolve('dist-spending'),[...manifest.files.map(f=>f.path).filter(p=>p!=='vercel.json'),'evidence/site-manifest.json']));
-const server=app.listen(port,'127.0.0.1',error=>{if(error){console.error('SPENDING_DEMO_LISTEN_FAILED:'+error.code);process.exitCode=1;return;}console.log(`Canonical spending demo: http://127.0.0.1:${port}`);});
+const workspace=await createWorkspace();
+const app=workspaceApp({workspace,port,root:path.resolve('dist-spending'),files:[...manifest.files.map(f=>f.path).filter(p=>p!=='vercel.json'),'evidence/site-manifest.json']});
+const server=app.listen(port,'127.0.0.1',()=>console.log(`Accord Lock workspace: http://127.0.0.1:${port} · Local EVM · no real funds`));
+server.on('error',async error=>{console.error('WORKSPACE_LISTEN_FAILED:'+error.code);await workspace.close();process.exitCode=1;});
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>server.close(async()=>{await workspace.close();process.exit(0);}));

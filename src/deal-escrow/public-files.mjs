@@ -28,7 +28,9 @@ export function allowlistedStatic(root,files){
   try{
    const file=path.join(base,name),resolved=realpathSync(file);
    if(!resolved.startsWith(base+path.sep)||lstatSync(file).isSymbolicLink()||!lstatSync(file).isFile())return res.sendStatus(404);
-   res.sendFile(resolved,err=>{if(err&&!res.headersSent)res.sendStatus(404);});
+   // A managed checkout may live under .codex. The explicit allowlist and
+   // canonical-root checks above decide exposure, including hidden ancestors.
+   res.sendFile(resolved,{dotfiles:'allow'},err=>{if(err&&!res.headersSent)res.sendStatus(404);});
   }catch{res.sendStatus(404);}
  };
 }

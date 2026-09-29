@@ -20,7 +20,7 @@ export function buildSpendingSite(root=process.cwd()) {
  // Stage in memory first: invalid evidence must not partially replace a prior build.
  const staged=new Map();
  function publish(name,bytes){if(name.endsWith('.json'))assertPublicJson(JSON.parse(String(bytes)));staged.set(name,bytes);files.push({path:name,bytes:Buffer.byteLength(bytes),sha256:createHash('sha256').update(bytes).digest('hex')});}
- for(const name of ['index.html','styles.css','accord.css','app.mjs','accord-scene.mjs','accord-tour.mjs','accord-tour.css','policy-simulator.mjs','favicon.svg'])publish(name,readFileSync(path.join(root,'web/spending',name)));
+ for(const name of ['index.html','workspace.css','app.mjs','workspace-model.mjs','workspace-view.mjs','policy-simulator.mjs','favicon.svg'])publish(name,readFileSync(path.join(root,'web/spending',name)));
  for(const name of PUBLIC_EVIDENCE)publish(`evidence/${name}.json`,readFileSync(path.join(source,(name==='independent'&&finalized?'independent-finalized':name)+'.json')));
  if(existsSync(path.join(source,'independent-finalized.json')))publish('evidence/independent-finalized.json',readFileSync(path.join(source,'independent-finalized.json')));
  // Keep the complete local test report. The public summary excludes stack
@@ -36,7 +36,7 @@ export function buildSpendingSite(root=process.cwd()) {
  const publicPaths=[...files.map(f=>f.path),'evidence/site-manifest.json'];
  staged.set('.vercelignore',vercelAllowlist(publicPaths));
  const version=createHash('sha256').update(JSON.stringify(files)).digest('hex');
- const manifest={schema_version:1,site_version:version,built_at:new Date().toISOString(),public_run:report.run,scope:'Read-only public proof + local educational policy simulator; no signing or backend mutation.',files};
+ const manifest={schema_version:1,site_version:version,built_at:new Date().toISOString(),public_run:report.run,scope:'Static workspace client and historical public proof. Task processing requires the loopback workspace service; local EVM only.',files};
  staged.set('evidence/site-manifest.json',JSON.stringify(manifest,null,2));
  // Never follow a file or directory link while publishing into the build output.
  for(const name of ['', 'evidence',...staged.keys()]){const destination=path.join(out,name);if(lstatSync(destination,{throwIfNoEntry:false})?.isSymbolicLink())throw Error('PUBLIC_OUTPUT_SYMLINK');}
