@@ -21,7 +21,7 @@ export function vercelAllowlist(files){
  // Reopening a directory also reopens its descendants in gitignore syntax.
  // Deny its children again before allowing exact files (including nested assets).
  const parents=[...directories].sort((a,b)=>a.split('/').length-b.split('/').length||a.localeCompare(b));
- return '/*\n'+parents.map(dir=>`!/${dir}/\n/${dir}/*\n`).join('')+paths.map(p=>'!/'+p).join('\n')+'\n';
+ return '/*\n'+parents.map(dir=>`!${dir}\n/${dir}/*\n`).join('')+paths.map(p=>'!'+p).join('\n')+'\n';
 }
 export function allowlistedStatic(root,files){
  const base=realpathSync(root),allowed=new Set(files);
