@@ -69,6 +69,11 @@ test('deployed browser bundle executes and persists real EVM work without a back
   await act('edit',{...(await request('/api/sample')),title:'Corrected task'});assert.equal(job.status,'DRAFT');
   await act('stop');await assert.rejects(request(`/api/tasks/${job.id}/fund`,{revision:job.revision}),/authority revoked/);assert.equal(job.dealId,undefined);
  });
+ await t.test('third seller settles to its distinct browser-chain address',async()=>{
+  await prepare(false);await act('select',{seller:'seller-c'});await act('counter',{price:24});await act('fund');await act('run');await act('settle');
+  assert.equal(job.status,'COMPLETED');assert.equal(job.agreedPrice,24);assert.equal((await request(`/api/tasks/${job.id}/verify`)).verdict,'VALID');
+  const network=(await request(`/api/tasks/${job.id}/receipt`)).network;assert.notEqual(network.sellers['seller-c'],network.sellers['seller-a']);assert.notEqual(network.sellers['seller-c'],network.sellers['seller-b']);
+ });
 });
 
 test('hosted release builds in isolation without a prebuilt dist or historical test report',async t=>{

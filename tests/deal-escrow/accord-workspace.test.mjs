@@ -38,7 +38,7 @@ test('English workspace carries user decisions through real local escrow, recove
  await t.test('spending limit blocks funds; human counteroffer changes the agreement',async()=>{
   await prepare({...sample,perDeal:20});await act('fund');assert.equal(job.status,'BLOCKED');assert.equal(job.dealId,undefined);
   await act('edit',{...sample});await act('quotes');await act('select',{seller:'seller-a'});
-  await act('counter',{price:1});assert.match(job.events.at(-1).title,/declined/);
+  await act('counter',{price:18});assert.match(job.events.at(-1).title,/Revised offer/);assert.equal(job.offers[0].counterPrice,20);assert.equal(job.offers[0].price,22);
   await act('counter',{price:20});assert.equal(job.offers[0].price,20);
   await assert.rejects(workspace.act(job.id,'fund',{revision:0}),/another tab/);
  });
@@ -68,7 +68,7 @@ test('English workspace carries user decisions through real local escrow, recove
  await t.test('English views expose real actions and escape imported data',()=>{
   const state={job:null,tasks:workspace.list(),network:workspace.network(),route:'workspace',present:false,draft:sample,sourceText:sample.sourceText,sourceName:sample.sourceName};
   for(const route of ['workspace','agents','evidence']){const html=renderWorkspace({...state,route});assert.doesNotMatch(html,/[\uac00-\ud7af]/);assert.ok(html.includes('data-action="tasks"'));}
-  const html=renderWorkspace({...state,job:{...job,title:'<img src=x onerror=alert(1)>'},present:true});assert.ok(html.includes('&lt;img'));assert.ok(html.includes('Verify on local chain'));assert.ok(html.includes('DEMO ASSIST'));
+  const html=renderWorkspace({...state,job:{...job,title:'<img src=x onerror=alert(1)>'},present:true});assert.ok(html.includes('&lt;img'));assert.ok(html.includes('Inspect proof'));assert.ok(html.includes('DEMO ASSIST'));assert.ok(!html.includes(job.dealHash));
   const client=readFileSync('web/spending/app.mjs','utf8');assert.doesNotMatch(client,/setInterval|autoplay|requestAnimationFrame/);assert.match(client,/hash===\x27demo\x27/);
  });
  await t.test('refund rejection has a bound attestation and retries its original transaction',async()=>{
@@ -83,6 +83,11 @@ test('English workspace carries user decisions through real local escrow, recove
  await t.test('stopped unfunded authority cannot be revived by editing or funding',async()=>{
   await prepare();await act('stop');assert.equal(job.authorityRevoked,true);
   await assert.rejects(act('fund'),/authority revoked/);await assert.rejects(act('edit',sample),/authority revoked/);assert.equal(job.dealId,undefined);
+ });
+ await t.test('Orbit has its own payout identity and an exact negotiated settlement',async()=>{
+  await prepare();assert.deepEqual(job.offers.map(o=>[o.name,o.price]),[['Atlas',22],['Nexus',35],['Orbit',27]]);
+  await act('select',{seller:'seller-c'});await act('counter',{price:24});await act('fund');await act('run');await act('invoice',{amount:24});await act('settle');
+  assert.equal(job.status,'COMPLETED');assert.equal(job.agreedPrice,24);assert.equal((await workspace.verify(job.id)).verdict,'VALID');
  });
  await t.test('HTTP API enforces local origin and session, serves only listed files',async()=>{
   let handler;const server=createServer((req,res)=>handler(req,res));await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));

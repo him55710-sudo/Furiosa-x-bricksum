@@ -1,8 +1,8 @@
 export const columns=['company','quarter','capex','currency','source_url'];
 export const phases=['Brief','Agreement','Work','Review','Receipt'];
 export const phaseOf=job=>({DRAFT:0,QUOTED:1,BLOCKED:1,FUNDING:1,LOCKED:2,REVIEW:3,SETTLING:3,REFUNDING:3,COMPLETED:4,REFUNDED:4,CANCELLED:4}[job?.status]??0);
-export const statusLabel=status=>({DRAFT:'Draft',QUOTED:'Choose an offer',BLOCKED:'Needs a change',FUNDING:'Confirm funding',LOCKED:'Ready to work',REVIEW:'Review delivery',SETTLING:'Confirm payment',REFUNDING:'Confirm refund',COMPLETED:'Completed',REFUNDED:'Refunded',CANCELLED:'Cancelled'}[status]??status);
-export const workerNames={'seller-a':'Atlas','seller-b':'Meridian'};
+export const statusLabel=status=>({DRAFT:'Ready to negotiate',QUOTED:'Negotiating',BLOCKED:'Protected',FUNDING:'Confirm funding',LOCKED:'Agreement locked',REVIEW:'Review delivery',SETTLING:'Confirm payment',REFUNDING:'Confirm refund',COMPLETED:'Paid as agreed',REFUNDED:'Refunded',CANCELLED:'Cancelled'}[status]??status);
+export const workerNames={'seller-a':'Atlas','seller-b':'Nexus','seller-c':'Orbit'};
 export function parseSource(raw){
  if(typeof raw!=='string'||raw.length>1_000_000)throw Error('Use a CSV or JSON file smaller than 1 MB.');
  let rows;
@@ -34,6 +34,7 @@ export function normalizeRows(rows){
 }
 export function offersFor(count){return [
  {seller:'seller-a',name:'Atlas',role:'Source-aware data worker',price:14+count*2,floor:12+count*2,description:'Normalize the table, preserve source references and compare every result with your input.'},
- {seller:'seller-b',name:'Meridian',role:'Lean data worker',price:27+count*2,floor:18+count*2,description:'Normalize the same fields in a compact output. All acceptance checks still apply.'}
+ {seller:'seller-b',name:'Nexus',role:'Fast delivery',price:27+count*2,floor:22+count*2,deliveryMinutes:4,description:'A speed-first worker that prioritizes short delivery windows and margin.'},
+ {seller:'seller-c',name:'Orbit',role:'Premium research',price:19+count*2,floor:16+count*2,deliveryMinutes:6,description:'A quality-first worker that preserves the complete source metadata with every row.'}
  ];}
 export function csv(rows){const keys=[...columns,...['unit','source_page','source_sha256','source_label','source_value'].filter(k=>rows.some(r=>r&&Object.hasOwn(r,k)))];const cell=v=>{let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};return [keys.join(','),...rows.map(r=>keys.map(k=>cell(r?.[k])).join(','))].join('\r\n');}

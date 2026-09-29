@@ -21,7 +21,7 @@ export function buildSpendingSite(root=process.cwd(),{outDir='dist-spending',tes
  // Stage in memory first: invalid evidence must not partially replace a prior build.
  const staged=new Map();
  function publish(name,bytes){if(name.endsWith('.json'))assertPublicJson(JSON.parse(String(bytes)));staged.set(name,bytes);files.push({path:name,bytes:Buffer.byteLength(bytes),sha256:createHash('sha256').update(bytes).digest('hex')});}
- for(const name of ['index.html','workspace.css','app.mjs','workspace-client.mjs','workspace-model.mjs','workspace-view.mjs','policy-simulator.mjs','favicon.svg'])publish(name,readFileSync(path.join(root,'web/spending',name)));
+ for(const name of ['index.html','workspace.css','deal-room.css','app.mjs','workspace-client.mjs','workspace-model.mjs','workspace-view.mjs','deal-room.mjs','policy-simulator.mjs','favicon.svg'])publish(name,readFileSync(path.join(root,'web/spending',name)));
  for(const name of PUBLIC_EVIDENCE)publish(`evidence/${name}.json`,readFileSync(path.join(source,(name==='independent'&&finalized?'independent-finalized':name)+'.json')));
  if(existsSync(path.join(source,'independent-finalized.json')))publish('evidence/independent-finalized.json',readFileSync(path.join(source,'independent-finalized.json')));
  // Keep the complete local test report. The public summary excludes stack

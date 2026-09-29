@@ -16,7 +16,7 @@ export async function openBrowserChain(state,save,{ganacheLoader=loadGanache,dbP
  try{
   progress('Opening your saved private chain…');
   await transport.request({method:'eth_chainId',params:[]});
-  const accounts=Object.values(transport.getInitialAccounts());const controller=new Wallet(accounts[0].secretKey,provider),buyer=new Wallet(accounts[1].secretKey).address,sellers={'seller-a':new Wallet(accounts[2].secretKey).address,'seller-b':new Wallet(accounts[3].secretKey).address};
+  const accounts=Object.values(transport.getInitialAccounts());const controller=new Wallet(accounts[0].secretKey,provider),buyer=new Wallet(accounts[1].secretKey).address,sellers={'seller-a':new Wallet(accounts[2].secretKey).address,'seller-b':new Wallet(accounts[3].secretKey).address,'seller-c':new Wallet(digest({seed:state.chain.seed,role:'seller-c'})).address};
   const signed=async request=>{const raw=await controller.signTransaction(await controller.populateTransaction(request));return {raw,hash:keccak256(raw),status:'PENDING'};};
   async function confirm(op){
    let receipt=await provider.getTransactionReceipt(op.hash);

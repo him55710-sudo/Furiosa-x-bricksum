@@ -26,7 +26,7 @@ export async function confirmReceipt(provider,receipt,policy){
   if(!canonical||canonical.hash!==receipt.blockHash)throw new Error('CHAIN_REORG_DETECTED');
   return {mode:policy.mode,confirmations,requiredConfirmations:policy.mode==='finalized'?1:policy.confirmations,observedBlock:observed.number,observedBlockHash:observed.hash};
 }
-export async function openChain({directory=null,publicNetwork=false,confirmations,finalityMode,devnetRpc=process.env.ADE_DEVNET_RPC_URL}={}){
+export async function openChain({directory=null,publicNetwork=false,confirmations,finalityMode,extraSellerIds=[],devnetRpc=process.env.ADE_DEVNET_RPC_URL}={}){
   const runtimeLock=directory?acquireRuntimeLock(directory):null;
   let transport,provider;
   try{
@@ -35,11 +35,12 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
   if(directory)mkdirSync(directory,{recursive:true});
   const keyFile=directory&&path.join(directory,'identities.json');
   const identities=keyFile&&existsSync(keyFile)?read(keyFile):Object.fromEntries(['controller','buyer','seller-a','seller-b'].map(id=>[id,Wallet.createRandom().privateKey]));
-  if(keyFile&&!existsSync(keyFile))writeFileSync(keyFile,JSON.stringify(identities),{mode:0o600});
+  for(const id of extraSellerIds){if(!/^seller-[a-z]$/.test(id))throw Error('SELLER_ID');identities[id]??=Wallet.createRandom().privateKey;}
+  if(keyFile&&(!existsSync(keyFile)||extraSellerIds.length))writeFileSync(keyFile,JSON.stringify(identities),{mode:0o600});
   if(publicNetwork){if(!process.env.SEPOLIA_RPC_URL)throw new Error('SEPOLIA_RPC_URL_REQUIRED');provider=new JsonRpcProvider(process.env.SEPOLIA_RPC_URL,undefined,{cacheTimeout:-1});provider.pollingInterval=2000;if((await provider.getNetwork()).chainId!==11155111n)throw new Error('SEPOLIA_ONLY');}
   else if(devnetRpc){const url=new URL(devnetRpc);if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.username||url.password||url.search||url.hash||url.pathname!=='/')throw new Error('LOOPBACK_DEVNET_ONLY');provider=new JsonRpcProvider(url.href,undefined,{cacheTimeout:-1});provider.pollingInterval=50;if((await provider.getNetwork()).chainId!==31338n)throw new Error('DEVNET_CHAIN_MISMATCH');}
   else {transport=ganache.provider({logging:{quiet:true},chain:{chainId:31338,hardfork:'shanghai'},wallet:{accounts:Object.values(identities).map(secretKey=>({secretKey,balance:'0x8AC7230489E80000'}))},...(directory?{database:{dbPath:path.join(directory,'chain')}}:{})});provider=new BrowserProvider(transport,undefined,{cacheTimeout:-1});provider.pollingInterval=30;}
-  const wallet=new Wallet(identities.controller,provider),sellers=Object.fromEntries(['seller-a','seller-b'].map(id=>[id,new Wallet(identities[id]).address]));
+  const wallet=new Wallet(identities.controller,provider),sellers=Object.fromEntries([...new Set(['seller-a','seller-b',...extraSellerIds])].map(id=>[id,new Wallet(identities[id]).address]));
   const chainId=Number((await provider.getNetwork()).chainId),deploymentFile=directory&&path.join(directory,'deployment.json');let deployment,contract;
   if(deploymentFile&&existsSync(deploymentFile)){
     deployment=read(deploymentFile);if(deployment.chainId!==chainId||deployment.sourceSha256!==artifact.sourceSha256||keccak256(await provider.getCode(deployment.contract))!==deployment.runtimeHash)throw new Error('DEPLOYMENT_MISMATCH');contract=new Contract(deployment.contract,artifact.abi,wallet);
@@ -52,6 +53,7 @@ export async function openChain({directory=null,publicNetwork=false,confirmation
   // This process owns the runtime directory; direct Engine instances still do
   // not constitute a distributed worker protocol.
   deployment.finality=finalityPolicy;
+  deployment.sellers={...deployment.sellers,...sellers};
   if(deploymentFile)writeFileSync(deploymentFile,JSON.stringify(deployment,null,2)+'\n');
   async function prepare(kind,dealHash,deal,attestation){
     if(kind==='fund'&&deal.assurance){const latest=await provider.getBlock('latest');if(!latest||latest.timestamp+deal.deadline+60>=deal.expires_at)throw new Error('DELIVERY_WINDOW_TRUNCATED');}
