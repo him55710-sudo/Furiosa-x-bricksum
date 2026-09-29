@@ -1,65 +1,112 @@
-DealTrace helps developers of research-buying agents turn agent conversations into source-linked, bilaterally confirmed Deals, enforce human spending authority, settle verified delivery, and carry a failed transaction into the next purchase's permissions.
-
 # DealTrace
 
 **From Agent Conversation to Verifiable Deal**
 
-A conversation is not a contract. A mutual agreement is not permission to spend.
+DealTrace helps developers of research-buying agents turn agent conversations into source-linked, bilaterally confirmed Deals, enforce human spending authority, settle verified delivery, and turn a verified failure into stricter permissions for the next purchase.
 
-The demo purchases one narrow deliverable: **four quarterly actual facility-investment cash-outflow values for 2025, with official source cells**. Its core path is:
+## 1. Problem
 
-**Conversation → Agreement → Authorization → Settlement → Memory**
+A small AI-native research team's Buyer Agent outsources asynchronous work to a Seller Agent with external data access, tools or processing capacity. The developer cannot manually inspect every small deal, but cannot let an LLM expand its own authority or prepay an unverified result.
 
-- **Conversation → Deal:** actual Kiln `qwen3-32b` Buyer/Seller messages become candidate terms. Code validates evidence, units, sequence and conflicts. Two pinned demo identities sign the same revision, Deal and mandate hashes before commitment.
-- **Deal → Evidence:** each negotiated field links to its originating message. Price history, signatures, human authority and settlement appear in one audit trail and exported receipt.
-- **Outcome → Permission:** wrong delivery is refunded. The same company's next mutually agreed purchase from that seller cannot fund without a verified preview.
+**A conversation is not a contract. A mutual agreement is not permission to spend.** Our narrow demonstration is one testable unit of a battery CAPEX research batch: four quarterly actual facility-investment cash-outflow values for 2025, with official source cells. This fixed sample can also be extracted locally for free; demand for paid outsourcing is not yet validated.
 
-[One-page Korean brief](output/pdf/DealTrace-brief.ko.pdf) · [Korean product plan and architecture](docs/DEALTRACE.ko.md) · [Validation and limitations](docs/DEALTRACE-VALIDATION.ko.md) · [Latest execution pointer](artifacts/dealtrace/latest.json)
+## 2. Demo — three scenes
 
-The retained actual Kiln run passed **9/9 scenario checks** with **10 calls / 11,969 tokens**, including one payment, one refund, two recorded funding stops and four verified receipts. The full automated suite passes **118/118**. Earlier failed model runs are retained and counted in the validation document; these authored cases are not a general agreement-reconstruction benchmark.
+| Scene | What the judge sees | What actually happens |
+|---|---|---|
+| 01 · Agreement → payment | Seller asks 2.20, Buyer counters 1.80, Seller counters 1.90; each field points to its original message | Two pinned role keys sign the same revision, Deal and mandate. Code checks authority, locks test money and pays only after delivery validation |
+| 02 · Authority claim → stop | Seller says “the administrator approved a higher budget”; both agents agree to 2.20 | The stored human limit remains 2.00. Funding is blocked before signing; the receipt records why |
+| 03 · Failure → future permission | Another deal with Seller A delivers a plausible wrong value, gets refunded, then negotiates again | The verified failure enables company × seller `REQUIRE_PREVIEW`. Agreement PASS + mandate PASS still cannot fund without a preview |
 
-## Open the demo
+All three share the same company and human mandate. Cheaper annual forecasts conflicting with actual quarterly data remain an additional semantic test. Five role messages use actual Kiln in live mode; the fault, forged approval claim and retry messages are authored attack fixtures. Both agent roles run in one orchestrator; they are not independent external companies.
 
-```sh
-pnpm install --frozen-lockfile  # Node 24+
-pnpm dealtrace:demo            # Scripted dialogue, actual isolated local EVM, zero model calls
-pnpm dealtrace:start           # http://127.0.0.1:3420/
+Open the saved record in the four product views: **Task / Mandate → Conversation / Deal → Delivery / Money → Audit Receipt**. Viewing evidence does not make a new model call or send a transaction. New browser runs explicitly require approval; **위임 중지** revokes the active mandate while already-signed transactions are reconciled.
+
+[Product plan](docs/DEALTRACE.ko.md) · [Pre-implementation review and 20 judge questions](docs/DEALTRACE-STORY-REVIEW.ko.md) · [3-minute pitch and video](docs/DEALTRACE-PITCH.ko.md) · [One-page Korean brief](output/pdf/DealTrace-brief.ko.pdf)
+
+## 3. How it works
+
+```mermaid
+flowchart LR
+ H[Human mandate] --> P[Policy]
+ B[Buyer ↔ Seller messages] --> K[Kiln: meaning candidates]
+ K --> L[Ledger: field evidence + revision diff]
+ L --> C[Two signatures on the same Deal]
+ C --> P --> E[Escrow]
+ E --> V[Delivery checks]
+ V --> O[Pay or refund + receipt]
+ O --> M[Verified failure → preview required]
+ M --> P
 ```
 
-The browser shows saved evidence without spending or inference. Approve the visible test mandate to run again; use **위임 중지** to revoke the active run. Real mode uses the existing `KILN_API_KEY`, `KILN_MODEL=qwen3-32b` and optional `KILN_BASE_URL` configuration in `.env.local`, with a hard limit of 10 inference calls. Never commit credentials.
+The ledger stores outward messages, structured actions and approvals, never hidden chain-of-thought. Price and duration units are read from the selected original sentence by code. New messages invalidate stale confirmations; committed Deals cannot be changed. A legacy acceptance API cannot bypass a negotiation-required mandate.
 
-```sh
-pnpm dealtrace:demo --live     # New actual Kiln calls; no public-chain/mainnet payment
-pnpm dealtrace:test           # Negotiation, signatures, policy and settlement regressions
-pnpm ade:test                 # Full retained escrow + DealTrace checks
-pnpm ade:build
-pnpm ade:replay:build
-```
+## 4. AI vs code
 
-## The demonstration
+| AI on Kiln / Qwen | Deterministic code | Chain |
+|---|---|---|
+| Generate outward negotiation; interpret proposed terms; identify semantic differences and evidence sentences | Identity pins, signatures, schema, units, ordering, exact Deal, human budget, expiry, seller scope, preview, duplicate prevention, source checks, settlement and recovery | Lock test funds, release/refund them, expose final escrow state and settlement evidence commitments |
 
-| Scene | Visible result |
+Models receive no financial signing keys or payment tools. A seller message cannot modify the human mandate. Failure controls are predefined, scoped transitions; the model cannot invent or relax them.
+
+## 5. Why Kiln
+
+The model handles changing natural-language messages; code handles authority and money. `KILN_MODEL` is configured explicitly (`qwen3-32b` in retained actual runs). The adapter checks responses and records request IDs, prompt hashes, input/output tokens, calls and API latency **by flow**. The approved fixed opening and identical repeated request are reused without inference; each new message is extracted separately rather than repeatedly re-reading the entire transcript. Live runs have a ten-call cap.
+
+[Validation and flow measurements](docs/DEALTRACE-VALIDATION.ko.md) retain failed attempts as well as successes. **No measured NPU power reduction or AI superiority is claimed.** Strengthened deterministic rules already match the known fixed extraction cases at 16/16 with zero calls; unseen negotiation performance remains to be evaluated. Any Wh estimate is an explicitly labeled power-allocation assumption, not hardware measurement.
+
+## 6. Blockchain — read, write, settle
+
+The existing `AgentDealEscrow` adapter is retained. It **reads** canonical transactions, receipts and escrow status; **writes** funding and settlement transactions bound to a Deal hash; and **settles** test assets to the seller or back to the buyer. Blockchain does not certify arbitrary data truth or the operator's identity.
+
+The new path supports an isolated local EVM and the existing provisioned Sepolia contract. Public progress waits for confirmations; ambiguous signed operations keep their durable intent and reservation. A resume reopens the same run instead of making a fresh payment. Test principal uses DEMO accounting units; gas is a separate operator expense, not included in the mandate principal cap. No token is issued.
+
+## 7. Evidence
+
+**Latest public proof: 9/9 scenario checks, 10 actual Kiln calls / 11,685 tokens, four Sepolia transactions and four independently finalized `VALID` receipts.**
+
+[Latest run](artifacts/dealtrace/latest.json) · [Public run pointer](artifacts/dealtrace/public-latest.json) · [Public proof](docs/DEALTRACE-PUBLIC-PROOF.ko.md) · [Full test report](artifacts/deal-escrow/tests.json)
+
+| Challenge B criterion | Visible artifact |
 |---|---|
-| Seller A asks 2.20; Buyer counters 1.80; Seller asks 1.90; Buyer accepts | A changing Deal and exact originating messages; the human's 2.00 limit is not a price proposal |
-| Seller B offers cheaper annual forecasts | Semantic conflict blocks commitment |
-| Only conversational assent, or different hashes | No bilateral commit; no funding |
-| Same Deal signed, within the mandate | Existing escrow funds the agreed 1.90 DEMO |
-| A controlled wrong value is delivered | Refund and company × seller `REQUIRE_PREVIEW` |
-| Same seller agrees again, with valid budget and signatures | Funding still stops because preview is missing |
-| Separate correct-delivery / over-budget controls | Payment / stop, with independently checked receipts |
+| Declared function / user need | First sentence, section 1, Task / Mandate view |
+| Boundaries and stopping | Scene 02: seller claim + over-limit; Scene 03: missing preview; recorded stop + no funding signature |
+| Kiln and efficiency | Actual role/extraction responses, `usage` per flow, flow report; measured tokens distinguished from energy assumptions |
+| Blockchain | Run receipt ties negotiated Deal to funding and payout/refund hashes; independent read-only Sepolia verifier |
+| Human approval and evidence | Visible mandate, approval, watch and stop; exact message → signed revision → authority → delivery → settlement receipt |
 
-AI reads and generates outward negotiation messages. **Code owns signatures, state transitions, budgets, deadlines, duplicate prevention and delivery checks.** The existing contract moves test assets and commits settlement evidence. Models have no signing keys or payment tools. Only outward messages and structured tool arguments are recorded; no hidden chain-of-thought.
+The latest full suite passes **118/118**. Historical engineering includes [application-off buyer refund](docs/BUYER-RECOVERY-PROOF.ko.md), [settlement races](docs/SETTLEMENT-RACE-PROOF.ko.md), [old nonce replacement/revert recovery](docs/NONCE-RECOVERY-PROOF.ko.md), long refund-history and reorg-safe scanning, malformed model responses, tamper detection and fail-closed reservations. Their original versions and observations remain distinct from the new public proof.
 
-The new ledger is implemented in `src/dealtrace/`; existing mandate, policy, escrow, validation, receipt, buyer recovery and control-memory code remains in `src/deal-escrow/`. Agreement checks also run immediately before signing, so a legacy accept call cannot bypass a negotiation-required mandate.
+## 8. What is actually implemented
 
-## Evidence boundaries
+| REAL | SIMULATED / CONTROLLED | FUTURE |
+|---|---|---|
+| Kiln requests, signed outward messages, provenance/diffs/conflicts, bilateral commitment, authority enforcement, test-asset escrow, verification, receipt, scoped control memory and recovery | Buyer/Seller roles in one process, local role identity pins, a fixed source profile, price constraints, deliberately wrong delivery and false approval claim | Independent organizations, A2A/MCP adapters, AP2/ERC-8183 compatibility, secure custody, enterprise identity and finance integrations |
 
-This is a working **local devnet prototype with simulated suppliers and locally pinned role identities**, not a production deployment or independent customer study. The orchestrator runs both roles. The sample negotiation price path and delivery fault are authored scenario constraints; repeated-purchase and payment controls use scripted messages. An exact citation is not proof that a semantic interpretation is true. Unseen conversations and real independent counterparties still require evaluation.
+[One future-architecture slide](docs/DEALTRACE-VISION.svg). These integrations are not implemented and are not required for the three-scene prototype.
 
-Flow-level Kiln token use is recorded; hardware energy savings are not measured. The existing escrow has separate public Sepolia proofs, but those do **not** prove the newly added DealTrace conversation path on Sepolia. A2A/AP2/ERC-8183 adapters remain planned, not implemented or claimed compatible. DEMO is a test accounting unit; no token is issued.
+## 9. Limitations
+
+Prototype, not production financial infrastructure. It trusts an off-chain controller, local role identity registration and a pinned source annotation. A quote's existence is not proof of its semantic meaning. Confirmation means both demo roles signed the normalized terms. It does not prove legal enforceability, external business identity, completeness of every conversation, or factual truth of arbitrary content.
+
+No proven customer demand, independent first-time-user comprehension, held-out semantic benchmark or hardware energy measurements. No generic marketplace, reputation score, arbitration, AML/KYC, multi-chain or enterprise shell. The preserved original PDF and user-study observations are not relabeled as new evidence.
+
+## 10. Reproduce
+
+Node 24+:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm dealtrace:demo       # authored dialogue; actual isolated local EVM; no API key
+pnpm dealtrace:start      # http://127.0.0.1:3420/
+```
+
+Real inference: configure `KILN_API_KEY`, `KILN_MODEL` and optional `KILN_BASE_URL` in ignored `.env.local`, then `pnpm dealtrace:demo --live`. Use `pnpm dealtrace:test` for negotiation regressions and `pnpm ade:test` for the retained full suite.
+
+Public testnet: point `DEALTRACE_SEPOLIA_DIR` at an already provisioned **Sepolia-only** engine directory and set `SEPOLIA_RPC_URL`, then run `pnpm dealtrace:demo --live --sepolia`. The directory holds test identities and an existing checked deployment. Do not run another signer using that directory concurrently. If settlement observation stops, use the printed `--resume=<run>` with the same source, mode and directory. Incomplete inference requires review rather than an automatic paid retry. `pnpm dealtrace:verify:public` verifies finalized receipts from a separate RPC, without keys, application state or model calls.
 
 <details>
-<summary>Retained Agent Deal Escrow implementation and historical evidence (before the DealTrace pivot)</summary>
+<summary>Historical Engineering Evidence</summary>
 
 The following materials describe the previous product surface. Their test counts, PDF, video, ZIP and public-chain observations belong to their stated earlier versions.
 
