@@ -20,7 +20,7 @@ This audit distinguishes implementation, observed execution and evidence that st
 | Approval, watch, stop, usable output and export | CUA approval/stop runs; four-row result; byte-identical downloaded receipt; mobile check | PASS as automated UI testing |
 | Three-scene demo, short brief, English README | 180-second decoded screenshot film; visually reviewed one-page PDF; README | Produced; film is saved-run evidence, not live footage |
 | Main integration preserves existing work | Both research modes and tool families retained; integration report and current full test suite | 138/138 local PASS |
-| Rules vs full-transcript vs incremental comparison | Frozen two-conversation, eight-turn experiment; all 16 model attempts retained | Complete; rules 8/8, incremental 7/8, full-transcript 3/8 under the specified strict metric |
+| Rules vs full-transcript vs incremental comparison | Frozen two-conversation, eight-turn experiment plus true full re-extraction follow-up; all 24 model attempts retained | Complete; rules 8/8, incremental 7/8, whole-transcript/newest-patch 3/8; true all-event re-extraction 4/8. Follow-up is not a new held-out evaluation |
 
 ## Version boundaries
 

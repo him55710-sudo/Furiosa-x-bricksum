@@ -66,6 +66,8 @@ This makes efficient inference a service-design question: spend tokens where lan
 
 A separate authored eight-case expression test scored Qwen **7/8**, versus **8/8** for an explicit deterministic baseline using zero calls. In a second frozen comparison of eight turns across two conversations, rules passed **8/8**, incremental interpretation **7/8** (12,669 tokens), and full-transcript input **3/8** (15,358 tokens) on exact changes, accumulated state and provenance. Both model arms made eight calls; failed attempts remain counted. Full-transcript input still emitted only the newest patch, not a complete re-extraction. These small authored tests support a bounded design choice, not general AI superiority or a universal savings claim. [Comparison protocol and results](docs/DEALTRACE-CONTEXT-COMPARISON.en.md).
 
+A subsequent **true full re-extraction** returned all event interpretations at every turn: **4/8**, eight calls and **18,984 tokens**, including every failed attempt. It used the unchanged dataset and was designed after the first comparison, so it is follow-up evidence, not a new held-out test. The measured difference supports keeping inference incremental for this workflow; code and bilateral review still determine whether a proposed interpretation can become executable.
+
 ## Blockchain carries the money and the commitment
 
 ```mermaid
