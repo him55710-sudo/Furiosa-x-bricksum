@@ -1,0 +1,758 @@
+{
+  "run": "a1974656-7bba-464f-86fd-d40869c6735c",
+  "status": "COMPLETE",
+  "transport": "REMOTE_HTTPS",
+  "results": [
+    {
+      "mode": "NORMAL",
+      "expected": "PAID",
+      "session": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+      "network": {
+        "chainId": 31339,
+        "contract": "0x04E826344e563953C2dfC48A7BE77B8309e0Ef61",
+        "metered": false
+      },
+      "live": false,
+      "checks": [],
+      "usage": [],
+      "identities": {
+        "buyer": "0x8618402D573922990ac1279A8a86F31A8a32AC66",
+        "buyer_pid": 8040,
+        "seller": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+        "seller_pid": null,
+        "seller_origin": "https://accord-seller-lab.vercel.app"
+      },
+      "packet": {
+        "rfq": {
+          "schema": "DEALTRACE_RFQ_V1",
+          "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+          "task": "Extract quarterly actual facility investment with source evidence; optionally search and process the returned records.",
+          "budget_minor": 4000,
+          "max_delivery_seconds": 600,
+          "asset": "DEMO",
+          "billing": "FIXED_ALL_OR_REFUND",
+          "items": [
+            {
+              "service": "document",
+              "units": 1,
+              "input": {
+                "periods": [
+                  "2025-Q1",
+                  "2025-Q2",
+                  "2025-Q3",
+                  "2025-Q4"
+                ],
+                "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT"
+              }
+            }
+          ],
+          "required_evidence": "ORIGINAL_SOURCE_CELLS",
+          "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+          "failed_units_billable": false
+        },
+        "provider": {
+          "id": "researchcloud-lab",
+          "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+          "capabilities": [
+            "document",
+            "search",
+            "compute"
+          ],
+          "execution": "SYNTHETIC_SELLER_LAB_V1",
+          "proof": {
+            "body": {
+              "schema": "DEALTRACE_PROVIDER_V1",
+              "id": "researchcloud-lab",
+              "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+              "challenge": "8821e425-fd11-452f-b7bb-493c60f45a64",
+              "capabilities": [
+                "document",
+                "search",
+                "compute"
+              ],
+              "execution": "SYNTHETIC_SELLER_LAB_V1",
+              "expires_at": 1790721020
+            },
+            "signature": "0x7cb1cd35449f6c88c584b987722db3a2e35779d97d412570b6690ef020af76c57883985ff2faab063759832a0b7525455d88a7bd8b81711b63981d6719c4e9a51c"
+          }
+        },
+        "events": [
+          {
+            "body": {
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+              "role": "seller",
+              "sequence": 1,
+              "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "quote": {
+                "action": "offer",
+                "message": "I can deliver the stated work at these unit rates.",
+                "items": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1440
+                  }
+                ],
+                "delivery_seconds": 180,
+                "quality": "ACTUAL_WITH_SOURCES"
+              },
+              "timestamp": "2026-09-29T22:25:23.804Z"
+            },
+            "signature": "0x57a388c522eee2882623f6315ea8b01b9ceee2d0ea5b0d84db0e0ea7af15fbeb22b97c8de4e0ee147e178d3c0718061e377c93e717d584dacab1a7495042c42f1c"
+          },
+          {
+            "body": {
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+              "role": "buyer",
+              "sequence": 2,
+              "previous_hash": "0x5f91560c32c336e43c1e7eae303f7fdc20adb662afd7c3569dbda8f244628e56",
+              "quote": {
+                "action": "offer",
+                "message": "Can you provide the same work on these revised terms?",
+                "items": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1296
+                  }
+                ],
+                "delivery_seconds": 600,
+                "quality": "ACTUAL_WITH_SOURCES"
+              },
+              "timestamp": "2026-09-29T22:25:24.337Z"
+            },
+            "signature": "0xae0992d618d328c951ed1421bca64243a91e9811de67fe921f06be5837336ed351781318f6966033a41b322b1b845b19d1a4a2f6eb930514a01c432264a385f21b"
+          },
+          {
+            "body": {
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+              "role": "seller",
+              "sequence": 3,
+              "previous_hash": "0x9785ba7e0065d84254401716417da146cd1e398d680eeddd011648844bd04a2f",
+              "quote": {
+                "action": "offer",
+                "message": "I can deliver the stated work at these unit rates.",
+                "items": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1296
+                  }
+                ],
+                "delivery_seconds": 180,
+                "quality": "ACTUAL_WITH_SOURCES"
+              },
+              "timestamp": "2026-09-29T22:25:26.465Z"
+            },
+            "signature": "0x247af1604b0b16136bfe31454c95d34061e72bcbdc6b9afbe7335f35745549ca07e4a63098f72c897a9583c98a0354318aef2c0d2d2d7d9299e12b4101567a821c"
+          }
+        ],
+        "terms": {
+          "schema": "DEALTRACE_PROCUREMENT_V1",
+          "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+          "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+          "seller": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+          "items": [
+            {
+              "service": "document",
+              "units": 1,
+              "unit_price_minor": 1296
+            }
+          ],
+          "price_minor": 1296,
+          "delivery_seconds": 180,
+          "quality": "ACTUAL_WITH_SOURCES",
+          "billing": "FIXED_ALL_OR_REFUND",
+          "failed_units_billable": false,
+          "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+          "required_evidence": "ORIGINAL_SOURCE_CELLS"
+        },
+        "terms_hash": "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63",
+        "provenance": {
+          "items": {
+            "event_hash": "0xd86ee7828619553cfaefe7ad08df5cc2835b451329464ee0a620095b9834f50b",
+            "value": [
+              {
+                "service": "document",
+                "units": 1,
+                "unit_price_minor": 1296
+              }
+            ]
+          },
+          "delivery_seconds": {
+            "event_hash": "0xd86ee7828619553cfaefe7ad08df5cc2835b451329464ee0a620095b9834f50b",
+            "value": 180
+          },
+          "quality": {
+            "event_hash": "0xd86ee7828619553cfaefe7ad08df5cc2835b451329464ee0a620095b9834f50b",
+            "value": "ACTUAL_WITH_SOURCES"
+          }
+        },
+        "buyer": "0x8618402D573922990ac1279A8a86F31A8a32AC66"
+      },
+      "deal": {
+        "dealHash": "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63",
+        "mandateId": "0x3836af6c9950b895792e2a4d9032fca2e980ae30d8401dd518ddd4bb175c962a",
+        "seller": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+        "amount": "1296000000000",
+        "deliveryWindow": 180,
+        "expiresAt": 1767229601,
+        "termsHash": "0xf8988788c50bcac62fe385b6fd206fbffc5851010d00461dae3fde17f407a46b",
+        "previewHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "units": [
+        {
+          "body": {
+            "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+            "terms_hash": "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63",
+            "request_id": "0xb2c7b4f5a3fe173862d5826edf876e4f629a6cbccf61a7365a091dd622f75700",
+            "service": "document",
+            "index": 0,
+            "status": "SUCCESS",
+            "output": {
+              "kind": "OFFICIAL_REFERENCE_EXTRACTION",
+              "rows": [
+                {
+                  "company": "LG Energy Solution",
+                  "quarter": "2025-Q1",
+                  "capex": 3014,
+                  "currency": "KRW",
+                  "unit": "billion",
+                  "source_value": -3014,
+                  "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                  "source_page": 16,
+                  "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                  "source_label": "Investment in Facilities"
+                },
+                {
+                  "company": "LG Energy Solution",
+                  "quarter": "2025-Q2",
+                  "capex": 2717,
+                  "currency": "KRW",
+                  "unit": "billion",
+                  "source_value": -2717,
+                  "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                  "source_page": 16,
+                  "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                  "source_label": "Investment in Facilities"
+                },
+                {
+                  "company": "LG Energy Solution",
+                  "quarter": "2025-Q3",
+                  "capex": 2171,
+                  "currency": "KRW",
+                  "unit": "billion",
+                  "source_value": -2171,
+                  "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                  "source_page": 16,
+                  "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                  "source_label": "Investment in Facilities"
+                },
+                {
+                  "company": "LG Energy Solution",
+                  "quarter": "2025-Q4",
+                  "capex": 2515,
+                  "currency": "KRW",
+                  "unit": "billion",
+                  "source_value": -2515,
+                  "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                  "source_page": 16,
+                  "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                  "source_label": "Investment in Facilities"
+                }
+              ]
+            },
+            "failure": null,
+            "elapsed_ms": 0,
+            "timestamp": "2026-09-29T22:25:31.017Z"
+          },
+          "signature": "0xf34775522b9907e5d75163c6627d7b00b3bb8ae1ded7fe916a2d86050055c75a43d1d5747f2ca9008823946fa8733ad9480c327cf6ce72741ed4408442f585b41c"
+        }
+      ],
+      "claim": {
+        "dealHash": "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63",
+        "claimId": "0xbe1dfe824c89224dd020b2ab80f3f6ddadab00f62d06e8d66363583f4ffc2f50",
+        "payee": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+        "amount": "1296000000000",
+        "deliveryHash": "0xbdfd05bc0e6e34aa5acd55a5726891404f2b3061a3d8180a8052ab6ae360352f"
+      },
+      "transactions": [
+        {
+          "method": "openMandate",
+          "hash": "0xf658cb3ce29a8b5601be7e3b7aa794ccc00710a0cc87f7717b7540fdf65547e2",
+          "block": 2,
+          "status": 1,
+          "gas_used": "223187"
+        },
+        {
+          "method": "fund",
+          "hash": "0x5157172dfccd3771d97fbd01a4533f7563d67bd2acefc2da0f3ecf3c54cc1226",
+          "block": 3,
+          "status": 1,
+          "gas_used": "219588"
+        },
+        {
+          "method": "release",
+          "hash": "0xdcceed1fd931c2cf2fcdae1fc9403699a3884d771743a5b4e687f8ec3b7bd152",
+          "block": 4,
+          "status": 1,
+          "gas_used": "105504"
+        },
+        {
+          "method": "withdrawFor",
+          "hash": "0x40ac59d79ee98e8d3bb525bed2098c0e1baaa3b38698d54f1e7a9db6e5ab5614",
+          "block": 5,
+          "status": 1,
+          "gas_used": "61208"
+        }
+      ],
+      "outcome": "PAID",
+      "error": null,
+      "journal": {
+        "negotiation": {
+          "providers": [
+            {
+              "id": "researchcloud-lab",
+              "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+              "capabilities": [
+                "document",
+                "search",
+                "compute"
+              ],
+              "execution": "SYNTHETIC_SELLER_LAB_V1",
+              "proof": {
+                "body": {
+                  "schema": "DEALTRACE_PROVIDER_V1",
+                  "id": "researchcloud-lab",
+                  "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+                  "challenge": "8821e425-fd11-452f-b7bb-493c60f45a64",
+                  "capabilities": [
+                    "document",
+                    "search",
+                    "compute"
+                  ],
+                  "execution": "SYNTHETIC_SELLER_LAB_V1",
+                  "expires_at": 1790721020
+                },
+                "signature": "0x7cb1cd35449f6c88c584b987722db3a2e35779d97d412570b6690ef020af76c57883985ff2faab063759832a0b7525455d88a7bd8b81711b63981d6719c4e9a51c"
+              }
+            }
+          ],
+          "sessions": {
+            "researchcloud-lab": {
+              "events": [
+                {
+                  "body": {
+                    "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+                    "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+                    "role": "seller",
+                    "sequence": 1,
+                    "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                    "quote": {
+                      "action": "offer",
+                      "message": "I can deliver the stated work at these unit rates.",
+                      "items": [
+                        {
+                          "service": "document",
+                          "units": 1,
+                          "unit_price_minor": 1440
+                        }
+                      ],
+                      "delivery_seconds": 180,
+                      "quality": "ACTUAL_WITH_SOURCES"
+                    },
+                    "timestamp": "2026-09-29T22:25:23.804Z"
+                  },
+                  "signature": "0x57a388c522eee2882623f6315ea8b01b9ceee2d0ea5b0d84db0e0ea7af15fbeb22b97c8de4e0ee147e178d3c0718061e377c93e717d584dacab1a7495042c42f1c"
+                },
+                {
+                  "body": {
+                    "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+                    "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+                    "role": "buyer",
+                    "sequence": 2,
+                    "previous_hash": "0x5f91560c32c336e43c1e7eae303f7fdc20adb662afd7c3569dbda8f244628e56",
+                    "quote": {
+                      "action": "offer",
+                      "message": "Can you provide the same work on these revised terms?",
+                      "items": [
+                        {
+                          "service": "document",
+                          "units": 1,
+                          "unit_price_minor": 1296
+                        }
+                      ],
+                      "delivery_seconds": 600,
+                      "quality": "ACTUAL_WITH_SOURCES"
+                    },
+                    "timestamp": "2026-09-29T22:25:24.337Z"
+                  },
+                  "signature": "0xae0992d618d328c951ed1421bca64243a91e9811de67fe921f06be5837336ed351781318f6966033a41b322b1b845b19d1a4a2f6eb930514a01c432264a385f21b"
+                },
+                {
+                  "body": {
+                    "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+                    "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+                    "role": "seller",
+                    "sequence": 3,
+                    "previous_hash": "0x9785ba7e0065d84254401716417da146cd1e398d680eeddd011648844bd04a2f",
+                    "quote": {
+                      "action": "offer",
+                      "message": "I can deliver the stated work at these unit rates.",
+                      "items": [
+                        {
+                          "service": "document",
+                          "units": 1,
+                          "unit_price_minor": 1296
+                        }
+                      ],
+                      "delivery_seconds": 180,
+                      "quality": "ACTUAL_WITH_SOURCES"
+                    },
+                    "timestamp": "2026-09-29T22:25:26.465Z"
+                  },
+                  "signature": "0x247af1604b0b16136bfe31454c95d34061e72bcbdc6b9afbe7335f35745549ca07e4a63098f72c897a9583c98a0354318aef2c0d2d2d7d9299e12b4101567a821c"
+                }
+              ],
+              "reason": "ELIGIBLE"
+            }
+          },
+          "selection": "researchcloud-lab",
+          "usage": {
+            "researchcloud-lab": [],
+            "buyer": []
+          },
+          "packet": {
+            "rfq": {
+              "schema": "DEALTRACE_RFQ_V1",
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "task": "Extract quarterly actual facility investment with source evidence; optionally search and process the returned records.",
+              "budget_minor": 4000,
+              "max_delivery_seconds": 600,
+              "asset": "DEMO",
+              "billing": "FIXED_ALL_OR_REFUND",
+              "items": [
+                {
+                  "service": "document",
+                  "units": 1,
+                  "input": {
+                    "periods": [
+                      "2025-Q1",
+                      "2025-Q2",
+                      "2025-Q3",
+                      "2025-Q4"
+                    ],
+                    "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT"
+                  }
+                }
+              ],
+              "required_evidence": "ORIGINAL_SOURCE_CELLS",
+              "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+              "failed_units_billable": false
+            },
+            "provider": {
+              "id": "researchcloud-lab",
+              "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+              "capabilities": [
+                "document",
+                "search",
+                "compute"
+              ],
+              "execution": "SYNTHETIC_SELLER_LAB_V1",
+              "proof": {
+                "body": {
+                  "schema": "DEALTRACE_PROVIDER_V1",
+                  "id": "researchcloud-lab",
+                  "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+                  "challenge": "8821e425-fd11-452f-b7bb-493c60f45a64",
+                  "capabilities": [
+                    "document",
+                    "search",
+                    "compute"
+                  ],
+                  "execution": "SYNTHETIC_SELLER_LAB_V1",
+                  "expires_at": 1790721020
+                },
+                "signature": "0x7cb1cd35449f6c88c584b987722db3a2e35779d97d412570b6690ef020af76c57883985ff2faab063759832a0b7525455d88a7bd8b81711b63981d6719c4e9a51c"
+              }
+            },
+            "events": [
+              {
+                "body": {
+                  "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+                  "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+                  "role": "seller",
+                  "sequence": 1,
+                  "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "quote": {
+                    "action": "offer",
+                    "message": "I can deliver the stated work at these unit rates.",
+                    "items": [
+                      {
+                        "service": "document",
+                        "units": 1,
+                        "unit_price_minor": 1440
+                      }
+                    ],
+                    "delivery_seconds": 180,
+                    "quality": "ACTUAL_WITH_SOURCES"
+                  },
+                  "timestamp": "2026-09-29T22:25:23.804Z"
+                },
+                "signature": "0x57a388c522eee2882623f6315ea8b01b9ceee2d0ea5b0d84db0e0ea7af15fbeb22b97c8de4e0ee147e178d3c0718061e377c93e717d584dacab1a7495042c42f1c"
+              },
+              {
+                "body": {
+                  "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+                  "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+                  "role": "buyer",
+                  "sequence": 2,
+                  "previous_hash": "0x5f91560c32c336e43c1e7eae303f7fdc20adb662afd7c3569dbda8f244628e56",
+                  "quote": {
+                    "action": "offer",
+                    "message": "Can you provide the same work on these revised terms?",
+                    "items": [
+                      {
+                        "service": "document",
+                        "units": 1,
+                        "unit_price_minor": 1296
+                      }
+                    ],
+                    "delivery_seconds": 600,
+                    "quality": "ACTUAL_WITH_SOURCES"
+                  },
+                  "timestamp": "2026-09-29T22:25:24.337Z"
+                },
+                "signature": "0xae0992d618d328c951ed1421bca64243a91e9811de67fe921f06be5837336ed351781318f6966033a41b322b1b845b19d1a4a2f6eb930514a01c432264a385f21b"
+              },
+              {
+                "body": {
+                  "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+                  "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+                  "role": "seller",
+                  "sequence": 3,
+                  "previous_hash": "0x9785ba7e0065d84254401716417da146cd1e398d680eeddd011648844bd04a2f",
+                  "quote": {
+                    "action": "offer",
+                    "message": "I can deliver the stated work at these unit rates.",
+                    "items": [
+                      {
+                        "service": "document",
+                        "units": 1,
+                        "unit_price_minor": 1296
+                      }
+                    ],
+                    "delivery_seconds": 180,
+                    "quality": "ACTUAL_WITH_SOURCES"
+                  },
+                  "timestamp": "2026-09-29T22:25:26.465Z"
+                },
+                "signature": "0x247af1604b0b16136bfe31454c95d34061e72bcbdc6b9afbe7335f35745549ca07e4a63098f72c897a9583c98a0354318aef2c0d2d2d7d9299e12b4101567a821c"
+              }
+            ],
+            "terms": {
+              "schema": "DEALTRACE_PROCUREMENT_V1",
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+              "seller": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+              "items": [
+                {
+                  "service": "document",
+                  "units": 1,
+                  "unit_price_minor": 1296
+                }
+              ],
+              "price_minor": 1296,
+              "delivery_seconds": 180,
+              "quality": "ACTUAL_WITH_SOURCES",
+              "billing": "FIXED_ALL_OR_REFUND",
+              "failed_units_billable": false,
+              "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+              "required_evidence": "ORIGINAL_SOURCE_CELLS"
+            },
+            "terms_hash": "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63",
+            "provenance": {
+              "items": {
+                "event_hash": "0xd86ee7828619553cfaefe7ad08df5cc2835b451329464ee0a620095b9834f50b",
+                "value": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1296
+                  }
+                ]
+              },
+              "delivery_seconds": {
+                "event_hash": "0xd86ee7828619553cfaefe7ad08df5cc2835b451329464ee0a620095b9834f50b",
+                "value": 180
+              },
+              "quality": {
+                "event_hash": "0xd86ee7828619553cfaefe7ad08df5cc2835b451329464ee0a620095b9834f50b",
+                "value": "ACTUAL_WITH_SOURCES"
+              }
+            },
+            "buyer": "0x8618402D573922990ac1279A8a86F31A8a32AC66"
+          }
+        }
+      },
+      "evidence": {
+        "id": "researchcloud-lab",
+        "address": "0x56AEa20aA44cDF19983fE764c0AD7fe3dF4923B6",
+        "events": [
+          {
+            "body": {
+              "run": "f4f05d3c-9d24-420b-9708-366b1dad3400",
+              "rfq_hash": "0xc9b1f5c969e7d7295185c13030d093b9cdb627f8094a4b5e03ab81544add6f05",
+              "role": "seller",
+              "sequence": 1,
+              "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "quote": {
+                "action": "offer",
+                "message": "I can deliver the stated work at these unit rates.",
+                "items": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1440
+                  }
+                ],
+                "delivery_seconds": 180,
+                "quality": "ACTUAL_WITH_SOURCES"
+              },
+              "timestamp": "2026-09-29T22:20:24.443Z"
+            },
+            "signature": "0x9fca1e81905ae52ac5785baacc08dd3373280df111c3fd97a89cb051d949681372d3e5ccf603e7a0c7da06f6c68cedba45d2f183b1dc93684d0f6367374c15311b"
+          },
+          {
+            "body": {
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+              "role": "seller",
+              "sequence": 1,
+              "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "quote": {
+                "action": "offer",
+                "message": "I can deliver the stated work at these unit rates.",
+                "items": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1440
+                  }
+                ],
+                "delivery_seconds": 180,
+                "quality": "ACTUAL_WITH_SOURCES"
+              },
+              "timestamp": "2026-09-29T22:25:23.804Z"
+            },
+            "signature": "0x57a388c522eee2882623f6315ea8b01b9ceee2d0ea5b0d84db0e0ea7af15fbeb22b97c8de4e0ee147e178d3c0718061e377c93e717d584dacab1a7495042c42f1c"
+          },
+          {
+            "body": {
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "rfq_hash": "0xa925083ed7fc8b5f77db35268acbccf3f3b6ccb7d47abaf3efb0b1f380043652",
+              "role": "seller",
+              "sequence": 3,
+              "previous_hash": "0x9785ba7e0065d84254401716417da146cd1e398d680eeddd011648844bd04a2f",
+              "quote": {
+                "action": "offer",
+                "message": "I can deliver the stated work at these unit rates.",
+                "items": [
+                  {
+                    "service": "document",
+                    "units": 1,
+                    "unit_price_minor": 1296
+                  }
+                ],
+                "delivery_seconds": 180,
+                "quality": "ACTUAL_WITH_SOURCES"
+              },
+              "timestamp": "2026-09-29T22:25:26.465Z"
+            },
+            "signature": "0x247af1604b0b16136bfe31454c95d34061e72bcbdc6b9afbe7335f35745549ca07e4a63098f72c897a9583c98a0354318aef2c0d2d2d7d9299e12b4101567a821c"
+          }
+        ],
+        "units": [
+          {
+            "body": {
+              "run": "c10b8a76-976f-4e9e-9b30-fdb99c7ecd0c",
+              "terms_hash": "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63",
+              "request_id": "0xb2c7b4f5a3fe173862d5826edf876e4f629a6cbccf61a7365a091dd622f75700",
+              "service": "document",
+              "index": 0,
+              "status": "SUCCESS",
+              "output": {
+                "kind": "OFFICIAL_REFERENCE_EXTRACTION",
+                "rows": [
+                  {
+                    "company": "LG Energy Solution",
+                    "quarter": "2025-Q1",
+                    "capex": 3014,
+                    "currency": "KRW",
+                    "unit": "billion",
+                    "source_value": -3014,
+                    "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                    "source_page": 16,
+                    "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                    "source_label": "Investment in Facilities"
+                  },
+                  {
+                    "company": "LG Energy Solution",
+                    "quarter": "2025-Q2",
+                    "capex": 2717,
+                    "currency": "KRW",
+                    "unit": "billion",
+                    "source_value": -2717,
+                    "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                    "source_page": 16,
+                    "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                    "source_label": "Investment in Facilities"
+                  },
+                  {
+                    "company": "LG Energy Solution",
+                    "quarter": "2025-Q3",
+                    "capex": 2171,
+                    "currency": "KRW",
+                    "unit": "billion",
+                    "source_value": -2171,
+                    "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                    "source_page": 16,
+                    "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                    "source_label": "Investment in Facilities"
+                  },
+                  {
+                    "company": "LG Energy Solution",
+                    "quarter": "2025-Q4",
+                    "capex": 2515,
+                    "currency": "KRW",
+                    "unit": "billion",
+                    "source_value": -2515,
+                    "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                    "source_page": 16,
+                    "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                    "source_label": "Investment in Facilities"
+                  }
+                ]
+              },
+              "failure": null,
+              "elapsed_ms": 0,
+              "timestamp": "2026-09-29T22:25:31.017Z"
+            },
+            "signature": "0xf34775522b9907e5d75163c6627d7b00b3bb8ae1ded7fe916a2d86050055c75a43d1d5747f2ca9008823946fa8733ad9480c327cf6ce72741ed4408442f585b41c"
+          }
+        ],
+        "commits": [
+          "0xb92a5ae4a43fb9003573ec0b381eeb5e2f003066ff4bec18c0ca4544aa3edb63"
+        ],
+        "usage": [],
+        "request_count": 9,
+        "laboratory": true
+      },
+      "restart": null,
+      "pass": true
+    }
+  ]
+}
