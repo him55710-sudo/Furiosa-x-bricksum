@@ -44,6 +44,8 @@ A chat log preserves what agents said. A budget limit caps how much they can spe
 - **Delivery and billing are separate.** A valid result alone cannot release money, and a correctly signed invoice cannot change the agreed total.
 - **The receipt can leave the application.** Another process can check the messages, signatures, authorization, delivery, claims and finalized chain result without the app database or secret keys.
 
+In the audit appendix, **change a receipt copy's price and verify it** to see `INVALID / DEAL_HASH_MISMATCH`. This runs the real verifier on an in-memory copy; it makes no model call or transaction and preserves the exported original. An offline integrity check does not independently confirm settlement finality.
+
 Our longer-term thesis is an integration layer for teams whose agents buy variable digital work. The reusable asset would be a consistent model of terms, provenance, execution and outcome-driven controls across providers. That is a product hypothesis—not a claim of market leadership, traction or a proven moat.
 
 ## Kiln powers the conversation; code controls the money
@@ -65,6 +67,8 @@ This makes efficient inference a service-design question: spend tokens where lan
 **12,073 tokens**, with individual attempts and latency retained. Hardware energy was not measured. With 56.772 seconds of summed API latency, assumed attributable power of 25/50/100 W gives 0.39425/0.7885/1.577 Wh. Queue time, networking, batching and utilization are unknown. These are assumptions, not a measured NPU/GPU comparison.
 
 A separate authored eight-case expression test scored Qwen **7/8**, versus **8/8** for an explicit deterministic baseline using zero calls. In a second frozen comparison of eight turns across two conversations, rules passed **8/8**, incremental interpretation **7/8** (12,669 tokens), and full-transcript input **3/8** (15,358 tokens) on exact changes, accumulated state and provenance. Both model arms made eight calls; failed attempts remain counted. Full-transcript input still emitted only the newest patch, not a complete re-extraction. These small authored tests support a bounded design choice, not general AI superiority or a universal savings claim. [Comparison protocol and results](docs/DEALTRACE-CONTEXT-COMPARISON.en.md).
+
+A subsequent **true full re-extraction** returned all event interpretations at every turn: **4/8**, eight calls and **18,984 tokens**, including every failed attempt. It used the unchanged dataset and was designed after the first comparison, so it is follow-up evidence, not a new held-out test. The measured difference supports keeping inference incremental for this workflow; code and bilateral review still determine whether a proposed interpretation can become executable.
 
 ## Blockchain carries the money and the commitment
 
@@ -100,7 +104,7 @@ Public run **`34d1da0d-e842-4f44-acfd-4d97728c81f0`** passed **17/17 workflow ch
 - [Valid, altered and incomplete portable receipts](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/portable-verifier-cases)
 - [Resume without additional payment or inference](artifacts/dealtrace/runs/34d1da0d-e842-4f44-acfd-4d97728c81f0/resume-proof.json)
 
-The filmed version passed **129/129 tests**. After integrating the existing research workbench from main and adding a regression for failed-inference accounting, the combined suite passed **138/138**. These versions remain distinct: [current tests](artifacts/deal-escrow/tests.json), [presentation tests](artifacts/dealtrace/integration/pre-merge-tests.json), [integration audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md).
+The filmed version passed **129/129 tests**. After integrating the existing research workbench from main and adding regressions for failed-inference accounting and read-only receipt-copy verification, the combined suite passed **139/139**. These versions remain distinct: [current tests](artifacts/deal-escrow/tests.json), [presentation tests](artifacts/dealtrace/integration/pre-merge-tests.json), [integration audit](docs/DEALTRACE-COMPLETION-AUDIT.en.md).
 
 The film is a 180-second, silent edit of real saved-run screenshots, not live transaction footage. Prices, excess billing and incorrect delivery are controlled scenarios. The expiry test injects policy time; it is not a real-time wait.
 
