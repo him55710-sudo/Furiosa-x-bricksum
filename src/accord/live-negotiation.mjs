@@ -6,7 +6,7 @@ const requireValue=(ok,message)=>{if(!ok)throw Error(message);};
 const digest=value=>keccak256(toUtf8Bytes(JSON.stringify(value)));
 const names={buyer:'Buyer',atlas:'Atlas',nexus:'Nexus',orbit:'Orbit'};
 // These policies are server-owned. Only the actor's own policy enters its prompt.
-const policies={
+export const defaultSellerPolicies={
  atlas:{goal:'Maximize revenue while maintaining high acceptance probability.',minimum_price:20,minimum_delivery_minutes:8,maximum_sources:6,specialty:'Source-first research'},
  nexus:{goal:'Maximize margin through fast delivery.',minimum_price:30,minimum_delivery_minutes:4,maximum_sources:6,specialty:'Fast delivery'},
  orbit:{goal:'Prefer quality-first contracts with strong source coverage.',minimum_price:24,minimum_delivery_minutes:6,maximum_sources:8,specialty:'Premium research'}
@@ -15,8 +15,15 @@ const fields=['action','price','rows','sources','deliveryMinutes','message'];
 const spec={name:'send_negotiation_message',description:'Propose complete public terms or accept the preceding terms. This cannot move funds.',parameters:{type:'object',properties:{action:{type:'string',enum:['offer','accept','decline']},price:{type:'integer',minimum:1},rows:{type:'integer',minimum:1},sources:{type:'integer',minimum:1},deliveryMinutes:{type:'integer',minimum:1,maximum:60},message:{type:'string',maxLength:160}},required:fields,additionalProperties:false}};
 const terms=q=>({price:q.price,rows:q.rows,sources:q.sources,deliveryMinutes:q.deliveryMinutes});
 
-export function createLiveNegotiation({secret,model=process.env.KILN_MODEL,clientFactory=onRecord=>new KilnClient({model,onRecord}),now=Date.now}={}){
+export function createLiveNegotiation({secret,model=process.env.KILN_MODEL,clientFactory=onRecord=>new KilnClient({model,onRecord}),now=Date.now,sellerPolicies=defaultSellerPolicies}={}){
  requireValue(typeof secret==='string'&&secret.length>=32,'LIVE_SIGNING_SECRET_REQUIRED');
+ // Server/test configuration only; never read private policies from HTTP input.
+ const policies=structuredClone(sellerPolicies);
+ requireValue(policies&&Object.keys(policies).length===3&&['atlas','nexus','orbit'].every(id=>Object.hasOwn(policies,id)),'LIVE_POLICY_CONFIG');
+ for(const p of Object.values(policies)){
+  requireValue(p&&typeof p.goal==='string'&&typeof p.specialty==='string','LIVE_POLICY_CONFIG');
+  for(const [field,max] of [['minimum_price',1000000],['minimum_delivery_minutes',60],['maximum_sources',8]])requireValue(Number.isSafeInteger(p[field])&&p[field]>=1&&p[field]<=max,'LIVE_POLICY_CONFIG');
+ }
  const keyFor=role=>new Wallet('0x'+createHmac('sha256',secret).update('accord-live-agent-v1:'+role).digest('hex'));
  const identities=Object.fromEntries(Object.keys(names).map(id=>[id,{name:names[id],address:keyFor(id).address}]));
  const seal=state=>createHmac('sha256',secret).update(JSON.stringify(state)).digest('hex');
