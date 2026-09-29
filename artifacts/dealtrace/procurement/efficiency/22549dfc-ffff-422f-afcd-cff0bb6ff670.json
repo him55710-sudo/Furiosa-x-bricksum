@@ -1,0 +1,704 @@
+{
+  "schema": "ACCORD_TOKEN_CEILING_EXPERIMENT_V1",
+  "batch": "22549dfc-ffff-422f-afcd-cff0bb6ff670",
+  "contextMode": "full",
+  "model": "qwen3-32b",
+  "started_at": "2026-09-29T19:48:39.258Z",
+  "source": [
+    {
+      "path": "src/dealtrace/procurement/client.mjs",
+      "sha256": "899d4a97ec2bf3bd28846082e953e7107599c8268d7804e989ab3c9b1eaa738a"
+    },
+    {
+      "path": "src/dealtrace/procurement/protocol.mjs",
+      "sha256": "c97c08e43282efad266da54553370ca5cd396845d31f8050c4d735afdb22153a"
+    },
+    {
+      "path": "src/dealtrace/procurement/worker.mjs",
+      "sha256": "386aa4de1f506ea66002de33ea6e894560a27f60d77a926c02d7f5678e2ce183"
+    },
+    {
+      "path": "src/dealtrace/procurement/limits.mjs",
+      "sha256": "17894d97b296924bb37a35ca2808c7155e162c2117a33a3ae0814808908bc128"
+    },
+    {
+      "path": "src/dealtrace/procurement/negotiate.mjs",
+      "sha256": "b24be17431ecc3e61075d51b2ec67349b1131e25d8686e5e4af899a036e28ab6"
+    },
+    {
+      "path": "scripts/benchmark-procurement-tokens.mjs",
+      "sha256": "c892079da7297e7c54a3b901f848eadf2c02a1f1284f32a2727a6dbd9beef0fc"
+    }
+  ],
+  "scope": "Live negotiation only, identical fixed RFQ and operator-pinned seller policies. No funding, settlement or synthetic fallback. Not a population reliability estimate.",
+  "repeats": 3,
+  "caps": [
+    1200
+  ],
+  "expected_calls": 4,
+  "capability_prefilter": true,
+  "attempts": [
+    {
+      "run": "af8a9986-de4d-4088-953d-1b829a87745a",
+      "repeat": 1,
+      "cap": 1200,
+      "success": true,
+      "calls": 4,
+      "retries": 0,
+      "truncations": 0,
+      "funding_transactions": 0,
+      "terms": {
+        "schema": "DEALTRACE_PROCUREMENT_V1",
+        "run": "af8a9986-de4d-4088-953d-1b829a87745a",
+        "rfq_hash": "0xf24a9bcd7bf9c2a9a0d65ae2681598b832582e02f6268ef34ce4ce3e46dd323a",
+        "seller": "0xEA6197c56A4a80fBEaC690310bf486C7e0b07744",
+        "items": [
+          {
+            "service": "document",
+            "unit_price_minor": 2000,
+            "units": 1
+          }
+        ],
+        "price_minor": 2000,
+        "delivery_seconds": 450,
+        "quality": "ACTUAL_WITH_SOURCES",
+        "billing": "FIXED_ALL_OR_REFUND",
+        "failed_units_billable": false,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "required_evidence": "ORIGINAL_SOURCE_CELLS"
+      },
+      "usage": [
+        {
+          "flow_name": "Procurement / seller-a",
+          "model": "qwen3-32b",
+          "request_id": "chat-3cf089d334434a48a5eb3e54c03486a7",
+          "prompt_tokens": 746,
+          "completion_tokens": 461,
+          "total_tokens": 1207,
+          "start_time": "2026-09-29T19:48:42.259Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:48:49.969Z",
+          "latency_ms": 7710,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x511959241b0706b51afb0c755aaf9768de9cb76dda65b2e56cacd87d87162b98",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / seller-a",
+          "model": "qwen3-32b",
+          "request_id": "chat-25566222246349c297db95456ab00159",
+          "prompt_tokens": 1495,
+          "completion_tokens": 645,
+          "total_tokens": 2140,
+          "start_time": "2026-09-29T19:49:03.475Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:49:13.598Z",
+          "latency_ms": 10123,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0xe6e647f71506895a67128265e50242c8fb932cf30d0a3b9f0c1838054746ad36",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / seller-c",
+          "model": "qwen3-32b",
+          "request_id": "chat-719c31c7630a41ea87211f364d8a5e34",
+          "prompt_tokens": 746,
+          "completion_tokens": 361,
+          "total_tokens": 1107,
+          "start_time": "2026-09-29T19:48:50.007Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:48:56.138Z",
+          "latency_ms": 6132,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0xf2ebb09b2941a762c4f3ced817f34f83c486e45e3e721a1de2d10802cc8d3a20",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / buyer",
+          "model": "qwen3-32b",
+          "request_id": "chat-ab19c58abc6c4210afeee7b02799f8a7",
+          "prompt_tokens": 1073,
+          "completion_tokens": 403,
+          "total_tokens": 1476,
+          "start_time": "2026-09-29T19:48:56.208Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:49:03.428Z",
+          "latency_ms": 7219,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x34ff3731b9bc062b888de2b124fdcbb798574d27555db73e9cf29850ff510f58",
+          "streaming": false
+        }
+      ],
+      "seller": "seller-a",
+      "input_tokens": 4060,
+      "output_tokens": 1870,
+      "total_tokens": 5930,
+      "api_latency_ms": 31184,
+      "invalid_calls": 0,
+      "elapsed_ms": 34558,
+      "sessions": {
+        "seller-a": {
+          "events": [
+            {
+              "body": {
+                "run": "af8a9986-de4d-4088-953d-1b829a87745a",
+                "rfq_hash": "0xf24a9bcd7bf9c2a9a0d65ae2681598b832582e02f6268ef34ce4ce3e46dd323a",
+                "role": "seller",
+                "sequence": 1,
+                "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 2000,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Offering precise quarterly facility investment extraction with full source evidence.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:48:49.975Z"
+              },
+              "signature": "0xa951f74bafaeb4c80a9a8950a365538285e50d8a68b13c7c6a004918f31bcd88694d963848399eee16b786e134e9c606d6b63acaa95e4f4da73e407724d458fd1b"
+            },
+            {
+              "body": {
+                "run": "af8a9986-de4d-4088-953d-1b829a87745a",
+                "rfq_hash": "0xf24a9bcd7bf9c2a9a0d65ae2681598b832582e02f6268ef34ce4ce3e46dd323a",
+                "role": "buyer",
+                "sequence": 2,
+                "previous_hash": "0xe0245710af5fe17b7efabd46be1febd87f67e5e70e03ad6e907822bcbca07c76",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 1500,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Requesting a modest discount while ensuring full source evidence and timely delivery.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:49:03.443Z"
+              },
+              "signature": "0x53dcab920ac6926fdc1e4de24970a08e98f60756a4fd3ceebd12dea3ba248c205e823336face317637b026531ed65e553b377e4d1c7f80590468a9be5627ccee1c"
+            },
+            {
+              "body": {
+                "run": "af8a9986-de4d-4088-953d-1b829a87745a",
+                "rfq_hash": "0xf24a9bcd7bf9c2a9a0d65ae2681598b832582e02f6268ef34ce4ce3e46dd323a",
+                "role": "seller",
+                "sequence": 3,
+                "previous_hash": "0x3616a6eb601a111b90b2ae21b5b64fcd25ecc40be3d4d1c8bf35d9d856cb0ac1",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 2000,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Maintaining floor price with expedited delivery.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:49:13.607Z"
+              },
+              "signature": "0x83dd55493c7f6d2f8f6908c600281723c24d618996de7e38d07c0c39dca46bb233563528347f00c96e1b2df8e5ff87fcdd1e60197a51a7ca32671907ef5fbfff1c"
+            }
+          ],
+          "reason": "ELIGIBLE"
+        },
+        "seller-b": {
+          "events": [],
+          "reason": "PREFILTER_QUALITY",
+          "inference_calls": 0
+        },
+        "seller-c": {
+          "events": [
+            {
+              "body": {
+                "run": "af8a9986-de4d-4088-953d-1b829a87745a",
+                "rfq_hash": "0xf24a9bcd7bf9c2a9a0d65ae2681598b832582e02f6268ef34ce4ce3e46dd323a",
+                "role": "seller",
+                "sequence": 1,
+                "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "quote": {
+                  "action": "offer",
+                  "message": "Offering precise quarterly facility investment extraction with source validation.",
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 2500,
+                      "units": 1
+                    }
+                  ],
+                  "delivery_seconds": 240,
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:48:56.150Z"
+              },
+              "signature": "0x5791fb698955002ac146937c48242d6ed4a35b55301acc38d8a813468a7da5974db541fe596e06e5e70c5f6a5d55a39e952e8e060d8aafbc8850f0ac6eb0b8221c"
+            }
+          ],
+          "reason": "ELIGIBLE"
+        }
+      }
+    },
+    {
+      "run": "8e7d0261-41e7-4655-bd6c-09071603ff85",
+      "repeat": 2,
+      "cap": 1200,
+      "success": true,
+      "calls": 4,
+      "retries": 0,
+      "truncations": 0,
+      "funding_transactions": 0,
+      "terms": {
+        "schema": "DEALTRACE_PROCUREMENT_V1",
+        "run": "8e7d0261-41e7-4655-bd6c-09071603ff85",
+        "rfq_hash": "0xe6a8cfc6409b80b69cf961d480a10c1b8a143315573363340ba14dba7d2ca28a",
+        "seller": "0x079E1db34d3695a090aAd5D3943631c30E76d238",
+        "items": [
+          {
+            "service": "document",
+            "unit_price_minor": 1850,
+            "units": 1
+          }
+        ],
+        "price_minor": 1850,
+        "delivery_seconds": 450,
+        "quality": "ACTUAL_WITH_SOURCES",
+        "billing": "FIXED_ALL_OR_REFUND",
+        "failed_units_billable": false,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "required_evidence": "ORIGINAL_SOURCE_CELLS"
+      },
+      "usage": [
+        {
+          "flow_name": "Procurement / seller-a",
+          "model": "qwen3-32b",
+          "request_id": "chat-12d9636e776e4eeea801bc5fb5426acb",
+          "prompt_tokens": 747,
+          "completion_tokens": 443,
+          "total_tokens": 1190,
+          "start_time": "2026-09-29T19:49:21.225Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:49:28.267Z",
+          "latency_ms": 7042,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x97b72000b9e0670c4a85034de4baf228c9354ee44cbfe251f422713dbe0cc9dc",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / seller-a",
+          "model": "qwen3-32b",
+          "request_id": "chat-ad23d5668eb74712998d562be1a698dc",
+          "prompt_tokens": 1508,
+          "completion_tokens": 428,
+          "total_tokens": 1936,
+          "start_time": "2026-09-29T19:49:44.402Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:49:51.225Z",
+          "latency_ms": 6823,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x4b820812a1b323293f6b8718716e950ed0395ffc0727f7d91e6a2fc8485d7954",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / seller-c",
+          "model": "qwen3-32b",
+          "request_id": "chat-c74594609a8a4526b6e1bb5865963f3f",
+          "prompt_tokens": 747,
+          "completion_tokens": 462,
+          "total_tokens": 1209,
+          "start_time": "2026-09-29T19:49:28.318Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:49:36.730Z",
+          "latency_ms": 8411,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0xb86afe77ee1f238135d17955306ab2badceec3f10952c1e406ca1dae6ad439be",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / buyer",
+          "model": "qwen3-32b",
+          "request_id": "chat-04590f9c382a4003aad072fb659f6c18",
+          "prompt_tokens": 1069,
+          "completion_tokens": 438,
+          "total_tokens": 1507,
+          "start_time": "2026-09-29T19:49:36.825Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:49:44.329Z",
+          "latency_ms": 7504,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x3b31807b53e9a654de8a834f5887f9632318f69b8de9dbdce19235f6acfc484f",
+          "streaming": false
+        }
+      ],
+      "seller": "seller-a",
+      "input_tokens": 4071,
+      "output_tokens": 1771,
+      "total_tokens": 5842,
+      "api_latency_ms": 29780,
+      "invalid_calls": 0,
+      "elapsed_ms": 37585,
+      "sessions": {
+        "seller-a": {
+          "events": [
+            {
+              "body": {
+                "run": "8e7d0261-41e7-4655-bd6c-09071603ff85",
+                "rfq_hash": "0xe6a8cfc6409b80b69cf961d480a10c1b8a143315573363340ba14dba7d2ca28a",
+                "role": "seller",
+                "sequence": 1,
+                "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 1900,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Ready to deliver verified facility investments with source evidence.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:49:28.276Z"
+              },
+              "signature": "0xbc700a5aaa1a1c3233c9a704ddbfe11d4ed9f72eac7f627ace5ba58c1adbe8854c652c4128e33cdd7feb78941e6c53e7389f411f18bbd99a3564f3c0d0286f641c"
+            },
+            {
+              "body": {
+                "run": "8e7d0261-41e7-4655-bd6c-09071603ff85",
+                "rfq_hash": "0xe6a8cfc6409b80b69cf961d480a10c1b8a143315573363340ba14dba7d2ca28a",
+                "role": "buyer",
+                "sequence": 2,
+                "previous_hash": "0x7137faf985458b2a719031075452c24c3a7d3364e13c8501de1b919810706300",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 1500,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Seeking a modest discount while ensuring timely delivery and full source evidence.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:49:44.338Z"
+              },
+              "signature": "0xed7001ac76856cb555e57ef03f98dd5f75149ef74184c80d982869d626147cb75b0b954125f8ff3e30ed4e7d81c65561e53f96262cb266b557dd70e587b6fbe51c"
+            },
+            {
+              "body": {
+                "run": "8e7d0261-41e7-4655-bd6c-09071603ff85",
+                "rfq_hash": "0xe6a8cfc6409b80b69cf961d480a10c1b8a143315573363340ba14dba7d2ca28a",
+                "role": "seller",
+                "sequence": 3,
+                "previous_hash": "0x642c0f8259959dfdfb1939ba4f90ab277dc0df1bf8f017cf87027be0d94a2a16",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 1850,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Adjusting to minimum viable price while maintaining quality and delivery terms.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:49:51.232Z"
+              },
+              "signature": "0x166b96db25501a19c8da0b08a697284b4fcda0ea29d53eb0076d51ff8798d6d05ab35e9a6245d296036bbe945445125afcd163e299014db39bda2a5f9dc0cdb41c"
+            }
+          ],
+          "reason": "ELIGIBLE"
+        },
+        "seller-b": {
+          "events": [],
+          "reason": "PREFILTER_QUALITY",
+          "inference_calls": 0
+        },
+        "seller-c": {
+          "events": [
+            {
+              "body": {
+                "run": "8e7d0261-41e7-4655-bd6c-09071603ff85",
+                "rfq_hash": "0xe6a8cfc6409b80b69cf961d480a10c1b8a143315573363340ba14dba7d2ca28a",
+                "role": "seller",
+                "sequence": 1,
+                "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 240,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 2500,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Offering precise extraction with verified sources.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:49:36.738Z"
+              },
+              "signature": "0x401d77f43677ee2cb83b616fd330b18542c41b3481a66dc37b84fcc111d60a975197c4fa07d40868488964a43de8602695ba322329d0c96128ceec62d062e4a01b"
+            }
+          ],
+          "reason": "ELIGIBLE"
+        }
+      }
+    },
+    {
+      "run": "5e58dde6-cd2d-4c98-b952-7b219b36d70e",
+      "repeat": 3,
+      "cap": 1200,
+      "success": true,
+      "calls": 4,
+      "retries": 0,
+      "truncations": 0,
+      "funding_transactions": 0,
+      "terms": {
+        "schema": "DEALTRACE_PROCUREMENT_V1",
+        "run": "5e58dde6-cd2d-4c98-b952-7b219b36d70e",
+        "rfq_hash": "0x3337c07ba9010f881a4d7d52e312e8d641fc6e0208bc364a909b648f8d949765",
+        "seller": "0xd7E6Af40331B9B4150b7705e9Fd2Bd8EC9b1FaAD",
+        "items": [
+          {
+            "service": "document",
+            "unit_price_minor": 1850,
+            "units": 1
+          }
+        ],
+        "price_minor": 1850,
+        "delivery_seconds": 450,
+        "quality": "ACTUAL_WITH_SOURCES",
+        "billing": "FIXED_ALL_OR_REFUND",
+        "failed_units_billable": false,
+        "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+        "required_evidence": "ORIGINAL_SOURCE_CELLS"
+      },
+      "usage": [
+        {
+          "flow_name": "Procurement / seller-a",
+          "model": "qwen3-32b",
+          "request_id": "chat-3e9edef293614c638a4844035ad74c17",
+          "prompt_tokens": 745,
+          "completion_tokens": 461,
+          "total_tokens": 1206,
+          "start_time": "2026-09-29T19:49:59.206Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:50:06.737Z",
+          "latency_ms": 7531,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0xc1df34a67ec8da25da2238730407a3a99bd3903b752509277eb66c97ac930ee0",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / seller-a",
+          "model": "qwen3-32b",
+          "request_id": "chat-4042e4a0fa8e4da885c61bfa5dbade0a",
+          "prompt_tokens": 1510,
+          "completion_tokens": 531,
+          "total_tokens": 2041,
+          "start_time": "2026-09-29T19:50:21.798Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:50:30.280Z",
+          "latency_ms": 8482,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x89afd5065d09099751e0f9747946868f22d4b3eef8d52500e70a728500257901",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / seller-c",
+          "model": "qwen3-32b",
+          "request_id": "chat-5ec631d6caf947508bc19b2d6a5659ab",
+          "prompt_tokens": 745,
+          "completion_tokens": 501,
+          "total_tokens": 1246,
+          "start_time": "2026-09-29T19:50:06.782Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:50:14.538Z",
+          "latency_ms": 7756,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x6d2991f0b227be29904309e5fdfe25ed6e78ddf5db2bbfde817bd0cd40dd4331",
+          "streaming": false
+        },
+        {
+          "flow_name": "Procurement / buyer",
+          "model": "qwen3-32b",
+          "request_id": "chat-8c1daee3775f4c458b86589da6824390",
+          "prompt_tokens": 1078,
+          "completion_tokens": 444,
+          "total_tokens": 1522,
+          "start_time": "2026-09-29T19:50:14.601Z",
+          "first_token_time": null,
+          "end_time": "2026-09-29T19:50:21.746Z",
+          "latency_ms": 7145,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0xdf2e7c98e1b51efd338fcb5d94b36a51d8ea3b7d391b3722e8a4db5005c927b5",
+          "streaming": false
+        }
+      ],
+      "seller": "seller-a",
+      "input_tokens": 4078,
+      "output_tokens": 1937,
+      "total_tokens": 6015,
+      "api_latency_ms": 30914,
+      "invalid_calls": 0,
+      "elapsed_ms": 38951,
+      "sessions": {
+        "seller-a": {
+          "events": [
+            {
+              "body": {
+                "run": "5e58dde6-cd2d-4c98-b952-7b219b36d70e",
+                "rfq_hash": "0x3337c07ba9010f881a4d7d52e312e8d641fc6e0208bc364a909b648f8d949765",
+                "role": "seller",
+                "sequence": 1,
+                "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 2000,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Offering precise quarterly facility investment extraction with verified sources.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:50:06.749Z"
+              },
+              "signature": "0x5f464729a6aa3695a3b52de4a8c7ee1725afd7599f106454555515906f46b6476323f4a1633e6259881b898a8132e46356c4ba7b1d6ccf8aacc793d5fc3f8a8b1c"
+            },
+            {
+              "body": {
+                "run": "5e58dde6-cd2d-4c98-b952-7b219b36d70e",
+                "rfq_hash": "0x3337c07ba9010f881a4d7d52e312e8d641fc6e0208bc364a909b648f8d949765",
+                "role": "buyer",
+                "sequence": 2,
+                "previous_hash": "0xb4ed4af699847513d7411a5827fea385cac007be0f72727dbd70f0dd31d334db",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 1500,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Requesting a modest discount while maintaining source evidence and timely delivery.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:50:21.759Z"
+              },
+              "signature": "0x1331233366b06850e9ae0307f8792142a23891da5461ea7086e80caa070a8c135eb8996dfef536b37287c37a1cf2b66ef81a7b6cbaa434accc1055f72181e9f11c"
+            },
+            {
+              "body": {
+                "run": "5e58dde6-cd2d-4c98-b952-7b219b36d70e",
+                "rfq_hash": "0x3337c07ba9010f881a4d7d52e312e8d641fc6e0208bc364a909b648f8d949765",
+                "role": "seller",
+                "sequence": 3,
+                "previous_hash": "0xd1174e928961cc7929c610c41df7d494747cbd427dbdc61b398e4f44231b2a10",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 450,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 1850,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Adjusting price to ensure quality source verification and timely delivery.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:50:30.286Z"
+              },
+              "signature": "0x4dc70223ca94dc8ba248132c6c114080335d7c1748d15141f6c895b4d8160d381c18b1721b7e35c1127189b637205a27e9b04dc3c28179b25d0ffffb503e855a1c"
+            }
+          ],
+          "reason": "ELIGIBLE"
+        },
+        "seller-b": {
+          "events": [],
+          "reason": "PREFILTER_QUALITY",
+          "inference_calls": 0
+        },
+        "seller-c": {
+          "events": [
+            {
+              "body": {
+                "run": "5e58dde6-cd2d-4c98-b952-7b219b36d70e",
+                "rfq_hash": "0x3337c07ba9010f881a4d7d52e312e8d641fc6e0208bc364a909b648f8d949765",
+                "role": "seller",
+                "sequence": 1,
+                "previous_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "quote": {
+                  "action": "offer",
+                  "delivery_seconds": 480,
+                  "items": [
+                    {
+                      "service": "document",
+                      "unit_price_minor": 2420,
+                      "units": 1
+                    }
+                  ],
+                  "message": "Providing verified quarterly facility investments with source documentation.",
+                  "quality": "ACTUAL_WITH_SOURCES"
+                },
+                "timestamp": "2026-09-29T19:50:14.543Z"
+              },
+              "signature": "0x93f69049e1af4ab8cfeda3f1c32cd3381c92d8abe924c9d5cb0b9fda431a639e39f087e57adbf441c9073f3a360bafadb8077eab5e66838b86c56cf71222de901b"
+            }
+          ],
+          "reason": "ELIGIBLE"
+        }
+      }
+    }
+  ],
+  "selected_ceiling": 1200,
+  "summary": [
+    {
+      "cap": 1200,
+      "attempts": 3,
+      "successful": 3,
+      "clean_successful": 3,
+      "total_tokens": 17787,
+      "truncations": 0
+    }
+  ],
+  "completed_at": "2026-09-29T19:50:30.359Z",
+  "source_unchanged": true,
+  "provenance_format_note": "Source hashes are unchanged. The original path-to-digest map was serialized as explicit path/sha256 entries after execution to distinguish public source checksums from credentials. Measurements and source snapshots are unchanged."
+}

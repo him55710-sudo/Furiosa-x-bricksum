@@ -1,0 +1,54 @@
+{
+  "schema": "ACCORD_TOKEN_CEILING_EXPERIMENT_V1",
+  "batch": "2eb7257f-5ffa-4c2d-8b23-5039967d6036",
+  "model": "qwen3-32b",
+  "started_at": "2026-09-29T19:41:37.993Z",
+  "source": [
+    {
+      "path": "src/dealtrace/procurement/worker.mjs",
+      "sha256": "cba86f464448487ef588f8ee644e40c0196f53bb242c49d5bba72ded8aaa1a28"
+    },
+    {
+      "path": "src/dealtrace/procurement/limits.mjs",
+      "sha256": "7052d2fbb22de71e4c56706a309184b69d30cb2384394df171250a24528781ae"
+    },
+    {
+      "path": "src/dealtrace/procurement/negotiate.mjs",
+      "sha256": "cc9f376cf280029aa4f2595c0fd822e44b5a824a3041e897c2834e240f9a2ef7"
+    },
+    {
+      "path": "scripts/benchmark-procurement-tokens.mjs",
+      "sha256": "4ac87f201a88579cbd325953a8cf88699c8ea2e1901247d048f4747751872daf"
+    }
+  ],
+  "scope": "Live negotiation only, identical fixed RFQ and operator-pinned seller policies. No funding, settlement or synthetic fallback. Not a population reliability estimate.",
+  "repeats": 3,
+  "caps": [
+    1200,
+    800
+  ],
+  "attempts": [],
+  "selected_ceiling": null,
+  "status": "INTERRUPTED",
+  "reason": "Duplicate run started after an editing command failed. Stopped before applying prompt refinement. Excluded from cap selection.",
+  "usage_completeness": "In-flight API requests may be billed without returned telemetry.",
+  "retained_partial_usage": [
+    {
+      "flow_name": "Procurement / seller-a",
+      "model": "qwen3-32b",
+      "request_id": "chat-00b6ab587ca049e8abaee98be23773f1",
+      "prompt_tokens": 843,
+      "completion_tokens": 911,
+      "total_tokens": 1754,
+      "start_time": "2026-09-29T19:41:39.901Z",
+      "first_token_time": null,
+      "end_time": "2026-09-29T19:41:53.965Z",
+      "latency_ms": 14065,
+      "tool_called": "send_negotiation_message",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x7cdee27cd626733e173f700deda17e5f6036da2e185122d05a9834e6f81d94dc",
+      "streaming": false
+    }
+  ],
+  "provenance_format_note": "Source hashes are unchanged. The original path-to-digest map was serialized as explicit path/sha256 entries after execution to distinguish public source checksums from credentials. Measurements and source snapshots are unchanged."
+}

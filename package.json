@@ -81,7 +81,9 @@
     "ade:spending:build": "node scripts/build-deal-escrow-spending.mjs",
     "ade:spending:test": "node --test tests/deal-escrow/accord-workspace.test.mjs tests/deal-escrow/spending-site.test.mjs",
     "ade:hosted:build": "node scripts/build-accord-vercel.mjs",
-    "ade:hosted:test": "node scripts/build-accord-vercel.mjs && node --test tests/deal-escrow/accord-browser.test.mjs"
+    "ade:hosted:test": "node scripts/build-accord-vercel.mjs && node --test tests/deal-escrow/accord-browser.test.mjs",
+    "dealtrace:boundaries": "node scripts/verify-procurement-boundaries.mjs",
+    "dealtrace:tokens": "node --env-file-if-exists=.env.local scripts/benchmark-procurement-tokens.mjs"
   },
   "dependencies": {
     "ethers": "^6.17.0",

@@ -15,6 +15,12 @@ export async function negotiate({rfq,buyer,sellers,live,onProgress=()=>{},cancel
   if(n.sessions[provider.id])continue;
   const seller=sellers.find(s=>s.id===provider.id),compatible=rfq.items.every(i=>provider.capabilities.includes(i.service));
   if(!compatible){n.sessions[provider.id]={events:[],reason:'CAPABILITY_MISMATCH'};persist();continue;}
+  const policy=seller.localPolicy;
+  // Only operator-pinned local configuration can establish these facts. An
+  // external seller's unverified prose is never used as a trusted cost floor.
+  const reason=policy?.quality&&policy.quality!=='ACTUAL_WITH_SOURCES'?'PREFILTER_QUALITY':policy?.min_delivery_seconds>rfq.max_delivery_seconds?'PREFILTER_DEADLINE':policy?.floors&&rfq.items.every(i=>Number.isSafeInteger(policy.floors[i.service]))&&rfq.items.reduce((n,i)=>n+(i.minimum_units??i.units)*policy.floors[i.service],0)>rfq.budget_minor?'PREFILTER_MINIMUM_COST':null;
+  if(reason){n.sessions[provider.id]={events:[],reason,inference_calls:0};persist();continue;}
+
   try{const event=await request(seller,provider,[],`${rfq.run}-initial`);n.sessions[provider.id]={events:[event],reason:eligible(event.body.quote,rfq)?'ELIGIBLE':'PRICE_DEADLINE_OR_QUALITY'};}
   catch(e){n.sessions[provider.id]={events:[],reason:e.message};}
   persist();onProgress('QUOTES_RECEIVED');

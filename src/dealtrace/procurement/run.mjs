@@ -7,45 +7,52 @@ import {acquireRuntimeLock} from '../../deal-escrow/runtime-lock.mjs';
 import {sellerListHash} from '../vault.mjs';
 import {openExecution} from './chain.mjs';
 import {startWorker,connectProvider} from './client.mjs';
+import {preflight,registeredSellers,tokenCeiling} from './limits.mjs';
 import {negotiate} from './negotiate.mjs';
 import {validateUsage} from './work.mjs';
 import {verifyProcurement} from './verify.mjs';
 import {hash,ensure,defaultRfq,validateRfq,UNIT_WEI,executionDeal,domainFor,executionTypes,meterLines,verifySigned} from './protocol.mjs';
 
 function source(){const files=['contracts/DealTraceVault.sol','contracts/DealTraceMeteredVault.sol','artifacts/dealtrace/vault/contract.json','artifacts/dealtrace/metered-vault/contract.json','src/deal-escrow/domain.ts','src/deal-escrow/kiln.ts','src/deal-escrow/reference.ts','src/deal-escrow/runtime-lock.mjs','src/dealtrace/vault.mjs','data/reference/capex/lges-2025-v1.json',...readdirSync('src/dealtrace/procurement').filter(n=>n.endsWith('.mjs')).map(n=>'src/dealtrace/procurement/'+n)];return hash(files.sort().map(p=>({path:p,hash:hash(readFileSync(p,'utf8'))})));}
-export async function runProcurement({run=randomUUID(),resume=false,live=false,metered=false,publicNetwork=false,approved=false,budget=4000,flexQuantity=false,failOne=metered,external=[],onProgress=()=>{},cancelled=()=>false}={}){
+export async function runProcurement({run=randomUUID(),resume=false,live=false,metered=false,publicNetwork=false,approved=false,budget=4000,flexQuantity=false,failOne=metered,external=[],allowedSellerIds=['seller-a','seller-b','seller-c'],requestedSellerIds=allowedSellerIds,authorityExpiresAt=Date.now()+7200000,feeReserveMinor=0,negotiationTokens=undefined,onProgress=()=>{},cancelled=()=>false}={}){
  ensure(approved===true,'HUMAN_APPROVAL_REQUIRED');ensure(/^[a-f0-9-]{36}$/.test(run),'RUN_ID');
  const directory=`data/private/dealtrace/procurement/${run}`,out=`artifacts/dealtrace/procurement/runs/${run}`;mkdirSync(directory,{recursive:true});mkdirSync(out,{recursive:true});
  const lock=acquireRuntimeLock(directory),journalFile=directory+'/journal.json';
  let journal,report,chain;const workers=[];
  try{
   if(resume){ensure(existsSync(journalFile),'RUN_NOT_FOUND');journal=readJson(journalFile);report=readJson(out+'/report.json');ensure(journal.config.live===live&&journal.config.metered===metered&&journal.config.publicNetwork===publicNetwork,'RESUME_MODE_MISMATCH');ensure(journal.source_hash===source(),'RESUME_SOURCE_MISMATCH');if(report.status==='PASS')return report;ensure(publicNetwork,'LOCAL_RESUME_UNAVAILABLE');}
-  else{ensure(!existsSync(journalFile),'RUN_EXISTS_USE_RESUME');journal={run,source_hash:source(),config:{live,metered,publicNetwork,failOne,flexQuantity},rfq:defaultRfq({run,metered,budget_minor:budget,flexQuantity})};report={schema:'DEALTRACE_PROCUREMENT_PROOF_V1',run,status:'RUNNING',mode:live?'LIVE_KILN':'DETERMINISTIC_OFFLINE',billing:journal.rfq.billing,source_hash:journal.source_hash,started_at:new Date().toISOString(),transactions:[],usage:[],limits:['All bundled default providers are separate local processes under one operator. External endpoints require an explicit identity pin.','Search operates on the pinned source corpus; compute executes a CPU hash batch, not an internet search service or rented GPU.','The evaluator attests off-chain delivery and successful usage. Cryptography does not establish business identity or semantic truth.','Failed units and overbilling are labeled injected adversarial scenarios. All chain assets are test assets.','This run is automated validation, not a human comprehension study.']};}
+  else{ensure(!existsSync(journalFile),'RUN_EXISTS_USE_RESUME');journal={run,source_hash:source(),config:{live,metered,publicNetwork,failOne,flexQuantity,originalBudget:budget,allowedSellerIds,requestedSellerIds,authorityExpiresAt,feeReserveMinor,negotiationTokens:tokenCeiling(negotiationTokens)},rfq:defaultRfq({run,metered,budget_minor:budget,flexQuantity})};report={schema:'DEALTRACE_PROCUREMENT_PROOF_V1',run,status:'RUNNING',mode:live?'LIVE_KILN':'DETERMINISTIC_OFFLINE',billing:journal.rfq.billing,source_hash:journal.source_hash,started_at:new Date().toISOString(),transactions:[],usage:[],limits:['All bundled default providers are separate local processes under one operator. External endpoints require an explicit identity pin.','Search operates on the pinned source corpus; compute executes a CPU hash batch, not an internet search service or rented GPU.','The evaluator attests off-chain delivery and successful usage. Cryptography does not establish business identity or semantic truth.','Failed units and overbilling are labeled injected adversarial scenarios. All chain assets are test assets.','This run is automated validation, not a human comprehension study.']};}
   const persist=()=>{saveJson(journalFile,journal);saveJson(out+'/report.json',report);};
   const refresh=stage=>{report.stage=stage;report.negotiation=journal.negotiation??null;report.usage=Object.values(journal.negotiation?.usage??{}).flat();report.model_calls=report.usage.length;persist();onProgress(structuredClone(report));};
   validateRfq(journal.rfq);report.rfq=journal.rfq;persist();
+  ensure(!cancelled(),'HUMAN_STOPPED');
+  report.authority={allowed_seller_ids:journal.config.allowedSellerIds,requested_seller_ids:journal.config.requestedSellerIds,budget_minor:journal.config.originalBudget,expires_at:journal.config.authorityExpiresAt,fee_reserve_minor:journal.config.feeReserveMinor};
+  ensure(Array.isArray(journal.config.allowedSellerIds)&&Array.isArray(journal.config.requestedSellerIds),'SELLER_ALLOWLIST_REQUIRED');
+  ensure(journal.config.requestedSellerIds.every(id=>journal.config.allowedSellerIds.includes(id)),'SELLER_NOT_ALLOWED');
+  report.preflight=preflight({rfq:defaultRfq({run,metered,budget_minor:journal.config.originalBudget,flexQuantity:journal.config.flexQuantity}),allowedSellerIds:journal.config.requestedSellerIds,expiresAt:journal.config.authorityExpiresAt,feeReserveMinor:journal.config.feeReserveMinor,external});
+  if(!resume)journal.rfq.budget_minor-=journal.config.feeReserveMinor;report.rfq=journal.rfq;persist();
   chain=await openExecution({directory,journal,report,persist,publicNetwork,metered,onProgress:refresh});report.network=chain.network;persist();
   const pin={network:chain.network,human:chain.buyer.address};
-  const buyer=await startWorker(directory+'/buyer',{id:'buyer',role:'buyer',identity_directory:'data/private/dealtrace/procurement-identities/buyer',policy:{max_budget_minor:journal.rfq.budget_minor,preference:'Lower price with all required source evidence, without extending the deadline.'},...pin});workers.push(buyer);
-  const sellerConfigs=[{id:'seller-a',floors:{document:1800,search:150,compute:200},min_delivery_seconds:300,quality:'ACTUAL_WITH_SOURCES'},{id:'seller-b',floors:{document:1100,search:60,compute:80},min_delivery_seconds:180,quality:'FORECAST_ONLY'},{id:'seller-c',floors:{document:2200,search:100,compute:120},min_delivery_seconds:240,quality:'ACTUAL_WITH_SOURCES'}];
+  const buyer=await startWorker(directory+'/buyer',{id:'buyer',role:'buyer',identity_directory:'data/private/dealtrace/procurement-identities/buyer',policy:{max_budget_minor:journal.rfq.budget_minor,preference:'Lower price with all required source evidence, without extending the deadline.'},negotiationTokens:journal.config.negotiationTokens,...pin});workers.push(buyer);
+  const sellerConfigs=registeredSellers.filter(s=>report.preflight.allowed_seller_ids.includes(s.id));
   const sellers=[];
-  for(const c of sellerConfigs){const seller=await startWorker(directory+'/'+c.id,{id:c.id,role:'seller',identity_directory:'data/private/dealtrace/procurement-identities/'+c.id,capabilities:['document','search','compute'],policy:{...c,preferred_margin:'Make a commercially reasonable offer above cost; lower it only if the counteroffer remains profitable.'},...pin});workers.push(seller);sellers.push(seller);}
-  for(const cfg of external){ensure(!sellers.some(s=>s.id===cfg.id),'DUPLICATE_PROVIDER_ID');sellers.push(connectProvider(cfg));}
+  for(const c of sellerConfigs){const seller=await startWorker(directory+'/'+c.id,{id:c.id,role:'seller',identity_directory:'data/private/dealtrace/procurement-identities/'+c.id,capabilities:['document','search','compute'],policy:{...c,preferred_margin:'Make a commercially reasonable offer above cost; lower it only if the counteroffer remains profitable.'},negotiationTokens:journal.config.negotiationTokens,...pin});workers.push(seller);sellers.push(seller);}
+  for(const cfg of external.filter(s=>report.preflight.allowed_seller_ids.includes(s.id))){ensure(!sellers.some(s=>s.id===cfg.id),'DUPLICATE_PROVIDER_ID');sellers.push(connectProvider(cfg));}
   report.identities={buyer:buyer.address,sellers:sellers.map(s=>({id:s.id,address:s.address,local_pid:s.pid??null,external:!s.pid}))};refresh('DISCOVERY');
   const {packet,selected}=await negotiate({rfq:journal.rfq,buyer,sellers,live,cancelled,journal,persist,onProgress:refresh});
   ensure(!cancelled(),'HUMAN_STOPPED');
   if(!journal.plan){
    const now=(await chain.provider.getBlock('latest')).timestamp,allowed=sellers.map(s=>s.address),domain=domainFor(chain.network);
-   const m={buyer:chain.buyer.address,agent:buyer.address,evaluator:chain.relayer.address,sellersHash:sellerListHash(allowed),budget:(BigInt(journal.rfq.budget_minor)*BigInt(UNIT_WEI)).toString(),maxPerDeal:(BigInt(journal.rfq.budget_minor)*BigInt(UNIT_WEI)).toString(),validUntil:now+7200,nonce:BigInt(hash({run})).toString()};
+   const m={buyer:chain.buyer.address,agent:buyer.address,evaluator:chain.relayer.address,sellersHash:sellerListHash(allowed),budget:(BigInt(journal.rfq.budget_minor)*BigInt(UNIT_WEI)).toString(),maxPerDeal:(BigInt(journal.rfq.budget_minor)*BigInt(UNIT_WEI)).toString(),validUntil:Math.min(now+7200,Math.floor(journal.config.authorityExpiresAt/1000)),nonce:BigInt(hash({run})).toString()};
    const mandateId=TypedDataEncoder.hash(domain,executionTypes('Mandate'),m),mandateSignature=await chain.buyer.signTypedData(domain,executionTypes('Mandate'),m);
-   const deal=executionDeal(packet,{mandateId,network:chain.network,expiresAt:now+7100});
+   const deal=executionDeal(packet,{mandateId,network:chain.network,expiresAt:Math.min(now+7100,m.validUntil)});
    journal.plan={packet,mandate:m,mandateSignature,allowed,deal};persist();
   }
   const p=journal.plan,domain=domainFor(chain.network),commitBody={packet:p.packet,deal:p.deal,network:chain.network,mandate:p.mandate,mandateSignature:p.mandateSignature};
   for(const [agent,which] of [[buyer,'buyer'],[selected,'seller']])if(!p[which+'Signature']){const result=await agent.request('/commit',{request_id:run+'-commit',...commitBody});ensure(!result.error,result.error??'COMMIT_FAILED');p[which+'Signature']=result.signature;p[which+'MeterSignature']=result.meterSignature;p[which+'Review']=result.review;persist();}
   if(metered)p.lines=meterLines(p.packet);report.plan=p;refresh('BILATERALLY_COMMITTED');
   const send=async(label,method,args,value=0n,opts={})=>chain.tx(label,await chain.call(method,args,value,opts.gasLimit),opts);
-  const stop=async()=>{if(cancelled()||journal.stopped){journal.stopped=true;persist();if(journal.operations['open-mandate'])await send('revoke','revoke',[p.deal.mandateId],0n,{signer:chain.buyer});throw new Error('HUMAN_STOPPED');}};
+  const stop=async()=>{ensure(journal.config.authorityExpiresAt>Date.now(),'MANDATE_EXPIRED');if(cancelled()||journal.stopped){journal.stopped=true;persist();if(journal.operations['open-mandate'])await send('revoke','revoke',[p.deal.mandateId],0n,{signer:chain.buyer});throw new Error('HUMAN_STOPPED');}};
   await stop();await send('open-mandate','openMandate',[p.mandate,p.allowed,p.mandateSignature]);await stop();
   const funding=await send('fund',metered?'fundMetered':'fund',metered?[p.deal,p.buyerSignature,p.sellerSignature,'0x',p.lines,p.buyerMeterSignature,p.sellerMeterSignature]:[p.deal,p.buyerSignature,p.sellerSignature,'0x'],BigInt(p.deal.amount));
   report.funding_timestamp=(await chain.provider.getBlock(funding.blockNumber)).timestamp;report.deadline=report.funding_timestamp+p.deal.deliveryWindow;refresh('FUNDED');await stop();
@@ -76,7 +83,7 @@ export async function runProcurement({run=randomUUID(),resume=false,live=false,m
   refresh('COMPLETE');saveJson('artifacts/dealtrace/procurement/latest.json',{run,report:out+'/report.json'});if(publicNetwork)saveJson('artifacts/dealtrace/procurement/public-latest.json',{run,report:out+'/report.json'});
   return report;
  }catch(error){
-  if(report){report.negotiation=journal?.negotiation??null;report.usage=Object.values(journal?.negotiation?.usage??{}).flat();report.model_calls=report.usage.length;report.status=error.message==='HUMAN_STOPPED'?'STOPPED':/PENDING|timeout|NETWORK|RPC/i.test(error.message)?'INCOMPLETE':'FAIL';report.error=error.message;report.resume_same_run=publicNetwork;report.financial_intents=Object.keys(journal?.operations??{});saveJson(out+'/report.json',report);onProgress(structuredClone(report));}
+  if(report){report.negotiation=journal?.negotiation??null;report.usage=Object.values(journal?.negotiation?.usage??{}).flat();report.model_calls=report.usage.length;report.status=['HUMAN_STOPPED','SELLER_NOT_ALLOWED','BUDGET_EXCEEDED','MANDATE_EXPIRED','NO_COMPATIBLE_PROVIDER'].includes(error.message)?'STOPPED':/PENDING|timeout|NETWORK|RPC/i.test(error.message)?'INCOMPLETE':'FAIL';report.error=error.message;report.resume_same_run=publicNetwork;report.financial_intents=Object.keys(journal?.operations??{});saveJson(out+'/report.json',report);onProgress(structuredClone(report));}
   if(journal)saveJson(journalFile,journal);return report??{run,status:'FAIL',error:error.message};
  }finally{for(const worker of workers)await worker.close();await chain?.close();lock.release();}
 }
