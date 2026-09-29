@@ -1,0 +1,124 @@
+{
+  "schema": "ACCORD_VARIED_LIVE_INDEX_V1",
+  "date_kst": "2026-09-30",
+  "model": "qwen3-32b",
+  "cohorts": {
+    "primary": {
+      "path": "artifacts/accord-lock/varied-live/466ad9f1-9d0b-48ef-921a-46b4e07fbfcf/report.json",
+      "sha256": "66148b9dd26a9a1f66bfd6af039a4ee92b6f2fb30a777327aff61282fd06aa72",
+      "max_tokens": 2400,
+      "cases": 20,
+      "feasible_cases": 14,
+      "operator_approved_signed_agreements": 9,
+      "explicit_seller_acceptances_with_agreement": 4,
+      "truncations": 0,
+      "metrics": {
+        "signedPolicyViolations": 0,
+        "invalidOutputs": 11,
+        "wrongAcceptanceProposals": 1,
+        "policyViolationProposals": 10,
+        "calls": 46,
+        "inputTokens": 31894,
+        "outputTokens": 30331,
+        "totalTokens": 62225,
+        "apiLatencyMs": 440631,
+        "missingUsage": 0
+      },
+      "source_unchanged": true
+    },
+    "baseline": {
+      "path": "artifacts/accord-lock/varied-live/813c49f4-3747-44fa-a9a2-f14e99edfe45/report.json",
+      "sha256": "f321534ba2731d7d31199a7917452f851e2a865b3bee10f535299a9ba62f6b3b",
+      "max_tokens": 1200,
+      "cases": 20,
+      "feasible_cases": 14,
+      "operator_approved_signed_agreements": 7,
+      "explicit_seller_acceptances_with_agreement": 5,
+      "truncations": 9,
+      "metrics": {
+        "signedPolicyViolations": 0,
+        "invalidOutputs": 13,
+        "wrongAcceptanceProposals": 1,
+        "policyViolationProposals": 3,
+        "calls": 38,
+        "inputTokens": 26230,
+        "outputTokens": 28474,
+        "totalTokens": 54704,
+        "apiLatencyMs": 418061,
+        "missingUsage": 0
+      },
+      "source_unchanged": true
+    },
+    "deployed_adapter_smoke": {
+      "path": "artifacts/accord-lock/varied-live/57c175ad-9910-4f64-b26b-03d078090335/report.json",
+      "sha256": "f23f14b4087499105dbca7b5387f9e37ec371553860a5e9c3374fb96dc837ed4",
+      "max_tokens": 2400,
+      "cases": 3,
+      "feasible_cases": 2,
+      "operator_approved_signed_agreements": 0,
+      "explicit_seller_acceptances_with_agreement": 0,
+      "truncations": 0,
+      "metrics": {
+        "signedPolicyViolations": 0,
+        "invalidOutputs": 3,
+        "wrongAcceptanceProposals": 0,
+        "policyViolationProposals": 3,
+        "calls": 5,
+        "inputTokens": 3381,
+        "outputTokens": 3237,
+        "totalTokens": 6618,
+        "apiLatencyMs": 47543,
+        "missingUsage": 0
+      },
+      "source_unchanged": true,
+      "correction": "Raw summary.feasible counts the full plan (14). Executed cases 1,4,20 have 2 feasible cases; corrected here from result records. Original preserved; future runner fixed. No agreements or financial replay claimed."
+    }
+  },
+  "financial_replay": {
+    "path": "artifacts/accord-lock/varied-live/466ad9f1-9d0b-48ef-921a-46b4e07fbfcf/financial.json",
+    "sha256": "e9ac7801746bd41f3d22746c43abda482ecc23ed42b3375e78b3ea5ceb9a2810",
+    "summary": {
+      "cases": 20,
+      "passed": 20,
+      "failures": [],
+      "payments": 9,
+      "unauthorizedSettlements": 0
+    },
+    "checks": 139,
+    "scope": "Saved actual Kiln signatures replayed through the current browser workspace and real private-EVM bytecode. Source processing and the human approval bridge are deterministic test fixtures; this is not a second live HTTP model run or a public-chain proof.",
+    "source_unchanged": true,
+    "current_financial_sources_match": true
+  },
+  "randomized_financial": {
+    "index": "artifacts/generalization/index.json",
+    "canonical_run": "57c5430b-9121-4d4f-a82e-6a4c74f5ec9c",
+    "cases": 640,
+    "passed": 640,
+    "checks": 2985,
+    "mined_local_transactions": 2025,
+    "seed": 20260930,
+    "same_seed_repeat_counted_as_extra": false
+  },
+  "excluded": [
+    {
+      "run": "7ab36ae0-b477-47cb-9df4-4423bf57f23a",
+      "reason": "Interrupted after four completed cases to fix source canonicalization. In-flight usage may be missing."
+    },
+    {
+      "file": "financial-partial-0743adb9-f1f4-45ea-9d49-79a509d11ea3.json",
+      "reason": "Failed harness: tampered session aliased expected-price oracle; original signatures unchanged. Correction retained."
+    },
+    {
+      "file": "financial-partial-7f21d220-d464-4c98-a0cd-7937e3d90748.json",
+      "reason": "Partial smoke superseded by full20 replay."
+    }
+  ],
+  "limits": [
+    "Operator-controlled bilateral signers, not independent supplier companies.",
+    "Primary used previous Kiln client with identical bounded payload; five actual calls on deployed client retained separately.",
+    "Validator-rejected outputs include conservative decline validation.",
+    "Raw negotiation reports retain FINANCIAL_PENDING; separate linked financial report completes primary replay.",
+    "Source snapshots preserve working bytes and CRLF; Git-normalized files may differ bytewise.",
+    "No dollar billing, energy, public-chain or universal security claim."
+  ]
+}

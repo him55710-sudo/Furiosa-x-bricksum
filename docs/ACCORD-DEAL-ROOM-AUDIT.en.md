@@ -33,9 +33,9 @@ Final UI artifact: index-VqtpDt7l.js / index-DmbklS-X.css. Final preview: https:
 - Current financial execution uses browser-private EVM test units, not real money or public-chain consensus. Signing keys are operator-controlled. Historical public Sepolia proof is clearly labeled.
 - The older localhost Node workspace retains its deterministic worker and escrow flow; the new Live HTTP adapter is deployed on Vercel. Local Live parity is not claimed.
 - Model negotiations can decline or produce invalid/truncated output. Such outputs cannot authorize funds. Broader model benchmarking is separate from this release's measured evidence.
-- The larger design goal remains subject to its final acceptance audit. This release audit does not claim unlimited production financial readiness.
+- The 17-item UI and functional acceptance audit below is complete within the disclosed test-asset scope. This does not establish unlimited production financial readiness or reliable autonomous model convergence.
 
-## Production deployment
+## Prior production deployment
 
 - URL: https://agent-spending-firewall.vercel.app
 - Deployment: dpl_FS6artqdb9N48W7evCXFHcmjaRFD (production, READY).
@@ -87,3 +87,12 @@ The current presentation plan uses one story and explicit clicks. It does not de
 The operator pasted a synthetic four-row, four-source CSV, created “Example Energy CAPEX review,” and ran six actual model calls through the deployed UI. Atlas proposed 35, Buyer countered 30, and Atlas revised to 32. A subsequent invalid Buyer response was rejected with `LIVE_BUYER_AUTHORITY`. Switching to Nexus produced 40 followed by Buyer's 30 counter. All six attempts and 8,889 measured tokens are retained, including the rejected response. The operator then stopped this session without signing or funding it. This run demonstrates custom-source binding, inspectable actual inference, authority protection, seller switching and Stop; it does not demonstrate a completed agreement or payment.
 
 Public evidence: `artifacts/accord-lock/live/custom-negotiation.json`, `custom-attempts.json`, and `custom-demo-input.csv`. Both new JSON artifacts passed the public-data validator. `artifacts/accord-lock/deal-room/live-custom-stopped.png` records the stopped state and failure timeline; `live-mobile.png` records the 390px layout. The full public session is exported without owner hashes, HMAC envelopes, operation records or private policies.
+
+
+## Final integrated production validation
+
+Deployment `dpl_2vqmTVgnwiy8LFnatuijvojHy7AU` is promoted to [the existing production site](https://agent-spending-firewall.vercel.app). Its application source is commit `e85e155`; the subsequent merge of `b36b816` adds only retained custom-run evidence and documentation. No later application source changed.
+
+[Deployment record](../artifacts/accord-lock/varied-live/deployment.json): HTML, JS, CSS and icons match the verified build byte-for-byte; private source/environment paths return 404. The protected candidate was checked through official Vercel CLI, then the public production URL was checked independently. Live GET returned 200 / qwen3-32b / available, and the actual production Live screen displayed the connected service. The final release made no additional model calls and did not reset the existing ledger. [Production screenshot](../artifacts/accord-lock/varied-live/production-live.png).
+
+The integrated local suite passed **233/233**, all application builds passed, the current Git-visible secret scan found no matches and the dependency audit reported no known vulnerabilities. The [fresh varied Kiln study](ACCORD-LIVE-VALIDATION.en.md) retains all model failures and reports 20/20 private-EVM financial cases with zero unauthorized settlements. Existing 640 generated financial cases are reused with matching contract evidence. This completes the requested connection and validation work; model reliability and independent real-money operations remain explicit limits.

@@ -17,11 +17,13 @@
 | Kiln & efficiency | [Five-call public negotiation and per-flow usage](artifacts/dealtrace/procurement/usage-audit.json) · [Output-ceiling experiment](docs/ACCORD-ACCEPTANCE-READINESS.en.md) |
 | Blockchain | [Five Sepolia transactions; signed 25 invoice reverted, 20 settled and withdrawn; 47 finalized checks](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json) |
 | Human control & reconstruction | Budget, watch, stop, receipt export and verification in the workspace. [Inspect the settled local receipt](artifacts/accord-lock/submission/run2-receipt.json) |
-| Regression | **Current main: 218/218 pass** · [source-bound automated test report](artifacts/deal-escrow/tests.json) |
+| Regression | **Integrated verification: 233/233 pass** · [source-bound automated test report](artifacts/deal-escrow/tests.json) |
 
-## One product, two explicit execution modes
+## One product, explicit execution modes
 
 **Demo Mode:** deterministic workers process an uploaded CSV/JSON CAPEX table, enforce limits and execute a private EVM in the browser. No model calls or public funds. The [recorded walkthrough](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) leaves Task 1 blocked when a 35 offer exceeds the 30 per-deal limit, then creates Task 2: negotiate Atlas from 22 to 20, lock funds, run the worker, block a 25 invoice, correct it to 20 and pay. Stop revokes this task's future local commitments; an already funded deal retains its terms.
+
+**Live Agents:** actual Kiln Buyer/Seller proposals flow through the hosted HTTP service into a signed agreement and the same deterministic browser settlement path. [Varied live validation](docs/ACCORD-LIVE-VALIDATION.en.md): 20 primary cases, 46 actual calls, 9 operator-approved agreements, 20/20 financial checks by case and zero unauthorized settlements; negotiation failures are retained. [640 randomized financial cases](GENERALIZATION-VALIDATION.md) cover amounts beyond the authored demo.
 
 **Proof Run:** the Evidence screen presents a recorded execution by Kiln-powered agents and Sepolia. Three sellers → five calls → 22 to 20 negotiated → a genuinely signed 25 invoice reverted → 20 settled → seller withdrawal. It is historical evidence, not a claim that the current browser task made those API calls or public transactions. DealTrace is the enforcement and proof system inside this product story.
 
