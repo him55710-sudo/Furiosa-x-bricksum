@@ -1,4 +1,67 @@
-We built a spending-control and escrow prototype for research-agent developers commissioning financial-data extraction: AI proposes the work, code checks the approved terms and pinned-source delivery, and blockchain escrow releases or refunds with reconstructable evidence.
+DealTrace helps developers of research-buying agents turn agent conversations into source-linked, bilaterally confirmed Deals, enforce human spending authority, settle verified delivery, and carry a failed transaction into the next purchase's permissions.
+
+# DealTrace
+
+**From Agent Conversation to Verifiable Deal**
+
+A conversation is not a contract. A mutual agreement is not permission to spend.
+
+The demo purchases one narrow deliverable: **four quarterly actual facility-investment cash-outflow values for 2025, with official source cells**. Its core path is:
+
+**Conversation → Agreement → Authorization → Settlement → Memory**
+
+- **Conversation → Deal:** actual Kiln `qwen3-32b` Buyer/Seller messages become candidate terms. Code validates evidence, units, sequence and conflicts. Two pinned demo identities sign the same revision, Deal and mandate hashes before commitment.
+- **Deal → Evidence:** each negotiated field links to its originating message. Price history, signatures, human authority and settlement appear in one audit trail and exported receipt.
+- **Outcome → Permission:** wrong delivery is refunded. The same company's next mutually agreed purchase from that seller cannot fund without a verified preview.
+
+[One-page Korean brief](output/pdf/DealTrace-brief.ko.pdf) · [Korean product plan and architecture](docs/DEALTRACE.ko.md) · [Validation and limitations](docs/DEALTRACE-VALIDATION.ko.md) · [Latest execution pointer](artifacts/dealtrace/latest.json)
+
+The retained actual Kiln run passed **9/9 scenario checks** with **10 calls / 11,969 tokens**, including one payment, one refund, two recorded funding stops and four verified receipts. The full automated suite passes **118/118**. Earlier failed model runs are retained and counted in the validation document; these authored cases are not a general agreement-reconstruction benchmark.
+
+## Open the demo
+
+```sh
+pnpm install --frozen-lockfile  # Node 24+
+pnpm dealtrace:demo            # Scripted dialogue, actual isolated local EVM, zero model calls
+pnpm dealtrace:start           # http://127.0.0.1:3420/
+```
+
+The browser shows saved evidence without spending or inference. Approve the visible test mandate to run again; use **위임 중지** to revoke the active run. Real mode uses the existing `KILN_API_KEY`, `KILN_MODEL=qwen3-32b` and optional `KILN_BASE_URL` configuration in `.env.local`, with a hard limit of 10 inference calls. Never commit credentials.
+
+```sh
+pnpm dealtrace:demo --live     # New actual Kiln calls; no public-chain/mainnet payment
+pnpm dealtrace:test           # Negotiation, signatures, policy and settlement regressions
+pnpm ade:test                 # Full retained escrow + DealTrace checks
+pnpm ade:build
+pnpm ade:replay:build
+```
+
+## The demonstration
+
+| Scene | Visible result |
+|---|---|
+| Seller A asks 2.20; Buyer counters 1.80; Seller asks 1.90; Buyer accepts | A changing Deal and exact originating messages; the human's 2.00 limit is not a price proposal |
+| Seller B offers cheaper annual forecasts | Semantic conflict blocks commitment |
+| Only conversational assent, or different hashes | No bilateral commit; no funding |
+| Same Deal signed, within the mandate | Existing escrow funds the agreed 1.90 DEMO |
+| A controlled wrong value is delivered | Refund and company × seller `REQUIRE_PREVIEW` |
+| Same seller agrees again, with valid budget and signatures | Funding still stops because preview is missing |
+| Separate correct-delivery / over-budget controls | Payment / stop, with independently checked receipts |
+
+AI reads and generates outward negotiation messages. **Code owns signatures, state transitions, budgets, deadlines, duplicate prevention and delivery checks.** The existing contract moves test assets and commits settlement evidence. Models have no signing keys or payment tools. Only outward messages and structured tool arguments are recorded; no hidden chain-of-thought.
+
+The new ledger is implemented in `src/dealtrace/`; existing mandate, policy, escrow, validation, receipt, buyer recovery and control-memory code remains in `src/deal-escrow/`. Agreement checks also run immediately before signing, so a legacy accept call cannot bypass a negotiation-required mandate.
+
+## Evidence boundaries
+
+This is a working **local devnet prototype with simulated suppliers and locally pinned role identities**, not a production deployment or independent customer study. The orchestrator runs both roles. The sample negotiation price path and delivery fault are authored scenario constraints; repeated-purchase and payment controls use scripted messages. An exact citation is not proof that a semantic interpretation is true. Unseen conversations and real independent counterparties still require evaluation.
+
+Flow-level Kiln token use is recorded; hardware energy savings are not measured. The existing escrow has separate public Sepolia proofs, but those do **not** prove the newly added DealTrace conversation path on Sepolia. A2A/AP2/ERC-8183 adapters remain planned, not implemented or claimed compatible. DEMO is a test accounting unit; no token is issued.
+
+<details>
+<summary>Retained Agent Deal Escrow implementation and historical evidence (before the DealTrace pivot)</summary>
+
+The following materials describe the previous product surface. Their test counts, PDF, video, ZIP and public-chain observations belong to their stated earlier versions.
 
 **Quick review:** [2-page Korean product brief](output/pdf/Agent-Deal-Escrow-brief.ko.pdf) · [portable demo ZIP](output/submission/Agent-Deal-Escrow-demo.zip) · [3-minute presentation guide](docs/SUBMISSION.ko.md). The ZIP needs no API key or wallet and replays retained evidence.
 # Agent Deal Escrow
@@ -260,3 +323,5 @@ Within this narrow workflow: actual buyer/supplier participation, human audit re
 `src/deal-escrow/{domain,store,delivery,engine,kiln,audit}.ts`, `chain.mjs`, `server.mjs`; `contracts/AgentDealEscrow.sol`; `tests/deal-escrow`; `web/deal-escrow`; `scripts/*deal-escrow.mjs`.
 
 P0 schemas/policy/state tests → P1 contract lifecycle → P2 delivery integration → P3 real Kiln tools → P4 reconstructable receipt → P5 scoped gate → P6 UI/demo/README. Core automated gates and the identified public-testnet runs pass. Human reconstruction/understanding, source review and customer-need gates remain open; the full goal is not complete. The optional safety benchmark and Merkle tree were not added. See the [current completion audit](docs/DELIVERY-READINESS-AUDIT.ko.md).
+
+</details>

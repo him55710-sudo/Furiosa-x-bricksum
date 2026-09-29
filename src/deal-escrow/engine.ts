@@ -3,6 +3,7 @@ import type {Deal,Mandate} from './domain.ts';
 import {DealStore} from './store.ts';
 import {validateDelivery,validatePreview} from './delivery.ts';
 import {sourceDocument} from './source-document.ts';
+import {agreementCheck} from '../dealtrace/ledger.mjs';
 
 // Multiple facades in one process share the executor queue. Cross-process
 // ownership is enforced by openChain's runtime lock, not by this WeakMap.
@@ -21,7 +22,7 @@ export class DealEngine {
       if(name==='accept_deal'&&this.gate(r))this.store.move(args.deal_id,'PREVIEW_REQUIRED');return this.store.get(args.deal_id);});
   }
   gate(r:any){return this.store.control(this.store.mandate(r.mandateId).company_id,r.deal.seller_id);}
-  checks(id:string,time=this.clock()){const r=this.store.get(id),m=this.store.mandate(r.mandateId);return policy(m,r.deal,{time,...this.store.accounting(r.mandateId,id),dealHash:r.dealHash,previewRequired:!!this.gate(r),previewVerified:r.details.preview?.verified===true&&r.details.preview?.deal_hash===r.dealHash});}
+  checks(id:string,time=this.clock()){const r=this.store.get(id),m=this.store.mandate(r.mandateId);return [...agreementCheck(this.store,r),...policy(m,r.deal,{time,...this.store.accounting(r.mandateId,id),dealHash:r.dealHash,previewRequired:!!this.gate(r),previewVerified:r.details.preview?.verified===true&&r.details.preview?.deal_hash===r.dealHash})];}
   preview(id:string,raw:string){ensure(typeof raw==='string'&&Buffer.byteLength(raw)<=2_000_000,'DELIVERY_SIZE');return this.store.transaction(()=>{const r=this.store.get(id);ensure(r.state==='PREVIEW_REQUIRED','INVALID_STATE_TRANSITION');const result=validatePreview(raw,r.deal.requirements,this.clock(),r.deal.expires_at);this.store.event(id,'PREVIEW_VALIDATED',result);this.store.details(id,{preview_attempt:result});
     if(result.verified){this.store.details(id,{preview:{...result,raw,deal_hash:r.dealHash}});this.store.move(id,'PREVIEW_VERIFIED');}return this.store.get(id);});}
   approve(id:string){return this.store.transaction(()=>{

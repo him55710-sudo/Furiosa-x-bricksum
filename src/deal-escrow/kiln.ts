@@ -5,7 +5,7 @@ const paymentContext=Object.freeze({asset:'DEMO',minor_units_per_unit:100,exampl
 const financialInput=(input:any)=>({...input,payment_context:paymentContext});
 const moneyInstruction='Every price_minor, floor_price_minor, counter_price_minor, task_budget_minor and max_single_minor field is an integer in DEMO minor units: 100 minor units equal 1 DEMO. For example 180 means 1.80 DEMO, not 180 KRW or USD. KRW and billion describe the requested financial dataset, not the purchase price. Keep these units distinct in your reason; do not convert currencies.';
 const termsSchema={type:'object',properties:{price_minor:{type:'integer',minimum:1,description:'Integer DEMO minor units; 100 = 1.00 DEMO. Not KRW.'},minimum_rows:{type:'integer',minimum:1,maximum:100},minimum_source_coverage:{type:'number',minimum:.9,maximum:1},deadline:{type:'integer',minimum:1,maximum:3600},reason:{type:'string'}},required:['price_minor','minimum_rows','minimum_source_coverage','deadline','reason'],additionalProperties:false};
-export const approvedToolNames=['discover_sellers','request_offer','counter_offer','accept_deal','reject_deal','select_offer','submit_dataset'];
+export const approvedToolNames=['discover_sellers','request_offer','counter_offer','accept_deal','reject_deal','select_offer','submit_dataset','send_negotiation_message','extract_negotiation'];
 const reason=(v:any)=>ensure(typeof v==='string'&&v.trim().length>0&&v.length<=1500,'INVALID_REASON');
 export class KilnClient {
   model:string;key:string;base:string;fetchImpl:typeof fetch;onRecord:(r:any)=>void;
