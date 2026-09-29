@@ -4,6 +4,7 @@ import {dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {ensure,hash,validateDeal,validateMandate,transition,freeze} from './domain.ts';
 import type {Deal,Mandate,State} from './domain.ts';
+import {confirmedDeliveryMismatch} from './delivery.ts';
 
 export class DealStore {
   db:DatabaseSync;
@@ -47,7 +48,7 @@ export class DealStore {
   control(company:string,seller:string){const row=this.db.prepare('SELECT body FROM controls WHERE company=? AND seller=?').get(company,seller) as any;return row?JSON.parse(row.body):null;}
   activate(company:string,seller:string,origin:string,validation:any){
     const row=this.get(origin);ensure(row.state==='REFUNDED'&&row.deal.seller_id===seller&&this.mandate(row.mandateId).company_id===company,'UNTRUSTED_CONTROL_ORIGIN');
-    ensure(validation.verified===false&&validation.failure_reason_code==='DELIVERY_REQUIREMENT_FAILED'&&hash(validation)===hash(row.details.validation),'UNTRUSTED_FAILURE');
+    ensure(confirmedDeliveryMismatch(validation)&&hash(validation)===hash(row.details.validation),'UNTRUSTED_FAILURE');
     const control={rule:'REQUIRE_PREVIEW',company_id:company,seller_id:seller,origin_deal_id:origin,failure_reason_code:validation.failure_reason_code,validation_hash:hash(validation),status:'ACTIVE',created_at:new Date().toISOString()};
     const r=this.db.prepare('INSERT OR IGNORE INTO controls VALUES(?,?,?,?)').run(company,seller,origin,JSON.stringify(control));if(r.changes)this.event(origin,'CONTROL_MEMORY_ADDED',control,'system','trusted-failure-mapper');return this.control(company,seller);
   }

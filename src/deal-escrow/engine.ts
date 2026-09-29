@@ -1,7 +1,7 @@
 import {ensure,exact,hash,now,policy} from './domain.ts';
 import type {Deal,Mandate} from './domain.ts';
 import {DealStore} from './store.ts';
-import {validateDelivery,validatePreview} from './delivery.ts';
+import {validateDelivery,validatePreview,confirmedDeliveryMismatch} from './delivery.ts';
 import {sourceDocument} from './source-document.ts';
 import {agreementCheck} from '../dealtrace/ledger.mjs';
 import {assertProfile,recordClaim,matchingClaim,claimHistory} from '../dealtrace/claims.mjs';
@@ -15,7 +15,7 @@ export class DealEngine {
   constructor(store:DealStore,chain:any,clock=now){this.store=store;this.chain=chain;this.clock=clock;}
   serial<T>(fn:()=>Promise<T>):Promise<T>{const previous=executorQueues.get(this.chain)??Promise.resolve();const next=previous.then(fn,fn);this.queue=next.catch(()=>{});executorQueues.set(this.chain,this.queue);return next;}
   mandate(m:Mandate){return this.store.transaction(()=>this.store.createMandate(m));}
-  propose(d:Deal,mandateId:string){ensure(this.chain.sellers[d.seller_id],'UNKNOWN_SELLER');ensure(d.created_at<=this.clock(),'FUTURE_DEAL');ensure(d.expires_at<=this.store.mandate(mandateId).expires_at,'DEAL_OUTLIVES_MANDATE');return this.store.transaction(()=>this.store.createDeal(d,mandateId));}
+  propose(d:Deal,mandateId:string){ensure(Object.hasOwn(this.chain.sellers,d.seller_id),'UNKNOWN_SELLER');ensure(d.created_at<=this.clock(),'FUTURE_DEAL');ensure(d.expires_at<=this.store.mandate(mandateId).expires_at,'DEAL_OUTLIVES_MANDATE');return this.store.transaction(()=>this.store.createDeal(d,mandateId));}
   // Only these actions are reachable by the model. No amount or authority is accepted.
   agentAction(name:string,args:any){
     ensure(['accept_deal','reject_deal'].includes(name),'FORBIDDEN_AGENT_TOOL');exact(args,['deal_id']);ensure(typeof args.deal_id==='string','SCHEMA_ID');
@@ -96,14 +96,24 @@ export class DealEngine {
       const target=kind==='fund'?'ESCROW_FUNDED':kind==='release'?'SETTLED':'REFUNDED';
       if(this.store.get(id).state!==target)this.store.move(id,target);
       this.store.event(id,kind==='fund'?'ESCROW_FUNDED':kind==='release'?'ESCROW_RELEASED':'ESCROW_REFUNDED',{deal_hash:r.dealHash,amount_minor:r.deal.price_minor,tx_hash:receipt.transactionHash,chain_id:this.chain.deployment.chainId,contract:this.chain.deployment.contract,reason:kind==='fund'?'POLICY_APPROVED':r.details.settlement_reason,attestation_hash:kind==='fund'?null:r.details.attestation_hash});
-      if(kind==='refund'&&r.details.validation?.failure_reason_code==='DELIVERY_REQUIREMENT_FAILED')this.store.activate(this.store.mandate(r.mandateId).company_id,r.deal.seller_id,id,r.details.validation);
+      if(kind==='refund'&&confirmedDeliveryMismatch(r.details.validation))this.store.activate(this.store.mandate(r.mandateId).company_id,r.deal.seller_id,id,r.details.validation);
     });
   }
   async deliver(id:string,raw:string){return this.serial(async()=>{
     await this.reconcileBuyerRefund(id);
     ensure(typeof raw==='string'&&Buffer.byteLength(raw)<=2_000_000,'DELIVERY_SIZE');
-    this.store.transaction(()=>{const r=this.store.get(id);ensure(r.state==='ESCROW_FUNDED','INVALID_STATE_TRANSITION');const result=validateDelivery(raw,r.deal.requirements,this.clock(),r.details.escrow.deadline);
-      this.store.move(id,'DELIVERY_SUBMITTED');this.store.details(id,{delivery:raw,validation:result});this.store.event(id,'DELIVERY_SUBMITTED',{content_hash:result.content_hash,submitted_at:result.submitted_at},'seller',r.deal.seller_id);this.store.event(id,'DELIVERY_VALIDATED',result,'system','delivery-validator');if(result.verified)this.store.move(id,'DELIVERY_VERIFIED');});
+    const submitted=this.store.get(id);ensure(submitted.state==='ESCROW_FUNDED','INVALID_STATE_TRANSITION');
+    if(submitted.details.delivery_validation_unavailable)ensure(raw===submitted.details.delivery,'DELIVERY_RETRY_CONTENT_MISMATCH');
+    const submittedAt=this.clock();let result;
+    try{result=validateDelivery(raw,submitted.deal.requirements,submittedAt,submitted.details.escrow.deadline);}
+    catch(error){
+      const reason=error instanceof Error&&/^[A-Z0-9_]+$/.test(error.message)?error.message:'VERIFIER_UNAVAILABLE';
+      this.store.transaction(()=>{const unavailable={category:'VERIFICATION_UNAVAILABLE',reason,content_hash:hash(raw),submitted_at:submittedAt,deadline:submitted.details.escrow.deadline};
+        this.store.details(id,{delivery:raw,delivery_validation_unavailable:unavailable});this.store.event(id,'DELIVERY_VALIDATION_UNAVAILABLE',unavailable,'system','delivery-validator');});
+      throw error;
+    }
+    this.store.transaction(()=>{if(submitted.details.delivery_validation_unavailable)this.store.details(id,{delivery_validation_unavailable:null});
+      this.store.move(id,'DELIVERY_SUBMITTED');this.store.details(id,{delivery:raw,validation:result});this.store.event(id,'DELIVERY_SUBMITTED',{content_hash:result.content_hash,submitted_at:result.submitted_at},'seller',submitted.deal.seller_id);this.store.event(id,'DELIVERY_VALIDATED',result,'system','delivery-validator');if(result.verified)this.store.move(id,'DELIVERY_VERIFIED');});
     await this.settle(id);return this.store.get(id);
   });}
   async settle(id:string){
@@ -120,7 +130,8 @@ export class DealEngine {
       return;
     }
     const opposite=this.store.operation(id,kind==='release'?'refund':'release');ensure(!opposite||['CANCELLED','REVERTED'].includes(opposite.status),'SETTLEMENT_ALREADY_CLAIMED');
-    const reason=kind==='release'?'DELIVERY_VERIFIED':truncated?'DELIVERY_WINDOW_TRUNCATED':releaseFailed?(this.store.operation(id,'release')?.status==='REVERTED'?'ESCROW_RELEASE_REVERTED':'ESCROW_RELEASE_CANCELLED'):r.details.validation?.failure_reason_code??failed?.name??'DELIVERY_DEADLINE_EXPIRED';
+    const deadlineOnly=r.details.validation?.verified===false&&r.details.validation.checks?.every((c:any)=>c.pass||c.name==='DELIVERY_DEADLINE');
+    const reason=kind==='release'?'DELIVERY_VERIFIED':truncated?'DELIVERY_WINDOW_TRUNCATED':releaseFailed?(this.store.operation(id,'release')?.status==='REVERTED'?'ESCROW_RELEASE_REVERTED':'ESCROW_RELEASE_CANCELLED'):deadlineOnly?'DELIVERY_DEADLINE_EXPIRED':r.details.validation?.failure_reason_code??failed?.name??'DELIVERY_DEADLINE_EXPIRED';
     if(!this.store.operation(id,kind))this.store.transaction(()=>{
       this.store.event(id,'FINAL_AUTHORIZATION',{checks,time,mandate:this.store.mandate(r.mandateId),accounting:this.store.accounting(r.mandateId,id)});
       const attestation={deal:r.deal,deal_hash:r.dealHash,mandate:this.store.mandate(r.mandateId),delivery:r.details.delivery??null,validation:r.details.validation??null,final_checks:checks,reason,outcome:kind,prior_event_hash:this.store.events(id).at(-1)?.event_hash,preview:r.details.preview??null,...(r.deal.assurance?{settlement_claim_hash:selectedClaim?hash(selectedClaim):null,claim_history_hash:hash(claimHistory(this.store,id))}:{})};
@@ -167,7 +178,7 @@ export class DealEngine {
       this.store.event(id,'BUYER_REFUND_OBSERVED',proof,'buyer',proof.buyer);
       this.store.move(id,'REFUNDED');
       this.store.event(id,'ESCROW_REFUNDED',{deal_hash:r.dealHash,amount_minor:r.deal.price_minor,tx_hash:observed.txHash,chain_id:this.chain.deployment.chainId,contract:this.chain.deployment.contract,reason:'BUYER_DEADLINE_REFUND',attestation_hash:proof.reason_hash},'buyer',proof.buyer);
-      if(r.details.validation?.failure_reason_code==='DELIVERY_REQUIREMENT_FAILED')this.store.activate(this.store.mandate(r.mandateId).company_id,r.deal.seller_id,id,r.details.validation);
+      if(confirmedDeliveryMismatch(r.details.validation))this.store.activate(this.store.mandate(r.mandateId).company_id,r.deal.seller_id,id,r.details.validation);
     });
     return true;
   }
