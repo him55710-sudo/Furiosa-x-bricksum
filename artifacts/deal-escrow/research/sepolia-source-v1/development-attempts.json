@@ -1,0 +1,150 @@
+{
+  "failed_model_attempts": [
+    {
+      "request": {
+        "mandate_id": "35e22fd1-aed5-440d-a943-54e63a62eecb",
+        "status": "FAILED",
+        "task": "Extract the four 2025 quarterly Investment in Facilities cash outflows for LG Energy Solution from the approved PDF. Provide positive magnitudes in billion KRW and the original signed value, document hash, page and exact source_cell_id. No annual total or investing-activities substitution.",
+        "source_document_id": "lges-2026q2-pdf",
+        "offers": [
+          {
+            "offer_id": "primary-reports",
+            "seller_id": "seller-a",
+            "price_minor": 210,
+            "floor_price_minor": 180,
+            "minimum_rows": 4,
+            "minimum_source_coverage": 1,
+            "deadline": 120,
+            "description": "Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included."
+          },
+          {
+            "offer_id": "outlook-summary",
+            "seller_id": "seller-b",
+            "price_minor": 120,
+            "floor_price_minor": 100,
+            "minimum_rows": 4,
+            "minimum_source_coverage": 1,
+            "deadline": 60,
+            "description": "Annual investment outlook for 2026 divided into four equal quarterly estimates. Includes the issuer URL. This is not historical cash expenditure."
+          },
+          {
+            "offer_id": "archive-service",
+            "seller_id": "seller-b",
+            "price_minor": 170,
+            "floor_price_minor": 160,
+            "minimum_rows": 4,
+            "minimum_source_coverage": 1,
+            "deadline": 300,
+            "description": "Historical actual quarterly facility cash expenditures from the original presentation. Archive verification takes 300 seconds."
+          }
+        ],
+        "started_at": "2026-09-28T16:39:39.404Z",
+        "deal_id": null,
+        "screening": [
+          {
+            "offer_id": "primary-reports",
+            "eligible": true,
+            "preview": null,
+            "control": null
+          },
+          {
+            "offer_id": "outlook-summary",
+            "eligible": true,
+            "preview": null,
+            "control": null
+          },
+          {
+            "offer_id": "archive-service",
+            "eligible": true,
+            "preview": null,
+            "control": null
+          }
+        ],
+        "updated_at": "2026-09-28T16:39:51.308Z",
+        "reason": "OFFER_REVIEW_QUOTE"
+      },
+      "calls": [
+        {
+          "flow_name": "Buyer offer content review",
+          "model": "qwen3-32b",
+          "request_id": "chat-ea4ca521083745b9a919ea1d56515974",
+          "prompt_tokens": 604,
+          "completion_tokens": 679,
+          "total_tokens": 1283,
+          "start_time": "2026-09-28T16:39:39.767Z",
+          "first_token_time": null,
+          "end_time": "2026-09-28T16:39:51.298Z",
+          "latency_ms": 11531,
+          "tool_called": "review_offers",
+          "result": "OFFER_REVIEW_QUOTE",
+          "prompt_hash": "0xb89325a4c8ba8b1f88588a7bfa8e6e05d355be3a5b181621c1ec426f9b121676",
+          "streaming": false
+        }
+      ]
+    }
+  ],
+  "expired_attempts": [
+    {
+      "deal_id": "8ef16e7f-1846-4bbc-bba3-d04c8861171e",
+      "reason": "Demo orchestration stopped at one confirmation; original transaction recovered and deadline refund verified",
+      "verification": {
+        "verdict": "VALID",
+        "scope": "Stored evidence and independently read configured chain; controller trust remains",
+        "checks": [
+          "immutable Deal hash",
+          "hash-linked events bound to the Deal and mandate",
+          "versioned delivery structure and quality checks; no factual certification",
+          "seller/company control mapped to a recomputed failed-delivery refund",
+          "policy arithmetic; preview flags checked against actual preview evidence",
+          "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+          "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+        ],
+        "delivery_quality": [
+          {
+            "deal_id": "8ef16e7f-1846-4bbc-bba3-d04c8861171e",
+            "recorded_validator": "delivery-source-v1",
+            "current_validator": "delivery-source-v1",
+            "current_checks_pass": false,
+            "semantic_truth_verified": false
+          }
+        ],
+        "unverified": [
+          "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+          "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+          "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+          "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+          "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+        ],
+        "checked_at": "2026-09-28T16:50:00.059Z"
+      },
+      "calls": [
+        {
+          "flow_name": "Buyer offer content review",
+          "model": "qwen3-32b",
+          "request_id": "chat-96c6bfcf0003488495ea6b567be6201c",
+          "prompt_tokens": 785,
+          "completion_tokens": 525,
+          "total_tokens": 1310,
+          "start_time": "2026-09-28T16:44:08.368Z",
+          "first_token_time": null,
+          "end_time": "2026-09-28T16:44:17.275Z",
+          "latency_ms": 8907,
+          "tool_called": "review_offers",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "0x76702f02340763b1509c99ebe770ffcd646defaa33a071570b47d34d03ff1260",
+          "streaming": false
+        }
+      ]
+    }
+  ],
+  "abandoned_unfunded_scenarios": [
+    {
+      "mandate_id": "3c90385f-588f-4090-973f-357b0767b8de",
+      "deal_id": "08c4953a-c128-4df3-bd49-f9ddb20f8ab4",
+      "state": "PREVIEW_REQUIRED",
+      "reason": "Earlier expiry attempt had already activated a preview control. Preserve this stop; start the causality demonstration under a separately approved test company scope."
+    }
+  ],
+  "last_resumed_error": "spawnSync C:\\Users\\user\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe ETIMEDOUT",
+  "scope": "Prior failed or interrupted development attempts retained; these are not first-attempt success statistics."
+}

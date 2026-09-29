@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "created_at": "2026-09-28T17:11:35.284Z",
+  "run": "9960e189-aa05-4534-9f5f-d3fcf6893923",
+  "network": {
+    "schemaVersion": 1,
+    "chainId": 11155111,
+    "network": "sepolia",
+    "contract": "0x3c68Bb7E6E32194F26e9DD079D2D2A84bb6063C8",
+    "controller": "0xE3e6E3451Ef871546a08339F0da42A2C07a5a2A9",
+    "buyer": "0x7c29080975c4dBFEBACbAA79CEFD3bD16deEE953",
+    "sellers": {
+      "seller-a": "0x96A606Bf973fcE999493A944Ea412c71Cb4d6ac6",
+      "seller-b": "0x5e37537304A27183f703C3019D4F90a3F81C91A5"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "58bd05598942562583f68e8a272989489a0580d3b68bb41ad0e93fb2511c359d",
+    "runtimeHash": "0x3cae53ca265f2127e9a48339f15f028cbe1e343344f31ced77aed97e99d316a3",
+    "deploymentTx": "0x5fa643c98aac4ed76c6514bf042d151aa88d3e9bdb5039cb5a72d826d0c4e79b",
+    "createdAt": "2026-09-28T16:39:15.696Z",
+    "finality": {
+      "mode": "confirmations",
+      "confirmations": 2
+    }
+  },
+  "source_document": {
+    "id": "lges-2026q2-pdf",
+    "company": "LG Energy Solution",
+    "year": 2025,
+    "url": "https://www.lgensol.com/upload/file/irEvent/26_2Q_LGES_business_performance_F_EN.pdf",
+    "sha256": "caf96a272fe8f036937a5ef8540b1948fc0b3e09202545cb162a222908f3b14b",
+    "page": 15,
+    "row_label": "Investment in Facilities",
+    "currency": "KRW",
+    "unit": "billion",
+    "preview_rows": 1,
+    "human_review": "PENDING"
+  },
+  "results": [
+    {
+      "scenario": "normal",
+      "receipt_file": "normal-receipt.json",
+      "state": "SETTLED",
+      "verification": "VALID"
+    },
+    {
+      "scenario": "wrong-row",
+      "receipt_file": "wrong-row-receipt.json",
+      "state": "REFUNDED",
+      "verification": "VALID"
+    },
+    {
+      "scenario": "partial-sample",
+      "receipt_file": "partial-sample-receipt.json",
+      "state": "SETTLED",
+      "verification": "VALID"
+    }
+  ],
+  "model_calls": [
+    {
+      "flow_name": "Buyer offer content review",
+      "model": "qwen3-32b",
+      "request_id": "chat-1a2adedfb7bb440992a47210ae194887",
+      "prompt_tokens": 785,
+      "completion_tokens": 2187,
+      "total_tokens": 2972,
+      "start_time": "2026-09-28T16:50:00.330Z",
+      "first_token_time": null,
+      "end_time": "2026-09-28T16:50:32.128Z",
+      "latency_ms": 31799,
+      "tool_called": "review_offers",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x76702f02340763b1509c99ebe770ffcd646defaa33a071570b47d34d03ff1260",
+      "streaming": false
+    }
+  ],
+  "extraction": "Deterministic PDF cells; no extraction model call",
+  "fault": {
+    "kind": "Controlled wrong-row citation and amount injection",
+    "original": 3014,
+    "mutated": 3441
+  },
+  "bad_sample_funding_blocked": true,
+  "preview_rows": 1,
+  "final_delivery_rows": 4,
+  "app_stop": {
+    "application_pid": 24608,
+    "exit": {
+      "code": null,
+      "signal": "SIGTERM"
+    },
+    "http_unavailable": true,
+    "at": "2026-09-28T17:02:50.292Z"
+  },
+  "independent_refund": {
+    "verdict": "VALID",
+    "scope": "Canonical test-chain funding and buyer-signed deadline refund for the pinned contract; no off-chain content truth claim",
+    "finality_mode": "confirmations",
+    "observed_block": 11801927,
+    "required_confirmations": 2,
+    "app_server_access": false,
+    "app_database_access": false,
+    "controller_key_access": false,
+    "chain_id": 11155111,
+    "deal_hash": "0xd07fcdee18599ec7b20eec2bad427a5db116aa39c025b6b0ace13a6e1e6464f8",
+    "fund_tx": "0x2ccafc41a5fd0ccbe00ef2a412da72c9e937fc83cf4ccc67c7f20c3aa0bb70c2",
+    "refund_tx": "0xa57bf539a7c4ee19693d7939fa58277225b284104d97b867e253226086c2e15a",
+    "buyer": "0x7c29080975c4dBFEBACbAA79CEFD3bD16deEE953",
+    "amount_wei": "180000000000"
+  },
+  "scope": "Actual Sepolia test assets, one real AI content-review call, simulated supplier and scripted human approvals. Controller trust and real participant validation remain. Two confirmations; finalized verification is separate.",
+  "development_attempts_file": "development-attempts.json",
+  "total_model_calls_across_attempts": 3,
+  "total_model_tokens_across_attempts": 5565,
+  "control_origin_deal_id": "8cf49e1e-15e7-47e0-8d4f-f3ae9ce71b6c"
+}

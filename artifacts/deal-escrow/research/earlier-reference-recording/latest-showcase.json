@@ -1,0 +1,571 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-28T15:40:10.881Z",
+  "kind": "Recorded actual executions; controlled mutations and separate process-stop drill are explicitly labeled",
+  "network": "local-devnet (no public Sepolia claim)",
+  "model": "qwen3-32b",
+  "human_study_status": "PENDING_REAL_PARTICIPANTS",
+  "source_report": "artifacts/deal-escrow/research/live-browser-run.json",
+  "steps": [
+    {
+      "kind": "task",
+      "title": "돈을 맡기기 전에, 받을 결과를 정합니다",
+      "narration": "리서치 에이전트에게 배터리 기업의 투자 자료를 맡겼습니다. 필요한 결과는 엘지 에너지 솔루션의 이천이십오 년 분기별 설비투자 현금유출입니다. 사람은 최대 가격과 납기, 출처가 있는 네 분기라는 조건을 승인합니다. 화면의 자금은 실제 돈이 아닌 테스트 자산입니다.",
+      "metrics": [
+        {
+          "label": "필요한 결과",
+          "value": "실제 분기 4개"
+        },
+        {
+          "label": "최대 가격",
+          "value": "2.00 테스트 단위"
+        },
+        {
+          "label": "원문",
+          "value": "공식 보고서 16쪽"
+        }
+      ],
+      "evidence": {
+        "task": "Buy all four 2025 quarterly realized facility-investment cash outflows of LG Energy Solution from its Q4 2025 earnings presentation, in billion KRW, with original signed value, exact document hash, page and row. Do not substitute annual totals, forecasts or total investing cash flows.",
+        "deal_id": "c395fba6-98e6-4a54-9bba-93e9ce6faae9"
+      }
+    },
+    {
+      "kind": "choice",
+      "title": "싼 제안도, 업무에 맞지 않으면 고르지 않습니다",
+      "narration": "세 제안은 가격만 다른 것이 아닙니다. 저렴한 제안은 연간 전망을 나눈 추정치이고, 다른 제안은 납기가 늦습니다. 실제 킬른 모델은 분기 실적을 제공하는 제안을 골라 일 점 팔 영 단위로 역제안했습니다. 판매자 응답은 공개된 최저 가격 규칙으로 처리했습니다. 금융 권한은 모델에게 주지 않았습니다.",
+      "metrics": [
+        {
+          "label": "제안",
+          "value": "3개"
+        },
+        {
+          "label": "표시 가격",
+          "value": "2.10"
+        },
+        {
+          "label": "합의 가격",
+          "value": "1.80"
+        }
+      ],
+      "quote": "The floor price of 180 is below the task budget of 300 and max_single_minor cap of 200, while the offer meets all requirements for realized 2025 quarterly data with source verification.",
+      "evidence": {
+        "decision": [
+          {
+            "actor": "Buyer Agent",
+            "tool": "request_discount",
+            "args": {
+              "decision": "counter",
+              "offer_id": "primary-reports",
+              "counter_price_minor": 180,
+              "reason": "The floor price of 180 is below the task budget of 300 and max_single_minor cap of 200, while the offer meets all requirements for realized 2025 quarterly data with source verification."
+            },
+            "model": "qwen3-32b",
+            "request_id": "chat-e01eb28a76424b1087d8c3e639d7958f",
+            "raw_args": {
+              "offer_id": "primary-reports",
+              "price_minor": 180,
+              "reason": "The floor price of 180 is below the task budget of 300 and max_single_minor cap of 200, while the offer meets all requirements for realized 2025 quarterly data with source verification."
+            }
+          }
+        ],
+        "deal_id": "c395fba6-98e6-4a54-9bba-93e9ce6faae9"
+      }
+    },
+    {
+      "kind": "delivery",
+      "title": "받은 숫자에서 원문까지 확인할 수 있습니다",
+      "narration": "판매자 모델은 미리 전사한 원문 표에서 네 분기를 추출했습니다. 코드는 등록된 네 정답과 숫자, 부호, 단위, 페이지와 문서 해시를 대조한 뒤 지급했습니다. 첫 실행의 단위 형식 오류는 환불로 남겼습니다. 이 검수는 고정 문서의 시험이며, 새로운 문서에서도 시간을 절약하는지는 다음 검증 과제입니다.",
+      "metrics": [
+        {
+          "label": "검수",
+          "value": "4 / 4 일치"
+        },
+        {
+          "label": "실제 결과",
+          "value": "지급 완료"
+        },
+        {
+          "label": "최초 형식 오류",
+          "value": "환불 기록 보존"
+        }
+      ],
+      "rows": [
+        {
+          "capex": 3014,
+          "company": "LG Energy Solution",
+          "currency": "KRW",
+          "quarter": "2025-Q1",
+          "source_label": "Investment in Facilities",
+          "source_page": 16,
+          "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+          "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+          "source_value": -3014,
+          "unit": "billion"
+        },
+        {
+          "capex": 2717,
+          "company": "LG Energy Solution",
+          "currency": "KRW",
+          "quarter": "2025-Q2",
+          "source_label": "Investment in Facilities",
+          "source_page": 16,
+          "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+          "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+          "source_value": -2717,
+          "unit": "billion"
+        },
+        {
+          "capex": 2171,
+          "company": "LG Energy Solution",
+          "currency": "KRW",
+          "quarter": "2025-Q3",
+          "source_label": "Investment in Facilities",
+          "source_page": 16,
+          "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+          "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+          "source_value": -2171,
+          "unit": "billion"
+        },
+        {
+          "capex": 2515,
+          "company": "LG Energy Solution",
+          "currency": "KRW",
+          "quarter": "2025-Q4",
+          "source_label": "Investment in Facilities",
+          "source_page": 16,
+          "source_sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+          "source_url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+          "source_value": -2515,
+          "unit": "billion"
+        }
+      ],
+      "evidence": {
+        "deal_id": "c395fba6-98e6-4a54-9bba-93e9ce6faae9",
+        "release_tx": "0x10201bb62b5f4bff0f748610b2b242b3a390f39def88c2b7852e8f17c0d9eeb4",
+        "first_failure_deal_id": "8cc40dc4-8196-448d-8ce6-ad56a8ea67d3",
+        "first_failure_checks": [
+          {
+            "name": "REFERENCE_UNIT",
+            "pass": false,
+            "actual": false,
+            "expected": "billion KRW"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "failure",
+      "title": "그럴듯한 숫자 하나를 바꿔도 지급하지 않습니다",
+      "narration": "이번에는 공격 실험입니다. 네 행과 출처는 그대로 두고, 첫 분기의 시설투자 값만 다른 현금흐름 숫자로 바꿨습니다. 이 변경은 모델의 실제 실수라고 꾸미지 않은 의도적인 주입입니다. 검수는 불일치를 찾아냈고, 잠긴 자금은 구매자에게 환불됐습니다.",
+      "metrics": [
+        {
+          "label": "정상 설비투자",
+          "value": "3,014"
+        },
+        {
+          "label": "주입한 다른 값",
+          "value": "3,441"
+        },
+        {
+          "label": "정산",
+          "value": "환불"
+        }
+      ],
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url",
+            "unit",
+            "source_page",
+            "source_sha256",
+            "source_label",
+            "source_value"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 1,
+          "expected": 1
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790608750,
+          "expected": 1790608870
+        },
+        {
+          "name": "CAPEX_VALUE_TYPES",
+          "pass": true,
+          "actual": true,
+          "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+        },
+        {
+          "name": "CAPEX_QUARTER_RANGE",
+          "pass": true,
+          "actual": true,
+          "expected": "2025-Q1 through 2026-Q4"
+        },
+        {
+          "name": "CURRENCY_FORMAT",
+          "pass": true,
+          "actual": true,
+          "expected": "three uppercase letters; currency authenticity is not verified"
+        },
+        {
+          "name": "UNIQUE_ECONOMIC_ROWS",
+          "pass": true,
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "REFERENCE_PERIODS",
+          "pass": true,
+          "actual": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ],
+          "expected": [
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4"
+          ]
+        },
+        {
+          "name": "REFERENCE_VALUES",
+          "pass": false,
+          "actual": false,
+          "expected": "positive quarterly facility-investment outflow and original negative source value"
+        },
+        {
+          "name": "REFERENCE_UNIT",
+          "pass": true,
+          "actual": true,
+          "expected": "billion KRW"
+        },
+        {
+          "name": "REFERENCE_PROVENANCE",
+          "pass": true,
+          "actual": true,
+          "expected": {
+            "url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+            "page": 16,
+            "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+            "row": "Investment in Facilities"
+          }
+        }
+      ],
+      "evidence": {
+        "kind": "Explicit fault injection through real HTTP, SQLite and local EVM; not a new model-generated mistake",
+        "deal_id": "f71da7a6-5f0d-4efc-bb35-a8824f50ab15",
+        "refund_tx": "0x6332739af1aceb7d2c06ea013834770dac6fb91838549d3097e927a790210252"
+      }
+    },
+    {
+      "kind": "memory",
+      "title": "실패 이력은 다음 거래의 절차를 바꿉니다",
+      "narration": "같은 판매자의 다음 거래에는 미리보기가 필요합니다. 잘못된 샘플로는 자금을 잠글 수 없습니다. 올바르게 수정한 샘플과 납품은 통과하므로 판매자를 영구 차단하지도 않습니다. 이 재시도는 이미 받은 모델 결과를 재사용한 코드 실행이며, 새로운 모델 호출은 없습니다.",
+      "metrics": [
+        {
+          "label": "잘못된 미리보기",
+          "value": "예치 차단"
+        },
+        {
+          "label": "수정된 납품",
+          "value": "지급 완료"
+        },
+        {
+          "label": "재시도 모델 호출",
+          "value": "0회"
+        }
+      ],
+      "evidence": {
+        "deal_id": "f8c0217a-7bb8-4387-93cf-8c949b5ae71e",
+        "preview": {
+          "validator_version": "delivery-reference-v1",
+          "url_validation_scope": "Exact pinned issuer document, page, row and annotated values; document not refetched at settlement",
+          "reference_dataset_id": "lges-2025-v1",
+          "reference_digest": "0xe5abea757c0c3ef71914da9e65e1207c8a11bee6555634f50650d2ba3fedffe6",
+          "reference_annotation": {
+            "method": "Text extraction plus visual inspection of the complete source table by Codex",
+            "human_review": "PENDING",
+            "truth_scope": "Agreement with this pinned issuer document and reference annotation; no general factual certification"
+          },
+          "verified": true,
+          "checks": [
+            {
+              "name": "VALID_JSON_ARRAY",
+              "pass": true,
+              "actual": true,
+              "expected": true
+            },
+            {
+              "name": "MINIMUM_ROWS",
+              "pass": true,
+              "actual": 4,
+              "expected": 4
+            },
+            {
+              "name": "REQUIRED_COLUMNS",
+              "pass": true,
+              "actual": true,
+              "expected": [
+                "company",
+                "quarter",
+                "capex",
+                "currency",
+                "source_url",
+                "unit",
+                "source_page",
+                "source_sha256",
+                "source_label",
+                "source_value"
+              ]
+            },
+            {
+              "name": "SOURCE_URL_COVERAGE",
+              "pass": true,
+              "actual": 1,
+              "expected": 1
+            },
+            {
+              "name": "DELIVERY_DEADLINE",
+              "pass": true,
+              "actual": 1790608750,
+              "expected": 1790609350
+            },
+            {
+              "name": "CAPEX_VALUE_TYPES",
+              "pass": true,
+              "actual": true,
+              "expected": "nonempty company, quarter and currency; finite nonnegative numeric capex; string source_url"
+            },
+            {
+              "name": "CAPEX_QUARTER_RANGE",
+              "pass": true,
+              "actual": true,
+              "expected": "2025-Q1 through 2026-Q4"
+            },
+            {
+              "name": "CURRENCY_FORMAT",
+              "pass": true,
+              "actual": true,
+              "expected": "three uppercase letters; currency authenticity is not verified"
+            },
+            {
+              "name": "UNIQUE_ECONOMIC_ROWS",
+              "pass": true,
+              "actual": 4,
+              "expected": 4
+            },
+            {
+              "name": "REFERENCE_PERIODS",
+              "pass": true,
+              "actual": [
+                "2025-Q1",
+                "2025-Q2",
+                "2025-Q3",
+                "2025-Q4"
+              ],
+              "expected": [
+                "2025-Q1",
+                "2025-Q2",
+                "2025-Q3",
+                "2025-Q4"
+              ]
+            },
+            {
+              "name": "REFERENCE_VALUES",
+              "pass": true,
+              "actual": true,
+              "expected": "positive quarterly facility-investment outflow and original negative source value"
+            },
+            {
+              "name": "REFERENCE_UNIT",
+              "pass": true,
+              "actual": true,
+              "expected": "billion KRW"
+            },
+            {
+              "name": "REFERENCE_PROVENANCE",
+              "pass": true,
+              "actual": true,
+              "expected": {
+                "url": "https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf",
+                "page": 16,
+                "sha256": "b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c",
+                "row": "Investment in Facilities"
+              }
+            }
+          ],
+          "failure_reason_code": null,
+          "evidence_hash": "0x8aaf1bfd7c2958f12eaac7174423b37b933281dff07127641b28c07711f2318f",
+          "content_hash": "0x04f93a9111ea1b9efe8d86c73d9263345d3456de19415f4ea013d6829a503c2e",
+          "row_count": 4,
+          "source_count": 4,
+          "source_coverage": 1,
+          "submitted_at": 1790608750,
+          "deadline": 1790609350,
+          "semantic_truth_verified": false,
+          "raw": "[{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q1\",\"capex\":3014,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_label\":\"Investment in Facilities\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_value\":-3014},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q2\",\"capex\":2717,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_label\":\"Investment in Facilities\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_value\":-2717},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q3\",\"capex\":2171,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_label\":\"Investment in Facilities\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_value\":-2171},{\"company\":\"LG Energy Solution\",\"quarter\":\"2025-Q4\",\"capex\":2515,\"currency\":\"KRW\",\"unit\":\"billion\",\"source_label\":\"Investment in Facilities\",\"source_page\":16,\"source_sha256\":\"b892a7ce727aa03272a202c0b315da2942d22afb444dc2d08e5fb77cb924ec3c\",\"source_url\":\"https://www.lgensol.com/upload/file/irEvent/25_4Q_LGES_business_performance_F_EN.pdf\",\"source_value\":-2515}]",
+          "deal_hash": "0x58315c13d046f48c079f2fdea1aa2230317050339a709fac0cc80694d46b4944"
+        },
+        "release_tx": "0x53cba080330d69c000088ad2009630873ceef36ae9a8770561559c4345507559",
+        "control": {
+          "rule": "REQUIRE_PREVIEW",
+          "company_id": "demo-research-company",
+          "seller_id": "seller-a",
+          "origin_deal_id": "8cc40dc4-8196-448d-8ce6-ad56a8ea67d3",
+          "failure_reason_code": "DELIVERY_REQUIREMENT_FAILED",
+          "validation_hash": "0x407efc90f9ba33e41ac6589a7902ed1a16410da305613c90518eb27d55b82392",
+          "status": "ACTIVE",
+          "created_at": "2026-09-28T15:05:18.688Z"
+        }
+      }
+    },
+    {
+      "kind": "offline",
+      "title": "앱 서버가 꺼져도 구매자는 만료 환불을 받습니다",
+      "narration": "별도 실험에서는 앱 프로세스를 실제로 종료했습니다. 독립적으로 실행 중인 로컬 블록체인에서 운영자와 다른 구매자 키가 만료 환불을 요청했습니다. 별도 검증기는 앱 서버나 데이터베이스 없이 거래를 확인했습니다. 계약은 배송의 의미 판단에는 운영자를 신뢰하며, 이 증거를 무신뢰 품질 보증이라고 부르지 않습니다.",
+      "metrics": [
+        {
+          "label": "앱 서버",
+          "value": "종료 확인"
+        },
+        {
+          "label": "구매자 직접 환불",
+          "value": "성공"
+        },
+        {
+          "label": "독립 검증",
+          "value": "VALID"
+        }
+      ],
+      "evidence": {
+        "status": "PASS",
+        "created_at": "2026-09-28T15:09:12.617Z",
+        "network": "independent local EVM; not Sepolia",
+        "fault": "application process terminated; blockchain process remained running",
+        "application_pid": 27636,
+        "application_exit": {
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        "application_http_unavailable": true,
+        "chain_pid": 26036,
+        "early_buyer_refund_denied": true,
+        "unrelated_sender_denied_after_deadline": true,
+        "independent_buyer": true,
+        "model_calls": 0,
+        "verification": {
+          "verdict": "VALID",
+          "scope": "Canonical local-chain funding and buyer-signed deadline refund for the pinned contract; no off-chain content truth claim",
+          "app_server_access": false,
+          "app_database_access": false,
+          "controller_key_access": false,
+          "chain_id": 31338,
+          "deal_hash": "0xfe5e535f6d318c22fc056ce5c57fb15643c6c2a134d665bd34df1ae960567700",
+          "fund_tx": "0xc58fd1a50e876681d67b989096abddc44d41b4a4c44bb40ec3ad98ff70a44aa9",
+          "refund_tx": "0x600868851d3bb0caa0ac87bbb2331dfc0aca42d2116fed00df8350f34ed0d1ca",
+          "buyer": "0x6C41d3D38de8932E5c4a439fd3B2D1C912C6EfB7",
+          "amount_wei": "180000000000"
+        },
+        "live_rpc_available_after_command": false,
+        "persistence_directory": "C:\\Users\\user\\Downloads\\Furiosa x Bricksum\\data\\private\\deal-escrow\\server-off-2026-09-28T15-08-52-428Z"
+      }
+    },
+    {
+      "kind": "benchmark",
+      "title": "좋은 거래를 살리는지도 함께 비교합니다",
+      "narration": "같은 최종 검수로 세 방법을 비교했습니다. 고정 규칙의 올바른 결과는 22건, 에이아이는 24건, 실패 이력을 먼저 확인한 에이아이는 23건입니다. 마지막 방식은 모델 호출 22번을 사용했고 오류도 공개했습니다. 열두 가지 작성된 상황을 두 번씩 실행한 탐색 결과입니다. 수정에 사용한 같은 상황이라 일반적 우위는 주장하지 않습니다. 실제 사용자 검증은 아직 남았습니다.",
+      "metrics": [
+        {
+          "label": "fixed",
+          "value": "22/24 올바른 결과"
+        },
+        {
+          "label": "ai",
+          "value": "24/24 올바른 결과"
+        },
+        {
+          "label": "ai-memory",
+          "value": "23/24 올바른 결과"
+        }
+      ],
+      "benchmark": [
+        {
+          "variant": "fixed",
+          "tasks": 24,
+          "correct_outcomes": 22,
+          "delivered": 14,
+          "false_blocks": 2,
+          "wrong_releases": 0,
+          "model_calls": 0,
+          "total_tokens": 0,
+          "latency_ms": 0,
+          "paid_minor": 2380
+        },
+        {
+          "variant": "ai",
+          "tasks": 24,
+          "correct_outcomes": 24,
+          "delivered": 16,
+          "false_blocks": 0,
+          "wrong_releases": 0,
+          "model_calls": 26,
+          "total_tokens": 43949,
+          "latency_ms": 307655,
+          "paid_minor": 2790
+        },
+        {
+          "variant": "ai-memory",
+          "tasks": 24,
+          "correct_outcomes": 23,
+          "delivered": 16,
+          "false_blocks": 0,
+          "wrong_releases": 0,
+          "model_calls": 22,
+          "total_tokens": 39112,
+          "latency_ms": 277016,
+          "paid_minor": 2750
+        }
+      ],
+      "evidence": {
+        "report": "latest-benchmark-live.json",
+        "source_unchanged": true,
+        "total_model_calls": 48
+      },
+      "failures": [
+        {
+          "case_id": "R12-unaffordable-fast-option",
+          "repeat": 1,
+          "variant": "ai-memory",
+          "error": "KILN_INVALID_TOOL"
+        }
+      ]
+    }
+  ]
+}

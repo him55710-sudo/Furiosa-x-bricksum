@@ -1,0 +1,93 @@
+{
+  "status": "ALL_72_ATTEMPTS_ACCOUNTED_FOR",
+  "original_report": "C:\\Users\\user\\Downloads\\Furiosa x Bricksum\\artifacts\\deal-escrow\\research\\benchmark-2026-09-28T15-13-17-626Z-live\\report.json",
+  "correction": "Include the two failed inference attempts in denominators, false blocks, calls and tokens. Original raw files remain unchanged.",
+  "source_unchanged": true,
+  "summary": [
+    {
+      "variant": "fixed",
+      "tasks": 24,
+      "correct_outcomes": 22,
+      "delivered": 14,
+      "false_blocks": 2,
+      "wrong_releases": 0,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0
+    },
+    {
+      "variant": "ai",
+      "tasks": 24,
+      "correct_outcomes": 20,
+      "delivered": 12,
+      "false_blocks": 4,
+      "wrong_releases": 0,
+      "model_calls": 26,
+      "total_tokens": 43294,
+      "latency_ms": 328855
+    },
+    {
+      "variant": "ai-memory",
+      "tasks": 24,
+      "correct_outcomes": 23,
+      "delivered": 15,
+      "false_blocks": 1,
+      "wrong_releases": 0,
+      "model_calls": 22,
+      "total_tokens": 34513,
+      "latency_ms": 242601
+    }
+  ],
+  "failures": [
+    {
+      "case_id": "R02-patient-buyer",
+      "repeat": 1,
+      "variant": "ai",
+      "error": "KILN_OUTPUT_TRUNCATED",
+      "calls": [
+        {
+          "flow_name": "Buyer offer comparison",
+          "model": "qwen3-32b",
+          "request_id": "chat-c221405e195d4f558e59aa58bbcd9e40",
+          "prompt_tokens": 850,
+          "completion_tokens": 2400,
+          "total_tokens": 3250,
+          "start_time": "2026-09-28T15:19:26.980Z",
+          "first_token_time": null,
+          "end_time": "2026-09-28T15:20:04.405Z",
+          "latency_ms": 37425,
+          "tool_called": null,
+          "result": "KILN_OUTPUT_TRUNCATED",
+          "prompt_hash": "0x770d9d41e385da2d1645c3f497c90964168e6e0c916737d0c4115032d499cc2e",
+          "streaming": false
+        }
+      ],
+      "history": []
+    },
+    {
+      "case_id": "R06-natural-period-description",
+      "repeat": 1,
+      "variant": "ai-memory",
+      "error": "UNEXPECTED_COUNTER",
+      "calls": [
+        {
+          "flow_name": "Buyer offer comparison",
+          "model": "qwen3-32b",
+          "request_id": "chat-a581ba66af174d8e9b7d981c7defa51e",
+          "prompt_tokens": 711,
+          "completion_tokens": 553,
+          "total_tokens": 1264,
+          "start_time": "2026-09-28T15:21:17.969Z",
+          "first_token_time": null,
+          "end_time": "2026-09-28T15:21:25.938Z",
+          "latency_ms": 7969,
+          "tool_called": "select_offer",
+          "result": "UNEXPECTED_COUNTER",
+          "prompt_hash": "0xa372dcdb8afe459e81d557c22640c10ff847ee09d825deb18a92847727e7a20a",
+          "streaming": false
+        }
+      ],
+      "history": []
+    }
+  ]
+}

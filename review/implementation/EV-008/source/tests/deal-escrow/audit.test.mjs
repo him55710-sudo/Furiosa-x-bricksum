@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {verifyReceipt} from '../../src/deal-escrow/audit.ts';
+// Recorded real Kiln + real local EVM run. Offline tamper checks do not impersonate RPC verification.
+const report=JSON.parse(readFileSync('artifacts/deal-escrow/latest-demo.json','utf8')),r=JSON.parse(readFileSync(`${report.evidence_directory}/${report.results.find(r=>r.state==='SETTLED').id}.json`,'utf8'));
+test('third-party receipt reconstructs delivery and policy arithmetic without application state',async()=>{assert.equal((await verifyReceipt(r)).verdict,'STRUCTURALLY_VALID');});
+test('receipt detects altered amount, delivery, event history, attestation and missing settlement tx',async()=>{for(const change of [r=>r.deal.price_minor++,r=>r.evidence.delivery='[]',r=>r.evidence.validation.row_count=999,r=>r.events[0].actor_id='intruder',r=>r.evidence.attestation.reason='made up',r=>delete r.transactions.release]){const altered=structuredClone(r);change(altered);assert.equal((await verifyReceipt(altered)).verdict,'INVALID');}});

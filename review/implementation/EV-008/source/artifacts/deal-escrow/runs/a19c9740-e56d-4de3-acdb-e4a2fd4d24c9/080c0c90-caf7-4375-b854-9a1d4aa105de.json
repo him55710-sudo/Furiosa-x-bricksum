@@ -1,0 +1,928 @@
+{
+  "schema_version": 1,
+  "product": "Agent Deal Escrow",
+  "exported_at": "2026-09-28T13:26:38.382Z",
+  "network": {
+    "schemaVersion": 1,
+    "chainId": 31338,
+    "network": "local-devnet",
+    "contract": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+    "controller": "0x0C9E276f61c952aC2cF02a489aaA7a57cD0b2371",
+    "buyer": "0x0C9E276f61c952aC2cF02a489aaA7a57cD0b2371",
+    "sellers": {
+      "seller-a": "0xea32652F09fD1f187a4f5C7eb33c3D0ce60C75dd",
+      "seller-b": "0xEf40185885D0eBD47a9923508113D4A705B4e512"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "58bd05598942562583f68e8a272989489a0580d3b68bb41ad0e93fb2511c359d",
+    "runtimeHash": "0x2c06ccdfbd580ccaefebb1e9aeb5677dcea2d665b3c9561533970fe95ee1e76e",
+    "deploymentTx": "0x99e8d506a78a58e39e3a9f39f9585adf7b6fcaba43278bb60ec7ece5a686d983",
+    "createdAt": "2026-09-28T13:25:50.859Z"
+  },
+  "mandate": {
+    "mandate_id": "f858a386-2838-4406-9c93-12fbc70f6da0",
+    "company_id": "demo-research-company",
+    "buyer_id": "research-agent-07",
+    "task_budget_minor": 300,
+    "max_single_minor": 200,
+    "allowed_sellers": [
+      "seller-a",
+      "seller-b"
+    ],
+    "category": "RESEARCH_DATA",
+    "status": "ACTIVE",
+    "created_at": 1790601950,
+    "expires_at": 1790603750
+  },
+  "mandate_history": [
+    {
+      "event_id": "388ae86e-eba6-435d-ae1e-5733812b2bdd",
+      "deal_id": "f858a386-2838-4406-9c93-12fbc70f6da0",
+      "event_type": "MANDATE_CREATED",
+      "timestamp": "2026-09-28T13:25:50.914Z",
+      "actor_type": "human",
+      "actor_id": "demo-research-company",
+      "structured_payload": {
+        "mandate_id": "f858a386-2838-4406-9c93-12fbc70f6da0",
+        "company_id": "demo-research-company",
+        "buyer_id": "research-agent-07",
+        "task_budget_minor": 300,
+        "max_single_minor": 200,
+        "allowed_sellers": [
+          "seller-a",
+          "seller-b"
+        ],
+        "category": "RESEARCH_DATA",
+        "status": "ACTIVE",
+        "created_at": 1790601950,
+        "expires_at": 1790603750
+      },
+      "previous_event_hash": null,
+      "event_hash": "0xf6087491fea2213089ad28b1406a6e5f1e224cb09f6eedcad0416581bc116f1e"
+    }
+  ],
+  "deal": {
+    "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+    "buyer_id": "research-agent-07",
+    "seller_id": "seller-a",
+    "price_minor": 200,
+    "currency_or_demo_asset": "DEMO",
+    "deliverable_type": "CAPEX_DATASET",
+    "requirements": {
+      "minimum_rows": 40,
+      "required_columns": [
+        "company",
+        "quarter",
+        "capex",
+        "currency",
+        "source_url"
+      ],
+      "minimum_source_coverage": 0.9,
+      "format": "JSON"
+    },
+    "deadline": 90,
+    "created_at": 1790601971,
+    "expires_at": 1790602571,
+    "supersedes_deal_id": null
+  },
+  "deal_hash": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+  "state": "SETTLED",
+  "evidence": {
+    "negotiation": [
+      {
+        "actor": "Buyer Agent",
+        "tool": "counter_offer",
+        "args": {
+          "deadline": 90,
+          "minimum_rows": 40,
+          "minimum_source_coverage": 0.9,
+          "price_minor": 200,
+          "reason": "Maximized rows (40/52) and source coverage (90% vs 96%) within budget ceiling (200 vs 200), accepted 3-min delivery time via 90-day deadline buffer"
+        },
+        "model": "qwen3-32b",
+        "request_id": "chat-433c42b0d0414b4ea5bbde6553defefe"
+      },
+      {
+        "actor": "Honest Seller A",
+        "tool": "request_offer",
+        "args": {
+          "price_minor": 200,
+          "minimum_rows": 40,
+          "minimum_source_coverage": 0.9,
+          "deadline": 90,
+          "reason": "Buyer's counteroffer meets seller's floor price (200 vs 180) and capacity constraints (40 rows/90% coverage within 52 rows/96% coverage). Accepts 3-min delivery time (180s) and 90-day deadline (within 60-180 range)."
+        },
+        "model": "qwen3-32b",
+        "request_id": "chat-899ac74a8356446fbef73eb0e74cf59c"
+      },
+      {
+        "actor": "Buyer Agent",
+        "tool": "accept_deal",
+        "args": {
+          "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de"
+        },
+        "model": "qwen3-32b",
+        "request_id": "chat-7ac43f7164a94cd5ab4c77fe87562a07"
+      }
+    ],
+    "model_listing": {
+      "supported": true,
+      "available": [
+        "deepseek-v4.1-flash",
+        "qwen3-32b"
+      ],
+      "selected": "qwen3-32b",
+      "checked_at": "2026-09-28T13:25:51.365Z"
+    },
+    "policy": [
+      {
+        "name": "MANDATE_ACTIVE",
+        "pass": true,
+        "actual": "ACTIVE",
+        "expected": "ACTIVE"
+      },
+      {
+        "name": "MANDATE_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790601977,
+        "expected": 1790603750
+      },
+      {
+        "name": "DEAL_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790601977,
+        "expected": 1790602571
+      },
+      {
+        "name": "BUYER_ALLOWED",
+        "pass": true,
+        "actual": "research-agent-07",
+        "expected": "research-agent-07"
+      },
+      {
+        "name": "SELLER_ALLOWED",
+        "pass": true,
+        "actual": "seller-a",
+        "expected": [
+          "seller-a",
+          "seller-b"
+        ]
+      },
+      {
+        "name": "MAX_SINGLE",
+        "pass": true,
+        "actual": 200,
+        "expected": 200
+      },
+      {
+        "name": "TASK_BUDGET",
+        "pass": true,
+        "actual": 200,
+        "expected": 300
+      },
+      {
+        "name": "DEAL_HASH",
+        "pass": true,
+        "actual": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+        "expected": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+      },
+      {
+        "name": "PREVIEW_REQUIRED",
+        "pass": true,
+        "actual": false,
+        "expected": false
+      }
+    ],
+    "escrow": {
+      "buyer": "0x0C9E276f61c952aC2cF02a489aaA7a57cD0b2371",
+      "seller": "0xea32652F09fD1f187a4f5C7eb33c3D0ce60C75dd",
+      "amount": "200000000000",
+      "deadline": 1790602067,
+      "status": 2
+    },
+    "fund_tx": "0x4263f7fff5fab37dd103f5cec8b05e282b3277f634760050bfd41c71202274f9",
+    "delivery": "[{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":100,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/0\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":101,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/1\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":102,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/2\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":103,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/3\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":104,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/4\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":105,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/5\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":106,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/6\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q4\",\"capex\":107,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/7\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q1\",\"capex\":108,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/8\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q2\",\"capex\":109,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/9\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":110,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/10\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":111,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/11\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":112,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/12\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":113,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/13\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":114,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/14\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":115,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/15\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":116,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/16\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q2\",\"capex\":117,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/17\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q3\",\"capex\":118,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/18\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q4\",\"capex\":119,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/19\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":120,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/20\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":121,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/21\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":122,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/22\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":123,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/23\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":124,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/24\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":125,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/25\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":126,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/26\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q4\",\"capex\":127,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/27\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q1\",\"capex\":128,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/28\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q2\",\"capex\":129,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/29\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":130,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/30\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":131,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/31\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":132,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/32\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":133,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/33\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":134,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/34\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":135,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/35\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":136,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/36\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q2\",\"capex\":137,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/37\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q3\",\"capex\":138,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/38\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q4\",\"capex\":139,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/39\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q1\",\"capex\":140,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/40\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q2\",\"capex\":141,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/41\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q3\",\"capex\":142,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/42\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q4\",\"capex\":143,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/43\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q1\",\"capex\":144,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/44\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q2\",\"capex\":145,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/45\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2026-Q3\",\"capex\":146,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/46\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2026-Q4\",\"capex\":147,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/47\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2026-Q1\",\"capex\":148,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/48\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2026-Q2\",\"capex\":149,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/49\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q3\",\"capex\":150,\"currency\":\"KRW\",\"source_url\":\"\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q4\",\"capex\":151,\"currency\":\"KRW\",\"source_url\":\"\"}]",
+    "validation": {
+      "verified": true,
+      "checks": [
+        {
+          "name": "VALID_JSON_ARRAY",
+          "pass": true,
+          "actual": true,
+          "expected": true
+        },
+        {
+          "name": "MINIMUM_ROWS",
+          "pass": true,
+          "actual": 52,
+          "expected": 40
+        },
+        {
+          "name": "REQUIRED_COLUMNS",
+          "pass": true,
+          "actual": true,
+          "expected": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url"
+          ]
+        },
+        {
+          "name": "SOURCE_URL_COVERAGE",
+          "pass": true,
+          "actual": 0.9615384615384616,
+          "expected": 0.9
+        },
+        {
+          "name": "DELIVERY_DEADLINE",
+          "pass": true,
+          "actual": 1790601977,
+          "expected": 1790602067
+        }
+      ],
+      "failure_reason_code": null,
+      "evidence_hash": "0xdafc9dee59ca38d60fc283d2df7f81df79fe88fbb27e5072deff326c4b73e09b",
+      "content_hash": "0xf483af1599ebae79118fa1877cebf7abe57be6e26a0b2da6cecdf84fa52d09c9",
+      "row_count": 52,
+      "source_count": 50,
+      "source_coverage": 0.9615384615384616,
+      "submitted_at": 1790601977,
+      "deadline": 1790602067,
+      "semantic_truth_verified": false
+    },
+    "settlement_reason": "DELIVERY_VERIFIED",
+    "attestation": {
+      "deal": {
+        "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+        "buyer_id": "research-agent-07",
+        "seller_id": "seller-a",
+        "price_minor": 200,
+        "currency_or_demo_asset": "DEMO",
+        "deliverable_type": "CAPEX_DATASET",
+        "requirements": {
+          "minimum_rows": 40,
+          "required_columns": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url"
+          ],
+          "minimum_source_coverage": 0.9,
+          "format": "JSON"
+        },
+        "deadline": 90,
+        "created_at": 1790601971,
+        "expires_at": 1790602571,
+        "supersedes_deal_id": null
+      },
+      "deal_hash": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+      "mandate": {
+        "mandate_id": "f858a386-2838-4406-9c93-12fbc70f6da0",
+        "company_id": "demo-research-company",
+        "buyer_id": "research-agent-07",
+        "task_budget_minor": 300,
+        "max_single_minor": 200,
+        "allowed_sellers": [
+          "seller-a",
+          "seller-b"
+        ],
+        "category": "RESEARCH_DATA",
+        "status": "ACTIVE",
+        "created_at": 1790601950,
+        "expires_at": 1790603750
+      },
+      "delivery": "[{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":100,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/0\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":101,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/1\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":102,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/2\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":103,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/3\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":104,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/4\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":105,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/5\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":106,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/6\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q4\",\"capex\":107,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/7\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q1\",\"capex\":108,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/8\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q2\",\"capex\":109,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/9\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":110,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/10\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":111,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/11\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":112,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/12\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":113,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/13\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":114,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/14\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":115,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/15\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":116,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/16\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q2\",\"capex\":117,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/17\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q3\",\"capex\":118,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/18\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q4\",\"capex\":119,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/19\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q1\",\"capex\":120,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/20\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q2\",\"capex\":121,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/21\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q3\",\"capex\":122,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/22\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q4\",\"capex\":123,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/23\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q1\",\"capex\":124,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/24\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q2\",\"capex\":125,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/25\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q3\",\"capex\":126,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/26\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q4\",\"capex\":127,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/27\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q1\",\"capex\":128,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/28\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q2\",\"capex\":129,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/29\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2025-Q3\",\"capex\":130,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/30\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2025-Q4\",\"capex\":131,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/31\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2025-Q1\",\"capex\":132,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/32\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2025-Q2\",\"capex\":133,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/33\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2025-Q3\",\"capex\":134,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/34\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2025-Q4\",\"capex\":135,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/35\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2025-Q1\",\"capex\":136,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/36\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2025-Q2\",\"capex\":137,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/37\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2025-Q3\",\"capex\":138,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/38\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2025-Q4\",\"capex\":139,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/39\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q1\",\"capex\":140,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/40\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q2\",\"capex\":141,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/41\"},{\"company\":\"Demo Battery 3\",\"quarter\":\"2026-Q3\",\"capex\":142,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/42\"},{\"company\":\"Demo Battery 4\",\"quarter\":\"2026-Q4\",\"capex\":143,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/43\"},{\"company\":\"Demo Battery 5\",\"quarter\":\"2026-Q1\",\"capex\":144,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/44\"},{\"company\":\"Demo Battery 6\",\"quarter\":\"2026-Q2\",\"capex\":145,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/45\"},{\"company\":\"Demo Battery 7\",\"quarter\":\"2026-Q3\",\"capex\":146,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/46\"},{\"company\":\"Demo Battery 8\",\"quarter\":\"2026-Q4\",\"capex\":147,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/47\"},{\"company\":\"Demo Battery 9\",\"quarter\":\"2026-Q1\",\"capex\":148,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/48\"},{\"company\":\"Demo Battery 10\",\"quarter\":\"2026-Q2\",\"capex\":149,\"currency\":\"KRW\",\"source_url\":\"https://example.org/demo-source/49\"},{\"company\":\"Demo Battery 1\",\"quarter\":\"2026-Q3\",\"capex\":150,\"currency\":\"KRW\",\"source_url\":\"\"},{\"company\":\"Demo Battery 2\",\"quarter\":\"2026-Q4\",\"capex\":151,\"currency\":\"KRW\",\"source_url\":\"\"}]",
+      "validation": {
+        "verified": true,
+        "checks": [
+          {
+            "name": "VALID_JSON_ARRAY",
+            "pass": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "name": "MINIMUM_ROWS",
+            "pass": true,
+            "actual": 52,
+            "expected": 40
+          },
+          {
+            "name": "REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": true,
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ]
+          },
+          {
+            "name": "SOURCE_URL_COVERAGE",
+            "pass": true,
+            "actual": 0.9615384615384616,
+            "expected": 0.9
+          },
+          {
+            "name": "DELIVERY_DEADLINE",
+            "pass": true,
+            "actual": 1790601977,
+            "expected": 1790602067
+          }
+        ],
+        "failure_reason_code": null,
+        "evidence_hash": "0xdafc9dee59ca38d60fc283d2df7f81df79fe88fbb27e5072deff326c4b73e09b",
+        "content_hash": "0xf483af1599ebae79118fa1877cebf7abe57be6e26a0b2da6cecdf84fa52d09c9",
+        "row_count": 52,
+        "source_count": 50,
+        "source_coverage": 0.9615384615384616,
+        "submitted_at": 1790601977,
+        "deadline": 1790602067,
+        "semantic_truth_verified": false
+      },
+      "final_checks": [
+        {
+          "name": "MANDATE_ACTIVE",
+          "pass": true,
+          "actual": "ACTIVE",
+          "expected": "ACTIVE"
+        },
+        {
+          "name": "MANDATE_NOT_EXPIRED",
+          "pass": true,
+          "actual": 1790601977,
+          "expected": 1790603750
+        },
+        {
+          "name": "DEAL_NOT_EXPIRED",
+          "pass": true,
+          "actual": 1790601977,
+          "expected": 1790602571
+        },
+        {
+          "name": "BUYER_ALLOWED",
+          "pass": true,
+          "actual": "research-agent-07",
+          "expected": "research-agent-07"
+        },
+        {
+          "name": "SELLER_ALLOWED",
+          "pass": true,
+          "actual": "seller-a",
+          "expected": [
+            "seller-a",
+            "seller-b"
+          ]
+        },
+        {
+          "name": "MAX_SINGLE",
+          "pass": true,
+          "actual": 200,
+          "expected": 200
+        },
+        {
+          "name": "TASK_BUDGET",
+          "pass": true,
+          "actual": 200,
+          "expected": 300
+        },
+        {
+          "name": "DEAL_HASH",
+          "pass": true,
+          "actual": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+          "expected": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+        },
+        {
+          "name": "PREVIEW_REQUIRED",
+          "pass": true,
+          "actual": false,
+          "expected": false
+        }
+      ],
+      "reason": "DELIVERY_VERIFIED",
+      "outcome": "release",
+      "prior_event_hash": "0x3c10856c701b39dd754de53939305693171fc90cc2b26a71efcf2ab4cb941c73",
+      "preview": null
+    },
+    "attestation_hash": "0x077e714b988445500d6e213fbdf89a1104469a448988c310e4e82c7877da6596",
+    "release_tx": "0x32fc4d47dd040c76012dacef9a86bddb759e83b74888ee4f5aa8c8781156405d"
+  },
+  "events": [
+    {
+      "event_id": "2e9bfbed-9796-44b5-8ef0-e5b38417cf94",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "NEGOTIATION_STARTED",
+      "timestamp": "2026-09-28T13:26:11.793Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "mandate_id": "f858a386-2838-4406-9c93-12fbc70f6da0"
+      },
+      "previous_event_hash": null,
+      "event_hash": "0xafcc32786dc83be0d8f6308fe0360894d7fbbc84ffe1df3769d1f100f406cc84"
+    },
+    {
+      "event_id": "d979177e-e9df-4b33-af75-80f6b0345d4c",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "DEAL_PROPOSED",
+      "timestamp": "2026-09-28T13:26:11.794Z",
+      "actor_type": "agent",
+      "actor_id": "research-agent-07",
+      "structured_payload": {
+        "deal": {
+          "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+          "buyer_id": "research-agent-07",
+          "seller_id": "seller-a",
+          "price_minor": 200,
+          "currency_or_demo_asset": "DEMO",
+          "deliverable_type": "CAPEX_DATASET",
+          "requirements": {
+            "minimum_rows": 40,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ],
+            "minimum_source_coverage": 0.9,
+            "format": "JSON"
+          },
+          "deadline": 90,
+          "created_at": 1790601971,
+          "expires_at": 1790602571,
+          "supersedes_deal_id": null
+        },
+        "deal_hash": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+      },
+      "previous_event_hash": "0xafcc32786dc83be0d8f6308fe0360894d7fbbc84ffe1df3769d1f100f406cc84",
+      "event_hash": "0xe49602872a067034e6473f0978e61f987b80dea5972844fde3fc59ea3ed9d498"
+    },
+    {
+      "event_id": "a42e11f6-661a-49e8-a8fc-e18e625490dd",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "NEGOTIATION_EVIDENCE",
+      "timestamp": "2026-09-28T13:26:11.803Z",
+      "actor_type": "system",
+      "actor_id": "kiln-adapter",
+      "structured_payload": {
+        "messages": [
+          {
+            "actor": "Buyer Agent",
+            "tool": "counter_offer",
+            "args": {
+              "deadline": 90,
+              "minimum_rows": 40,
+              "minimum_source_coverage": 0.9,
+              "price_minor": 200,
+              "reason": "Maximized rows (40/52) and source coverage (90% vs 96%) within budget ceiling (200 vs 200), accepted 3-min delivery time via 90-day deadline buffer"
+            },
+            "model": "qwen3-32b",
+            "request_id": "chat-433c42b0d0414b4ea5bbde6553defefe"
+          },
+          {
+            "actor": "Honest Seller A",
+            "tool": "request_offer",
+            "args": {
+              "price_minor": 200,
+              "minimum_rows": 40,
+              "minimum_source_coverage": 0.9,
+              "deadline": 90,
+              "reason": "Buyer's counteroffer meets seller's floor price (200 vs 180) and capacity constraints (40 rows/90% coverage within 52 rows/96% coverage). Accepts 3-min delivery time (180s) and 90-day deadline (within 60-180 range)."
+            },
+            "model": "qwen3-32b",
+            "request_id": "chat-899ac74a8356446fbef73eb0e74cf59c"
+          }
+        ],
+        "model_listing": {
+          "supported": true,
+          "available": [
+            "deepseek-v4.1-flash",
+            "qwen3-32b"
+          ],
+          "selected": "qwen3-32b",
+          "checked_at": "2026-09-28T13:25:51.365Z"
+        }
+      },
+      "previous_event_hash": "0xe49602872a067034e6473f0978e61f987b80dea5972844fde3fc59ea3ed9d498",
+      "event_hash": "0x77b96e4077278d679b9a4bdb0beb23ad9b44016408e22a43bca4a212b91e25b1"
+    },
+    {
+      "event_id": "9e019f27-907c-401d-8745-8e7e5db774db",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "DEAL_ACCEPTED",
+      "timestamp": "2026-09-28T13:26:17.216Z",
+      "actor_type": "agent",
+      "actor_id": "research-agent-07",
+      "structured_payload": {
+        "deal_hash": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+      },
+      "previous_event_hash": "0x77b96e4077278d679b9a4bdb0beb23ad9b44016408e22a43bca4a212b91e25b1",
+      "event_hash": "0x8f7f6c05f850d19ebe90081fc3972e69f5e84826e62314293123bb087bdc5a7d"
+    },
+    {
+      "event_id": "e80eaa00-425d-4dbd-b33c-6680643870fc",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "POLICY_CHECKED",
+      "timestamp": "2026-09-28T13:26:17.222Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790601977,
+            "expected": 1790603750
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790601977,
+            "expected": 1790602571
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "research-agent-07",
+            "expected": "research-agent-07"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a",
+              "seller-b"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 200,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 200,
+            "expected": 300
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+            "expected": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "mandate": {
+          "mandate_id": "f858a386-2838-4406-9c93-12fbc70f6da0",
+          "company_id": "demo-research-company",
+          "buyer_id": "research-agent-07",
+          "task_budget_minor": 300,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a",
+            "seller-b"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790601950,
+          "expires_at": 1790603750
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        },
+        "time": 1790601977
+      },
+      "previous_event_hash": "0x8f7f6c05f850d19ebe90081fc3972e69f5e84826e62314293123bb087bdc5a7d",
+      "event_hash": "0xb3e61ec7a6634e45e2897ca11578d59ba78e71385fcc9c9e7d34c23a53e94c00"
+    },
+    {
+      "event_id": "0caf5245-407c-41c0-a12d-33f51528a5f0",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "ESCROW_FUNDED",
+      "timestamp": "2026-09-28T13:26:17.536Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "deal_hash": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+        "amount_minor": 200,
+        "tx_hash": "0x4263f7fff5fab37dd103f5cec8b05e282b3277f634760050bfd41c71202274f9",
+        "chain_id": 31338,
+        "contract": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+        "reason": "POLICY_APPROVED",
+        "attestation_hash": null
+      },
+      "previous_event_hash": "0xb3e61ec7a6634e45e2897ca11578d59ba78e71385fcc9c9e7d34c23a53e94c00",
+      "event_hash": "0x8f81e7cf99486deda26f73cf709189b1011cd650d8b5e2f9e46d9dd4028e92cc"
+    },
+    {
+      "event_id": "708f105d-f669-40d7-a8bc-2fc48a9f68f2",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "DELIVERY_SUBMITTED",
+      "timestamp": "2026-09-28T13:26:17.543Z",
+      "actor_type": "seller",
+      "actor_id": "seller-a",
+      "structured_payload": {
+        "content_hash": "0xf483af1599ebae79118fa1877cebf7abe57be6e26a0b2da6cecdf84fa52d09c9",
+        "submitted_at": 1790601977
+      },
+      "previous_event_hash": "0x8f81e7cf99486deda26f73cf709189b1011cd650d8b5e2f9e46d9dd4028e92cc",
+      "event_hash": "0xd4b6f8e8d72ce9f930cbfaecf93f8f591b3e43a3631cdd2919a05eeed772f91d"
+    },
+    {
+      "event_id": "4e7f8ddd-d1d6-47bb-ae94-81bb7800a09f",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "DELIVERY_VALIDATED",
+      "timestamp": "2026-09-28T13:26:17.543Z",
+      "actor_type": "system",
+      "actor_id": "delivery-validator",
+      "structured_payload": {
+        "verified": true,
+        "checks": [
+          {
+            "name": "VALID_JSON_ARRAY",
+            "pass": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "name": "MINIMUM_ROWS",
+            "pass": true,
+            "actual": 52,
+            "expected": 40
+          },
+          {
+            "name": "REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": true,
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ]
+          },
+          {
+            "name": "SOURCE_URL_COVERAGE",
+            "pass": true,
+            "actual": 0.9615384615384616,
+            "expected": 0.9
+          },
+          {
+            "name": "DELIVERY_DEADLINE",
+            "pass": true,
+            "actual": 1790601977,
+            "expected": 1790602067
+          }
+        ],
+        "failure_reason_code": null,
+        "evidence_hash": "0xdafc9dee59ca38d60fc283d2df7f81df79fe88fbb27e5072deff326c4b73e09b",
+        "content_hash": "0xf483af1599ebae79118fa1877cebf7abe57be6e26a0b2da6cecdf84fa52d09c9",
+        "row_count": 52,
+        "source_count": 50,
+        "source_coverage": 0.9615384615384616,
+        "submitted_at": 1790601977,
+        "deadline": 1790602067,
+        "semantic_truth_verified": false
+      },
+      "previous_event_hash": "0xd4b6f8e8d72ce9f930cbfaecf93f8f591b3e43a3631cdd2919a05eeed772f91d",
+      "event_hash": "0x555a4f801a93117eeb87a0aa26dc3fcf9aa5059a80a3a1d6490b853e99668eaf"
+    },
+    {
+      "event_id": "cd670f3b-c10a-42c5-91da-29f5be56e279",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "FINAL_AUTHORIZATION",
+      "timestamp": "2026-09-28T13:26:17.548Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790601977,
+            "expected": 1790603750
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790601977,
+            "expected": 1790602571
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "research-agent-07",
+            "expected": "research-agent-07"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a",
+              "seller-b"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 200,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 200,
+            "expected": 300
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+            "expected": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "time": 1790601977,
+        "mandate": {
+          "mandate_id": "f858a386-2838-4406-9c93-12fbc70f6da0",
+          "company_id": "demo-research-company",
+          "buyer_id": "research-agent-07",
+          "task_budget_minor": 300,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a",
+            "seller-b"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790601950,
+          "expires_at": 1790603750
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        }
+      },
+      "previous_event_hash": "0x555a4f801a93117eeb87a0aa26dc3fcf9aa5059a80a3a1d6490b853e99668eaf",
+      "event_hash": "0x3c10856c701b39dd754de53939305693171fc90cc2b26a71efcf2ab4cb941c73"
+    },
+    {
+      "event_id": "540cc5d2-c284-4d7a-a01b-2ad655abac7b",
+      "deal_id": "080c0c90-caf7-4375-b854-9a1d4aa105de",
+      "event_type": "ESCROW_RELEASED",
+      "timestamp": "2026-09-28T13:26:17.690Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "deal_hash": "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+        "amount_minor": 200,
+        "tx_hash": "0x32fc4d47dd040c76012dacef9a86bddb759e83b74888ee4f5aa8c8781156405d",
+        "chain_id": 31338,
+        "contract": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+        "reason": "DELIVERY_VERIFIED",
+        "attestation_hash": "0x077e714b988445500d6e213fbdf89a1104469a448988c310e4e82c7877da6596"
+      },
+      "previous_event_hash": "0x3c10856c701b39dd754de53939305693171fc90cc2b26a71efcf2ab4cb941c73",
+      "event_hash": "0x8cb139693b7456952a1d64661ca7b1d6bffff38e9f476b7a8c5727af6de1e767"
+    }
+  ],
+  "control": null,
+  "transactions": {
+    "fund": {
+      "status": "CONFIRMED",
+      "tx_hash": "0x4263f7fff5fab37dd103f5cec8b05e282b3277f634760050bfd41c71202274f9",
+      "receipt": {
+        "transactionHash": "0x4263f7fff5fab37dd103f5cec8b05e282b3277f634760050bfd41c71202274f9",
+        "blockNumber": 2,
+        "blockHash": "0xa5240fd2a0eee8c2526300d8c7ca8e9901b9ebe46112d7f53ebb8d1de0e37729",
+        "status": 1,
+        "from": "0x0C9E276f61c952aC2cF02a489aaA7a57cD0b2371",
+        "to": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+        "logs": [
+          {
+            "address": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+            "topics": [
+              "0xe27c180c59dadd04beb7d79adb8fc96266c3672cfb075e52df8e40cd55d7cc42",
+              "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8",
+              "0x0000000000000000000000000c9e276f61c952ac2cf02a489aaa7a57cd0b2371",
+              "0x000000000000000000000000ea32652f09fd1f187a4f5c7eb33c3d0ce60c75dd"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000000000000002e90edd000000000000000000000000000000000000000000000000000000000006aba6b53"
+          }
+        ]
+      }
+    },
+    "release": {
+      "status": "CONFIRMED",
+      "tx_hash": "0x32fc4d47dd040c76012dacef9a86bddb759e83b74888ee4f5aa8c8781156405d",
+      "receipt": {
+        "transactionHash": "0x32fc4d47dd040c76012dacef9a86bddb759e83b74888ee4f5aa8c8781156405d",
+        "blockNumber": 3,
+        "blockHash": "0x49424d3caf0c281d1878fb7420873658f338293bdde5ac01ae621b8992fed0cd",
+        "status": 1,
+        "from": "0x0C9E276f61c952aC2cF02a489aaA7a57cD0b2371",
+        "to": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+        "logs": [
+          {
+            "address": "0x600D49F4229549D83f05219Eb54255Ad58FeFE65",
+            "topics": [
+              "0x0e334fd11ab7bea6d2bda89338c0f25674e099b70dd28aaaee262fbecba48882",
+              "0x7866ae248aabde8db4887766dafe92c96d30010f224c64716cacc794550951c8"
+            ],
+            "data": "0x077e714b988445500d6e213fbdf89a1104469a448988c310e4e82c7877da65960000000000000000000000000000000000000000000000000000002e90edd000"
+          }
+        ]
+      }
+    }
+  },
+  "kiln": [
+    {
+      "flow_name": "Buyer counter-offer",
+      "model": "qwen3-32b",
+      "request_id": "chat-433c42b0d0414b4ea5bbde6553defefe",
+      "prompt_tokens": 584,
+      "completion_tokens": 632,
+      "total_tokens": 1216,
+      "start_time": "2026-09-28T13:25:51.365Z",
+      "first_token_time": null,
+      "end_time": "2026-09-28T13:26:00.545Z",
+      "latency_ms": 9180,
+      "tool_called": "counter_offer",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x860211cb082fcc08ff547df919d980c0f30cbe4f2c55c7e58ea86fd96b8c0aba",
+      "streaming": false
+    },
+    {
+      "flow_name": "seller-a negotiation",
+      "model": "qwen3-32b",
+      "request_id": "chat-899ac74a8356446fbef73eb0e74cf59c",
+      "prompt_tokens": 539,
+      "completion_tokens": 683,
+      "total_tokens": 1222,
+      "start_time": "2026-09-28T13:26:00.555Z",
+      "first_token_time": null,
+      "end_time": "2026-09-28T13:26:11.789Z",
+      "latency_ms": 11234,
+      "tool_called": "request_offer",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x451c24022b7b9fc9d186ac0a11f10adeaafe3da3ea726b05a2061a20abac7a94",
+      "streaming": false
+    },
+    {
+      "flow_name": "Buyer final Deal selection",
+      "model": "qwen3-32b",
+      "request_id": "chat-7ac43f7164a94cd5ab4c77fe87562a07",
+      "prompt_tokens": 630,
+      "completion_tokens": 368,
+      "total_tokens": 998,
+      "start_time": "2026-09-28T13:26:11.806Z",
+      "first_token_time": null,
+      "end_time": "2026-09-28T13:26:17.201Z",
+      "latency_ms": 5395,
+      "tool_called": "accept_deal",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x33f479b244f450105f1fe4bab3f4c82372a0736e2e7ba378a4ee895fbaeee47c",
+      "streaming": false
+    }
+  ],
+  "limitations": [
+    "Dataset semantic truth is not verified.",
+    "Controller is trusted to enforce off-chain mandate and validator decisions.",
+    "Demo native test asset scale is not USD.",
+    "Blockchain settlement is not ACID-atomic with SQLite."
+  ]
+}

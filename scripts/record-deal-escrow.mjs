@@ -1,2 +1,4 @@
-// Encode the saved public-evidence storyboard; no live browser or transaction.
-import './render-deal-escrow-video.mjs';
+import {chromium} from 'playwright';import {mkdirSync,writeFileSync} from 'node:fs';
+mkdirSync('artifacts/deal-escrow/video',{recursive:true});const browser=await chromium.launch({channel:'msedge',headless:true});const context=await browser.newContext({viewport:{width:1440,height:960},recordVideo:{dir:'artifacts/deal-escrow/video',size:{width:1440,height:960}}});
+const page=await context.newPage();await page.goto('http://127.0.0.1:3402/?replay=1');await page.getByRole('button',{name:'Play 3-minute demo'}).click();const video=page.video();
+for(let i=0;i<6;i++){await page.waitForTimeout(30000);console.log(`Recorded ${(i+1)*30}/180 seconds`);}await context.close();const path=await video.path();await browser.close();writeFileSync('artifacts/deal-escrow/video.json',JSON.stringify({created_at:new Date().toISOString(),path,duration_seconds:180,kind:'Silent screen recording of explicitly labeled recorded evidence replay',live:false},null,2));console.log(path);

@@ -1,0 +1,468 @@
+{
+  "schema_version": 2,
+  "product": "Agent Deal Escrow",
+  "exported_at": "2026-09-28T14:29:40.767Z",
+  "network": {
+    "schemaVersion": 1,
+    "chainId": 31338,
+    "network": "local-devnet",
+    "contract": "0xfb0B28852C4b0cdC648Af5E22A352828D74CD5AB",
+    "controller": "0xFc86001f72Ad01348a0DaF80138303d33e33128E",
+    "buyer": "0xFc86001f72Ad01348a0DaF80138303d33e33128E",
+    "sellers": {
+      "seller-a": "0x9E9f6Dfa35259b220fc1C6146Fd2Cf740fe0fC97",
+      "seller-b": "0x2d89b1943a43512D33C6e11Cd5232B3D491793B9"
+    },
+    "unitWei": "1000000000",
+    "sourceSha256": "58bd05598942562583f68e8a272989489a0580d3b68bb41ad0e93fb2511c359d",
+    "runtimeHash": "0x416dec67c15ff4e675e67f146e4de9cb584d2af57fcdea3b8d01aa0886383644",
+    "deploymentTx": "0x13b4aea64b413a07cfe544bdc819adb46bee32191b26348bd5dcf8fde46d8d8e",
+    "createdAt": "2026-09-28T14:29:38.967Z",
+    "finality": {
+      "mode": "confirmations",
+      "confirmations": 1
+    }
+  },
+  "mandate": {
+    "mandate_id": "d741e0c9-9d2d-44b5-81e9-80509cfb37d7",
+    "company_id": "persona-research-company",
+    "buyer_id": "research-agent-07",
+    "task_budget_minor": 300,
+    "max_single_minor": 200,
+    "allowed_sellers": [
+      "seller-a",
+      "seller-b"
+    ],
+    "category": "RESEARCH_DATA",
+    "status": "ACTIVE",
+    "created_at": 1790605780,
+    "expires_at": 1790612980,
+    "task_requirements": {
+      "version": 1,
+      "minimum_rows": 40,
+      "required_columns": [
+        "company",
+        "quarter",
+        "capex",
+        "currency",
+        "source_url"
+      ],
+      "minimum_source_coverage": 0.9,
+      "format": "JSON",
+      "max_delivery_seconds": 180
+    }
+  },
+  "mandate_history": [
+    {
+      "event_id": "e256232b-8d35-4870-bcd1-b6a7dcf7dcf5",
+      "deal_id": "d741e0c9-9d2d-44b5-81e9-80509cfb37d7",
+      "event_type": "MANDATE_CREATED",
+      "timestamp": "2026-09-28T14:29:40.249Z",
+      "actor_type": "human",
+      "actor_id": "persona-research-company",
+      "structured_payload": {
+        "mandate_id": "d741e0c9-9d2d-44b5-81e9-80509cfb37d7",
+        "company_id": "persona-research-company",
+        "buyer_id": "research-agent-07",
+        "task_budget_minor": 300,
+        "max_single_minor": 200,
+        "allowed_sellers": [
+          "seller-a",
+          "seller-b"
+        ],
+        "category": "RESEARCH_DATA",
+        "status": "ACTIVE",
+        "created_at": 1790605780,
+        "expires_at": 1790612980,
+        "task_requirements": {
+          "version": 1,
+          "minimum_rows": 40,
+          "required_columns": [
+            "company",
+            "quarter",
+            "capex",
+            "currency",
+            "source_url"
+          ],
+          "minimum_source_coverage": 0.9,
+          "format": "JSON",
+          "max_delivery_seconds": 180
+        }
+      },
+      "previous_event_hash": null,
+      "event_hash": "0x48f07b61b381b8ed6bc1dd0c457dc634473a3e94882fccae07dfe8917a82790b"
+    },
+    {
+      "event_id": "8d32b82c-5ba6-402f-ad71-d6f798d01568",
+      "deal_id": "d741e0c9-9d2d-44b5-81e9-80509cfb37d7",
+      "event_type": "PURCHASE_INTENT_CREATED",
+      "timestamp": "2026-09-28T14:29:40.252Z",
+      "actor_type": "human",
+      "actor_id": "persona-research-company",
+      "structured_payload": {
+        "intent_id": "84adb49c-03a9-4bf1-b668-3370580f15c9",
+        "seller_id": "seller-a",
+        "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+        "status": "READY",
+        "created_at": "2026-09-28T14:29:40.252Z",
+        "explicit_new_purchase": false,
+        "retry_of": null
+      },
+      "previous_event_hash": "0x48f07b61b381b8ed6bc1dd0c457dc634473a3e94882fccae07dfe8917a82790b",
+      "event_hash": "0x1fa744a851f03861657c988d147c5e5c37a5a0d5990bc377890ad03ee196b462"
+    }
+  ],
+  "deal": {
+    "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+    "buyer_id": "research-agent-07",
+    "seller_id": "seller-a",
+    "price_minor": 150,
+    "currency_or_demo_asset": "DEMO",
+    "deliverable_type": "CAPEX_DATASET",
+    "requirements": {
+      "minimum_rows": 1,
+      "required_columns": [
+        "company",
+        "quarter",
+        "capex",
+        "currency",
+        "source_url"
+      ],
+      "minimum_source_coverage": 0,
+      "format": "JSON"
+    },
+    "deadline": 180,
+    "created_at": 1790605780,
+    "expires_at": 1790609380,
+    "supersedes_deal_id": null
+  },
+  "deal_hash": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31",
+  "state": "BLOCKED",
+  "evidence": {
+    "policy": [
+      {
+        "name": "MANDATE_ACTIVE",
+        "pass": true,
+        "actual": "ACTIVE",
+        "expected": "ACTIVE"
+      },
+      {
+        "name": "MANDATE_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790605780,
+        "expected": 1790612980
+      },
+      {
+        "name": "DEAL_NOT_EXPIRED",
+        "pass": true,
+        "actual": 1790605780,
+        "expected": 1790609380
+      },
+      {
+        "name": "BUYER_ALLOWED",
+        "pass": true,
+        "actual": "research-agent-07",
+        "expected": "research-agent-07"
+      },
+      {
+        "name": "SELLER_ALLOWED",
+        "pass": true,
+        "actual": "seller-a",
+        "expected": [
+          "seller-a",
+          "seller-b"
+        ]
+      },
+      {
+        "name": "MAX_SINGLE",
+        "pass": true,
+        "actual": 150,
+        "expected": 200
+      },
+      {
+        "name": "TASK_BUDGET",
+        "pass": true,
+        "actual": 150,
+        "expected": 300
+      },
+      {
+        "name": "DEAL_HASH",
+        "pass": true,
+        "actual": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31",
+        "expected": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31"
+      },
+      {
+        "name": "TASK_MINIMUM_ROWS",
+        "pass": false,
+        "actual": 1,
+        "expected": 40
+      },
+      {
+        "name": "TASK_SOURCE_COVERAGE",
+        "pass": false,
+        "actual": 0,
+        "expected": 0.9
+      },
+      {
+        "name": "TASK_REQUIRED_COLUMNS",
+        "pass": true,
+        "actual": [
+          "company",
+          "quarter",
+          "capex",
+          "currency",
+          "source_url"
+        ],
+        "expected": [
+          "company",
+          "quarter",
+          "capex",
+          "currency",
+          "source_url"
+        ]
+      },
+      {
+        "name": "TASK_DELIVERY_WINDOW",
+        "pass": true,
+        "actual": 180,
+        "expected": 180
+      },
+      {
+        "name": "PREVIEW_REQUIRED",
+        "pass": true,
+        "actual": false,
+        "expected": false
+      }
+    ]
+  },
+  "events": [
+    {
+      "event_id": "e9bd3a2b-ad6b-4608-9c87-f20d674e76a1",
+      "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+      "event_type": "NEGOTIATION_STARTED",
+      "timestamp": "2026-09-28T14:29:40.255Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "mandate_id": "d741e0c9-9d2d-44b5-81e9-80509cfb37d7"
+      },
+      "previous_event_hash": null,
+      "event_hash": "0x387fa1788ac408356ef9918c795f1003062798e45e0874f77348e901f41a9186"
+    },
+    {
+      "event_id": "3b8f4c53-5649-4336-b4ae-fa9595969bd5",
+      "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+      "event_type": "DEAL_PROPOSED",
+      "timestamp": "2026-09-28T14:29:40.256Z",
+      "actor_type": "agent",
+      "actor_id": "research-agent-07",
+      "structured_payload": {
+        "deal": {
+          "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+          "buyer_id": "research-agent-07",
+          "seller_id": "seller-a",
+          "price_minor": 150,
+          "currency_or_demo_asset": "DEMO",
+          "deliverable_type": "CAPEX_DATASET",
+          "requirements": {
+            "minimum_rows": 1,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ],
+            "minimum_source_coverage": 0,
+            "format": "JSON"
+          },
+          "deadline": 180,
+          "created_at": 1790605780,
+          "expires_at": 1790609380,
+          "supersedes_deal_id": null
+        },
+        "deal_hash": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31"
+      },
+      "previous_event_hash": "0x387fa1788ac408356ef9918c795f1003062798e45e0874f77348e901f41a9186",
+      "event_hash": "0x451749bb483eb622cef4e82172a92222acc07b8508abcc030adee4b37224c06d"
+    },
+    {
+      "event_id": "9c815196-c612-49ea-a29e-9deb58eb2766",
+      "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+      "event_type": "DEAL_ACCEPTED",
+      "timestamp": "2026-09-28T14:29:40.260Z",
+      "actor_type": "agent",
+      "actor_id": "research-agent-07",
+      "structured_payload": {
+        "deal_hash": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31"
+      },
+      "previous_event_hash": "0x451749bb483eb622cef4e82172a92222acc07b8508abcc030adee4b37224c06d",
+      "event_hash": "0x24f6c5533c10430224152fbfbbb0e8f49f9cf886a37c63c71a2ab4ba299915e6"
+    },
+    {
+      "event_id": "516ca7f9-c99a-4174-b310-23cd217099d3",
+      "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+      "event_type": "POLICY_CHECKED",
+      "timestamp": "2026-09-28T14:29:40.267Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "checks": [
+          {
+            "name": "MANDATE_ACTIVE",
+            "pass": true,
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          },
+          {
+            "name": "MANDATE_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790605780,
+            "expected": 1790612980
+          },
+          {
+            "name": "DEAL_NOT_EXPIRED",
+            "pass": true,
+            "actual": 1790605780,
+            "expected": 1790609380
+          },
+          {
+            "name": "BUYER_ALLOWED",
+            "pass": true,
+            "actual": "research-agent-07",
+            "expected": "research-agent-07"
+          },
+          {
+            "name": "SELLER_ALLOWED",
+            "pass": true,
+            "actual": "seller-a",
+            "expected": [
+              "seller-a",
+              "seller-b"
+            ]
+          },
+          {
+            "name": "MAX_SINGLE",
+            "pass": true,
+            "actual": 150,
+            "expected": 200
+          },
+          {
+            "name": "TASK_BUDGET",
+            "pass": true,
+            "actual": 150,
+            "expected": 300
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31",
+            "expected": "0x631c0d0d337443774ae61bf39a979d72af918495481bcbed11836bf6df59bb31"
+          },
+          {
+            "name": "TASK_MINIMUM_ROWS",
+            "pass": false,
+            "actual": 1,
+            "expected": 40
+          },
+          {
+            "name": "TASK_SOURCE_COVERAGE",
+            "pass": false,
+            "actual": 0,
+            "expected": 0.9
+          },
+          {
+            "name": "TASK_REQUIRED_COLUMNS",
+            "pass": true,
+            "actual": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ],
+            "expected": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ]
+          },
+          {
+            "name": "TASK_DELIVERY_WINDOW",
+            "pass": true,
+            "actual": 180,
+            "expected": 180
+          },
+          {
+            "name": "PREVIEW_REQUIRED",
+            "pass": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "mandate": {
+          "mandate_id": "d741e0c9-9d2d-44b5-81e9-80509cfb37d7",
+          "company_id": "persona-research-company",
+          "buyer_id": "research-agent-07",
+          "task_budget_minor": 300,
+          "max_single_minor": 200,
+          "allowed_sellers": [
+            "seller-a",
+            "seller-b"
+          ],
+          "category": "RESEARCH_DATA",
+          "status": "ACTIVE",
+          "created_at": 1790605780,
+          "expires_at": 1790612980,
+          "task_requirements": {
+            "version": 1,
+            "minimum_rows": 40,
+            "required_columns": [
+              "company",
+              "quarter",
+              "capex",
+              "currency",
+              "source_url"
+            ],
+            "minimum_source_coverage": 0.9,
+            "format": "JSON",
+            "max_delivery_seconds": 180
+          }
+        },
+        "accounting": {
+          "spent": 0,
+          "reserved": 0
+        },
+        "time": 1790605780
+      },
+      "previous_event_hash": "0x24f6c5533c10430224152fbfbbb0e8f49f9cf886a37c63c71a2ab4ba299915e6",
+      "event_hash": "0xd0b80017a50552660b8c1839710c2a3a3128ce8abf23be8b1106899851e74210"
+    },
+    {
+      "event_id": "1fddd6ac-2fae-47d2-99f5-819a676353d2",
+      "deal_id": "106954a2-ab99-4566-a503-2dcc411b4f46",
+      "event_type": "TRANSACTION_BLOCKED",
+      "timestamp": "2026-09-28T14:29:40.268Z",
+      "actor_type": "system",
+      "actor_id": "deal-engine",
+      "structured_payload": {
+        "reason": "TASK_MINIMUM_ROWS"
+      },
+      "previous_event_hash": "0xd0b80017a50552660b8c1839710c2a3a3128ce8abf23be8b1106899851e74210",
+      "event_hash": "0x713105ad2a512d2937b4311e7594e174620e9608c25d0d726c90d40ea27f339d"
+    }
+  ],
+  "control": null,
+  "control_source": null,
+  "transactions": {},
+  "kiln": [],
+  "limitations": [
+    "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+    "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+    "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+    "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+    "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+  ]
+}

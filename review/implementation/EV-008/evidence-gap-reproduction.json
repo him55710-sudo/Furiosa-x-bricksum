@@ -1,0 +1,44 @@
+{
+  "scope": "Derived offline comparison; original receipts unchanged; no chain queries",
+  "oldSuccessAgainstCurrentValidator": {
+    "recordedVersion": "delivery-v1",
+    "currentVersion": "delivery-v2",
+    "failedChecks": [
+      {
+        "name": "UNIQUE_ECONOMIC_ROWS",
+        "pass": false,
+        "actual": 32,
+        "expected": 52
+      }
+    ]
+  },
+  "previewWithExistingRefundSourceAttached": {
+    "verdict": "STRUCTURALLY_VALID",
+    "scope": "Offline structural checks only; no independent chain authenticity claim",
+    "checks": [
+      "immutable Deal hash",
+      "hash-linked events bound to the Deal and mandate",
+      "versioned delivery structure and quality checks; no factual certification",
+      "seller/company control mapped to a recomputed failed-delivery refund",
+      "policy arithmetic; preview flags checked against actual preview evidence",
+      "settlement attestation binds Deal, mandate, delivery, preview and final checks"
+    ],
+    "delivery_quality": [
+      {
+        "deal_id": "9f7020aa-27c2-40a5-9938-6a6c7ec91efa",
+        "recorded_validator": "delivery-v1",
+        "current_validator": "delivery-v2",
+        "current_checks_pass": false,
+        "semantic_truth_verified": false
+      }
+    ],
+    "unverified": [
+      "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+      "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+      "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+      "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+      "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+    ],
+    "checked_at": "2026-09-28T14:23:21.933Z"
+  }
+}

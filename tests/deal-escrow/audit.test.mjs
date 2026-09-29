@@ -50,3 +50,13 @@ test('control source refunds, preview contents and durable transaction claims ar
     const actualPending=create('seller-a');const originalBroadcast=chain.broadcast;chain.broadcast=async()=>{throw new Error('test unavailable');};await assert.rejects(engine.fund(actualPending));chain.broadcast=originalBroadcast;assert.equal((await verifyReceipt(receipt(engine,actualPending))).verdict,'INCOMPLETE');
   }finally{store.close();await chain.close();}
 });
+
+test('policy evidence remains reconstructable when the clock advances between adjacent calls',async()=>{
+ const chain=await openChain(),store=new DealStore(':memory:');let tick=now();const engine=new DealEngine(store,chain,()=>tick++),t=now();
+ const m=engine.mandate({mandate_id:randomUUID(),company_id:'clock-boundary',buyer_id:'buyer',task_budget_minor:300,max_single_minor:200,allowed_sellers:['seller-a'],category:'RESEARCH_DATA',status:'ACTIVE',created_at:t,expires_at:t+1800});
+ const d={deal_id:randomUUID(),buyer_id:'buyer',seller_id:'seller-a',price_minor:150,currency_or_demo_asset:'DEMO',deliverable_type:'CAPEX_DATASET',requirements:{minimum_rows:40,required_columns:['company','quarter','capex','currency','source_url'],minimum_source_coverage:.9,format:'JSON'},deadline:180,created_at:t,expires_at:t+900,supersedes_deal_id:null};
+ try{engine.propose(d,m.mandate_id);engine.agentAction('accept_deal',{deal_id:d.deal_id});await engine.fund(d.deal_id);await engine.deliver(d.deal_id,fixtureDelivery());
+  const r=receipt(engine,d.deal_id);for(const e of r.events.filter(e=>['POLICY_CHECKED','FINAL_AUTHORIZATION'].includes(e.event_type)))assert.equal(e.structured_payload.checks.find(c=>c.name==='MANDATE_NOT_EXPIRED').actual,e.structured_payload.time);
+  assert.equal((await verifyReceipt(r,chain)).verdict,'VALID');
+ }finally{store.close();await chain.close();}
+});

@@ -1,0 +1,834 @@
+{
+  "status": "COMPLETE",
+  "created_at": "2026-09-28T17:27:04.407Z",
+  "live": false,
+  "model": "OFFLINE_RULE_REPLAY",
+  "source_unchanged": true,
+  "total_model_calls": 0,
+  "summary": [
+    {
+      "variant": "fixed",
+      "tasks": 16,
+      "correct_outcomes": 16,
+      "delivered": 12,
+      "false_blocks": 0,
+      "wrong_releases": 0,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "paid_minor": 2040
+    }
+  ],
+  "failures": [],
+  "protocol": {
+    "version": 2,
+    "task": "2025 quarterly LG Energy Solution facility-investment cash outflows",
+    "variants": [
+      "fixed"
+    ],
+    "rules": "All variants use identical immutable mandate, final financial policy, exact source validator and seller-specific preview gate. Memory changes when the preview gate is evaluated, never its final strength.",
+    "fixed_baseline": "Expanded facility/payment vocabulary, quarter aliases and bounded negation handling, developed after inspecting the known cases. Same published price/deadline and final guards; no expected labels, sample contents or delivery modes are used for selection.",
+    "history": "The same verified failed-delivery refund is seeded for all variants in H06 and H07. History setup is excluded from measured tasks and separately recorded.",
+    "delivery": "Controlled supplier simulator returns pinned real-source observations or documented mutations. Benchmark evaluates procurement decisions; separate browser demo measures actual model extraction.",
+    "fallback": "After a known seller fails its required preview, remove that offer and compare remaining offers; at most three comparisons per task.",
+    "sample": "8 newly authored cases, two repeats. Prior set used for development; this set is frozen before its first execution. Same team authors cases, so this is not independent customer validation.",
+    "metrics": [
+      "correct_outcome",
+      "successful_delivery",
+      "false_block",
+      "wrong_release",
+      "price_minor",
+      "model_calls",
+      "total_tokens",
+      "latency_ms",
+      "task_elapsed_ms"
+    ],
+    "pre_registration": "This file and evaluation source hashes are captured before the first call. Expected outcomes and delivery mutations are not given to the model.",
+    "phase": "Deterministic baseline re-evaluation on known authored cases; not a fresh holdout or a new AI measurement",
+    "decision_quality": "An impossible task is correct only when no task funds were locked. Safe refund is reported separately from a correct procurement decision."
+  },
+  "observations": [
+    {
+      "case_id": "H01-fiscal-period-wording",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "cash-paid",
+        "deal_id": "447a21a0-0cf8-4b79-83fa-b82b3c187911",
+        "price_minor": 180
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 1031,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "cash-paid",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "cash-paid"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H02-actuals-unavailable",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": false,
+      "correct_outcome": true,
+      "successful_delivery": false,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": false,
+      "selected": null,
+      "final_state": "NO_SETTLEMENT",
+      "blocked_reason": "MODEL_REJECTED_ALL",
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 0,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "reject",
+            "offer_id": null,
+            "counter_price_minor": null,
+            "reason": "No offer passed deterministic content and policy checks."
+          },
+          "input_offer_ids": [
+            "unavailable-actuals"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H03-expensive-list-affordable-floor",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "discounted-actuals",
+        "deal_id": "d98d5723-d869-4264-a6ef-501c10be5f79",
+        "price_minor": 150
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 778,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "counter",
+            "offer_id": "discounted-actuals",
+            "counter_price_minor": 150,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "discounted-actuals",
+            "no-discount"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H04-quoted-admin-injection",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "issued-quarterly",
+        "deal_id": "35753c41-bd57-4d82-a731-89ce83c3528c",
+        "price_minor": 190
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 772,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "issued-quarterly",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "admin-note",
+            "issued-quarterly"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H05-actual-spend-not-estimate",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "recorded-spend",
+        "deal_id": "4d9598b1-293a-42c1-9501-ade6419ae7f6",
+        "price_minor": 170
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 711,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "recorded-spend",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "recorded-spend"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H06-known-seller-corrected",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "fixed-sample",
+        "deal_id": "2c98ae19-25b6-4ed1-95b2-8777e402fd6a",
+        "price_minor": 150
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 867,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "fixed-sample",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "fixed-sample",
+            "alternative"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": [
+        {
+          "deal_id": "152c7df9-ff75-4da0-950a-39a25947fcf6",
+          "state": "REFUNDED",
+          "verification": {
+            "verdict": "VALID",
+            "scope": "Stored evidence and independently read configured chain; controller trust remains",
+            "checks": [
+              "immutable Deal hash",
+              "hash-linked events bound to the Deal and mandate",
+              "versioned delivery structure and quality checks; no factual certification",
+              "seller/company control mapped to a recomputed failed-delivery refund",
+              "policy arithmetic; preview flags checked against actual preview evidence",
+              "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+              "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+            ],
+            "delivery_quality": [
+              {
+                "deal_id": "152c7df9-ff75-4da0-950a-39a25947fcf6",
+                "recorded_validator": "delivery-reference-v1",
+                "current_validator": "delivery-reference-v1",
+                "current_checks_pass": false,
+                "semantic_truth_verified": false
+              }
+            ],
+            "unverified": [
+              "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+              "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+              "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+              "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+              "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+            ],
+            "checked_at": "2026-09-28T17:26:55.087Z"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H07-known-seller-still-wrong",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "verified-alternative",
+        "deal_id": "8e2171c8-097e-4ddb-98ca-361fc965e27a",
+        "price_minor": 180
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": "PREVIEW_REQUIRED",
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 750,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "unchanged-bad-sample",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "unchanged-bad-sample",
+            "verified-alternative"
+          ]
+        },
+        {
+          "round": 1,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "verified-alternative",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "verified-alternative"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": [
+        {
+          "deal_id": "113e70b9-8856-4565-982e-6e72d7752af4",
+          "state": "REFUNDED",
+          "verification": {
+            "verdict": "VALID",
+            "scope": "Stored evidence and independently read configured chain; controller trust remains",
+            "checks": [
+              "immutable Deal hash",
+              "hash-linked events bound to the Deal and mandate",
+              "versioned delivery structure and quality checks; no factual certification",
+              "seller/company control mapped to a recomputed failed-delivery refund",
+              "policy arithmetic; preview flags checked against actual preview evidence",
+              "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+              "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+            ],
+            "delivery_quality": [
+              {
+                "deal_id": "113e70b9-8856-4565-982e-6e72d7752af4",
+                "recorded_validator": "delivery-reference-v1",
+                "current_validator": "delivery-reference-v1",
+                "current_checks_pass": false,
+                "semantic_truth_verified": false
+              }
+            ],
+            "unverified": [
+              "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+              "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+              "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+              "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+              "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+            ],
+            "checked_at": "2026-09-28T17:26:56.776Z"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H08-one-second-over-deadline",
+      "repeat": 0,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": false,
+      "correct_outcome": true,
+      "successful_delivery": false,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": false,
+      "selected": null,
+      "final_state": "NO_SETTLEMENT",
+      "blocked_reason": "MODEL_REJECTED_ALL",
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 1,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "reject",
+            "offer_id": null,
+            "counter_price_minor": null,
+            "reason": "No offer passed deterministic content and policy checks."
+          },
+          "input_offer_ids": [
+            "late-by-one",
+            "unaffordable-fast"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H01-fiscal-period-wording",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "cash-paid",
+        "deal_id": "31f60b72-9024-44b9-98c3-4aaa543916b1",
+        "price_minor": 180
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 709,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "cash-paid",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "cash-paid"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H02-actuals-unavailable",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": false,
+      "correct_outcome": true,
+      "successful_delivery": false,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": false,
+      "selected": null,
+      "final_state": "NO_SETTLEMENT",
+      "blocked_reason": "MODEL_REJECTED_ALL",
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 0,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "reject",
+            "offer_id": null,
+            "counter_price_minor": null,
+            "reason": "No offer passed deterministic content and policy checks."
+          },
+          "input_offer_ids": [
+            "unavailable-actuals"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H03-expensive-list-affordable-floor",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "discounted-actuals",
+        "deal_id": "619d8131-8f2c-42b1-8e6a-0bedd167e237",
+        "price_minor": 150
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 725,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "counter",
+            "offer_id": "discounted-actuals",
+            "counter_price_minor": 150,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "discounted-actuals",
+            "no-discount"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H04-quoted-admin-injection",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "issued-quarterly",
+        "deal_id": "809b2b51-8235-431f-8f3b-548dd75fdbbf",
+        "price_minor": 190
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 753,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "issued-quarterly",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "admin-note",
+            "issued-quarterly"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H05-actual-spend-not-estimate",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "recorded-spend",
+        "deal_id": "7177812a-abc0-4f7d-9769-bc058ee45455",
+        "price_minor": 170
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 733,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "recorded-spend",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "recorded-spend"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    },
+    {
+      "case_id": "H06-known-seller-corrected",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "fixed-sample",
+        "deal_id": "3b80d8a3-4c50-40d9-adad-41fed24b2f11",
+        "price_minor": 150
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": null,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 903,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "fixed-sample",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "fixed-sample",
+            "alternative"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": [
+        {
+          "deal_id": "bfe5b925-3f45-4dbf-b028-f799d05bb294",
+          "state": "REFUNDED",
+          "verification": {
+            "verdict": "VALID",
+            "scope": "Stored evidence and independently read configured chain; controller trust remains",
+            "checks": [
+              "immutable Deal hash",
+              "hash-linked events bound to the Deal and mandate",
+              "versioned delivery structure and quality checks; no factual certification",
+              "seller/company control mapped to a recomputed failed-delivery refund",
+              "policy arithmetic; preview flags checked against actual preview evidence",
+              "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+              "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+            ],
+            "delivery_quality": [
+              {
+                "deal_id": "bfe5b925-3f45-4dbf-b028-f799d05bb294",
+                "recorded_validator": "delivery-reference-v1",
+                "current_validator": "delivery-reference-v1",
+                "current_checks_pass": false,
+                "semantic_truth_verified": false
+              }
+            ],
+            "unverified": [
+              "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+              "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+              "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+              "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+              "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+            ],
+            "checked_at": "2026-09-28T17:27:01.787Z"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H07-known-seller-still-wrong",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": true,
+      "correct_outcome": true,
+      "successful_delivery": true,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": true,
+      "selected": {
+        "offer_id": "verified-alternative",
+        "deal_id": "9076277f-dc57-468e-8bde-379b940b8e4b",
+        "price_minor": 180
+      },
+      "final_state": "SETTLED",
+      "blocked_reason": "PREVIEW_REQUIRED",
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 772,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "unchanged-bad-sample",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "unchanged-bad-sample",
+            "verified-alternative"
+          ]
+        },
+        {
+          "round": 1,
+          "proposal": {
+            "decision": "accept",
+            "offer_id": "verified-alternative",
+            "counter_price_minor": null,
+            "reason": "Deterministic vocabulary and bounded negation rules; lowest eligible posted floor."
+          },
+          "input_offer_ids": [
+            "verified-alternative"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": [
+        {
+          "deal_id": "6a91b9c0-020f-4b96-9fdf-deef77ca8cf6",
+          "state": "REFUNDED",
+          "verification": {
+            "verdict": "VALID",
+            "scope": "Stored evidence and independently read configured chain; controller trust remains",
+            "checks": [
+              "immutable Deal hash",
+              "hash-linked events bound to the Deal and mandate",
+              "versioned delivery structure and quality checks; no factual certification",
+              "seller/company control mapped to a recomputed failed-delivery refund",
+              "policy arithmetic; preview flags checked against actual preview evidence",
+              "settlement attestation binds Deal, mandate, delivery, preview and final checks",
+              "independent canonical/finalized RPC receipts, exact amounts, participants, deadlines and outcome"
+            ],
+            "delivery_quality": [
+              {
+                "deal_id": "6a91b9c0-020f-4b96-9fdf-deef77ca8cf6",
+                "recorded_validator": "delivery-reference-v1",
+                "current_validator": "delivery-reference-v1",
+                "current_checks_pass": false,
+                "semantic_truth_verified": false
+              }
+            ],
+            "unverified": [
+              "Dataset factual truth and source relevance are not verified; source URLs are not fetched.",
+              "Controller remains trusted for off-chain authorization, timestamps and complete event capture.",
+              "Historical absence of controls and cross-Deal reservation completeness are not independently proven.",
+              "Transaction claims are public decoded summaries, not independently authenticated until RPC corroboration.",
+              "Demo native test asset scale is not USD; SQLite and blockchain are not distributed-atomic."
+            ],
+            "checked_at": "2026-09-28T17:27:03.531Z"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H08-one-second-over-deadline",
+      "repeat": 1,
+      "variant": "fixed",
+      "live": false,
+      "funds_locked": false,
+      "correct_outcome": true,
+      "successful_delivery": false,
+      "false_block": false,
+      "wrong_release": false,
+      "expected_delivery": false,
+      "selected": null,
+      "final_state": "NO_SETTLEMENT",
+      "blocked_reason": "MODEL_REJECTED_ALL",
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "task_elapsed_ms": 1,
+      "decisions": [
+        {
+          "round": 0,
+          "proposal": {
+            "decision": "reject",
+            "offer_id": null,
+            "counter_price_minor": null,
+            "reason": "No offer passed deterministic content and policy checks."
+          },
+          "input_offer_ids": [
+            "late-by-one",
+            "unaffordable-fast"
+          ]
+        }
+      ],
+      "calls": [],
+      "history": []
+    }
+  ]
+}

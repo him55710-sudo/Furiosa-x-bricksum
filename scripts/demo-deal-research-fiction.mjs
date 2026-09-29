@@ -35,7 +35,7 @@ const planSha=createHash('sha256').update(readFileSync(`${out}/manifest.json`)).
 const chain=await openChain({directory,devnetRpc:null}),store=new DealStore(`${directory}/state.sqlite`),engine=new DealEngine(store,chain),results=[];
 let normalId,normalMandate,failedId,failedMandate,basePrice=180;
 const compareProposal={decision:'counter',offer_id:'primary-reports',counter_price_minor:180,reason:'명시적으로 작성한 가상 제안. 실제 모델 판단이 아님.'};
-const clients=live?{}:{clientFactory:()=>({models:async()=>({scripted:true}),selectOffer:async()=>({args:compareProposal,tool:'select_offer',model:'SCRIPTED',request_id:null})})};
+const clients=live?{selectionMode:'offer_selection'}:{selectionMode:'offer_selection',clientFactory:()=>({models:async()=>({scripted:true}),selectOffer:async()=>({args:compareProposal,tool:'select_offer',model:'SCRIPTED',request_id:null})})};
 function mandate(company,patch={}){const t=now();return engine.mandate({mandate_id:randomUUID(),company_id:company,buyer_id:'fiction-research-agent',task_budget_minor:300,max_single_minor:200,allowed_sellers:['seller-a','seller-b'],category:'RESEARCH_DATA',status:'ACTIVE',created_at:t,expires_at:t+7200,task_requirements:sourceRequirements('lges-2025-pdf'),...patch});}
 function propose(m,{seller='seller-a',price=basePrice,previous=null,expired=false}={}){
  const intent=store.getOrCreateIntent(m.mandate_id,seller,'new-'+randomUUID()),t=now(),offer={...documentOffers('lges-2025-pdf')[0],seller_id:seller};

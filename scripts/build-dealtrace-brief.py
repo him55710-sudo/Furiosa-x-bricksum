@@ -13,7 +13,8 @@ from pypdf import PdfReader
 ROOT=Path(__file__).resolve().parents[1]
 run=ROOT/'artifacts/dealtrace/runs'/sys.argv[1]
 report=json.loads((run/'report.json').read_text(encoding='utf-8'))
-tests=json.loads((ROOT/'artifacts/deal-escrow/tests.json').read_text(encoding='utf-8'))
+test_path='artifacts/dealtrace/integration/pre-merge-tests.json'
+tests=json.loads((ROOT/test_path).read_text(encoding='utf-8'))
 assert report['status']=='PASS' and report['mode']=='LIVE_KILN_SEPOLIA'
 assert tests['failed']==0
 before={f['path']:f['sha256'] for f in report['source_manifest']}
@@ -70,6 +71,6 @@ c.save()
 reader=PdfReader(str(PDF)); assert len(reader.pages)==1
 text=reader.pages[0].extract_text()
 for word in ['DealTrace','청구','샘플','Qwen',str(tests['passed'])]: assert word in text
-manifest={'pdf':PDF.name,'pages':1,'run':report['run'],'live_source_fingerprint':report['source_fingerprint'],'test_source_fingerprint':tests['source_fingerprint'],'post_run_source_changes':changed,'sha256':hashlib.sha256(PDF.read_bytes()).hexdigest(),'report_sha256':hashlib.sha256((run/'report.json').read_bytes()).hexdigest(),'test_report_sha256':hashlib.sha256((ROOT/'artifacts/deal-escrow/tests.json').read_bytes()).hexdigest(),'scope':'Actual Kiln plus Sepolia settlement; subsequent tests differ only in an explicit UI readiness label. Original UI bytes and change mapping retained. Controlled counterparties, not production validation.'}
+manifest={'pdf':PDF.name,'pages':1,'run':report['run'],'live_source_fingerprint':report['source_fingerprint'],'test_source_fingerprint':tests['source_fingerprint'],'post_run_source_changes':changed,'sha256':hashlib.sha256(PDF.read_bytes()).hexdigest(),'report_sha256':hashlib.sha256((run/'report.json').read_bytes()).hexdigest(),'test_report_path':test_path,'test_report_sha256':hashlib.sha256((ROOT/test_path).read_bytes()).hexdigest(),'scope':'Actual Kiln plus Sepolia settlement, with the archived 129-test presentation version. The later main integration has its own 137-test report. Original UI bytes and change mapping retained. Controlled counterparties, not production validation.'}
 (OUT/'dealtrace-brief-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(manifest))

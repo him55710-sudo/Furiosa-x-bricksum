@@ -23,6 +23,7 @@ node scripts/verify-system.mjs --suite=redteam
 node scripts/verify-system.mjs --suite=operations
 node scripts/verify-system.mjs --suite=e2e
 node scripts/verify-system.mjs --suite=browser
+node scripts/verify-system.mjs --suite=personas
 node scripts/verify-system.mjs --suite=invariants --case=INV-003 --seed=20260928
 ```
 
@@ -49,6 +50,8 @@ node --env-file-if-exists=.env.local scripts/verify-system.mjs --suite=live
 | Live | 실제 qwen3-32b 사용량과 HTTP 구매·devnet receipt·독립 검증 연결 |
 
 모의 응답은 실제 `Kiln` 어댑터에 합성 HTTP 응답을 주입하여 출력 검증을 함께 거칩니다. 제품 HTTP 입력으로 모의 모드나 정책 우회를 켤 수 없습니다. 공개 테스트넷·실물 공급·물리 NPU·전력 실측의 성공으로 해석하면 안 됩니다. 시나리오 행렬은 기능 검증이며 CM의 효율 우월성을 주장하는 통계 실험이 아닙니다.
+
+기획의 T0/F1–F6/U1과 공용 서비스 복합 장애를 다루는 [페르소나 검증](PERSONA-VALIDATION.ko.md)은 기본 전체 검사에도 포함됩니다. 역할별 품질 저하·마찰·증거 한계는 테스트 통과 여부와 분리해 보고서에 표시합니다.
 
 ## 결과와 보완 루프
 

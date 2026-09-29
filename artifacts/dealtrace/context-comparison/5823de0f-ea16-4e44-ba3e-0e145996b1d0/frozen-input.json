@@ -1,0 +1,128 @@
+{
+  "run": "5823de0f-ea16-4e44-ba3e-0e145996b1d0",
+  "created_at": "2026-09-29T10:35:06.172Z",
+  "dataset_sha256": "0a6c7cbc860d04e9c22a8b7a33e45363b2dbdb07f5d8f1e63451b982a274e363",
+  "source_hashes": {
+    "verification/dealtrace-context-comparison.json": "0a6c7cbc860d04e9c22a8b7a33e45363b2dbdb07f5d8f1e63451b982a274e363",
+    "scripts/compare-dealtrace-context.mjs": "609d16e6f7043cd6ba8d5e308ff8e85270f42ca9bb8c19f0ff392fe4c62c347e",
+    "src/dealtrace/kiln.mjs": "84aeeaf72a2a6dc956e815fd3a613475a025c8fdc677d562e6f919fe83a0a7ed",
+    "src/deal-escrow/kiln.ts": "04ba75c64abbd5607c3a6f272c546d736fccb7bec25d2d119bb57598ebd7efab",
+    "src/dealtrace/ledger.mjs": "d1c91688b70721065b805084034d24c1117e0c584b0ed83df6b63fd67dbeaf9d"
+  },
+  "initial_terms": {
+    "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+    "periods": [
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4"
+    ],
+    "source_required": true,
+    "deadline_anchor": "ESCROW_FUNDING_BLOCK",
+    "refund_policy": "MISMATCH_OR_EXPIRY_REFUND_BUYER",
+    "price_minor": 2600,
+    "deadline_seconds": 300
+  },
+  "dataset": {
+    "version": 1,
+    "scope": "Two authored four-turn conversations, frozen before this comparison. Not held-out customer data. Initial terms are the same for every arm. No tuning or retries after observing results.",
+    "conversations": [
+      {
+        "id": "renegotiation",
+        "events": [
+          {
+            "id": "quote",
+            "sender": "seller-a",
+            "text": "The all-in price is 30.00 DEMO. Delivery takes 10 minutes from escrow funding.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 3000,
+              "deadline_seconds": 600
+            }
+          },
+          {
+            "id": "counter",
+            "sender": "buyer",
+            "text": "I offer 25.00 DEMO for the same job. I need delivery in 5 minutes from escrow funding.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 2500,
+              "deadline_seconds": 300
+            }
+          },
+          {
+            "id": "revised",
+            "sender": "seller-a",
+            "text": "I can do 26.00 DEMO instead. The latest delivery terms and all other requirements stay unchanged.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 2600
+            }
+          },
+          {
+            "id": "accept",
+            "sender": "buyer",
+            "text": "I accept the seller's latest offer without any changes.",
+            "kind": "accept",
+            "patch": {}
+          }
+        ]
+      },
+      {
+        "id": "scope-and-ambiguity",
+        "events": [
+          {
+            "id": "annual",
+            "sender": "seller-b",
+            "text": "For 15.00 DEMO I will provide an annual CAPEX forecast for 2025, not quarterly actuals.",
+            "kind": "propose",
+            "patch": {
+              "price_minor": 1500,
+              "metric": "ANNUAL_CAPEX_FORECAST",
+              "periods": [
+                "2025"
+              ]
+            }
+          },
+          {
+            "id": "sources",
+            "sender": "seller-b",
+            "text": "I cannot include original official source cells. All my other proposed terms remain unchanged.",
+            "kind": "propose",
+            "patch": {
+              "source_required": false
+            }
+          },
+          {
+            "id": "repair",
+            "sender": "seller-b",
+            "text": "I will instead provide actual quarterly facility investment cash outflow for 2025-Q1, 2025-Q2, 2025-Q3 and 2025-Q4. Original official source cells are included. The price stays as last quoted.",
+            "kind": "propose",
+            "patch": {
+              "metric": "ACTUAL_QUARTERLY_FACILITY_INVESTMENT",
+              "periods": [
+                "2025-Q1",
+                "2025-Q2",
+                "2025-Q3",
+                "2025-Q4"
+              ],
+              "source_required": true
+            }
+          },
+          {
+            "id": "ambiguous",
+            "sender": "seller-b",
+            "text": "It could be 25.00 DEMO or 28.00 DEMO; I have not chosen a price.",
+            "must_stop": true,
+            "patch": {}
+          }
+        ]
+      }
+    ]
+  },
+  "arms": [
+    "rules",
+    "incremental",
+    "full_transcript"
+  ]
+}

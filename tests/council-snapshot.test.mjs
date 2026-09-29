@@ -63,3 +63,23 @@ test('private files and council-generated artifacts do not cause feedback loops'
   assert.equal(result.status, 'UNCHANGED');
   assert.deepEqual(result.sources.map(x => x.path), ['README.md']);
 });
+
+test('tracks demo, verifier, UI and shared-schema evidence without learning review churn', async t => {
+  const root = await fixture(t);
+  const files = ['web/App.tsx', 'web/styles.css', 'shared/schema.mjs', 'verification/e2e.test.mjs', 'harness/metrics.mjs', 'learning/control.mjs', 'artifacts/demo/evidence/run.json', 'artifacts/devnet/deployment.json', 'pnpm-lock.yaml'];
+  for (const file of files) {
+    await mkdir(dirname(join(root, file)), { recursive: true });
+    await writeFile(join(root, file), 'one');
+  }
+  const initial = await inspect(root);
+  assert.deepEqual(initial.sources.map(x => x.path), [...files].sort());
+  await acknowledge(root, initial.fingerprint);
+  await mkdir(join(root, 'learning/review'), { recursive: true });
+  await writeFile(join(root, 'learning/review/state.json'), '{}');
+  await mkdir(join(root, 'artifacts/demo/private'), { recursive: true });
+  await writeFile(join(root, 'artifacts/demo/private/key.json'), '{}');
+  assert.equal((await inspect(root)).status, 'UNCHANGED');
+  await writeFile(join(root, 'web/App.tsx'), 'two');
+  await writeFile(join(root, 'artifacts/demo/evidence/run.json'), 'two');
+  assert.deepEqual((await inspect(root)).changes.modified, ['artifacts/demo/evidence/run.json', 'web/App.tsx']);
+});

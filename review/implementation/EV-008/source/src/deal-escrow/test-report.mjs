@@ -1,0 +1,2 @@
+import {readFileSync,existsSync} from 'node:fs';import {verificationSource} from './verification-source.mjs';
+export function testReport(){const path='artifacts/deal-escrow/tests.json';if(!existsSync(path))return null;try{const report=JSON.parse(readFileSync(path,'utf8')),current_fingerprint=verificationSource().sha256;return {...report,current_fingerprint,stale:report.source_changed===true||current_fingerprint!==report.source_fingerprint};}catch{return {status:'INCOMPLETE',stale:true,reason:'TEST_REPORT_UNAVAILABLE'};}}

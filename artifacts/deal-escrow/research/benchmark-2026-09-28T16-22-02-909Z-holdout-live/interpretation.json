@@ -1,0 +1,87 @@
+{
+  "created_at": "2026-09-28T16:28:49.372Z",
+  "source_report": "C:\\Users\\user\\Downloads\\Furiosa x Bricksum\\artifacts\\deal-escrow\\research\\benchmark-2026-09-28T16-22-02-909Z-holdout-live/report.json",
+  "source_report_sha256": "8c3ac7f7ff701bb8fccb77657090fc673688ccb05659e95cedf3bb3b10b9f835",
+  "status": "COMPLETE",
+  "source_unchanged": true,
+  "attempts": 48,
+  "model_calls": 34,
+  "scope": "8 newly authored cases, two repeats. Prior set used for development; this set is frozen before its first execution. Same team authors cases, so this is not independent customer validation.",
+  "interpretation": "Raw records are preserved. In H03 the model twice chose a valid 190-unit-minor offer while a 150-unit-minor counteroffer was available. These are price-choice errors, not invalid-delivery payments. Scenario success criteria are unchanged.",
+  "summary": [
+    {
+      "variant": "fixed",
+      "tasks": 16,
+      "correct_outcomes": 10,
+      "delivered": 8,
+      "false_blocks": 4,
+      "wrong_releases": 0,
+      "model_calls": 0,
+      "total_tokens": 0,
+      "latency_ms": 0,
+      "paid_minor": 1340,
+      "raw_wrong_releases_label": "Any successful purchase outside expected_offer_ids; includes valid but nonpreferred offers. Not exclusively unsafe payment.",
+      "invalid_delivery_paid": 0,
+      "nonpreferred_eligible_purchases": 0,
+      "impossible_task_funded_then_refunded": 2
+    },
+    {
+      "variant": "ai",
+      "tasks": 16,
+      "correct_outcomes": 15,
+      "delivered": 12,
+      "false_blocks": 0,
+      "wrong_releases": 1,
+      "model_calls": 18,
+      "total_tokens": 28678,
+      "latency_ms": 181110,
+      "paid_minor": 2080,
+      "raw_wrong_releases_label": "Any successful purchase outside expected_offer_ids; includes valid but nonpreferred offers. Not exclusively unsafe payment.",
+      "invalid_delivery_paid": 0,
+      "nonpreferred_eligible_purchases": 1,
+      "impossible_task_funded_then_refunded": 0
+    },
+    {
+      "variant": "ai-memory",
+      "tasks": 16,
+      "correct_outcomes": 15,
+      "delivered": 12,
+      "false_blocks": 0,
+      "wrong_releases": 1,
+      "model_calls": 16,
+      "total_tokens": 23564,
+      "latency_ms": 137600,
+      "paid_minor": 2080,
+      "raw_wrong_releases_label": "Any successful purchase outside expected_offer_ids; includes valid but nonpreferred offers. Not exclusively unsafe payment.",
+      "invalid_delivery_paid": 0,
+      "nonpreferred_eligible_purchases": 1,
+      "impossible_task_funded_then_refunded": 0
+    }
+  ],
+  "price_choice_errors": [
+    {
+      "case_id": "H03-expensive-list-affordable-floor",
+      "repeat": 0,
+      "variant": "ai-memory",
+      "selected": {
+        "offer_id": "no-discount",
+        "deal_id": "ae49dfa5-1d0d-4356-973b-5cbd40f045b6",
+        "price_minor": 190
+      },
+      "available_floor_minor": 150,
+      "overpayment_vs_available_floor_minor": 40
+    },
+    {
+      "case_id": "H03-expensive-list-affordable-floor",
+      "repeat": 1,
+      "variant": "ai",
+      "selected": {
+        "offer_id": "no-discount",
+        "deal_id": "17fb6b5c-2304-4cf9-b617-ebea77c4356d",
+        "price_minor": 190
+      },
+      "available_floor_minor": 150,
+      "overpayment_vs_available_floor_minor": 40
+    }
+  ]
+}

@@ -33,7 +33,7 @@ def main():
     parser.add_argument('--font',default=os.getenv('KOREAN_FONT','C:/Windows/Fonts/malgun.ttf'))
     args=parser.parse_args()
     assert sum(scene[0] for scene in SCENES)==180
-    proofs=[ROOT/f'artifacts/dealtrace/runs/{SOURCE_RUN}/report.json', ROOT/'artifacts/deal-escrow/tests.json', ROOT/f'artifacts/dealtrace/runs/{SOURCE_RUN}/resume-proof.json']
+    proofs=[ROOT/f'artifacts/dealtrace/runs/{SOURCE_RUN}/report.json', ROOT/'artifacts/dealtrace/integration/pre-merge-tests.json', ROOT/f'artifacts/dealtrace/runs/{SOURCE_RUN}/resume-proof.json']
     for proof in proofs:
         assert json.loads(proof.read_text(encoding='utf8'))['status']=='PASS'
     fonts={size:ImageFont.truetype(args.font,size) for size in [16,25]}

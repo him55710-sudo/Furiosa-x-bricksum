@@ -1,0 +1,172 @@
+{
+  "created_at": "2026-09-28T16:43:29.746Z",
+  "results": [
+    {
+      "scenario": "default",
+      "result": {
+        "tool": "review_offers",
+        "args": {
+          "reviews": [
+            {
+              "offer_id": "primary-reports",
+              "fit": "match",
+              "evidence_ids": [
+                "o0s0",
+                "o0s1"
+              ],
+              "reason": "Promises four 2025 realized quarterly facility-investment cash outflows with signed source values and page/row from the earnings presentation in billion KRW. Normalization to positive values does not contradict the signed original requirement."
+            },
+            {
+              "offer_id": "outlook-summary",
+              "fit": "mismatch",
+              "evidence_ids": [
+                "o1s0",
+                "o1s2"
+              ],
+              "reason": "Describes 2026 annual outlook split into forecast quarters, not historical 2025 realized data. Explicitly states non-historical cash expenditure."
+            },
+            {
+              "offer_id": "archive-service",
+              "fit": "unclear",
+              "evidence_ids": [
+                "o2s0"
+              ],
+              "reason": "Mentions historical facility cash expenditures but omits explicit year (2025) and document hash verification. Requires clarification on time period and source document."
+            }
+          ]
+        },
+        "model": "qwen3-32b",
+        "request_id": "chat-a258b6ed9f6a42e4b1f6ea0f2617dc92",
+        "evidence": [
+          {
+            "offer_id": "primary-reports",
+            "fit": "match",
+            "evidence_ids": [
+              "o0s0",
+              "o0s1"
+            ],
+            "reason": "Promises four 2025 realized quarterly facility-investment cash outflows with signed source values and page/row from the earnings presentation in billion KRW. Normalization to positive values does not contradict the signed original requirement.",
+            "quote": "Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included."
+          },
+          {
+            "offer_id": "outlook-summary",
+            "fit": "mismatch",
+            "evidence_ids": [
+              "o1s0",
+              "o1s2"
+            ],
+            "reason": "Describes 2026 annual outlook split into forecast quarters, not historical 2025 realized data. Explicitly states non-historical cash expenditure.",
+            "quote": "Annual investment outlook for 2026 divided into four equal quarterly estimates. This is not historical cash expenditure."
+          },
+          {
+            "offer_id": "archive-service",
+            "fit": "unclear",
+            "evidence_ids": [
+              "o2s0"
+            ],
+            "reason": "Mentions historical facility cash expenditures but omits explicit year (2025) and document hash verification. Requires clarification on time period and source document.",
+            "quote": "Historical actual quarterly facility cash expenditures from the original presentation."
+          }
+        ]
+      },
+      "selection": {
+        "decision": "counter",
+        "offer_id": "primary-reports",
+        "counter_price_minor": 180,
+        "reason": "Code selected the lowest posted floor among AI-reviewed matching offers that pass the human policy; ties prefer faster delivery."
+      }
+    },
+    {
+      "scenario": "H03-expensive-list-affordable-floor",
+      "result": {
+        "tool": "review_offers",
+        "args": {
+          "reviews": [
+            {
+              "offer_id": "discounted-actuals",
+              "fit": "match",
+              "evidence_ids": [
+                "o0s0",
+                "o0s1"
+              ],
+              "reason": "Sentences o0s0 and o0s1 specify four realized 2025 quarterly facility-investment cash flows with exact page and signed source amounts, matching the task's requirement for historical outflows, billion KRW units, and document metadata."
+            },
+            {
+              "offer_id": "no-discount",
+              "fit": "match",
+              "evidence_ids": [
+                "o1s0",
+                "o1s1"
+              ],
+              "reason": "Sentences o1s0 and o1s1 replicate the same data commitment as discounted-actuals, fulfilling requirements for quarterly realized values, signed source amounts, and document provenance."
+            }
+          ]
+        },
+        "model": "qwen3-32b",
+        "request_id": "chat-0cbb08eb130a41c49c158b666ad2455d",
+        "evidence": [
+          {
+            "offer_id": "discounted-actuals",
+            "fit": "match",
+            "evidence_ids": [
+              "o0s0",
+              "o0s1"
+            ],
+            "reason": "Sentences o0s0 and o0s1 specify four realized 2025 quarterly facility-investment cash flows with exact page and signed source amounts, matching the task's requirement for historical outflows, billion KRW units, and document metadata.",
+            "quote": "Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included."
+          },
+          {
+            "offer_id": "no-discount",
+            "fit": "match",
+            "evidence_ids": [
+              "o1s0",
+              "o1s1"
+            ],
+            "reason": "Sentences o1s0 and o1s1 replicate the same data commitment as discounted-actuals, fulfilling requirements for quarterly realized values, signed source amounts, and document provenance.",
+            "quote": "Four realized 2025 quarters from the issuer facility-investment cash-flow row, normalized to positive billion KRW. Exact page and signed source amounts included."
+          }
+        ]
+      },
+      "selection": {
+        "decision": "counter",
+        "offer_id": "discounted-actuals",
+        "counter_price_minor": 150,
+        "reason": "Code selected the lowest posted floor among AI-reviewed matching offers that pass the human policy; ties prefer faster delivery."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "flow_name": "Buyer offer content review",
+      "model": "qwen3-32b",
+      "request_id": "chat-a258b6ed9f6a42e4b1f6ea0f2617dc92",
+      "prompt_tokens": 791,
+      "completion_tokens": 688,
+      "total_tokens": 1479,
+      "start_time": "2026-09-28T16:43:10.473Z",
+      "first_token_time": null,
+      "end_time": "2026-09-28T16:43:20.586Z",
+      "latency_ms": 10113,
+      "tool_called": "review_offers",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0xd87fc336bd043ba2bf1a01b917ac006b526629cbee1c01da6e50dd52e3dcc53a",
+      "streaming": false
+    },
+    {
+      "flow_name": "Buyer offer content review",
+      "model": "qwen3-32b",
+      "request_id": "chat-0cbb08eb130a41c49c158b666ad2455d",
+      "prompt_tokens": 717,
+      "completion_tokens": 639,
+      "total_tokens": 1356,
+      "start_time": "2026-09-28T16:43:20.590Z",
+      "first_token_time": null,
+      "end_time": "2026-09-28T16:43:29.745Z",
+      "latency_ms": 9154,
+      "tool_called": "review_offers",
+      "result": "VALID_TOOL_PROPOSAL",
+      "prompt_hash": "0x1e16d1698392dd64b6c6202d6465dc81d95e7c6d18987635850d1cdc26defd5d",
+      "streaming": false
+    }
+  ]
+}
