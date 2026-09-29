@@ -18,3 +18,15 @@ test('invalid operator policy configuration fails before any model request',()=>
  for(const value of [0,-1,1.5,NaN,1000001]){const p=structuredClone(defaultSellerPolicies);p.atlas.minimum_price=value;assert.throws(()=>createLiveNegotiation({secret,sellerPolicies:p}),/LIVE_POLICY_CONFIG/);}
  assert.throws(()=>createLiveNegotiation({secret,sellerPolicies:{atlas:defaultSellerPolicies.atlas}}),/LIVE_POLICY_CONFIG/);
 });
+import {KilnClient} from '../../src/deal-escrow/kiln.ts';
+import {LiveKilnClient} from '../../src/accord/live-kiln.mjs';
+test('deployed and measured adapters build the same bounded negotiation request',()=>{
+ const args={model:'qwen3-32b',key:'fixture-not-a-network-credential'};
+ const spec=[{name:'send_negotiation_message',parameters:{type:'object'}}];
+ const older=new KilnClient(args).payload('policy',{request:{budget:173}},spec);
+ const deployed=new LiveKilnClient(args).payload('policy',{request:{budget:173}},spec);
+ older.max_tokens=deployed.max_tokens=2400;assert.deepEqual(older,deployed);
+});
+test('output limits are bounded server configuration',()=>{
+ for(const maxTokens of [0,799,5001,NaN,2400.5])assert.throws(()=>createLiveNegotiation({secret,maxTokens}),/LIVE_TOKEN_CONFIG/);
+});
