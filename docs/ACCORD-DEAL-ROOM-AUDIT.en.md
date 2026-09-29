@@ -55,3 +55,29 @@ A real 1,200-token custom-task response was truncated and safely rejected. Its s
 The durable Live coordinator now retains every reserved model attempt, completion/failure/Stop status and allowlisted usage metadata. Late responses after Stop cannot apply a proposal, but their measured usage remains inspectable. The Proof drawer exposes this attempt ledger; private prompts are not exported.
 
 All 45 targeted tests passed again after these refinements, followed by a focused failure-telemetry/Stop regression. A browser extension setting prevented automated file-picker injection; the existing file-input path remains, and the actual paste/import workflow was verified without changing browser permissions. Three-minute presentation instructions are in ACCORD-THREE-MINUTE-DEMO.en.md.
+
+## Requirement-by-requirement design audit
+
+The numbered rows correspond to the supplied 17-part design brief. Financial execution remains the explicitly disclosed private-EVM test workflow; the separately labeled Sepolia run is historical evidence.
+
+| Item | Implementation inspected | Runtime or source evidence |
+| --- | --- | --- |
+| 1 | Product flow replaces the quote-form dashboard; protection events and two gates have separate states. | Actual guided authority and invoice blocks, plus current Live mobile screenshot. |
+| 2 | Product positioning is agreement enforcement, with payment tied to agreed terms. | Overview headline and value statements; mismatch prevents settlement in browser tests and UI. |
+| 3 | Overview is the default route, with animated agent illustration and Run the demo / See public proof actions. | Production rendering; overview() markup, scene animation CSS, pause control and reduced-motion rule. |
+| 4 | Deal Room exposes participants, negotiation, mandate, agreement, escrow and activity. | Guided walkthrough and final Live desktop/mobile rendering; liveView activity ledger. |
+| 5 | Three distinct server-side policies, separate actor input and identities. Buyer receives no seller floor. | live-negotiation.mjs policy definitions; private-context isolation test; inspected actual public-input drawer. |
+| 6 | Guided authority is 40 total / 30 per deal; 22/35/27 offers; 35 > 30 blocks before funding. | Fresh HTTPS guided walkthrough and retained browser-EVM checks. |
+| 7 | Guided 18 counter receives 20 revision; acceptance, bilateral workspace signatures and locked agreement are visible. Actual Live terms come from model responses. | Guided browser walkthrough; actual Live signed receipt; both-signature recovery tests. |
+| 8 | Invoice 25 against agreement 20 stops payment even inside authority; correction permits exactly 20. | Disabled payment control, corrected payment and VALID receipt observed. |
+| 9 | Authority Gate and Agreement Gate are separately named with distinct comparisons and states. | Guided and Live markup, browser render and financial tests. |
+| 10 | Protection uses white cards, restrained violation color and no-signature/no-funds facts. | Desktop/mobile protection screenshots; final Live color specificity fix. |
+| 11 | Speaker messages differ visually from Accord events; model failures remain events, not accepted proposals. | Current Live timeline and real rejected Buyer attempt with measured usage. |
+| 12 | Technical hashes, signatures, transactions and receipts are inspected in a drawer; public evidence is separate. | Download followed by VALID verification; actual model/proof drawer interaction. |
+| 13 | Guided Demo is labeled deterministic; Live Agents makes actual qwen3-32b calls with inspectable request IDs, public input, output and usage. | Deployed negotiation/receipt JSON and final custom-task actual request IDs. No recorded message is labeled a new Live call. |
+| 14 | Existing source parsing, work, invoice, settlement/refund, Stop and recovery paths are reused. | 45 targeted tests including actual EVM bytecode, persistence and local API; custom table creation through the browser. |
+| 15 | Visual hierarchy is participants → proposals → agreement → gate decision → money → optional proof. | Three-column desktop and compact mobile mandate summary; central agreement/protection scenes. |
+| 16 | Overview / Deal Room / Deals / Proof are the four primary navigation destinations. | Rendered navigation and persisted task reopening. |
+| 17 | White/pale-gray surfaces, cobalt primary, red buyer/violations, blue sellers, muted green success and amber escrow. | Production and mobile screenshots, shared typography/layout and illustration styles. |
+
+The current presentation plan uses one story and explicit clicks. It does not depend on real-model convergence within three minutes. A completed real-model negotiation and its test settlement are retained separately, while failed model runs are preserved rather than replaced with simulated success.
