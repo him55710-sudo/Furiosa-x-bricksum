@@ -1,3 +1,7 @@
+import {checkRows} from '../../web/spending/workspace-rules.mjs';
+import {createLiveNegotiation} from '../../src/accord/live-negotiation.mjs';
+import {getBytes,verifyMessage} from 'ethers';
+import {pathToFileURL} from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
@@ -74,6 +78,23 @@ test('deployed browser bundle executes and persists real EVM work without a back
   assert.equal(job.status,'COMPLETED');assert.equal(job.agreedPrice,24);assert.equal((await request(`/api/tasks/${job.id}/verify`)).verdict,'VALID');
   const network=(await request(`/api/tasks/${job.id}/receipt`)).network;assert.notEqual(network.sellers['seller-c'],network.sellers['seller-a']);assert.notEqual(network.sellers['seller-c'],network.sellers['seller-b']);
  });
+ await t.test('live signatures bind source and negotiated terms to the actual browser escrow',async()=>{
+  let session;
+  await workspace.close();workspace=createBrowserWorkspace({storage:browserStore(globalThis.indexedDB),locks,chainFactory,liveAuthority:async()=>({session:session.state,authorization:{taskId:job.id}})});
+  job=await request('/api/tasks',{...await request('/api/sample'),demoMode:false});
+  const live=createLiveNegotiation({secret:'test-only-live-escrow-signing-secret',model:'qwen3-32b',clientFactory:()=>({payload:(_system,input)=>({input}),request:async(_flow,payload,validate)=>{
+   const q={action:'offer',price:payload.input.private_policy.minimum_price??18,rows:4,sources:1,deliveryMinutes:8,message:'Same referenced scope.'};validate('',q);return {args:q,model:'qwen3-32b',request_id:'fixture-live'};
+  }})});
+  session=await live.execute({action:'start',input:await request(`/api/tasks/${job.id}/live-brief`)});
+  await act('live-bind',{id:session.state.id});assert.equal(job.liveSessionId,session.state.id);
+  for(const action of ['offer','counter','respond','agree'])session=await live.execute({action,session,seller:'atlas'});
+  await act('live-import',{id:session.state.id});await assert.rejects(act('counter',{price:25}),/connected agents/);
+  await act('fund');assert.equal(job.agreedPrice,20);assert.equal(job.agreement.deliveryMinutes,8);assert.equal(job.agreement.agentAgreementHash,session.state.agreement.hash);
+  const signatures=job.agreementSignatures;assert.equal(verifyMessage(getBytes(job.dealHash),signatures.buyerSignature),signatures.buyer);assert.equal(verifyMessage(getBytes(job.dealHash),signatures.sellerSignature),signatures.seller);
+  await act('run');const excessSources=structuredClone(job);excessSources.liveSession.agreement.terms.sources=2;assert.equal(checkRows(excessSources,job.output).verified,false);assert.equal(checkRows(job,job.output,job.deadline+1).verified,false);await act('invoice',{amount:25});await assert.rejects(act('settle'),/exactly match/);await act('invoice',{amount:20});await act('settle');
+  const verified=await request(`/api/tasks/${job.id}/verify`);assert.equal(verified.verdict,'VALID');assert.ok(verified.checks.some(c=>c.includes('Live agent signatures')));
+ });
+
 });
 
 test('hosted release builds in isolation without a prebuilt dist or historical test report',async t=>{
@@ -89,5 +110,5 @@ test('hosted release builds in isolation without a prebuilt dist or historical t
  const extras=['assets/stale-bundle.js','vendor/unlisted.json','evidence/private-key.json','.env'];
  const ignored=spawnSync('git',['check-ignore','--no-index','--stdin'],{cwd:out,encoding:'utf8',input:[...manifest.files.map(f=>f.path),...extras].join('\n')+'\n'});
  assert.equal(ignored.status,0);assert.deepEqual(ignored.stdout.trim().split(/\r?\n/),extras);
- const config=JSON.parse(readFileSync(path.join(out,'vercel.json')));assert.equal(config.buildCommand,null);const proof=JSON.parse(readFileSync(path.join(out,'evidence/dealtrace-summary.json')));assert.deepEqual([proof.budget,proof.agreement,proof.rejectedInvoice,proof.calls,proof.tokens],[40,20,25,5,7890]);assert.equal(proof.verification.checks,47);assert.equal(proof.transactions.find(t=>t.label==='overbill-blocked').status,0);assert.ok(config.headers[0].headers.find(h=>h.key==='Content-Security-Policy').value.includes("'wasm-unsafe-eval'"));
+ const config=JSON.parse(readFileSync(path.join(out,'vercel.json')));assert.equal(config.buildCommand,null);assert.equal(config.functions['api/live.mjs'].maxDuration,120);const boot=spawnSync(process.execPath,['--input-type=module','-e',`await import(${JSON.stringify(pathToFileURL(path.join(out,'api/live.mjs')).href)})`],{cwd:out,encoding:'utf8'});assert.equal(boot.status,0,boot.stderr);const proof=JSON.parse(readFileSync(path.join(out,'evidence/dealtrace-summary.json')));assert.deepEqual([proof.budget,proof.agreement,proof.rejectedInvoice,proof.calls,proof.tokens],[40,20,25,5,7890]);assert.equal(proof.verification.checks,47);assert.equal(proof.transactions.find(t=>t.label==='overbill-blocked').status,0);assert.ok(config.headers[0].headers.find(h=>h.key==='Content-Security-Policy').value.includes("'wasm-unsafe-eval'"));
 });

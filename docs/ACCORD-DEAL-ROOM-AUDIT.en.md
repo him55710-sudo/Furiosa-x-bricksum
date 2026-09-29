@@ -1,47 +1,47 @@
-# Agent Deal Room implementation audit
+# Accord Lock release audit — 2026-09-30
 
-The goal is the complete design brief supplied on 2026-09-30, including real negotiation, separated execution modes and proof. This file records evidence and remaining work; it is not a completion claim.
+## Product requirements
 
-## Design reference
-
-Inspected the user-specified Stripe sandbox dashboard in the signed-in browser. Adopted its persistent left navigation, compact environment banner, restrained transaction states and separated detail inspection. Accord retains its own cobalt/white palette, red buyer, blue sellers and clear, large typography inspired by the requested Toss design philosophy.
-
-## Requirement map
-
-| Objective items | Current implementation | Completion evidence / remaining work |
+| Brief | Delivered behavior | Evidence |
 | --- | --- | --- |
-| 1–4, 15–17: positioning, landing, Deal Room, hierarchy, navigation, visual style | Overview with the requested headline, small animated example, four navigation destinations; participants / negotiation / Accord Control; chronological activity | Preview renders and authority flow observed in browser. Final responsive verification still required. |
-| 5: sellers with distinct private goals and constraints | Guided Demo has Atlas, Nexus and Orbit; real server-side policies and private context isolation remain to integrate | Not complete. Browser simulation rules are not private AI agents. |
-| 6: authority block 35 > 30 | White protection card, explicit no-signature/no-escrow/no-funds facts; Nexus quote automatically checked in the guided story | Actual preview UI observed; existing backend checks execute before funding. |
-| 7: 22 → 18 → 20 negotiation and agreement climax | Counteroffer 18 produces a revised 20 offer; operator accepts then approves funding | Observed in preview. Bilateral agreement signatures before funding remain unimplemented in the browser workflow. Never display fabricated signature verification. |
-| 8–10: exact agreement block 25 ≠ 20; two gates; protection semantics | Separate Authority and Agreement Gate cards, clear amount comparisons, correction path | Automated payment mismatch tests pass. Browser walkthrough verification ongoing. |
-| 11: distinguish agent dialogue from Accord events | Colored speaker messages separate from white enforcement cards and activity timeline | Rendered. Actual live message metadata still needs integration. |
-| 12: proof drawer | Current deal hashes, transactions, receipt download and verification in a right drawer; historical public evidence stays in Proof | Needs final interaction/accessibility checks. Public and private networks must never be conflated. |
-| 13: Guided Demo / Live Agents | Visible mode controls and explicit deterministic label; connection state is honest | Live integration is outstanding. A disconnected screen or recorded replay alone does not satisfy this requirement. |
-| 14: preserve existing usable execution | Local and browser task state transitions retained; added a third seller payout address; task revocation retained | 21 local/service tests and 9 browser-bundle tests passed after first UI implementation. Final additions need targeted checks. |
-| Earlier instructions: English, manual operation, three-minute presentation, deployment/main | English controls; one-click sample; explicit action buttons, no timer-driven task transitions | Final three-minute walkthrough, final production deployment, push and requirement audit remain outstanding. |
+| 1–4, 15–17 | English Overview, illustrated agreement story, Deal Room, Deals and Proof. Cobalt/white, red buyer, blue sellers. Persistent mandate and payment controls. | Desktop and 390px browser inspection; no horizontal overflow. Stripe sandbox reference was inspected earlier. |
+| 5, 13 | Guided simulation and actual Kiln qwen3-32b negotiations are distinct. Atlas, Nexus and Orbit have server-only private policies. Buyer receives public messages and its own mandate. | Protocol privacy tests; actual requests and bilateral signatures in artifacts/accord-lock/live. |
+| 6–10 | 40 budget, 30 per deal; offers 22/35/27; 35 > 30 protection; counter 18, revised/accepted 20; 25 ≠ 20 blocks payment; corrected 20 pays once. | Fresh final-preview browser walkthrough, verified private EVM receipt VALID. |
+| 11 | Speaker messages and Accord enforcement events have separate visual treatments. Live messages expose actual model, request ID, public input, output and usage. | Browser Live walkthrough and rendered metadata. |
+| 12 | Current signatures, escrow hash, transactions and receipt verification in a proof drawer. Historical Sepolia evidence remains separate. | Download then verification works; actual signatures checked against current agreement. |
+| 14 | Custom CSV/JSON, explicit worker execution, editable invoices, rejection/refund, Stop, persisted deals and retry recovery retained. | 45 targeted tests pass; real browser EVM funding and settlement exercised. |
+| Manual three-minute demonstration | Operator drives each step. Guided story can be presented in three minutes without waiting for external inference. Live actions show what each model is doing and can be stopped. | Guided walkthrough; tour duration checks; actual Live request/response walkthrough. |
 
-## Next work
+## Actual Live evidence
 
-1. Finish responsive/UI verification of the complete authority → negotiation → invoice block → corrected payment → proof story. Preserve custom imports, refresh/recovery and Stop.
-2. Integrate the existing actual Kiln negotiation path into Live Agents. Sellers must not expose private floor policies to the buyer. Display actual model, request ID, public input and output for each live message; do not label recordings live.
-3. Establish honest bilateral signature evidence for the agreed terms, or leave signature state explicitly pending until it is implemented and verified. Public historical signatures cannot stand in for current deal signatures.
-4. Verify all explicit requirements against current runtime/source evidence, then commit/push and deploy the verified final build. Keep the goal active until this audit is complete.
+- The dedicated server transport calls the fixed Kiln endpoint and requires the actual qwen3-32b model, request ID and validated structured tool output. Truncated, malformed or substituted outputs fail closed.
+- Private Vercel Blob persists sessions, revisions, authorizations and a shared call ledger. Atomic writes, signed HttpOnly owner cookies, same-origin request tokens and request-size limits protect the endpoint.
+- Each session allows at most eight model attempts. The default environment-wide allowance is 60 lifetime attempts; failed calls count. This is a bounded pilot, not an unlimited inference service.
+- Stop supersedes in-flight inference. Repeated operation IDs do not repeat paid work. Agreement authorization binds one task.
+- Six direct verification model calls were retained, including the first agreement rejected for exceeding authority. Three deployed model calls produced 35 → 30 → 30, signed by both participants. A private browser escrow then blocked 29 and 35 invoices, paid 30 exactly once, and verified VALID. All retained evidence JSON passed the public-data validator.
+- Latest browser enforcement binds both live signatures, source hash, row/source counts and negotiated delivery deadline to the escrow agreement. Automated tests specifically cover the eight-minute deadline and missing second source.
 
-## Verified checkpoint
+## Verification
 
-- Vercel design preview: `https://agent-spending-firewall-mfutjbduf-mongben.vercel.app`. This is a preview, not the final production release. Later mobile control-summary changes are not in that preview yet.
-- Browser interaction on the prior equivalent core build covered: create guided task → request three quotes → Nexus 35 blocked against 30 → select Atlas → counter 18 → revised offer 20 → accept → fund → run → 25 invoice blocked → correct 20 → settle → open proof drawer → verify `VALID`. This was actual private-EVM execution, not an animation or screenshot fixture.
-- The landing was visually inspected at desktop and a 390px browser viewport. Its document width did not overflow. Further mobile deal-state checks remain.
-- Current automated checks passed: 22 local workspace/public-build tests, 10 browser-EVM/build tests, 2 live-negotiation protocol tests with an explicitly stubbed model. The third seller has its own payout address and settles correctly in both editions.
-- `src/accord/live-negotiation.mjs` now implements sealed session envelopes, actor-specific private prompts, actual Kiln client calls, public message inspection fields and bilateral signature generation. Its test adapter verifies buyer privacy and tamper rejection. It is not connected to HTTP, UI or a deployed live service yet, and no fresh actual Kiln call has been claimed.
-- Live API authentication, bounded paid-model access, retry handling and durable stop/revision checks must be implemented before exposing it publicly. A signed old session alone does not establish current revocation state. Browser financial authority must still be checked before every commitment.
+45 targeted tests passed across browser EVM, local workspace, public build allowlist, tour, Live protocol, durable coordination, HTTP authentication and dedicated transport. A subsequent malformed Unicode-token regression passed after tightening token comparison.
 
-## Production checkpoint — 2026-09-30
+Final UI artifact: index-VqtpDt7l.js / index-DmbklS-X.css. Final preview: https://agent-spending-firewall-hyx3oyl3a-mongben.vercel.app. A final server-only token validation fix was built after that preview; browser assets are identical.
 
-The tested Agent Deal Room checkpoint was merged with the latest main submission/security work and pushed to main as `ec33d2e`. Production is `https://agent-spending-firewall.vercel.app`, deployment `dpl_8ZHHV1b4t81jrkQMDv8rmvQ9DxoS` (READY, production alias confirmed).
+## Honest boundaries
 
-- 43 targeted tests passed after merging, including workspace/EVM execution, receipt recovery, Stop, third-seller payout, static allowlist, model validation, origin/signing security and submission boundaries. Live tests in this count use a stub, not actual inference.
-- The exact preview artifact completed a fresh interactive browser walkthrough: authority block 35 > 30, counter 18, revised/accepted 20, funding, worker execution, invoice 25 blocked with the payment button disabled, correction to 20, payment, refresh persistence, and receipt verification VALID. Browser error log was empty.
-- Production HTTP returned 200. HTML, JavaScript and CSS SHA-256 hashes matched the locally built artifact. The actual production overview rendered in the browser. Screenshot: `artifacts/accord-lock/deal-room/production-overview.png`.
-- This release executes uploaded-table processing and a private browser EVM with test units. The Live Agents connection and bilateral current-agreement signatures remain outstanding as documented above. Deployment is complete for this checkpoint; the full goal remains active.
+- Hosted Live negotiation uses actual inference. Delivery is the existing deterministic source-table worker; it does not perform autonomous web research.
+- Current financial execution uses browser-private EVM test units, not real money or public-chain consensus. Signing keys are operator-controlled. Historical public Sepolia proof is clearly labeled.
+- The older localhost Node workspace retains its deterministic worker and escrow flow; the new Live HTTP adapter is deployed on Vercel. Local Live parity is not claimed.
+- Model negotiations can decline or produce invalid/truncated output. Such outputs cannot authorize funds. Broader model benchmarking is separate from this release's measured evidence.
+- The larger design goal remains subject to its final acceptance audit. This release audit does not claim unlimited production financial readiness.
+
+## Production deployment
+
+- URL: https://agent-spending-firewall.vercel.app
+- Deployment: dpl_FS6artqdb9N48W7evCXFHcmjaRFD (production, READY).
+- HTML, JS, CSS and favicon returned HTTP 200 with SHA-256 equality to the tested local build.
+- Production /api/live returned HTTP 200, available=true, qwen3-32b and its fresh 60-attempt allowance.
+- Final-preview Live session creation and Stop persistence were verified without extra model calls.
+- Production browser rendering was inspected and its error log was empty. Screenshot: artifacts/accord-lock/deal-room/production-live-release.png.
+- Main includes the release commit 83a91ff and merges the concurrent validation evidence at dc0d93d. That merge adds verification scripts and evidence only; deployed application files are unchanged.
+- Post-deploy runtime log inspection showed the production Live GET returning 200 and no error entries in the observed release window. Long-term monitoring/drains were not configured by this task.
