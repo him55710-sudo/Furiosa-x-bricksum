@@ -64,6 +64,8 @@ The recorded V2 Sepolia run has these **five** transactions. Status 0 on the 25 
 
 The [official schedule](https://wap.gwdc.net/hackathon.html) places the kickoff on 2026-09-28 at 17:00 KST. The [initial commit](https://github.com/him55710-sudo/Furiosa-x-bricksum/commit/3d0b572) at 19:08:52 KST contained only a two-line repository README (`# Furiosa-x-bricksum` and `GWDC`). **Built during the event, as evidenced by subsequent commits:** the authored application, Accord Lock browser workspace, Kiln negotiation and logging, DealTrace signed evidence workflow, escrow contracts, Sepolia execution, verification tools, tests, demo and brief. **Pre-existing work disclosed:** no proprietary application source or assets from a previous project are identified in the tracked history. Git history cannot rule out untracked preparation, so this statement is bounded by repository evidence rather than presented as an independent audit of the authors' prior work. Third-party packages remain identified by the package manifest and their licenses. [Commit history](https://github.com/him55710-sudo/Furiosa-x-bricksum/commits/main/).
 
+**Usability evidence limit:** no real first-time-user study or independent customer validation has been completed. Automated tests and synthetic reviewer exercises are not human responses.
+
 ## Product and proof paths
 
 **One product, two explicit execution paths:** Accord Lock is the usable workspace. DealTrace is the signed agreement and public settlement proof path. They demonstrate the same payment boundary with different runtimes.
