@@ -19,7 +19,8 @@ This audit distinguishes implementation, observed execution and evidence that st
 | Portable evidence without app DB or private keys | Standalone CLI on browser-downloaded receipt; altered message INVALID; missing conversation INCOMPLETE | PASS |
 | Approval, watch, stop, usable output and export | CUA approval/stop runs; four-row result; byte-identical downloaded receipt; mobile check | PASS as automated UI testing |
 | Three-scene demo, short brief, English README | 180-second decoded screenshot film; visually reviewed one-page PDF; README | Produced; film is saved-run evidence, not live footage |
-| Main integration preserves existing work | Both research modes and tool families retained; integration report and current full test suite | 138/138 local PASS |
+| Main integration preserves existing work | Both research modes and tool families retained; integration report and current full test suite | 139/139 local PASS |
+| Audit-screen altered-copy demonstration | Real browser click yields INVALID / DEAL_HASH_MISMATCH; original receipt preserved; `artifacts/dealtrace/audit-copy/browser.json` | PASS; no model, chain query or financial action |
 | Rules vs full-transcript vs incremental comparison | Frozen two-conversation, eight-turn experiment plus true full re-extraction follow-up; all 24 model attempts retained | Complete; rules 8/8, incremental 7/8, whole-transcript/newest-patch 3/8; true all-event re-extraction 4/8. Follow-up is not a new held-out evaluation |
 
 ## Version boundaries
@@ -27,6 +28,8 @@ This audit distinguishes implementation, observed execution and evidence that st
 The public and filmed run was tested before main integration. Its source fingerprint is `c79135af89b4fe1a5b5d1df59942dedc0a11c370408ee66183205bf8c7cde281`. A later UI readiness-label fix is mapped in `post-run-ui-change.json` with original bytes. The filmed presentation's 129-test report is archived at `artifacts/dealtrace/integration/pre-merge-tests.json`.
 
 Main integration adds the existing PDF/content-review workflows and preserves both Kiln tool families. `artifacts/dealtrace/integration/report.json` enumerates the changed and added source inputs. The new DealTrace agent, ledger, claim, engine, chain, domain and verifier files remain unchanged from the actual public execution. A later accounting correction counts rejected Kiln responses from their actual result code; its regression brings the suite to 138. The original public workflow had no failed calls, so its token and transaction totals are unchanged. Do not claim that every source byte was identical across these versions.
+
+The subsequent read-only receipt-copy API/button adds one regression, bringing the current suite to 139. Its browser evidence and a preserved copy of the preceding 138-test report are in `artifacts/dealtrace/audit-copy`. The public financial run and filmed version are unchanged.
 
 ## Still open
 

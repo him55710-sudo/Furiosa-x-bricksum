@@ -3,9 +3,9 @@
   "execution_commit": "91d648564f95fbaf3140287855ace1b9aba829d5",
   "integrated_main": "84b59dad0812d3ec5aef3538b99a21f53cceaa04",
   "status": "PASS",
-  "tests": 138,
-  "passed": 138,
-  "source_fingerprint": "d86c0ccd91ca68bae9d878859122b39a124b7dae0117fa055916b757a25d05b2",
+  "tests": 139,
+  "passed": 139,
+  "source_fingerprint": "84116be6ef222191bc96e2dede2a8e831e8fdd130da18668278d5008170cca86",
   "unchanged_core_files": [
     "src/dealtrace/agent-service.mjs",
     "src/dealtrace/claims.mjs",
@@ -28,13 +28,15 @@
     "src/deal-escrow/study.mjs",
     "src/deal-escrow/verification-source.mjs",
     "src/dealtrace/efficiency.mjs",
+    "src/dealtrace/server.mjs",
     "tests/deal-escrow/audit.test.mjs",
     "tests/deal-escrow/research.test.mjs",
     "tests/deal-escrow/server-start.test.mjs",
     "web/deal-escrow/Replay.tsx",
     "web/deal-escrow/main.tsx",
     "web/deal-escrow/style.css",
-    "web/dealtrace/app.js"
+    "web/dealtrace/app.js",
+    "web/dealtrace/index.html"
   ],
   "added_manifest_files": [
     "data/source-documents/02e498aea0b986035cac254fb6509a18d776a235b831bef19c8050f45e335f6d.pdf",
@@ -68,10 +70,10 @@
     "web/deal-escrow/Study.tsx"
   ],
   "explanation": "Main contributes legacy source-review workflows and tests. The shared Kiln client allows both tool families. Public execution and integration are separately versioned; the public run is not relabeled as an integrated-source execution.",
-  "completed_at": "2026-09-29T10:39:02.900Z",
+  "completed_at": "2026-09-29T11:02:08.907Z",
   "local_workflow": "6951c586-c7d7-496b-b2a6-82360c12fa9e",
   "local_workflow_checks": "17/17",
-  "local_workflow_scope": "Integrated main before the telemetry-only correction; no model calls; real isolated local EVM.",
+  "local_workflow_scope": "Integrated main before subsequent telemetry and read-only UI changes; real isolated local EVM and no model calls.",
   "accounting_correction": "Failed Kiln calls are counted using their result code; regression included.",
   "added_verification_inputs": [
     "data/source-documents/02e498aea0b986035cac254fb6509a18d776a235b831bef19c8050f45e335f6d.pdf",
@@ -96,7 +98,9 @@
     "scripts/start-deal-research.mjs",
     "scripts/verify-deal-research-pdf-public.mjs",
     "scripts/verify-deal-research-video.mjs",
+    "src/dealtrace/evidence-demo.mjs",
     "tests/deal-escrow/efficiency.test.mjs",
+    "tests/deal-escrow/evidence-demo.test.mjs",
     "tests/deal-escrow/strong-rules.test.mjs",
     "tests/deal-escrow/study.test.mjs",
     "verification/deal-research-cases.mjs",
@@ -104,5 +108,6 @@
     "verification/deal-research-strong-rules.mjs",
     "web/deal-escrow/ReviewResearchWorkbench.tsx",
     "web/deal-escrow/Study.tsx"
-  ]
+  ],
+  "audit_copy": "Actual browser action and regression demonstrate changed-price INVALID while retaining original evidence, without RPC, inference or transaction."
 }
