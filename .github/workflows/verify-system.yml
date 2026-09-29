@@ -19,6 +19,8 @@ jobs:
           node-version: '24'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Check Git-visible secrets and dependency advisories
+        run: pnpm run security:check
       - name: Reproduce the two deterministic Track B stops
         run: node scripts/record-track-b-stops.mjs > /tmp/accord-track-b-stops.json
       # Discard the historical report so an interrupted run cannot upload it as new evidence.

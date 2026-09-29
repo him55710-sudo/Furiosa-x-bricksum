@@ -69,6 +69,7 @@ test('English workspace carries user decisions through real local escrow, recove
   const state={job:null,tasks:workspace.list(),network:workspace.network(),route:'workspace',present:false,draft:sample,sourceText:sample.sourceText,sourceName:sample.sourceName};
   for(const route of ['workspace','agents','evidence']){const html=renderWorkspace({...state,route});assert.doesNotMatch(html,/[\uac00-\ud7af]/);assert.ok(html.includes('data-action="tasks"'));}
   const html=renderWorkspace({...state,job:{...job,title:'<img src=x onerror=alert(1)>'},present:true});assert.ok(html.includes('&lt;img'));assert.ok(html.includes('Inspect proof'));assert.ok(html.includes('DEMO ASSIST'));assert.ok(!html.includes(job.dealHash));
+
   const client=readFileSync('web/spending/app.mjs','utf8');assert.doesNotMatch(client,/setInterval|autoplay|requestAnimationFrame/);assert.match(client,/hash===\x27demo\x27/);
  });
  await t.test('refund rejection has a bound attestation and retries its original transaction',async()=>{

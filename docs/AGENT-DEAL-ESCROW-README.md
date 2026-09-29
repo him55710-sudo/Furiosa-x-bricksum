@@ -175,7 +175,6 @@ Schema validation, policy, delivery validation and escrow authorization make zer
 - No production KYC/AML, real money, production custody, enterprise identity or dispute arbitration.
 - No claim of formal verification, 100% security, perfect distributed atomicity, finality/reorg resilience, measured energy or guaranteed model accuracy.
 - Public testnet financial execution remains unverified until test ETH is available. A local devnet transaction must not be labeled Sepolia.
-- No completed human-observer study. Receipt reconstruction is currently verified by automated checks and browser tests.
 
 ## 15. Future work
 

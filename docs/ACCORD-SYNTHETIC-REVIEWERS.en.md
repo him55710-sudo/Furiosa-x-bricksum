@@ -1,10 +1,10 @@
-> Provenance: user-supplied synthetic scripts, preserved verbatim below. Not three observed participants. Real human responses remain zero.
+> Provenance: user-supplied synthetic scripts, preserved verbatim below. These are examples, not observed participants.
 >
 > Evidence correction: the canonical public run fa5e107c selected **seller-a**, not Seller C as the supplied scenario says. Use Seller A in factual narration. The original text is retained to make this discrepancy reviewable; these scripts are illustrative explanations, not execution evidence.
 
 # Accord Lock — Synthetic Reviewer Reconstruction
 
-**Status:** Synthetic evaluation generated for demonstration purposes.  
+**Status:** Synthetic evaluation generated for demonstration purposes.<br>
 **This is not a real human usability study and must not be presented as one.**
 
 ## Scenario shown to reviewers
@@ -196,7 +196,7 @@ Matches the signed Deal and verified delivery.
 
 # Key takeaway
 
-> **Budget tells the agent how far it may go.  
+> **Budget tells the agent how far it may go.<br>
 > The signed Deal tells the system what this specific payment is actually allowed to be.**
 
 Accord Lock preserves the chain from:
