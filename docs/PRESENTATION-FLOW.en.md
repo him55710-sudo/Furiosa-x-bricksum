@@ -92,6 +92,8 @@ The default route and `#presentation` open Guided Presentation; `#presentation-l
 
 ## Remaining UX limitations
 
+Production is available at [Presentation](https://agent-spending-firewall.vercel.app/#presentation) and [Live Presentation](https://agent-spending-firewall.vercel.app/#presentation-live). Implementation commit `2deac52` was pushed to main. Vercel production deployment `dpl_8Lyor1TQ6ebdwMRyfV45kYmEUom4` is READY; both served JS/CSS files match the tested local build byte-for-byte. The readiness endpoint returned HTTP 200 with qwen3-32b available. The checked browser reported no warnings/errors, and the deployment error/fatal log query returned no entries at verification time. See [deployment.json](../artifacts/accord-lock/presentation/deployment.json), [browser-validation.json](../artifacts/accord-lock/presentation/browser-validation.json) and [production-ready.png](../artifacts/accord-lock/presentation/production-ready.png).
+
 - Guided intentionally uses the existing fixed source-table sample; custom task setup and low-level recovery remain in Detailed Deal Room.
 - Live timing, invalid model output and call limits remain real. Live invoices are never automatically rewritten to manufacture the Guided story.
 - Current execution uses private-EVM test units and existing operator-managed identities; the graph does not imply a fresh public-chain transaction. The Node edition does not export the browser's bilateral signature object, so it is labeled a committed Deal rather than displaying invented signature checks.
