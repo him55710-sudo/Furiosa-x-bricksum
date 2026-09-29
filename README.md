@@ -1,8 +1,70 @@
 # Accord Lock
 
-**Accord Lock helps research teams pay worker agents only for CAPEX table work that matches their agreement and human spending authority, with a receipt explaining the outcome.**
+**Accord Lock helps research teams pay worker agents for CAPEX table work only when the invoice matches the negotiated Deal and the human's spending authority.**
 
-[Open the permanent demo](https://agent-spending-firewall.vercel.app/) · [Public Kiln / Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [Five-minute pitch](docs/DEALTRACE-PITCH.ko.md) · [Workspace guide](docs/ACCORD-LOCK-WORKSPACE.en.md)
+[Try the browser workspace](https://agent-spending-firewall.vercel.app/) · [Track B stop records](artifacts/accord-lock/track-b-stops.json) · [Public Kiln + Sepolia run](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) · [3-minute demo plan](docs/ACCORD-LOCK-DEMO-3MIN.en.md) · [Current 8-page deck](output/pdf/Accord-Lock-Submission.en.pdf)
+
+## Track B submission evidence
+
+**Stops are recorded outcomes, not silent failures.** The two local policy attempts below used the existing DealEngine and retained `POLICY_CHECKED` and `TRANSACTION_BLOCKED` events. `STOPPED` is the submission outcome; the implementation's exact state is `BLOCKED`. These are separate from the public Kiln/Sepolia execution.
+
+| Run | Boundary pushed | Recorded result and reason | Kiln calls | Financial effect | Evidence |
+|---|---|---|---:|---|---|
+| **STOP RUN 1** | Budget 40, per-deal cap 30, seller B offers 35 | **STOPPED** (`BLOCKED`, `MAX_SINGLE`) | **0** | 0 funded; 0 paid; 0 deal transactions | [Retained event log and policy checks](artifacts/accord-lock/track-b-stops.json) |
+| **STOP RUN 2** | Seller D attempts a 20 deal; mandate permits A/B/C | **STOPPED** (`BLOCKED`, `SELLER_ALLOWED`) | **0** | 0 funded; 0 paid; 0 deal transactions | [Retained event log and policy checks](artifacts/accord-lock/track-b-stops.json) |
+| **Public agreement proof** | Signed invoice 25 differs from signed Deal 20, although both fit human budget 40 | **REVERTED** (`CLAIM_MISMATCH`) | 5 for negotiation | 0 overpayment; corrected 20 later paid | [Mined failed transaction](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59) · [run report](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) |
+
+The first two stops are reproducible with `node scripts/record-track-b-stops.mjs`; the committed [capture](artifacts/accord-lock/track-b-stops.json) is one actual execution, not a claim that the interactive browser demo ran Kiln or Sepolia. The browser sample visibly blocks the 35 offer and records its own activity entry. Its `BLOCKED` state is implemented in [the workspace](src/accord/workspace.mjs); its workers are authored rules. The second stop exercises the same deterministic deal policy directly because the browser UI does not offer an unknown seller selector. [Evidence guide](docs/TRACK-B-SUBMISSION.en.md).
+
+**The payment boundary:** human authority **40**; Kiln seller offers **22**; Kiln buyer counters and seller accepts **20**; seller signs invoice **25**. Since **25 ≠ 20**, Sepolia rejects it despite **25 < 40**. A corrected, signed invoice **20** settles and the seller withdraws. Accord Lock is the product; **DealTrace** is its signed agreement, enforcement and public-proof path.
+
+## Run it
+
+Node 24+ and pnpm:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm ade:spending:view       # http://127.0.0.1:3440/#workspace
+pnpm ade:spending:test
+pnpm ade:hosted:test
+pnpm ade:test
+```
+
+The hosted build is `pnpm ade:hosted:build`. The browser workspace needs no wallet, API key or public funds. It executes on a private browser EVM; its transactions are **not** the Sepolia transactions below. Replaying public evidence needs no secrets. [Full workspace instructions](docs/ACCORD-LOCK-WORKSPACE.en.md) · [DealTrace live/local commands](#try-it).
+
+## Kiln and chain: the representative public run
+
+`src/deal-escrow/kiln.ts` calls Kiln's `/chat/completions`; `src/dealtrace/procurement/negotiate.mjs` uses that adapter for three seller proposals, the buyer counteroffer and seller A's response. The observed model ID is **`qwen3-32b`**. Open the [raw `usage` array in the successful run report](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json) for each request ID, model, input/output tokens and timing. The [all-attempt usage audit](artifacts/dealtrace/procurement/usage-audit.json) includes the failed truncated and non-convergent attempts without rewriting their original reports.
+
+| Kiln flow | Decision influenced | Calls | Input tokens | Output tokens |
+|---|---|---:|---:|---:|
+| Seller A | Initial offer and response to counteroffer | 2 | 1,730 | 1,648 |
+| Seller B | Conflicting initial offer | 1 | 793 | 658 |
+| Seller C | Initial offer | 1 | 797 | 923 |
+| Buyer | Counteroffer | 1 | 825 | 516 |
+| **Total** | | **5** | **4,145** | **3,745** |
+
+The recorded V2 Sepolia run has these **five** transactions. Status 0 on the 25 invoice is the intended contract rejection, not a broken demo. The V2 contract stores the mandate and funded escrow, checks the signed claim amount against the locked Deal amount, credits the seller for the exact 20 settlement, then transfers the seller's credit on withdrawal. Delivery is evaluated off-chain; the contract enforces the signed claim and amount, not the factual truth of arbitrary work.
+
+| Step | Mined result | Sepolia transaction |
+|---|---|---|
+| Human mandate | Confirmed | [0xaf10…93eb](https://sepolia.etherscan.io/tx/0xaf10d26f83bd13a12708427fe9f173a849da9a4c1d596eda7f692793226093eb) |
+| Fund the 20 Deal | Confirmed | [0xe0b1…104a](https://sepolia.etherscan.io/tx/0xe0b17e51a52378b3c29122054be1f2cd720fe33542eeb7ce5bc45d3ce565104a) |
+| Signed invoice 25 | **Reverted** (`CLAIM_MISMATCH`) | [0x255d…4e59](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59) |
+| Corrected invoice 20 | Confirmed | [0x00b1…ce2f](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f) |
+| Seller withdrawal | Confirmed | [0x6a32…cb7cc](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc) |
+
+[Finalized independent verification: VALID, 47 checks at finalized block 11808905](artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json). The V3 metered proof below is a **separate local-EVM run**, not this public V2 execution.
+
+## Inference efficiency
+
+**Use Kiln where language and negotiation are necessary; use deterministic code where the answer is mechanically verifiable.** Seller proposals, buyer counteroffer and seller response use Kiln. Allowlist, budget/per-deal boundary, signatures, nonce/replay, invoice matching, mechanically checkable delivery, settlement, refund and receipt/transaction verification use code. **If code can reject an invalid request deterministically, Accord Lock does not spend an inference call rediscovering that fact.** Both recorded Track B stops used zero inference. No NPU power or energy savings were measured.
+
+## Event build disclosure
+
+The [official schedule](https://wap.gwdc.net/hackathon.html) places the kickoff on 2026-09-28 at 17:00 KST. The [initial commit](https://github.com/him55710-sudo/Furiosa-x-bricksum/commit/3d0b572) at 19:08:52 KST contained only a two-line repository README (`# Furiosa-x-bricksum` and `GWDC`). **Built during the event, as evidenced by subsequent commits:** the authored application, Accord Lock browser workspace, Kiln negotiation and logging, DealTrace signed evidence workflow, escrow contracts, Sepolia execution, verification tools, tests, demo and brief. **Pre-existing work disclosed:** no proprietary application source or assets from a previous project are identified in the tracked history. Git history cannot rule out untracked preparation, so this statement is bounded by repository evidence rather than presented as an independent audit of the authors' prior work. Third-party packages remain identified by the package manifest and their licenses. [Commit history](https://github.com/him55710-sudo/Furiosa-x-bricksum/commits/main/).
+
+## Product and proof paths
 
 **One product, two explicit execution paths:** Accord Lock is the usable workspace. DealTrace is the signed agreement and public settlement proof path. They demonstrate the same payment boundary with different runtimes.
 

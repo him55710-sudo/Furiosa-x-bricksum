@@ -1,14 +1,15 @@
-# Accord Lock — 현재 체험 순서
+# Accord Lock — Track B 최종 3분 시연 계획
 
-고정 주소: https://agent-spending-firewall.vercel.app/
+[영문 기준 원고](ACCORD-LOCK-DEMO-3MIN.en.md) · [두 정지 실행의 원본 기록](../artifacts/accord-lock/track-b-stops.json) · [공개 실행 보고서](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json)
 
-1. **Try with a sample task → Create task.** LG에너지솔루션 네 분기, 예산 40, 거래당 한도 30. 테스트 단위이며 현금 가치는 없다.
-2. **Request offers.** 35 제안이 자동 차단되고 로그가 남는다. 트랜잭션은 생성되지 않는다.
-3. **Atlas → Send counteroffer(20) → Approve & lock funds.** 22 제안을 20으로 합의하고 브라우저 EVM에 잠근다.
-4. **Run worker.** 결과 네 행과 원문 근거를 확인한다. 시연용 25 청구가 주입되어 지급 버튼이 비활성화된다. 두 한도 안이어도 합의 20과 다르다.
-5. **Use agreed invoice: 20 → Approve & pay → Verify on local chain → Export receipt.** 수정 청구·지급·검증을 끝낸다. 원하면 Reject & refund로 환불할 수 있다.
-6. **See the matching Sepolia proof.** DealTrace의 실제 Kiln 5회 / 7,890 토큰, 공개 거래 5개, finalized 47검사를 연다. 저장된 실행의 25 거절과 20 출금을 확인한다.
+목표 길이 2분 55초, 최대 3분. 화면에 `RUN 1`, `RUN 2`, `STOPPED`, 실제 엔진 상태 `BLOCKED` 및 이유 코드를 반드시 표시한다. 이전 영상은 과거 버전의 역사적 자료다.
 
-브라우저 워커는 규칙 기반이며 공개 실증은 Kiln/Qwen 기반이다. 같은 런타임·같은 거래라고 말하지 않는다. 브라우저 청구 차단은 앱 검사이고, Sepolia의 25 거절은 서명된 합의에 대한 컨트랙트 검사다.
+| 시간 | 화면과 설명 |
+|---|---|
+| **0:00–0:15 문제** | 인간 예산 40, 협상된 Deal 20, 청구 25. “예산 안의 금액도 합의한 거래가 아니면 지급할 수 없습니다.” |
+| **0:15–0:50 RUN 1** | [브라우저 샘플](https://agent-spending-firewall.vercel.app/)에서 예산 40, 거래당 한도 30, Meridian의 35 제안과 남은 `Sample offer blocked` 활동 로그를 보여준다. 별도 [엔진 실행 기록](../artifacts/accord-lock/track-b-stops.json)의 `MAX_SINGLE`, `POLICY_CHECKED`, `TRANSACTION_BLOCKED`를 보여준다. 이 기록에서는 Kiln 호출·자금 잠금·지급·Deal 거래가 모두 0이다. |
+| **0:50–1:20 RUN 2** | 허용 판매자 A/B/C와 등록되었으나 허용되지 않은 D의 20 제안을 [두 번째 실행 기록](../artifacts/accord-lock/track-b-stops.json)에서 보여준다. `SELLER_ALLOWED` 실패, `BLOCKED`, `TRANSACTION_BLOCKED`를 눈에 띄게 둔다. Kiln 호출·자금 잠금·지급·Deal 거래가 모두 0이다. 브라우저 셀러 선택 화면이 아니라 엔진 기록임을 말한다. |
+| **1:20–2:30 실제 Kiln + Sepolia** | [공개 V2 보고서](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/report.json)의 Kiln 5회, 22→20 협상, [25 청구 실패 거래](https://sepolia.etherscan.io/tx/0x255d855d5e19779fdc0fd12a02c924db0bb1980561fbc3dea98df230135e4e59), [20 정산](https://sepolia.etherscan.io/tx/0x00b1e35d51542daceacd191caabf6fd0e77b740ecb45eab0b4daa15965ecce2f), [판매자 출금](https://sepolia.etherscan.io/tx/0x6a322e82f24b1fd1b3c2d40f2215ead29c9b0c4d1899b1bb6f87cecaf95cb7cc)을 보여준다. 브라우저는 로컬·규칙 기반, 공개 증거는 실제 Kiln·Sepolia 실행으로 서로 다른 런타임과 거래다. |
+| **2:30–3:00 증거 요약** | 한 화면에 정지 2회, Kiln 5회, 입력 4,145·출력 3,745 토큰, Sepolia 거래 5개, [finalized 47개 검증](../artifacts/dealtrace/procurement/runs/fa5e107c-7a20-4a6d-9970-5f15e8d4f6e9/finalized-verification.json)을 표시한다. “Accord Lock makes the negotiated agreement the boundary for agent payment.” |
 
-발표는 [5분 원고](DEALTRACE-PITCH.ko.md)를 따른다. 이전 녹화의 숫자를 현재 대표 거래와 섞지 않는다.
+정지 사례는 말로만 주장하지 않고 보존된 이벤트를 보여준다. Sepolia의 실패 거래는 컨트랙트 집행 증거이며 지급 성공으로 표현하지 않는다.

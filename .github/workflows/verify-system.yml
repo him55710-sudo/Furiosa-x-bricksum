@@ -19,6 +19,8 @@ jobs:
           node-version: '24'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Reproduce the two deterministic Track B stops
+        run: node scripts/record-track-b-stops.mjs > /tmp/accord-track-b-stops.json
       # Discard the historical report so an interrupted run cannot upload it as new evidence.
       - run: rm -f artifacts/deal-escrow/tests.json
       - name: Compile escrow and check the committed contract artifact
@@ -39,6 +41,8 @@ jobs:
         run: pnpm run ade:spending:build
       - name: Build the deployable browser workspace with the current test report
         run: pnpm run ade:hosted:build
+      - name: Test the isolated hosted artifact and browser workspace
+        run: pnpm run ade:hosted:test
       - uses: actions/upload-artifact@v4
         if: always()
         with:
