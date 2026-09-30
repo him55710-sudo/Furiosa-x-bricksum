@@ -53,3 +53,8 @@ The browser integration test builds its own isolated hosted fixture, so a fresh 
 **Scope:** source-linked quarterly CAPEX processing is a concrete integration example. Customer demand and independent supplier operations remain unverified. The browser controller and public delivery evaluator are trusted; signatures do not prove arbitrary source truth. This is a testnet prototype, without production custody or an independent security audit.
 
 [Implementation and historical scenarios](README.technical.md) · [Acceptance work and experiment results](docs/ACCORD-ACCEPTANCE-READINESS.en.md)
+
+
+### Live Playground
+
+Open `#playground` for real Kiln / Qwen negotiation between a Buyer and three differently behaved Seller test agents. Enter your task, budget and currency; inspect model messages, the selected agreement, dynamic invoices, enforcement and DealTrace evidence. Settlement is an explicitly labeled durable test ledger with no real funds. Guided Demo remains deterministic and unchanged at `#presentation`. See [Live Playground architecture and validation](docs/LIVE-PLAYGROUND.en.md).

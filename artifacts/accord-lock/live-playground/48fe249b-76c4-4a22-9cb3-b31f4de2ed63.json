@@ -1,0 +1,177 @@
+{
+  "schema": "ACCORD_PLAYGROUND_VALIDATION_V1",
+  "scope": "Actual Kiln qwen3-32b responses. Test ledger only; no real funds.",
+  "session": {
+    "schema": "ACCORD_PLAYGROUND_V1",
+    "id": "48fe249b-76c4-4a22-9cb3-b31f4de2ed63",
+    "createdAt": 1790729739715,
+    "expiresAt": 1790730939715,
+    "model": "qwen3-32b",
+    "identities": {
+      "buyer": {
+        "address": "0xE0a8A6D9D6584933Ee5B1283352EB088b9C61e40",
+        "name": "Buyer"
+      },
+      "atlas": {
+        "address": "0x6687fC4415b2A2874e138B0C22542eB14c21D9a1",
+        "name": "Atlas"
+      },
+      "nexus": {
+        "address": "0xD7335a29bb2Be7ECC2929636881E44954c57eb02",
+        "name": "Nexus"
+      },
+      "orbit": {
+        "address": "0x27E90bbDD0A918169562DbC41B0F4afACB5524Fc",
+        "name": "Orbit"
+      }
+    },
+    "request": {
+      "task": "Buy a market research report on battery recycling opportunities",
+      "budgetMinor": 10000,
+      "perDealMinor": 10000,
+      "currency": "USD",
+      "maxDeliveryMinutes": 60,
+      "allowedSellers": [
+        "atlas",
+        "nexus",
+        "orbit"
+      ],
+      "constraints": "",
+      "session": "48fe249b-76c4-4a22-9cb3-b31f4de2ed63",
+      "expiresAt": 1790730939715
+    },
+    "messages": [
+      {
+        "schema": "ACCORD_PLAYGROUND_MESSAGE_V1",
+        "session": "48fe249b-76c4-4a22-9cb3-b31f4de2ed63",
+        "sequence": 1,
+        "actor": "atlas",
+        "to": "buyer",
+        "seller": "atlas",
+        "quote": {
+          "action": "offer",
+          "seller": "atlas",
+          "amountMinor": 10000,
+          "feeMinor": 0,
+          "currency": "USD",
+          "deliveryMinutes": 60,
+          "scope": "Buy a market research report on battery recycling opportunities",
+          "message": "Offer for market research report on battery recycling opportunities. Total cost $100.00, delivered within 60 minutes."
+        },
+        "requestId": "chat-f1d29edaf2ab4c118a0757f0dd0ca260",
+        "model": "qwen3-32b",
+        "at": 1790729752241,
+        "previousHash": null,
+        "hash": "0xe8751e90fc0fb6a0b527efcd2d65c933b9b08d786fde62c20b2bcdf6e6549152",
+        "signature": "0x6ac654b38c7ff03c87fd589422d3da1bd55a911929942afda39a55f7b11bb36a7272c45ecb9d0145ab4c9fe2187443e89914a16d10b51a1f340b2c6637531df91c",
+        "usage": {
+          "flow_name": "Accord Playground / atlas / offer",
+          "model": "qwen3-32b",
+          "request_id": "chat-f1d29edaf2ab4c118a0757f0dd0ca260",
+          "prompt_tokens": 698,
+          "completion_tokens": 679,
+          "total_tokens": 1377,
+          "start_time": "2026-09-30T00:55:39.781Z",
+          "end_time": "2026-09-30T00:55:52.241Z",
+          "latency_ms": 12460,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "f263f287092fff98f8cbd64bab1325cdb63da0fc56e04656ae55b9ed35629d36"
+        }
+      }
+    ],
+    "events": [
+      {
+        "sequence": 1,
+        "at": 1790729739715,
+        "type": "MANDATE_CREATED",
+        "previousHash": null,
+        "data": {
+          "task": "Buy a market research report on battery recycling opportunities",
+          "budgetMinor": 10000,
+          "perDealMinor": 10000,
+          "currency": "USD",
+          "maxDeliveryMinutes": 60,
+          "allowedSellers": [
+            "atlas",
+            "nexus",
+            "orbit"
+          ],
+          "constraints": "",
+          "session": "48fe249b-76c4-4a22-9cb3-b31f4de2ed63",
+          "expiresAt": 1790730939715
+        },
+        "hash": "0xbf8369b5c7c393bd588250735501a8aa41440f6dae0dc633a92c96b2e4f41b2c"
+      },
+      {
+        "sequence": 2,
+        "at": 1790729752248,
+        "type": "TERMS_RECEIVED",
+        "previousHash": "0xbf8369b5c7c393bd588250735501a8aa41440f6dae0dc633a92c96b2e4f41b2c",
+        "data": {
+          "messageHash": "0xe8751e90fc0fb6a0b527efcd2d65c933b9b08d786fde62c20b2bcdf6e6549152",
+          "actor": "atlas",
+          "seller": "atlas",
+          "quote": {
+            "action": "offer",
+            "seller": "atlas",
+            "amountMinor": 10000,
+            "feeMinor": 0,
+            "currency": "USD",
+            "deliveryMinutes": 60,
+            "scope": "Buy a market research report on battery recycling opportunities",
+            "message": "Offer for market research report on battery recycling opportunities. Total cost $100.00, delivered within 60 minutes."
+          }
+        },
+        "hash": "0x0c277da7da61b149ab3861058fee5367616b9f93d9ad421787725681d30a6b6e"
+      }
+    ],
+    "calls": 1,
+    "agreement": null,
+    "selectedSeller": null,
+    "invoices": [],
+    "decisions": [],
+    "settlement": null,
+    "stopped": false
+  },
+  "attemptLog": [
+    {
+      "id": "e2f7416a-0da4-495c-98bb-6f8ab49f6bb2",
+      "action": "offer",
+      "seller": "atlas",
+      "at": 1790729739757,
+      "result": "VALID_TOOL_PROPOSAL",
+      "completedAt": 1790729752250,
+      "usage": {
+        "model": "qwen3-32b",
+        "request_id": "chat-f1d29edaf2ab4c118a0757f0dd0ca260",
+        "prompt_tokens": 698,
+        "completion_tokens": 679,
+        "total_tokens": 1377,
+        "latency_ms": 12460,
+        "prompt_hash": "f263f287092fff98f8cbd64bab1325cdb63da0fc56e04656ae55b9ed35629d36"
+      }
+    },
+    {
+      "id": "c432ae19-adff-43b8-8071-970a26495d08",
+      "action": "offer",
+      "seller": "nexus",
+      "at": 1790729752292,
+      "result": "LIVE_SELLER_CHANGED",
+      "completedAt": 1790729763687,
+      "usage": {
+        "model": "qwen3-32b",
+        "request_id": "chat-bae60fd289094510b92174d9fdf0e204",
+        "prompt_tokens": 713,
+        "completion_tokens": 698,
+        "total_tokens": 1411,
+        "latency_ms": 11381,
+        "prompt_hash": "de088eb2db34cbe06baa0165b8d8d21cc7417cd3d2cda47f99dd7d2b33892c13"
+      }
+    }
+  ],
+  "verification": {
+    "verdict": "VALID",
+    "scope": "Integrity against included operator-owned identities; not independent identity certification or public-chain settlement."
+  }
+}

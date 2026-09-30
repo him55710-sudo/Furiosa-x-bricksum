@@ -1,0 +1,52 @@
+{
+  "schema": "ACCORD_PLAYGROUND_VALIDATION_V1",
+  "date": "2026-09-30",
+  "model": "qwen3-32b",
+  "inference": "Actual Kiln API, no replayed outputs",
+  "settlement": "TEST_LEDGER; no real funds or on-chain transaction",
+  "regressions": {
+    "passed": 70,
+    "failed": 0,
+    "includes": "existing language support regressions after integration with main 23a794f"
+  },
+  "build": "PASS including isolated hosted API import",
+  "secretScan": "PASS",
+  "actualSessions": [
+    {
+      "id": "48fe249b-76c4-4a22-9cb3-b31f4de2ed63",
+      "attempts": 2,
+      "result": "One accepted public offer; LIVE_SELLER_CHANGED validation failure preserved. Seller schema was subsequently pinned to the requested counterparty."
+    },
+    {
+      "id": "54784d23-d961-4226-a5d8-1c08ee012d80",
+      "attempts": 8,
+      "result": "Three sellers negotiated; Buyer selected Atlas; USD 80 agreement/invoice; USD 80 settled exactly once; USD 20 remaining; evidence VALID."
+    },
+    {
+      "id": "252dfa6d-36b3-4ed1-b1bb-704389c26af6",
+      "attempts": 6,
+      "result": "Nexus USD 650 proposal rejected against USD 70 per-deal limit; invalid Buyer acceptance rejected and counted. Explicit minor-unit prompt clarified. Real counter USD 70 accepted; matching invoice authorized; session stopped without settlement."
+    },
+    {
+      "id": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+      "attempts": 4,
+      "result": "Nexus USD 70 agreement/invoice; USD 70 settled; USD 30 remaining; evidence VALID."
+    }
+  ],
+  "browser": [
+    "User-defined task, budget, per-deal limit and seller allowlist",
+    "Actual autonomous offer/counter/selection responses",
+    "Approval, actual invoice, policy decision and test settlement",
+    "Evidence integrity view and keyboard Enter activation",
+    "Session restored after service restart and route changes",
+    "Guided USD 40 authority / USD 20 agreement / USD 25 blocked / USD 20 paid",
+    "1920x1080, 1440x900 and 390x844: no horizontal overflow",
+    "Historical Sepolia proof reachable with original finalized checks and separate network labeling"
+  ],
+  "limits": [
+    "No actual model-generated over-invoice was observed in these runs. Do not present fixture overcharge as Live inference.",
+    "Mismatch USD 58 against agreement USD 51 within budget USD 100, correction, and settlement are enforced in regression tests with an injected model client.",
+    "Reduced-motion behavior checked in source CSS and state semantics; OS reduced-motion emulation not available through this browser connector.",
+    "Server attachment export headers and owner authorization verified by HTTP regression; browser download completion not confirmed by connector."
+  ]
+}
