@@ -2,6 +2,7 @@ import {renderHome,renderPurchase,policyForm,defaultPolicy} from './product-view
 import {renderPresentation,presentationInspect} from './presentation-view.mjs';
 import {runGuidedStory,presentationModel} from './presentation-model.mjs';
 import {liveRequest} from './live-client.mjs';
+import {leaveLiveSession,runLiveSessionRequest} from './live-session.mjs';
 import {sendRoomMessage} from './live-chat.mjs';
 import {parseSource,csv,normalizeRows} from './workspace-model.mjs';
 import {renderWorkspace,briefForm,esc as e,amount,button} from './workspace-view.mjs';
@@ -43,7 +44,7 @@ async function loadLive(){
 }
 async function liveAction(action,guidance){
  if(action==='live-refresh'){if(live?.current)live.current=await liveRequest(undefined,live.current.session.id);else await loadLive();return;}
- if(action==='live-new'){if(live?.current&&!live.current.session.stopped&&!live.current.authorization)await liveAction('live-stop');live={...live,current:null};localStorage.removeItem('accord-live-current');job=null;return;}
+ if(action==='live-new'){await leaveLiveSession(live?.current,()=>liveAction('live-stop'));live={...live,current:null};localStorage.removeItem('accord-live-current');job=null;return;}
  if(action==='live-start'){
   present=false;
   if(!job||job.dealId||job.authorityRevoked||!['DRAFT','QUOTED','BLOCKED'].includes(job.status)){const sample=await api('/api/sample');job=await api('/api/tasks',{...sample,demoMode:false});}
@@ -53,10 +54,10 @@ async function liveAction(action,guidance){
  }
  const current=live.current;
  if(action==='live-fund'){
-  live.current=await liveRequest({action:'authorize',id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),taskId:job.id});
+  live.current=await runLiveSessionRequest(current,()=>liveRequest({action:'authorize',id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),taskId:job.id}));
   if(!job.liveSession)await mutate('live-import',{id:current.session.id});if(!job.dealId||job.status==='FUNDING')await mutate('fund');route='workspace';history.replaceState(null,'','#task/'+job.id);return;
  }
- live.current=await liveRequest({action:action.slice(5),id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),seller:live.seller??'atlas',...(guidance?{guidance}: {})});
+ live.current=await runLiveSessionRequest(current,()=>liveRequest({action:action.slice(5),id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),seller:live.seller??'atlas',...(guidance?{guidance}: {})}));
 }
 
 async function loadStory(mode){
