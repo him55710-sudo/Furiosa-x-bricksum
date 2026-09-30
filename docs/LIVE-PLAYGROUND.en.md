@@ -69,7 +69,7 @@ Remaining limitations: complete model messages arrive after each API response ra
 
 ## Recorded execution results — 2026-09-30
 
-The initial relevant regression run passed **66 tests, zero failures**. The hosted build and security scan passed. Raw actual-call evidence and a machine-readable validation report are in `artifacts/accord-lock/live-playground/validation.json` and its referenced session JSON files.
+The final relevant regression run passed **70 tests, zero failures**, including the existing language support tests after integrating main `23a794f`. The hosted build and security scan passed. Raw actual-call evidence and a machine-readable validation report are in `artifacts/accord-lock/live-playground/validation.json` and its referenced session JSON files.
 
 - **Atlas:** all three sellers returned actual offers; Buyer selected an $80.00 agreement under a $100.00 budget. The seller invoiced $80.00; enforcement authorized it; the test ledger settled $80.00 once and left $20.00 authority. Signed evidence verified VALID.
 - **Nexus:** a live $650.00 proposal exceeded the $70.00 per-deal ceiling and was visibly rejected. An invalid Buyer acceptance failed validation and consumed its attempt. After clarifying minor units in the prompt, a real $70.00 counter was accepted. This session was stopped before settlement.
@@ -77,6 +77,6 @@ The initial relevant regression run passed **66 tests, zero failures**. The host
 - No model-generated mismatched invoice was observed in these live runs. The $51 agreement / $58 invoice / $100 budget rejection, corrected invoice and once-only settlement were verified with an injected model client in regression tests, not presented as Live evidence.
 - Guided Demo was exercised in the same browser through delegation, negotiation, $25 invoice rejection, correction and $20 private-EVM payment. Live state survived round-trip navigation and a service restart.
 
-Screenshots: `live-transaction-1920.png`, `live-evidence-1920.png`, `live-settled-1440.png`, `live-mobile-390.png`, and `guided-preserved-1920.png` in that artifact directory. Desktop and 390px layouts had no horizontal overflow. Keyboard Enter opened the Evidence view. Reduced-motion CSS and state-preserving behavior were reviewed; this browser connector could not emulate the OS preference. Evidence attachment export is covered by the HTTP regression; the connector did not confirm browser download completion.
+Screenshots: `live-transaction-1920.png`, `live-evidence-1920.png`, `live-transaction-1440.png`, `live-settled-1440.png`, `live-mobile-390.png`, and `guided-preserved-1920.png` in that artifact directory. Desktop and 390px layouts had no horizontal overflow. Keyboard Enter opened the Evidence view. Reduced-motion CSS and state-preserving behavior were reviewed; this browser connector could not emulate the OS preference. Evidence attachment export is covered by the HTTP regression; the connector did not confirm browser download completion.
 
 Expired sessions remain inspectable during the existing ledger retention window (pruning occurs on new starts after expiry plus 24 hours). Export evidence for longer retention. Local preview dispatches Playground and the original operator API to separate SQLite ledgers, just as hosted mode uses separate Blob keys.
