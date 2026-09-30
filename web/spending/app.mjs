@@ -2,6 +2,7 @@ import {renderHome,renderPurchase,policyForm,defaultPolicy} from './product-view
 import {renderPresentation,presentationInspect} from './presentation-view.mjs';
 import {runGuidedStory,presentationModel} from './presentation-model.mjs';
 import {liveRequest} from './live-client.mjs';
+import {sendRoomMessage} from './live-chat.mjs';
 import {parseSource,csv,normalizeRows} from './workspace-model.mjs';
 import {renderWorkspace,briefForm,esc as e,amount,button} from './workspace-view.mjs';
 import {request,executionMode} from './workspace-client.mjs';
@@ -143,6 +144,24 @@ document.addEventListener('submit',async ev=>{
    story.composer='';
   });return;
  }
+});
+document.addEventListener('input',ev=>{if(ev.target.id==='deal-room-message'&&live)live.composer=ev.target.value;});
+document.addEventListener('submit',async ev=>{
+ if(ev.target.id!=='deal-room-message-form')return;
+ ev.preventDefault();if(busy)return;
+ const text=String(new FormData(ev.target).get('message')??'');
+ await operate('Sending your message to the live agent through Kiln…',async()=>{
+  await sendRoomMessage(()=>live,{
+   start:()=>liveAction('live-start'),
+   send:async(action,guidance)=>{
+    live.chatPending=guidance;render();
+    try{await liveAction(action,guidance);live.composer='';}
+    finally{live.chatPending=null;}
+   }
+  },text);
+ });
+ const stream=document.querySelector('.live-message-stream');if(stream)stream.scrollTop=stream.scrollHeight;
+ document.getElementById('deal-room-message')?.focus({preventScroll:true});
 });
 function sellerNamesForStory(){return {atlas:'Atlas',nexus:'Nexus',orbit:'Orbit'}[live?.seller??'atlas'];}
 
