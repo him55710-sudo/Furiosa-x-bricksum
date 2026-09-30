@@ -15,7 +15,7 @@ export function roomComposer(live){
 }
 
 export function roomHumanMessage(text,status='Sent to Kiln'){
- return `<article class="deal-room-human-message"><strong>You <small>${esc(status)}</small></strong><p>${esc(text)}</p></article>`;
+ return `<article class="deal-room-human-message"><strong>You <small>${esc(status)}</small></strong><p translate="no">${esc(text)}</p></article>`;
 }
 
 export async function sendRoomMessage(getLive,actions,text){

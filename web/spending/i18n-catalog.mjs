@@ -905,6 +905,92 @@ Spending request blocked|지출 요청 차단됨|支出请求已拦截
 {0} test USD exceeds your authority. No transaction was signed.|{0} 테스트 USD가 권한을 초과합니다. 서명된 거래는 없습니다.|{0} 测试 USD 超出授权，未签署交易。
 `;
 const validationRows = `
+{0} AM|오전 {0}|上午 {0}
+{0} PM|오후 {0}|下午 {0}
+Set your policy, message real agents, and pay only what was agreed. Explore the guided demo or connect to Kiln. Test USD, no real funds.|정책을 정하고 실제 에이전트에게 요청하며 합의한 금액만 결제하세요. 가이드 데모 또는 Kiln 연결로 체험할 수 있습니다. 테스트 USD를 사용하며 실제 자금은 없습니다.|设定规则、向真实智能体发送消息，并仅支付约定金额。体验引导演示或连接 Kiln。使用测试 USD，不涉及真实资金。
+ACCORD LOCK · DEALTRACE PUBLIC PROOF|ACCORD LOCK · DEALTRACE 공개 증빙|ACCORD LOCK · DEALTRACE 公开凭证
+The same question. Public evidence.|같은 질문에, 공개된 증거로 답합니다.|同一个问题，用公开证据回答。
+Did we pay what the agents agreed? This saved DealTrace run used Kiln / Qwen and Sepolia. Guided Demo uses authored worker rules and a private EVM. Live negotiations are new model calls, separate from this recording.|에이전트가 합의한 금액을 지급했나요? 이 저장된 DealTrace 실행은 Kiln / Qwen과 Sepolia를 사용했습니다. 가이드 데모는 작성된 처리 규칙과 프라이빗 EVM을 사용합니다. Live 협상은 이 기록과 별개의 새로운 모델 호출입니다.|是否按照智能体的约定付款？这份已保存的 DealTrace 运行使用了 Kiln / Qwen 和 Sepolia。引导演示使用预设处理规则与私有 EVM。Live 协商是新的模型调用，与此记录无关。
+RECORDED {0} · NOT A NEW EXECUTION|기록일 {0} · 새로운 실행 아님|记录于 {0} · 并非新执行
+Budget {0}. Agreed {1}. Invoice {2} rejected.|예산 {0}. 합의 {1}. 청구 {2} 차단.|预算 {0}，约定 {1}，账单 {2} 已拒绝。
+Both agents signed the same deal. Even with valid seller and evaluator signatures, the contract rejected the higher invoice. The corrected {0} was settled and withdrawn.|양측 에이전트가 같은 거래에 서명했습니다. 유효한 판매자·평가자 서명이 있어도 컨트랙트는 과다 청구를 거부했습니다. 정정된 {0}만 정산·출금되었습니다.|双方智能体签署同一协议。即使卖方和评估者签名有效，合约仍拒绝更高账单。更正后的 {0} 已结算并提取。
+Agreed & paid|합의 및 지급액|约定并支付
+Invoice rejected|청구 거부됨|账单已拒绝
+Public proof uses DEMO accounting units: 1 DEMO = 100 gwei of Sepolia test ETH. Browser demo uses 1 test unit = 1 local gwei. The economic amounts match; the networks and unit scales differ. Neither is a cash price. Gas is recorded separately.|공개 증빙은 DEMO 회계 단위를 사용합니다. 1 DEMO = Sepolia 테스트 ETH 100 gwei. 브라우저 데모는 1 테스트 단위 = 로컬 1 gwei입니다. 표현하는 거래 금액은 같지만 네트워크와 단위 크기는 다릅니다. 둘 다 현금 가격이 아니며 가스는 별도 기록합니다.|公开凭证使用 DEMO 记账单位：1 DEMO = 100 gwei 的 Sepolia 测试 ETH。浏览器演示中 1 测试单位 = 1 本地 gwei。表示的交易金额相同，但网络和单位比例不同，两者均非现金价格。Gas 单独记录。
+open-mandate|권한 위임 기록|记录授权
+fund|에스크로 입금|托管注资
+release|판매자 지급|支付卖方
+refund|환불|退款
+overbill-blocked|과다 청구 차단|拦截多收费
+settle|정산|结算
+withdraw-seller|판매자 출금|卖方提现
+CONFIRMED|확인됨 (CONFIRMED)|已确认 (CONFIRMED)
+REVERTED|되돌림 (REVERTED)|已回退 (REVERTED)
+PENDING|대기 중 (PENDING)|待处理 (PENDING)
+VALID|유효 (VALID)|有效 (VALID)
+Block {0}|블록 {0}|区块 {0}
+{0} · Chain {1}|{0} · 체인 {1}|{0} · 链 {1}
+{0} finalized checks|최종 확정 검사 {0}건|{0} 项最终确认检查
+Recorded block {0}. Open the report to inspect the original checks.|기록 블록 {0}. 보고서를 열어 원본 검증을 확인하세요.|记录区块 {0}。请打开报告查看原始检查。
+Where Kiln contributed|Kiln이 담당한 부분|Kiln 的作用
+Three sellers → five Kiln calls → 22 to 20 negotiated → 25 invoice rejected → 20 settled on Sepolia.|판매자 3개 → Kiln 호출 5회 → 22에서 20으로 협상 → 청구 25 차단 → Sepolia에서 20 정산.|3 个卖方 → 5 次 Kiln 调用 → 从 22 协商至 20 → 拒绝账单 25 → 在 Sepolia 结算 20。
+{0} actual API calls · {1} tokens · {2}. Offers and a counteroffer used inference; budgets, billing and chain verification used code.|실제 API 호출 {0}회 · 토큰 {1}개 · {2}. 제안과 역제안에는 추론을, 예산·청구·체인 검증에는 코드를 사용했습니다.|{0} 次真实 API 调用 · {1} 个 token · {2}。报价与还价使用推理，预算、账单和链上验证使用代码。
+No NPU power telemetry was collected. Token counts are measured API usage, not measured energy savings. This evidence is a saved successful run; failed development attempts remain in the|NPU 전력 측정값은 수집하지 않았습니다. 토큰 수는 API 사용량이며 실측 에너지 절감량이 아닙니다. 저장된 성공 실행의 증빙이며 개발 중 실패한 시도도 다음 원장에 남습니다:|未采集 NPU 功耗遥测。Token 数是 API 用量，并非实测节能。这是保存的成功运行证据，开发中的失败尝试仍保留于
+all-run usage ledger|전체 실행 사용량 원장|全部运行用量账本
+What is guaranteed, and by whom?|무엇을 누가 보장하나요?|由谁保障哪些事项？
+This browser:|이 브라우저:|此浏览器：
+limit and invoice checks execute in application code before signing; the local escrow runs real bytecode. Its controller is trusted.|서명 전에 애플리케이션 코드가 한도와 청구를 검사하고, 로컬 에스크로가 실제 바이트코드를 실행합니다. 제어기는 신뢰 대상입니다.|签名前由应用代码检查限额与账单，本地托管运行真实字节码。控制器是信任对象。
+Public DealTrace V2:|공개 DealTrace V2:|公开 DealTrace V2：
+signed agreement amounts and human authority are checked on Sepolia. An evaluator is still trusted for delivery quality; the chain does not establish whether a CAPEX claim is true.|Sepolia에서 서명된 합의 금액과 사람의 권한을 검사합니다. 납품 품질은 평가자를 신뢰하며 체인이 CAPEX 내용의 진위를 입증하지 않습니다.|在 Sepolia 检查已签署金额与人类授权。交付质量仍依赖评估者，链本身不证明 CAPEX 内容的真实性。
+DealTrace bundle|DealTrace 증빙 묶음|DealTrace 凭证包
+Earlier escrow scenarios · separate historical amounts|이전 에스크로 시나리오 · 별도 과거 금액|早期托管场景 · 独立历史金额
+These earlier runs cover refund, recovery and outcome-driven restrictions. They are not the 40 / 20 / 25 procurement run above.|이전 실행은 환불·복구·결과 기반 제한을 다룹니다. 위의 40 / 20 / 25 구매 실행과는 다릅니다.|这些早期运行涵盖退款、恢复和基于结果的限制，不是上方的 40 / 20 / 25 采购运行。
+The public proof summary could not load. Open the original bundle below; no verification result is assumed.|공개 증빙 요약을 불러오지 못했습니다. 아래 원본 묶음을 여세요. 검증 결과를 임의로 가정하지 않습니다.|无法加载公开凭证摘要。请打开下方原始数据包，系统不会假定验证成功。
+Procurement / seller-a|구매 / 판매자 A|采购 / 卖方 A
+Procurement / seller-b|구매 / 판매자 B|采购 / 卖方 B
+Procurement / seller-c|구매 / 판매자 C|采购 / 卖方 C
+Procurement / buyer|구매 / 구매자|采购 / 买方
+A quality-first worker that preserves the complete source metadata with every row.|각 행의 모든 출처 메타데이터를 보존하는 품질 우선 처리기.|优先保证质量、保留每行完整来源元数据的处理程序。
+A speed-first worker that prioritizes short delivery windows and margin.|짧은 납품 시간과 마진을 우선하는 속도 중심 처리기.|优先考虑短交付时间和利润的速度型处理程序。
+Normalize the table, preserve source references and compare every result with your input.|표를 정규화하고 출처를 보존하며 모든 결과를 입력과 비교합니다.|规范化表格、保留来源引用，并将所有结果与输入比较。
+Source-aware data worker|출처를 보존하는 데이터 처리기|保留来源的数据处理程序
+Spending authority|지출 권한|支出授权
+Agreed amount|합의 금액|约定金额
+Selected offer|선택한 제안|选定报价
+Invoice rejected|청구 거부됨|账单已拒绝
+STOP RECORDED|중지 기록됨|停止已记录
+PAID · EXACT AGREEMENT|지급 완료 · 합의 금액 일치|已付款 · 与协议完全一致
+AGREEMENT CONTROLS PAYMENT|합의가 결제를 제어합니다|协议控制付款
+Worker proposes|처리기가 제안합니다|处理程序提出建议
+Offer exceeds authority|제안이 권한 초과|报价超出授权
+Agreement + delivery + invoice match|합의 + 납품 + 청구 일치|协议、交付与账单一致
+Policy checks authority and agreement|정책이 권한과 합의를 검사합니다|规则检查授权与协议
+No funds locked|예치된 자금 없음|无锁定资金
+Task ID:|업무 ID:|任务 ID：
+Recorded event|기록된 사건|已记录事件
+Funding signatures: 0 · Seller payout: 0|입금 서명: 0 · 판매자 지급: 0|注资签名：0 · 卖方收款：0
+Payout signatures: 0 · Seller payout: 0 · Existing escrow remains locked|지급 서명: 0 · 판매자 지급: 0 · 기존 에스크로 잠금 유지|付款签名：0 · 卖方收款：0 · 现有托管保持锁定
+Live local workflow · authored worker rules · private EVM · test units. Kiln / Sepolia evidence is a separate recorded run.|실시간 로컬 흐름 · 작성된 처리 규칙 · 프라이빗 EVM · 테스트 단위. Kiln / Sepolia 증빙은 별도의 기록된 실행입니다.|实时本地流程 · 预设处理规则 · 私有 EVM · 测试单位。Kiln / Sepolia 证据来自独立的记录运行。
+Message the live agents|Live 에이전트에게 메시지 보내기|向 Live 智能体发送消息
+Message Buyer|구매 에이전트에게 메시지 보내기|向采购智能体发送消息
+Message {0}|{0}에게 메시지 보내기|向 {0} 发送消息
+Tell the agent what to negotiate. Your message goes to Kiln; your spending rules stay in force.|협상할 내용을 에이전트에게 알려주세요. 메시지는 Kiln으로 전송되며 지출 정책은 계속 적용됩니다.|告诉智能体协商什么。消息将发送至 Kiln，支出规则仍然有效。
+Can you offer a lower price without reducing source coverage?|출처 범위를 줄이지 않고 가격을 낮출 수 있나요?|能否在不减少来源覆盖的情况下降低价格？
+Send message|메시지 보내기|发送消息
+Waiting for the actual Kiln response…|실제 Kiln 응답 대기 중…|正在等待真实 Kiln 回应…
+Agents stopped. Start a new negotiation to send messages.|에이전트가 중지되었습니다. 메시지를 보내려면 새 협상을 시작하세요.|智能体已停止，请开始新协商以发送消息。
+Agreement locked. Approve the signed deal or start a new negotiation.|합의가 확정되었습니다. 서명된 거래를 승인하거나 새 협상을 시작하세요.|协议已锁定，请批准已签协议或开始新协商。
+A model request is running. Wait, refresh, or stop the agents.|모델 요청 처리 중입니다. 기다리거나 상태를 새로고침하거나 에이전트를 중지하세요.|模型请求正在执行。请等待、刷新或停止智能体。
+All 8 model calls have been used. Start a new negotiation.|모델 호출 8회를 모두 사용했습니다. 새 협상을 시작하세요.|8 次模型调用已用完，请开始新协商。
+Connect the live service with available calls to send a message.|메시지를 보내려면 호출 잔여량이 있는 Live 서비스에 연결하세요.|请连接仍有调用额度的 Live 服务以发送消息。
+Enter a message between 1 and 1,200 characters.|메시지를 1~1,200자로 입력하세요.|请输入 1 至 1,200 个字符的消息。
+Sending to Kiln…|Kiln으로 전송 중…|正在发送至 Kiln…
+Sending your message to the live agent through Kiln…|Kiln을 통해 Live 에이전트에게 메시지 전송 중…|正在通过 Kiln 向 Live 智能体发送消息…
+Live session expired|Live 세션 만료|Live 会话已到期
+This Live session expired after 20 minutes. Start a new negotiation to continue. Previous conversation and proof remain available in the saved task.|Live 세션이 20분 후 만료되었습니다. 계속하려면 새 협상을 시작하세요. 이전 대화와 증빙은 저장된 업무에서 확인할 수 있습니다.|此 Live 会话已在 20 分钟后到期。请开始新协商以继续。此前的对话与凭证仍可在已保存任务中查看。
+Start a new negotiation|새 협상 시작|开始新协商
+Your task is with Atlas. Waiting for the actual Kiln response…|Atlas에 업무가 전달되었습니다. 실제 Kiln 응답 대기 중…|任务已交给 Atlas，正在等待真实 Kiln 回应…
+Sending your instruction to {0} through Kiln…|Kiln을 통해 {0}에 지시 전송 중…|正在通过 Kiln 向 {0} 发送指令…
 Give this task a title between 3 and 100 characters.|업무 제목을 3~100자로 입력하세요.|请输入 3 至 100 个字符的任务标题。
 Describe the required work in 10 to 4,000 characters.|업무 설명을 10~4,000자로 입력하세요.|请用 10 至 4,000 个字符描述任务。
 Use whole test-unit amounts. The per-deal limit cannot exceed the task budget.|정수 테스트 금액을 사용하세요. 거래당 한도는 업무 예산을 초과할 수 없습니다.|请使用整数测试金额，每笔限额不能超过任务预算。

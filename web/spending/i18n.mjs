@@ -40,6 +40,8 @@ export function installLanguageUI() {
   const attributes = new WeakMap();
   const excluded = 'script,style,pre,code,textarea,input,option,[translate="no"],.hash,.original-content';
   const labels = {en:'Language', ko:'언어', 'zh-CN':'语言'};
+  const description=document.querySelector('meta[name="description"]');
+  const originalDescription=description?.content;
   const remember = (map, node, value) => {
     const prior = map.get(node);
     return prior && prior.output === value ? prior.original : value;
@@ -49,6 +51,7 @@ export function installLanguageUI() {
     try {
       document.documentElement.lang = language;
       document.title = translate('Accord Lock — The agreement decides what gets paid.', language);
+      if(description)description.content=translate(originalDescription,language);
       const header = document.querySelector('.home-nav,.purchase-top,.topbar,.story-topbar') ?? document.querySelector('.boot');
       if (header && !header.querySelector('[data-language-picker]')) {
         const label = document.createElement('label');
