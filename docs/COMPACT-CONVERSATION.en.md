@@ -15,3 +15,5 @@ Verified evidence has six historical cards and no execution grid; details has cu
 45 relevant tests passed: conversation-room, i18n, product-workflow, presentation, spending-site, deal-room-chat, live-session-recovery, playground and accord-live-http. Production build passed with the existing bundle-size warning. Financial and model execution semantics are unchanged.
 
 Evidence: artifacts/accord-lock/compact-room/deal-1440.png, mobile-390.png. Production screenshots are added after deployment verification.
+
+Production deployment `dpl_93QA6ZfHNRaLFisbPZM6NTgDf2bg` is READY. The main alias served `/assets/index-7URzCeIA.js`; browser measurement confirmed 1248px conversation width and 71px composer height. Production evidence and detail controls displayed different content as intended. At 1920px, the conversation width is 1728px with no horizontal overflow. Screenshot: artifacts/accord-lock/compact-room/production-wide-ko.png.
