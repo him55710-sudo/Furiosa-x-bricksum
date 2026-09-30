@@ -1,18 +1,61 @@
 # Accord Lock
 
-**Accord Lock controls delegated agent spending by binding payment to the deal the agents actually agreed on, while DealTrace preserves and verifies the agreement, delivery, invoice, and settlement evidence.**
+### The agreement decides what gets paid.
+
+AI agents can find suppliers, negotiate terms and carry out purchases. **A spending limit tells an agent how far it may negotiate; it does not tell a payment system what the buyer and seller finally agreed to.** Accord Lock closes that gap. It checks the buyer's authority, the agreed terms, the invoice and delivery evidence before settlement. DealTrace preserves the record needed to explain and verify the result.
 
 [Open Accord Lock](https://agent-spending-firewall.vercel.app/#home) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Product workflow](docs/PRODUCT-WORKFLOW.en.md)
 
-[Submission video · 165 seconds](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) · [Submission deck · 8 pages](output/pdf/accord-lock-track-b.pdf) · [Track B submission guide](docs/TRACK-B-SUBMISSION.ko.md)
+[Watch the 165-second demo](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) · [Submission deck · 8 pages](output/pdf/accord-lock-track-b.pdf) · [Track B submission guide](docs/TRACK-B-SUBMISSION.ko.md)
 
-**Example only: budget $40 → negotiated deal $20 → invoice $25 BLOCKED → $20 PAID.**
+## Why agent commerce needs an agreement lock
 
-**$25 < $40, but $25 ≠ $20.** A spending budget does not authorize a seller to rewrite an agreed price. AI proposes terms; deterministic policy and the settlement contract authorize money movement.
+Traditional checkout starts with a fixed offer that a person reviews and approves. Agent commerce can start with an objective instead: find suitable capacity, data or work within a budget and deadline. Buyer and seller agents can compare alternatives and negotiate price, quantity, delivery time and quality requirements before anyone sends an invoice.
 
-Amounts such as **$40, $25 and $15 are illustrative examples, not fixed product limits or pricing**. The new interface displays **test USD ($)**: one displayed dollar represents one existing whole test unit, with **no cash value, USD deposit, or stablecoin claim**. The contract's units and settlement semantics are unchanged. Human budgets and per-transaction limits are editable in both Demo and Live setup. Changing a bound Live mandate starts a separate purchase instead of rewriting signed authority.
+| Traditional commerce | Agent-to-agent commerce |
+|---|---|
+| Person searches and compares fixed offers | Buyer agent discovers and compares offers in parallel |
+| Price and delivery are predefined | Agents can trade price against timing, capacity and terms |
+| Person approves a checkout | Person delegates bounded authority; agents reach a specific agreement |
+| Checkout amount is the approved amount | Invoice must be checked against the negotiated agreement |
 
-The [main page](https://agent-spending-firewall.vercel.app/#home) offers **Try Demo** and **Go Live**. In Demo, follow the deterministic agent conversation, submit a counteroffer and pause at saved gate incidents. In Live, type a task or negotiation guidance directly into the composer; it reaches actual Kiln inference and is retained with the public model input. Messages cannot override spending rules or signed terms. Conversation/incident export and the original receipt verification remain separate and accessible. [Product workflow and validation](docs/PRODUCT-WORKFLOW.en.md).
+That last step creates a new payment boundary:
+
+| Stage | Illustrative amount | What it means |
+|---|---:|---|
+| Human mandate | $40 maximum | The agent may negotiate within this authority. |
+| Buyer–seller agreement | $20 | This is the price the parties accepted. |
+| Seller invoice | $25 | It fits the budget but changes the deal: **BLOCK**. |
+| Corrected invoice, after delivery checks | $20 | It matches the deal: **PAY**. |
+
+**$25 < $40, but $25 ≠ $20.** A budget-only control would miss the overcharge. Accord Lock treats the agreement as a separate constraint on settlement, alongside the human mandate and delivery requirements.
+
+These dollar figures illustrate the rule; they are not product pricing or fixed limits. The interface displays **test USD ($)**, where one displayed dollar represents one whole test unit. It has no cash value and does not imply a USD deposit or stablecoin. Human budgets and per-transaction limits are editable in both Demo and Live setup.
+
+## From negotiation to enforceable payment
+
+```mermaid
+flowchart LR
+    H[Human sets intent and spending authority] --> B[Buyer agent]
+    B <--> |Offers and counteroffers| S[Seller agent]
+    B --> D[Specific agreement]
+    S --> D
+    D --> L[Accord Lock]
+    H --> L
+    I[Invoice and delivery evidence] --> L
+    L --> |Terms and checks pass| P[Settle and issue receipt]
+    L --> |Mismatch or failed check| X[Block or refund and record why]
+```
+
+Language models help negotiate flexible offers. **Deterministic checks control the money:** the requested payment must satisfy the human mandate and match the accepted deal; delivery must pass the supported verification before release. DealTrace links negotiation, agreement, invoice, delivery and settlement evidence so the decision can be reconstructed later. Changing a bound Live mandate starts a separate purchase instead of silently rewriting signed authority.
+
+The current product uses source-linked quarterly CAPEX table work as a concrete procurement example. Its public proof includes a Kiln negotiation from 22 to 20 and a genuinely signed 25 invoice rejected by the Sepolia contract. The corrected 20 was settled and withdrawn. This demonstrates the agreement boundary for that supported workflow.
+
+## Try the product
+
+The [main page](https://agent-spending-firewall.vercel.app/#home) offers **Try Demo** and **Go Live**. In Demo, follow the deterministic agent conversation, submit a counteroffer and pause at saved gate incidents. In Live, type a task or negotiation guidance directly into the composer; it reaches actual Kiln inference and is retained with the model input. Messages cannot override spending rules or signed terms. Budget controls, stop, conversation export and receipt verification remain accessible. [Product workflow and validation](docs/PRODUCT-WORKFLOW.en.md).
+
+## What we have demonstrated
 
 | Acceptance criterion | Inspect the evidence |
 |---|---|
