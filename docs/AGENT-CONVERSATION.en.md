@@ -19,7 +19,7 @@ Browser-local conversation history is explicitly distinguished from signed settl
 
 ## Validation
 
-35 tests passed across conversation-room, i18n, product-workflow, presentation, spending-site, deal-room-chat and live-session-recovery. Production bundle build passed (existing large-bundle warning). Browser verification covered keyboard Start demo, prepared Korean prompt, three named sellers, authority block, negotiation, invoice mismatch, expandable original record, same-URL inspection, corrected settlement and receipt verification VALID. Language changes preserve transaction state. Checked widths 1440, 1920 and 390 with no document horizontal overflow. Reduced-motion UI enabled during settlement. No new live model call was made for this presentation-only change; Live regression tests were run.
+44 tests passed across conversation-room, i18n, product-workflow, presentation, spending-site, deal-room-chat, live-session-recovery, playground and accord-live-http after integrating the current main branch. Production bundle build passed (existing large-bundle warning). Browser verification covered keyboard Start demo, prepared Korean prompt, three named sellers, authority block, negotiation, invoice mismatch, expandable original record, same-URL inspection, corrected settlement and receipt verification VALID. Language changes preserve transaction state. Checked widths 1440, 1920 and 390 with no document horizontal overflow. Reduced-motion UI enabled during settlement. No new live model call was made for this presentation-only change; Live regression tests were run.
 
 Evidence:
 - ../artifacts/accord-lock/agent-room/agreement-1440-ko.png
@@ -27,3 +27,7 @@ Evidence:
 - ../artifacts/accord-lock/agent-room/detailed-1920-en.png
 
 Limits: Guided agents use deterministic rules, not an LLM. The source-table worker is unchanged. Raw evidence is intentionally not translated or renamed. Clearing browser storage removes local history. OS reduced-motion emulation was not available; the UI override and existing media rule remain supported.
+
+Production: implementation and current Live Playground merged in `2a7c1c7`, pushed to main. Vercel deployment `dpl_FyzNSFiDXVktu3zeNe4iQyJsaH4v` is READY at https://agent-spending-firewall.vercel.app/. Current main Live Playground routing was preserved during integration.
+
+Production browser evidence: `artifacts/accord-lock/agent-room/production-1440-ko.png` and `production-evidence-ko.png`. The production page loaded `/assets/index-YchrMsYr.js`; starting and sending the prepared Korean prompt produced the actual $35 authority block, and inspection retained `#presentation`.
