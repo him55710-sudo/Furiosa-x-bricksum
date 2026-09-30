@@ -2,13 +2,17 @@
 
 **Accord Lock controls delegated agent spending by binding payment to the deal the agents actually agreed on, while DealTrace preserves and verifies the agreement, delivery, invoice, and settlement evidence.**
 
-[Open the demo](https://agent-spending-firewall.vercel.app/#presentation) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Four-action presentation](docs/PRESENTATION-FLOW.en.md)
+[Open Accord Lock](https://agent-spending-firewall.vercel.app/#home) · [Kiln + Sepolia proof](https://agent-spending-firewall.vercel.app/#evidence) · [CI status](https://github.com/him55710-sudo/Furiosa-x-bricksum/actions/workflows/verify-system.yml) · [Product workflow](docs/PRODUCT-WORKFLOW.en.md)
 
 [Submission video · 165 seconds](artifacts/accord-lock/submission/accord-lock-track-b-165s.ko.mp4) · [Submission deck · 8 pages](output/pdf/accord-lock-track-b.pdf) · [Track B submission guide](docs/TRACK-B-SUBMISSION.ko.md)
 
-**Human budget 40 → negotiated deal 20 → invoice 25 BLOCKED → 20 PAID.**
+**Example only: budget $40 → negotiated deal $20 → invoice $25 BLOCKED → $20 PAID.**
 
-**25 < 40, but 25 ≠ 20.** A spending budget does not authorize a seller to rewrite an agreed price. AI proposes terms; deterministic policy and the settlement contract authorize money movement.
+**$25 < $40, but $25 ≠ $20.** A spending budget does not authorize a seller to rewrite an agreed price. AI proposes terms; deterministic policy and the settlement contract authorize money movement.
+
+Amounts such as **$40, $25 and $15 are illustrative examples, not fixed product limits or pricing**. The new interface displays **test USD ($)**: one displayed dollar represents one existing whole test unit, with **no cash value, USD deposit, or stablecoin claim**. The contract's units and settlement semantics are unchanged. Human budgets and per-transaction limits are editable in both Demo and Live setup. Changing a bound Live mandate starts a separate purchase instead of rewriting signed authority.
+
+The [main page](https://agent-spending-firewall.vercel.app/#home) offers **Try Demo** and **Go Live**. In Demo, follow the deterministic agent conversation, submit a counteroffer and pause at saved gate incidents. In Live, type a task or negotiation guidance directly into the composer; it reaches actual Kiln inference and is retained with the public model input. Messages cannot override spending rules or signed terms. Conversation/incident export and the original receipt verification remain separate and accessible. [Product workflow and validation](docs/PRODUCT-WORKFLOW.en.md).
 
 | Acceptance criterion | Inspect the evidence |
 |---|---|

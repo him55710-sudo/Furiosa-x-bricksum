@@ -1,3 +1,4 @@
+import {renderHome,renderPurchase,policyForm,defaultPolicy} from './product-view.mjs';
 import {renderPresentation,presentationInspect} from './presentation-view.mjs';
 import {runGuidedStory,presentationModel} from './presentation-model.mjs';
 import {liveRequest} from './live-client.mjs';
@@ -9,6 +10,11 @@ let proof=null;
 let story={reduceMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,mode:'guided',receipt:null,verification:null,pending:null,animate:false},storyRenderKey='',storyProjection=null;
 const isStory=()=>route==='presentation'||route==='presentation-live';
 const storyState=()=>({job,live,mode:story.mode,receipt:story.receipt,verification:story.verification,pending:story.pending,story});
+function savedJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
+function loadNotes(){story.messages=job?savedJSON('accord-notes-'+job.id,[]):[];}
+function saveNotes(){if(job)localStorage.setItem('accord-notes-'+job.id,JSON.stringify(story.messages??[]));}
+function readPolicy(){return {...defaultPolicy,...savedJSON('accord-purchase-policy',{})};}
+async function createStoryTask(){const sample=await api('/api/sample');job=await api('/api/tasks',{...sample,...(story.policy??readPolicy()),demoMode:story.mode!=='live'});if(story.mode!=='live')localStorage.setItem('accord-story-guided',job.id);loadNotes();}
 let creating=false,live=null;
 let renderedDeal=null,renderedStage=null;
 let token='',network=null,tasks=[],job=null,busy=false,present=false,route='workspace',sourceText='',sourceName='',lastFocus=null,draft={...empty};
@@ -20,7 +26,7 @@ async function refreshList(){const state=await api('/api/workspace');token=state
 async function operate(label,fn){if(busy)return;busy=true;story.error=null;const bar=$('#operation');bar.textContent=label;bar.hidden=false;const previousDisabled=new Map([...document.querySelectorAll('button:not([data-close])')].map(b=>[b,b.disabled]));previousDisabled.forEach((_was,b)=>b.disabled=true);document.querySelector('[data-action="live-stop"]')?.removeAttribute('disabled');try{await fn();await refreshList();render();}catch(err){story.error=err.message;if(job){try{job=await api('/api/tasks/'+job.id);}catch{}}render();showError(err.message);}finally{busy=false;story.pending=null;if(isStory()){render();document.querySelector('.story-actions .primary')?.focus({preventScroll:true});}previousDisabled.forEach((was,b)=>{if(b.isConnected)b.disabled=was;});}}
 async function mutate(action,fields={}){job=await api(`/api/tasks/${job.id}/${action}`,{revision:job.revision,...fields});}
 function captureDraft(form=$('#brief-form')){if(form){const d=new FormData(form);draft={demoMode:draft.demoMode===true,title:d.get('title'),brief:d.get('brief'),budget:Number(d.get('budget')),perDeal:Number(d.get('perDeal')),deliveryMinutes:Number(d.get('deliveryMinutes'))};}}
-function render(){const changed=renderedDeal!==job?.id||renderedStage!==job?.status;renderedDeal=job?.id;renderedStage=job?.status;document.body.classList.toggle('presentation-mode',present);const storyKey=[job?.id,job?.revision,live?.current?.revision,story.receipt?.task?.id,story.verification?.verdict].join(':');const nextProjection=isStory()?presentationModel(storyState()):null;story.motionNodes=nextProjection&&storyProjection?Object.keys(nextProjection.nodes).filter(id=>nextProjection.nodes[id]&&(!storyProjection.nodes[id]||id==='invoice'&&nextProjection.invoice!==storyProjection.invoice||id==='negotiation'&&JSON.stringify(nextProjection.packets)!==JSON.stringify(storyProjection.packets)||id==='authority'&&nextProjection.proposed!==storyProjection.proposed)):[];story.animate=isStory()&&storyRenderKey!==storyKey;storyProjection=nextProjection;storyRenderKey=storyKey;$('#app').innerHTML=isStory()?renderPresentation(storyState()):renderWorkspace({job,tasks,route,present,network,proof,draft,sourceText,sourceName,creating,live});if(isStory()&&story.error){$('#error').textContent=story.error;$('#error').hidden=false;}if(isStory()&&busy)document.querySelectorAll('.story-actions button:not([data-action="live-stop"])').forEach(b=>b.disabled=true);const stream=$('.negotiation-stream');if(stream)stream.scrollTop=stream.scrollHeight;if(changed&&!isStory())window.scrollTo({top:0,behavior:'instant'});if(job?.authorityRevoked){for(const action of ['edit','quotes','select','counter','negotiate','accept-counter',...(!job.dealId?['fund']:[])])document.querySelectorAll(`[data-action="${action}"]`).forEach(b=>b.disabled=true);document.querySelectorAll('[data-select],#counter-form button').forEach(b=>b.disabled=true);}if(!job&&route==='workspace'&&$('#brief-form'))bindForm();$('#counter-form')?.addEventListener('submit',ev=>{ev.preventDefault();operate('Sending your counteroffer…',()=>mutate('counter',{price:Number(new FormData(ev.currentTarget).get('price'))}));});$('#invoice-form')?.addEventListener('submit',ev=>{ev.preventDefault();const n=Number(new FormData(ev.currentTarget).get('amount'));operate('Checking the invoice against the agreement…',()=>mutate('invoice',{amount:n}));});}
+function render(){const changed=renderedDeal!==job?.id||renderedStage!==job?.status;renderedDeal=job?.id;renderedStage=job?.status;document.body.classList.toggle('presentation-mode',present);const storyKey=[job?.id,job?.revision,live?.current?.revision,story.receipt?.task?.id,story.verification?.verdict].join(':');const nextProjection=isStory()?presentationModel(storyState()):null;story.motionNodes=nextProjection&&storyProjection?Object.keys(nextProjection.nodes).filter(id=>nextProjection.nodes[id]&&(!storyProjection.nodes[id]||id==='invoice'&&nextProjection.invoice!==storyProjection.invoice||id==='negotiation'&&JSON.stringify(nextProjection.packets)!==JSON.stringify(storyProjection.packets)||id==='authority'&&nextProjection.proposed!==storyProjection.proposed)):[];story.animate=isStory()&&storyRenderKey!==storyKey;storyProjection=nextProjection;storyRenderKey=storyKey;$('#app').innerHTML=route==='home'?renderHome():isStory()?renderPurchase(storyState()):renderWorkspace({job,tasks,route,present,network,proof,draft,sourceText,sourceName,creating,live});if(isStory()&&story.error){$('#error').textContent=story.error;$('#error').hidden=false;}if(isStory()&&busy)document.querySelectorAll('.story-actions button:not([data-action="live-stop"])').forEach(b=>b.disabled=true);const stream=$('.purchase-transcript')??$('.negotiation-stream');if(stream)stream.scrollTop=stream.scrollHeight;if(changed&&!isStory())window.scrollTo({top:0,behavior:'instant'});if(job?.authorityRevoked){for(const action of ['edit','quotes','select','counter','negotiate','accept-counter',...(!job.dealId?['fund']:[])])document.querySelectorAll(`[data-action="${action}"]`).forEach(b=>b.disabled=true);document.querySelectorAll('[data-select],#counter-form button').forEach(b=>b.disabled=true);}if(!job&&route==='workspace'&&$('#brief-form'))bindForm();$('#counter-form')?.addEventListener('submit',ev=>{ev.preventDefault();operate('Sending your counteroffer…',()=>mutate('counter',{price:Number(new FormData(ev.currentTarget).get('price'))}));});$('#invoice-form')?.addEventListener('submit',ev=>{ev.preventDefault();const n=Number(new FormData(ev.currentTarget).get('amount'));operate('Checking the invoice against the agreement…',()=>mutate('invoice',{amount:n}));});}
 function bindFile(scope=document){scope.querySelector('#source-file')?.addEventListener('change',async ev=>{const form=scope.querySelector('#brief-form');captureDraft(form);try{const file=ev.target.files[0];if(!file)return;if(file.size>1_000_000)throw Error('Choose a file smaller than 1 MB.');const raw=await file.text();parseSource(raw);draft.demoMode=false;sourceText=raw;sourceName=file.name;scope.querySelector('#source-name').textContent=sourceName;scope.querySelector('#source-count').textContent=`${parseSource(raw).length} rows · stored on this computer`;}catch(err){announce(err.message);}});}
 function bindForm(){bindFile();$('#brief-form').addEventListener('submit',ev=>{ev.preventDefault();captureDraft();if(!sourceText){showError('Choose a source file, or use the sample task.');return;}const spec={...draft,sourceText,sourceName};operate('Saving your task and source table…',async()=>{job=await api('/api/tasks',spec);history.replaceState(null,'',`#task/${job.id}`);});});}
 function modal(html,drawer=false){lastFocus=document.activeElement;$('#detail').classList.toggle('proof-detail',drawer);$('#dialog-content').innerHTML=`<button class="dialog-close" data-close aria-label="Close dialog">×</button>${html}`;if(!$('#detail').open)$('#detail').showModal();}
@@ -34,7 +40,7 @@ async function loadLive(){
  else if(job&&!job.dealId)live.current=null;
  else if(saved&&!live.current){try{live.current=await liveRequest(undefined,saved.id);job=await api('/api/tasks/'+saved.taskId);}catch{localStorage.removeItem('accord-live-current');}}
 }
-async function liveAction(action){
+async function liveAction(action,guidance){
  if(action==='live-refresh'){if(live?.current)live.current=await liveRequest(undefined,live.current.session.id);else await loadLive();return;}
  if(action==='live-new'){if(live?.current&&!live.current.session.stopped&&!live.current.authorization)await liveAction('live-stop');live={...live,current:null};localStorage.removeItem('accord-live-current');job=null;return;}
  if(action==='live-start'){
@@ -49,11 +55,11 @@ async function liveAction(action){
   live.current=await liveRequest({action:'authorize',id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),taskId:job.id});
   if(!job.liveSession)await mutate('live-import',{id:current.session.id});if(!job.dealId||job.status==='FUNDING')await mutate('fund');route='workspace';history.replaceState(null,'','#task/'+job.id);return;
  }
- live.current=await liveRequest({action:action.slice(5),id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),seller:live.seller??'atlas'});
+ live.current=await liveRequest({action:action.slice(5),id:current.session.id,revision:current.revision,operationId:crypto.randomUUID(),seller:live.seller??'atlas',...(guidance?{guidance}: {})});
 }
 
 async function loadStory(mode){
- story={reduceMotion:story.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches,mode,receipt:null,verification:null,pending:null,animate:false};storyRenderKey='';storyProjection=null;
+ story={reduceMotion:story.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches,mode,receipt:null,verification:null,pending:null,animate:false,policy:readPolicy(),view:'chat'};storyRenderKey='';storyProjection=null;
  if(mode==='guided'){
   const id=localStorage.getItem('accord-story-guided');job=null;
   if(id){try{const saved=await api('/api/tasks/'+id);if(saved.demoMode&&!saved.liveSessionId)job=saved;}catch{localStorage.removeItem('accord-story-guided');}}
@@ -62,6 +68,7 @@ async function loadStory(mode){
   if(!job?.liveSessionId)job=null;
   try{await loadLive();if(!job&&live?.current){const saved=JSON.parse(localStorage.getItem('accord-live-current')??'null');if(saved?.id===live.current.session.id)job=await api('/api/tasks/'+saved.taskId);}}catch(error){live={available:false,error:error.message};}
  }
+ loadNotes();
  if(job?.status==='COMPLETED'){story.receipt=await api('/api/tasks/'+job.id+'/receipt');story.verification=await api('/api/tasks/'+job.id+'/verify');}
 }
 async function storyCheckpoint(){
@@ -75,13 +82,13 @@ async function storyReceipt(){
 async function storyAction(action){
  if(action==='new'){
   if(story.mode==='live')await liveAction('live-new');else localStorage.removeItem('accord-story-guided');
-  job=null;story.receipt=null;story.verification=null;return;
+  job=null;story.receipt=null;story.verification=null;story.messages=[];story.composer='';story.chosenSeller=null;return;
  }
  const labels={delegate:'Creating your mandate and requesting offers…',negotiate:'Buyer and Atlas are exchanging terms…',approve:'Confirming signatures, escrow and delivery…',pay:'Checking the corrected invoice and confirming settlement…',receipt:'Verifying the actual receipt…','live-start':'Delegating your mandate…','live-offer':'Seller is preparing an offer…','live-counter':'Buyer is comparing the terms…','live-respond':'Seller is evaluating the counteroffer…','live-agree':'Verifying terms and creating both signatures…','live-execute':'Funding the approved agreement and executing the source-table worker…','live-pay':'Checking the actual invoice before settlement…'};
  story.pending={action,label:labels[action]??'Reading the current transaction…'};render();
  if(story.mode==='guided')return runGuidedStory(action,{
   getJob:()=>job,
-  create:async()=>{const sample=await api('/api/sample');job=await api('/api/tasks',sample);localStorage.setItem('accord-story-guided',job.id);},
+  create:createStoryTask,seller:story.chosenSeller,
   mutate:async(name,fields)=>{story.pending={action:name,label:({quotes:'Requesting the three deterministic offers…',select:'Buyer is choosing Atlas…',counter:'Buyer and Atlas are exchanging terms…',fund:'Confirming both signatures and funding escrow…',run:'Reading the source table and validating delivery…',invoice:'Checking the corrected invoice against the signed deal…',settle:'Confirming the private-EVM settlement…'})[name]};render();await mutate(name,fields);},checkpoint:storyCheckpoint,receipt:storyReceipt
  });
  if(action==='receipt'){await storyReceipt();return;}
@@ -90,12 +97,60 @@ async function storyAction(action){
   if(job.status==='LOCKED'){await mutate('run');await storyCheckpoint();}
  }else if(action==='live-pay'){
   await mutate('settle');await storyCheckpoint();if(job.status==='COMPLETED')await storyReceipt();
- }else await liveAction(action);
+ }else {if(action==='live-start'&&!job)await createStoryTask();await liveAction(action);}
 }
 document.addEventListener('change',ev=>{if(ev.target.id==='story-motion'){story.reduceMotion=ev.target.checked;render();document.querySelector('#story-motion')?.focus();return;}if(ev.target.id==='story-seller'&&!busy){live.seller=ev.target.value;render();}});
 
+document.addEventListener('input',ev=>{if(ev.target.id==='purchase-message')story.composer=ev.target.value;});
+document.addEventListener('submit',async ev=>{
+ if(ev.target.id==='purchase-policy-form'){
+  ev.preventDefault();if(busy)return;const form=ev.target,d=new FormData(form);
+  const p={title:String(d.get('title')).trim(),brief:String(d.get('brief')).trim(),budget:Number(d.get('budget')),perDeal:Number(d.get('perDeal')),deliveryMinutes:Number(d.get('deliveryMinutes'))};
+  if(!Number.isSafeInteger(p.budget)||!Number.isSafeInteger(p.perDeal)||p.budget<1||p.perDeal<1||p.budget>1000000||p.perDeal>p.budget){form.querySelector('#policy-error').textContent='Use positive whole amounts. Max per deal cannot exceed total budget.';return;}
+  await operate('Saving your spending policy…',async()=>{
+   if(job?.liveSessionId||job?.dealId||job?.authorityRevoked)await storyAction('new');
+   if(job)await mutate('edit',{...p,demoMode:true,sourceText:JSON.stringify(job.source),sourceName:job.sourceName});
+   story.policy=p;localStorage.setItem('accord-purchase-policy',JSON.stringify(p));$('#detail').close();
+  });return;
+ }
+ if(ev.target.id==='purchase-message-form'){
+  ev.preventDefault();if(busy)return;const d=new FormData(ev.target),text=String(d.get('message')??'').trim(),counter=Number(d.get('counter'));
+  if(!text&&!job){showError('Describe the task in at least 10 characters, or use Delegate task for the sample.');return;}
+  if(!job&&text.length<10){showError('Describe the task in at least 10 characters.');return;}
+  await operate(story.mode==='live'?'Sending your message to Kiln…':'Applying your instruction…',async()=>{
+   if(!job){
+    story.policy={...(story.policy??readPolicy()),brief:text};
+    if(story.mode==='live'){
+     await storyAction('live-start');story.pending={action:'live-offer',label:'Your task is with Atlas. Waiting for the actual Kiln response…'};render();await liveAction('live-offer');
+    }else await storyAction('delegate');
+   }else{
+    const note={id:crypto.randomUUID(),at:new Date().toISOString(),text:text||(story.mode==='guided'?'Counteroffer: $'+counter+' test USD.':''),label:story.mode==='live'?'Sent to Kiln':'Human counteroffer',status:'submitted'};
+    (story.messages??=[]).push(note);saveNotes();
+    try{
+     if(story.mode==='live'){
+      const next=presentationModel(storyState()).action;
+      if(!['live-offer','live-counter','live-respond'].includes(next))throw Error('No negotiation turn is available. Inspect the current agreement.');
+      if(!text)throw Error('Enter a message for the agents.');
+      story.pending={action:next,label:'Sending your instruction to '+(next==='live-counter'?'Buyer':sellerNamesForStory())+' through Kiln…'};render();await liveAction(next,text);
+      note.status=live.current.error?'proposal_rejected':'response_recorded';
+     }else{
+      if(!Number.isSafeInteger(counter)||counter<1||counter>1000000)throw Error('Enter a positive whole counteroffer.');
+      const seller=story.chosenSeller??'seller-a';if(job.selected!==seller)await mutate('select',{seller});
+      story.pending={action:'counter',label:'Buyer is sending your counteroffer…'};render();await mutate('counter',{price:counter});note.status='response_recorded';
+     }
+    }catch(error){note.status='request_failed';throw error;}finally{saveNotes();}
+   }
+   story.composer='';
+  });return;
+ }
+});
+function sellerNamesForStory(){return {atlas:'Atlas',nexus:'Nexus',orbit:'Orbit'}[live?.seller??'atlas'];}
+
 document.addEventListener('click',async ev=>{
  if(isStory()&&busy&&ev.target.closest('a[href^="#"]')){ev.preventDefault();return;}
+ const homeSection=ev.target.closest('[data-home-section]');if(homeSection){ev.preventDefault();document.getElementById(homeSection.dataset.homeSection)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});return;}
+ const view=ev.target.closest('[data-purchase-view]');if(view){story.view=view.dataset.purchaseView;render();return;}
+ const sellerChoice=ev.target.closest('[data-purchase-seller]');if(sellerChoice&&!busy){const id=sellerChoice.dataset.purchaseSeller;if(story.mode==='live'){live.seller=id;render();}else {story.chosenSeller=id;await operate('Selecting seller…',()=>mutate('select',{seller:id}));}return;}
  const inspection=ev.target.closest('[data-story-inspect]');if(inspection){modal(presentationInspect(inspection.dataset.storyInspect,storyState()),true);return;}
 
  if(ev.target.closest('[data-close]')){$('#detail').close();return;}
@@ -110,6 +165,9 @@ document.addEventListener('click',async ev=>{
  const liveSeller=ev.target.closest('[data-live-seller]');if(liveSeller&&!busy){live.seller=liveSeller.dataset.liveSeller;render();return;}
  const liveMessage=ev.target.closest('[data-live-message]');if(liveMessage){const m=live.current.session.messages.find(m=>m.sequence===Number(liveMessage.dataset.liveMessage));modal(`<span class="eyebrow">ACTUAL MODEL RESPONSE</span><h2>${e(m.actor)} · ${e(m.model)}</h2><dl><dt>Request ID</dt><dd class="hash">${e(m.requestId)}</dd><dt>Input scope</dt><dd>${e(m.inputScope)}</dd></dl><h3>Public input</h3><pre>${e(JSON.stringify(m.input,null,2))}</pre><h3>Model output</h3><pre>${e(JSON.stringify(m.quote,null,2))}</pre><h3>Measured usage</h3><pre>${e(JSON.stringify(m.usage,null,2))}</pre>`,true);return;}
  let name=ev.target.closest('[data-action]')?.dataset.action;if(!name)return;
+ if(name==='purchase-policy'){modal(policyForm(storyState()));return;}
+ if(name==='purchase-new'){await operate('Opening a new purchase…',()=>storyAction('new'));return;}
+ if(name==='purchase-export'){download('accord-conversation-'+(job?.id??'draft')+'.json',{schema:'ACCORD_CONVERSATION_EXPORT_V1',exportedAt:new Date().toISOString(),mode:story.mode,displayCurrency:'test USD; no cash value',task:job,humanNotes:story.messages??[],live:story.mode==='live'?live?.current:null,receipt:story.receipt,verification:story.verification,note:'Human notes are local annotations, not signed agent messages. Original receipts and signed terms remain unchanged.'});return;}
  if(name==='story-inspect-proof')name=live?.current&&story.mode==='live'&&!job?.dealId?'live-proof':'proof';
  if(name.startsWith('story-')&&!busy){await operate('Applying your next transaction decision…',()=>storyAction(name.slice(6)));return;}
 
@@ -138,7 +196,7 @@ document.addEventListener('click',async ev=>{
  if(Object.hasOwn(labels,name))await operate(labels[name],()=>mutate(name));
 });
 $('#detail').addEventListener('close',()=>{if(lastFocus?.isConnected)lastFocus.focus();else document.querySelector('.story-actions .primary')?.focus({preventScroll:true});});
-async function loadRoute(){const hash=location.hash.slice(1);$('#detail').close();if(hash.startsWith('task/')){job=await api('/api/tasks/'+hash.slice(5));route=job.liveSessionId&&!job.dealId?'live':'workspace';}else{route=['presentation','presentation-live','overview','workspace','deals','agents','evidence','live'].includes(hash)?hash:'presentation';if(hash==='demo'){route='presentation';history.replaceState(null,'','#presentation');}}if(route==='workspace'&&job?.liveSessionId&&!job.dealId)route='live';if(hash==='guided'){job=null;route='workspace';present=false;creating=false;}if(isStory()){await loadStory(route==='presentation-live'?'live':'guided');}if(route==='live'){try{await loadLive();}catch(error){live={available:false,error:error.message};}}render();}
+async function loadRoute(){const hash=location.hash.slice(1);$('#detail').close();if(hash.startsWith('task/')){job=await api('/api/tasks/'+hash.slice(5));route=job.liveSessionId&&!job.dealId?'live':'workspace';}else{route=['home','presentation','presentation-live','overview','workspace','deals','agents','evidence','live'].includes(hash)?hash:'home';if(hash==='demo'){route='presentation';history.replaceState(null,'','#presentation');}}if(route==='workspace'&&job?.liveSessionId&&!job.dealId)route='live';if(hash==='guided'){job=null;route='workspace';present=false;creating=false;}if(isStory()){await loadStory(route==='presentation-live'?'live':'guided');}if(route==='live'){try{await loadLive();}catch(error){live={available:false,error:error.message};}}render();}
 window.addEventListener('hashchange',()=>loadRoute().catch(err=>showError(err.message)));
-async function init(){try{const clean=new URL(location.href);if(clean.searchParams.has('shem')){clean.searchParams.delete('shem');history.replaceState(null,'',clean.pathname+clean.search+clean.hash);}try{const r=await fetch('/evidence/dealtrace-summary.json');if(r.ok)proof=await r.json();}catch{}await refreshList();await loadRoute();}catch(err){$('#app').innerHTML=`<div class="boot"><span class="brand-symbol">a</span><h1>${executionMode==='browser'?'Open your browser workspace':'Start your Accord Lock workspace'}</h1>${executionMode==='browser'?'<p>Use a recent browser with site storage enabled. No local server is required.</p>':'<p>This workspace needs its local task and escrow service.</p><code>pnpm ade:spending:view</code>'}<p>${e(err.message)}</p><button class="button primary" id="retry">Retry connection</button></div>`;$('#retry').onclick=init;}}
+async function init(){if(!location.hash||location.hash==='#home')$('#app').innerHTML=renderHome();try{const clean=new URL(location.href);if(clean.searchParams.has('shem')){clean.searchParams.delete('shem');history.replaceState(null,'',clean.pathname+clean.search+clean.hash);}try{const r=await fetch('/evidence/dealtrace-summary.json');if(r.ok)proof=await r.json();}catch{}await refreshList();await loadRoute();}catch(err){$('#app').innerHTML=`<div class="boot"><span class="brand-symbol">a</span><h1>${executionMode==='browser'?'Open your browser workspace':'Start your Accord Lock workspace'}</h1>${executionMode==='browser'?'<p>Use a recent browser with site storage enabled. No local server is required.</p>':'<p>This workspace needs its local task and escrow service.</p><code>pnpm ade:spending:view</code>'}<p>${e(err.message)}</p><button class="button primary" id="retry">Retry connection</button></div>`;$('#retry').onclick=init;}}
 init();

@@ -28,9 +28,10 @@ export function createLiveService({store,negotiation,callBudget=60,now=Date.now}
   },
   async execute(owner,input){
    need(typeof owner==='string'&&idPattern.test(owner),'LIVE_OWNER_REQUIRED');
-   const {action,operationId,id,revision,seller,request,taskId}=input;
+   const {action,operationId,id,revision,seller,request,taskId,guidance}=input;
    need(allowed.has(action)&&idPattern.test(operationId??''),'LIVE_ACTION_REQUEST');
-   const fingerprint=hash({action,id,seller,request,taskId});
+   need(guidance===undefined||(inference.has(action)&&typeof guidance==='string'&&guidance.trim().length>0&&guidance.length<=1200),'LIVE_GUIDANCE_INVALID');
+   const fingerprint=hash({action,id,seller,request,taskId,...(guidance===undefined?{}:{guidance})});
    if(action==='start'){
     return update(async ledger=>{
      const previous=Object.values(ledger.sessions).find(s=>s.owner===hash(owner)&&s.startId===operationId);
@@ -67,13 +68,13 @@ export function createLiveService({store,negotiation,callBudget=60,now=Date.now}
      s.operations[operationId]={fingerprint};return {done:true,result:view(s)};
     }
     need(!s.authorization,'LIVE_ALREADY_AUTHORIZED');
-    if(inference.has(action)){need(s.attempts<8,'LIVE_SESSION_CALL_LIMIT');need(ledger.calls<callBudget,'LIVE_SERVICE_CALL_LIMIT');ledger.calls++;s.attempts++;(s.attemptLog??=[]).push({id:operationId,action,seller,at:now(),result:'PENDING'});}
+    if(inference.has(action)){need(s.attempts<8,'LIVE_SESSION_CALL_LIMIT');need(ledger.calls<callBudget,'LIVE_SERVICE_CALL_LIMIT');ledger.calls++;s.attempts++;(s.attemptLog??=[]).push({id:operationId,action,seller,...(guidance?{guidance}:{}),at:now(),result:'PENDING'});}
     s.pending={id:operationId,fingerprint,action,startedAt:now()};s.error=null;s.revision++;
     return {done:false,envelope:s.envelope};
    });
    if(reservation.done)return reservation.result;
    let result,error,usage;
-   try{result=await negotiation.execute({action,session:reservation.envelope,seller});}
+   try{result=await negotiation.execute({action,session:reservation.envelope,seller,guidance});}
    catch(e){error=/^[A-Z0-9_]{3,100}$/.test(e.message)?e.message:'LIVE_REQUEST_FAILED';usage=e.liveUsage;}
    return update(ledger=>{
     const s=owned(ledger,owner,id);

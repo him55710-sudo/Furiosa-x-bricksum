@@ -1,5 +1,7 @@
 # Accord Lock — Presentation flow
 
+> Historical design record. The subsequent [product workflow update](PRODUCT-WORKFLOW.en.md) makes the homepage the default entry and conversation the primary workspace. This document and its screenshots describe the preceding graph-first revision.
+
 ## Before implementation: state-to-graph contract
 
 The detailed Deal Room prioritizes the roster, chat, controls and event log equally. Presentation instead prioritizes a transaction graph, one current decision, four financial values and one primary action. Conversation, request IDs, signatures and receipts remain available through Inspect and the unchanged detailed room.
