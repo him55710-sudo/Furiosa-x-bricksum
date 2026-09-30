@@ -37,6 +37,48 @@ Our thesis: as agents negotiate and submit invoices, applications need to preser
 
 These payment systems already provide controls, including amount- and merchant-bound authorization. Accord Lock focuses on enforcing the negotiated agreement across proposal, invoice and settlement. The announcements establish the market context; integrations with those networks are future work.
 
+## Commercial Potential
+
+Accord Lock is designed to become the **agreement-aware authorization layer between AI agents and payment infrastructure**.
+
+### Initial users
+
+Our initial target is teams beginning to delegate purchasing authority to AI agents:
+
+- AI procurement and sourcing systems
+- Research and data-purchasing agents
+- API and cloud-resource purchasing agents
+- Enterprise workflow agents
+- Machine-to-machine commerce systems
+
+As agents receive more autonomy, teams face a trade-off: **increase agent autonomy and accept more transaction risk, or keep humans in the approval loop.**
+
+Accord Lock is designed to make greater autonomy possible without removing deterministic control over payment.
+
+### Initial wedge: one API at the payment boundary
+
+Accord Lock can sit between an existing agent workflow and its payment or settlement layer.
+
+**Human mandate → Negotiated agreement → Seller invoice → Accord Lock → PAY / BLOCK**
+
+Developers do not need to replace their models, wallets, or negotiation infrastructure. Accord Lock adds agreement-aware authorization at the point where an agent attempts to move money.
+
+### Path to market
+
+**Today — Authorization API**  
+For AI-agent developers and autonomous procurement workflows.
+
+**Next — Infrastructure integrations**  
+Agent wallets, payment providers, procurement platforms, and enterprise agent infrastructure.
+
+**Long term — Agreement infrastructure for agent-to-agent commerce**  
+As autonomous agents increasingly negotiate and transact with other agents, Accord Lock can provide a common enforcement layer connecting agreements to payments.
+
+We are not building another marketplace or payment network.
+
+**AI negotiates. Accord Lock decides whether the money moves.**
+
+
 ## The missing control layer
 
 **Budget control answers how much an agent may spend. Agreement control answers what it may pay for, to whom, and on which terms.**
