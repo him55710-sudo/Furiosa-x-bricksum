@@ -43,3 +43,11 @@ test('specific narration templates outrank generic financial templates in all lo
   }
  }
 });
+
+test('evidence is recorded history while detailed room is current terms and execution',()=>{
+ const job={id:'room',budget:40,perDeal:30,status:'QUOTED',offers:[],events:[{id:'record-1',actor:'buyer',at:'2026-09-30T00:00:00Z',title:'Requested offers',detail:'4 source rows; 30 test units per-deal limit.'}]};
+ const state={job};const evidence=purchaseInspection(state,'all'),detail=purchaseInspection(state,'details');
+ assert.match(evidence,/record-list/);assert.match(evidence,/record-1/);assert.doesNotMatch(evidence,/execution-grid|current-terms/);
+ assert.match(detail,/current-terms/);assert.match(detail,/execution-grid/);assert.doesNotMatch(detail,/record-list|record-1/);
+ assert.match(detail,/purchase-policy/);assert.match(evidence,/purchase-export/);
+});

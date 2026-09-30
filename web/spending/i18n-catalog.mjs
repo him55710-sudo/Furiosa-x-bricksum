@@ -1095,6 +1095,12 @@ Thinking…|생각 중…|思考中…
 Waiting for the actual response.|실제 응답 대기 중.|正在等待真实回应。
 `;
 const guidedRoomRows = `
+Current terms, delivery and available transaction actions.|현재 거래 조건, 납품 상태와 실행 가능한 거래 동작입니다.|当前交易条款、交付状态和可用交易操作。
+Recorded history: conversations, gate incidents and original evidence.|대화, 차단 사건과 원본 증거가 저장된 이력입니다.|已保存的对话、拦截事件和原始证据历史。
+Current terms|현재 거래 조건|当前交易条款
+Signed terms|서명 상태|签名状态
+Policy & balances|정책 · 자금 현황|政策与资金
+Hide policy & balances|정책 · 자금 현황 접기|收起政策与资金
 I need {0} source-linked records. My limit is {1} test USD per deal. Sellers, what can you offer?|출처가 연결된 데이터 {0}건이 필요합니다. 거래당 한도는 테스트 USD {1}입니다. 판매 에이전트 여러분, 조건을 제안해주세요.|我需要 {0} 条附带来源链接的记录。每笔上限为 {1} 测试美元。销售智能体们，请提出报价。
 Start demo|데모 시작|开始演示
 Your request is ready.|요청이 준비되었습니다.|您的请求已准备就绪。

@@ -189,6 +189,7 @@ document.addEventListener('click',async ev=>{
  const liveMessage=ev.target.closest('[data-live-message]');if(liveMessage){const m=live.current.session.messages.find(m=>m.sequence===Number(liveMessage.dataset.liveMessage));modal(`<span class="eyebrow">ACTUAL MODEL RESPONSE</span><h2>${e(m.actor)} · ${e(m.model)}</h2><dl><dt>Request ID</dt><dd class="hash">${e(m.requestId)}</dd><dt>Input scope</dt><dd>${e(m.inputScope)}</dd></dl><h3>Public input</h3><pre>${e(JSON.stringify(m.input,null,2))}</pre><h3>Model output</h3><pre>${e(JSON.stringify(m.quote,null,2))}</pre><h3>Measured usage</h3><pre>${e(JSON.stringify(m.usage,null,2))}</pre>`,true);return;}
  let name=ev.target.closest('[data-action]')?.dataset.action;if(!name)return;
  if(name==='purchase-start-demo'){story.demoStarted=true;story.composer=preparedDemoPrompt(story.policy??readPolicy(),document.documentElement.lang);render();document.querySelector('#purchase-message')?.focus();return;}
+ if(name==='purchase-toggle-policy'){story.showPolicy=!story.showPolicy;if(story.showPolicy)story.chatExpanded=false;render();document.querySelector('.policy-toggle')?.focus({preventScroll:true});return;}
  if(name==='purchase-expand'){story.chatExpanded=!story.chatExpanded;render();document.querySelector('.chat-expand')?.focus({preventScroll:true});return;}
  if(name==='purchase-policy'){modal(policyForm(storyState()));return;}
  if(name==='purchase-new'){await operate('Opening a new purchase…',()=>storyAction('new'));return;}
