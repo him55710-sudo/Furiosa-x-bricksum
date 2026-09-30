@@ -49,6 +49,8 @@ Previous presentation screenshots remain historical. The original [presentation 
 
 ## Scope and limitations
 
+Production verification: implementation commit `72c0c78` is on main. [The root homepage](https://agent-spending-firewall.vercel.app/) serves production deployment `dpl_BCbNtgiFm9ZzKHgRnfPQji6kWWKW` (READY). Its JS and CSS hashes match the tested build; `/api/live` returned HTTP 200 with qwen3-32b available. Browser warning/error output was empty, and the deployment error/fatal log query returned no entries at verification time. See [deployment.json](../artifacts/accord-lock/product-workflow/deployment.json).
+
 The current worker still normalizes supplied CAPEX source rows; it is not a general web-research agent. Custom files remain available through Detailed Deal Room. Demo free text describes the task or records an annotation; the explicit counteroffer amount drives its deterministic response. Live free text reaches the actual model at the next valid negotiation turn. Financial approval remains an explicit action.
 
 Only the public guidance input plumbing changed in `src/accord/live-service.mjs` and `src/accord/live-negotiation.mjs`. Financial validation, contract units, signatures, settlement, private seller policies, call limits and STOP behavior were not redesigned. Human annotations are browser-local and not cryptographic proofs. Clearing site storage removes browser-local tasks and annotations. OS-level reduced-motion emulation was not available; the shared UI override and CSS media rule preserve the same state meaning.
