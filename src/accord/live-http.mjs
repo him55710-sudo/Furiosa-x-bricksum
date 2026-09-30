@@ -19,8 +19,13 @@ export function liveHandler({service,secret,configured=true,secure=true}){
   const csrf=mac('csrf:'+owner);
   try{
    if(req.method==='GET'){
-    const id=new URL(req.url,expected).searchParams.get('id');
-    return send(200,{...await service.state(owner,id),csrf});
+    const url=new URL(req.url,expected),id=url.searchParams.get('id');
+    const state=await service.state(owner,id);
+    if(id&&url.searchParams.get('download')==='1'){
+     res.setHeader('Content-Disposition','attachment; filename="accord-live-evidence.json"');
+     return send(200,{schema:'ACCORD_LIVE_EXPORT_V1',exportedAt:new Date().toISOString(),...state});
+    }
+    return send(200,{...state,csrf});
    }
    if(req.method!=='POST'){res.setHeader('Allow','GET, POST');return send(405,{error:'LIVE_METHOD_NOT_ALLOWED'});}
    if(origin!==expected||!equal(req.headers['x-accord-live-token'],csrf))return send(403,{error:'LIVE_REQUEST_TOKEN_REQUIRED'});

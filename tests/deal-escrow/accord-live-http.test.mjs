@@ -20,3 +20,13 @@ test('live HTTP requires its signed HttpOnly cookie, same origin and request tok
  assert.equal((await call('POST',{cookie,origin:'https://accord.example','x-accord-live-token':csrf,'content-type':'application/json'},{data:'x'.repeat(17000)})).code,413);
  assert.equal(calls,1);
 });
+
+
+test('evidence downloads remain owner-scoped and never export the request token',async()=>{
+ let ownerSeen;const handler=liveHandler({secret:'test-download-secret-at-least-thirty-two-characters',service:{state:async(owner,id)=>{ownerSeen=owner;return id?{session:{id},attemptLog:[]}:{};}}});
+ const response=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(body){this.body=body;return this;}});
+ const initial=response();await handler({method:'GET',url:'/api/live?playground=1',headers:{host:'accord.example'}},initial);
+ const owner=ownerSeen,cookie=initial.headers['Set-Cookie'].split(';')[0],download=response();
+ await handler({method:'GET',url:'/api/live?playground=1&id=example-session&download=1',headers:{host:'accord.example',cookie}},download);
+ assert.equal(ownerSeen,owner);assert.equal(download.code,200);assert.match(download.headers['Content-Disposition'],/attachment/);assert.equal(download.headers['Cache-Control'],'private, no-store');assert.equal(download.body.session.id,'example-session');assert.equal(Object.hasOwn(download.body,'csrf'),false);
+});

@@ -1,0 +1,693 @@
+{
+  "schema": "ACCORD_PLAYGROUND_VALIDATION_V1",
+  "scope": "Actual Kiln qwen3-32b responses. Test ledger only; no real funds.",
+  "session": {
+    "schema": "ACCORD_PLAYGROUND_V1",
+    "id": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+    "createdAt": 1790730371134,
+    "expiresAt": 1790731571134,
+    "model": "qwen3-32b",
+    "identities": {
+      "buyer": {
+        "address": "0x0AC38467E98f6671013693F1F64B31B6Ff54aCbA",
+        "name": "Buyer"
+      },
+      "atlas": {
+        "address": "0x9b4d06fC59d9427e272aAF0648E57d22110BF036",
+        "name": "Atlas"
+      },
+      "nexus": {
+        "address": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+        "name": "Nexus"
+      },
+      "orbit": {
+        "address": "0x4C47b69652553DdafF9F7d38D6F45B84a6Cbe20F",
+        "name": "Orbit"
+      }
+    },
+    "request": {
+      "task": "Buy a market research report on battery recycling opportunities",
+      "budgetMinor": 10000,
+      "perDealMinor": 7000,
+      "currency": "USD",
+      "maxDeliveryMinutes": 60,
+      "allowedSellers": [
+        "nexus"
+      ],
+      "constraints": "",
+      "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+      "expiresAt": 1790731571134
+    },
+    "messages": [
+      {
+        "schema": "ACCORD_PLAYGROUND_MESSAGE_V1",
+        "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+        "sequence": 1,
+        "step": "offer",
+        "actor": "nexus",
+        "to": "buyer",
+        "seller": "nexus",
+        "quote": {
+          "action": "offer",
+          "seller": "nexus",
+          "amountMinor": 7000,
+          "feeMinor": 0,
+          "currency": "USD",
+          "deliveryMinutes": 60,
+          "scope": "Buy a market research report on battery recycling opportunities",
+          "message": "Initial offer for market research report on battery recycling opportunities."
+        },
+        "requestId": "chat-ae933548174f48358af3abb947642da4",
+        "model": "qwen3-32b",
+        "at": 1790730401142,
+        "previousHash": null,
+        "hash": "0x7f9d65727c35701ce76df2346ed53b099433e66c89aafbcdaf922be3772488e1",
+        "signature": "0x1d51e359427d1af1150a04852a2bbed1e1f8f71ac48385063f763afb727605570733d217bfbef4b83ff029f082579fa3b8d55984f93c8b26e135058f5e4063fd1b",
+        "usage": {
+          "flow_name": "Accord Playground / nexus / offer",
+          "model": "qwen3-32b",
+          "request_id": "chat-ae933548174f48358af3abb947642da4",
+          "prompt_tokens": 851,
+          "completion_tokens": 1651,
+          "total_tokens": 2502,
+          "start_time": "2026-09-30T01:06:11.198Z",
+          "end_time": "2026-09-30T01:06:41.142Z",
+          "latency_ms": 29944,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "face81e92a563f09ce56cf941680ade70383e2871a5a9ecf782b3f031cb26c2a"
+        }
+      },
+      {
+        "schema": "ACCORD_PLAYGROUND_MESSAGE_V1",
+        "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+        "sequence": 2,
+        "step": "counter",
+        "actor": "buyer",
+        "to": "nexus",
+        "seller": "nexus",
+        "quote": {
+          "action": "accept",
+          "seller": "nexus",
+          "amountMinor": 7000,
+          "feeMinor": 0,
+          "currency": "USD",
+          "deliveryMinutes": 60,
+          "scope": "Buy a market research report on battery recycling opportunities",
+          "message": "Accepting initial offer for market research report on battery recycling opportunities."
+        },
+        "requestId": "chat-1ee64237b4c04a01aef5c03ea0365dc1",
+        "model": "qwen3-32b",
+        "at": 1790730407672,
+        "previousHash": "0x7f9d65727c35701ce76df2346ed53b099433e66c89aafbcdaf922be3772488e1",
+        "hash": "0xd182ef757db68f49a381c2a21efe244d7eeba46783939e7a8fa0c5ea72d1a447",
+        "signature": "0xc4d01e50842f03e41035b8a0ab805d89b7b3fda4e3fc787896abeb763b5d233e4014309ed668263b0cf515eeba38cbfe6f4e9a2dbfa2c8aa947432fb0779700c1b",
+        "usage": {
+          "flow_name": "Accord Playground / buyer / counter",
+          "model": "qwen3-32b",
+          "request_id": "chat-1ee64237b4c04a01aef5c03ea0365dc1",
+          "prompt_tokens": 895,
+          "completion_tokens": 394,
+          "total_tokens": 1289,
+          "start_time": "2026-09-30T01:06:41.200Z",
+          "end_time": "2026-09-30T01:06:47.672Z",
+          "latency_ms": 6472,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "6487d5a8ad1e99c00ff190a23a14e20a8cf41bdb92ea150827734c854691f594"
+        }
+      },
+      {
+        "schema": "ACCORD_PLAYGROUND_MESSAGE_V1",
+        "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+        "sequence": 3,
+        "step": "select",
+        "actor": "buyer",
+        "to": "nexus",
+        "seller": "nexus",
+        "quote": {
+          "action": "accept",
+          "seller": "nexus",
+          "amountMinor": 7000,
+          "feeMinor": 0,
+          "currency": "USD",
+          "deliveryMinutes": 60,
+          "scope": "Buy a market research report on battery recycling opportunities",
+          "message": "Accepting offer for market research report on battery recycling opportunities."
+        },
+        "requestId": "chat-a9773fde4b324a668cbe231ee7744a8c",
+        "model": "qwen3-32b",
+        "at": 1790730412541,
+        "previousHash": "0xd182ef757db68f49a381c2a21efe244d7eeba46783939e7a8fa0c5ea72d1a447",
+        "hash": "0xb1c998c884db052c5adb34eaa01e04222b290ab03b03a96f483ab89ca444f0ac",
+        "signature": "0xb448db80313bde39970415970f907ef4f9448dd65e344a3230fdf4748ce52d950eac76a89da37c002761f7f8d1c392e9d20f794553710a7820aaff8d41ca9f931b",
+        "usage": {
+          "flow_name": "Accord Playground / buyer / select",
+          "model": "qwen3-32b",
+          "request_id": "chat-a9773fde4b324a668cbe231ee7744a8c",
+          "prompt_tokens": 895,
+          "completion_tokens": 285,
+          "total_tokens": 1180,
+          "start_time": "2026-09-30T01:06:47.726Z",
+          "end_time": "2026-09-30T01:06:52.541Z",
+          "latency_ms": 4815,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "6585e6dafff6860d3ade14ba015fe553a8feedc3ddc0d119d6c8e7501f52ab3b"
+        }
+      },
+      {
+        "schema": "ACCORD_PLAYGROUND_MESSAGE_V1",
+        "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+        "sequence": 4,
+        "step": "invoice",
+        "actor": "nexus",
+        "to": "buyer",
+        "seller": "nexus",
+        "quote": {
+          "action": "invoice",
+          "amountMinor": 7000,
+          "currency": "USD",
+          "deliveryMinutes": 60,
+          "feeMinor": 0,
+          "message": "Final invoice for market research report on battery recycling opportunities.",
+          "scope": "Buy a market research report on battery recycling opportunities",
+          "seller": "nexus"
+        },
+        "requestId": "chat-871e92094a9344669b88a273f034f6b5",
+        "model": "qwen3-32b",
+        "at": 1790730459889,
+        "previousHash": "0xb1c998c884db052c5adb34eaa01e04222b290ab03b03a96f483ab89ca444f0ac",
+        "hash": "0xb0a835f289b64628fa407de1579fa9136d6cf9144fd29045b6a37d9e8b8002bf",
+        "signature": "0xee88d425abd0f4b883e8423040bc4d5c80188c6a179a102ce441e25e9c51f77061bd95c6b69e484419e901d598741219f59846972db81d9b44bb6aadc5f0a6e11c",
+        "usage": {
+          "flow_name": "Accord Playground / nexus / invoice",
+          "model": "qwen3-32b",
+          "request_id": "chat-871e92094a9344669b88a273f034f6b5",
+          "prompt_tokens": 1304,
+          "completion_tokens": 2302,
+          "total_tokens": 3606,
+          "start_time": "2026-09-30T01:07:03.898Z",
+          "end_time": "2026-09-30T01:07:39.889Z",
+          "latency_ms": 35991,
+          "tool_called": "send_negotiation_message",
+          "result": "VALID_TOOL_PROPOSAL",
+          "prompt_hash": "061a73b7ffd56bbb00db919e70c9e332490931dc06149caa1560c820af88426d"
+        }
+      }
+    ],
+    "events": [
+      {
+        "sequence": 1,
+        "at": 1790730371135,
+        "type": "MANDATE_CREATED",
+        "previousHash": null,
+        "data": {
+          "task": "Buy a market research report on battery recycling opportunities",
+          "budgetMinor": 10000,
+          "perDealMinor": 7000,
+          "currency": "USD",
+          "maxDeliveryMinutes": 60,
+          "allowedSellers": [
+            "nexus"
+          ],
+          "constraints": "",
+          "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+          "expiresAt": 1790731571134
+        },
+        "hash": "0xdb286c9f7ee976798c09f5c629dfe888415790ac07ee18086ed182f792ee4557"
+      },
+      {
+        "sequence": 2,
+        "at": 1790730401146,
+        "type": "TERMS_RECEIVED",
+        "previousHash": "0xdb286c9f7ee976798c09f5c629dfe888415790ac07ee18086ed182f792ee4557",
+        "data": {
+          "messageHash": "0x7f9d65727c35701ce76df2346ed53b099433e66c89aafbcdaf922be3772488e1",
+          "actor": "nexus",
+          "seller": "nexus",
+          "quote": {
+            "action": "offer",
+            "seller": "nexus",
+            "amountMinor": 7000,
+            "feeMinor": 0,
+            "currency": "USD",
+            "deliveryMinutes": 60,
+            "scope": "Buy a market research report on battery recycling opportunities",
+            "message": "Initial offer for market research report on battery recycling opportunities."
+          }
+        },
+        "hash": "0x86c6787f98c95ba70c9e493aea60238c1392ce2fd7bebe2c41c2dfde25b64a13"
+      },
+      {
+        "sequence": 3,
+        "at": 1790730407673,
+        "type": "TERMS_RECEIVED",
+        "previousHash": "0x86c6787f98c95ba70c9e493aea60238c1392ce2fd7bebe2c41c2dfde25b64a13",
+        "data": {
+          "messageHash": "0xd182ef757db68f49a381c2a21efe244d7eeba46783939e7a8fa0c5ea72d1a447",
+          "actor": "buyer",
+          "seller": "nexus",
+          "quote": {
+            "action": "accept",
+            "seller": "nexus",
+            "amountMinor": 7000,
+            "feeMinor": 0,
+            "currency": "USD",
+            "deliveryMinutes": 60,
+            "scope": "Buy a market research report on battery recycling opportunities",
+            "message": "Accepting initial offer for market research report on battery recycling opportunities."
+          }
+        },
+        "hash": "0xc1f82d38ab2643a18c7a9c946377c44566760ca619b22ddb30ef6ad8e97a50c6"
+      },
+      {
+        "sequence": 4,
+        "at": 1790730412542,
+        "type": "TERMS_RECEIVED",
+        "previousHash": "0xc1f82d38ab2643a18c7a9c946377c44566760ca619b22ddb30ef6ad8e97a50c6",
+        "data": {
+          "messageHash": "0xb1c998c884db052c5adb34eaa01e04222b290ab03b03a96f483ab89ca444f0ac",
+          "actor": "buyer",
+          "seller": "nexus",
+          "quote": {
+            "action": "accept",
+            "seller": "nexus",
+            "amountMinor": 7000,
+            "feeMinor": 0,
+            "currency": "USD",
+            "deliveryMinutes": 60,
+            "scope": "Buy a market research report on battery recycling opportunities",
+            "message": "Accepting offer for market research report on battery recycling opportunities."
+          }
+        },
+        "hash": "0x1baead204cbf865ea1932cd9c5e4d5944ab3bcd86aadf7977ea86c868702dd21"
+      },
+      {
+        "sequence": 5,
+        "at": 1790730423823,
+        "type": "BILATERAL_AGREEMENT_LOCKED",
+        "previousHash": "0x1baead204cbf865ea1932cd9c5e4d5944ab3bcd86aadf7977ea86c868702dd21",
+        "data": {
+          "body": {
+            "schema": "ACCORD_PLAYGROUND_DEAL_V1",
+            "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+            "mandateHash": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704",
+            "seller": "nexus",
+            "amountMinor": 7000,
+            "currency": "USD",
+            "deliveryMinutes": 60,
+            "scope": "Buy a market research report on battery recycling opportunities",
+            "recipient": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+            "transcriptHash": "0xa199b733b4cdf6d9b8ff8839b610ba4906bcebbd564afe6f1ca01dabe9f250bc",
+            "expiresAt": 1790731571134
+          },
+          "hash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+          "buyerSignature": "0x305591dfd33e5612cddcd981f41daa1bee3d728440cc89f8f3ea8bf8b33bf751727f30862f64e5dfdb49fe9468aebeea2c4f256bf66869e5f417172ded4734d21b",
+          "sellerSignature": "0x7c8818538c539bc69b483e35a6bbfb2474efb6e45554585a991895953c976678340d351c3455e24c1e9f89ebc13405c06b522b91cad73774ca1bef9c4ef3c8ff1c"
+        },
+        "hash": "0x546725400f8f09b937717de0683bb771b175d48894f0cf0fd8cbc8e6317c22e2"
+      },
+      {
+        "sequence": 6,
+        "at": 1790730459890,
+        "type": "INVOICE_PROPOSED",
+        "previousHash": "0x546725400f8f09b937717de0683bb771b175d48894f0cf0fd8cbc8e6317c22e2",
+        "data": {
+          "messageHash": "0xb0a835f289b64628fa407de1579fa9136d6cf9144fd29045b6a37d9e8b8002bf",
+          "actor": "nexus",
+          "seller": "nexus",
+          "quote": {
+            "action": "invoice",
+            "amountMinor": 7000,
+            "currency": "USD",
+            "deliveryMinutes": 60,
+            "feeMinor": 0,
+            "message": "Final invoice for market research report on battery recycling opportunities.",
+            "scope": "Buy a market research report on battery recycling opportunities",
+            "seller": "nexus"
+          }
+        },
+        "hash": "0x60892cbb01b6f0c0914709bb138dd14a33b6a5896d052420931b0a9314baea9e"
+      },
+      {
+        "sequence": 7,
+        "at": 1790730459967,
+        "type": "PAYMENT_AUTHORIZED",
+        "previousHash": "0x60892cbb01b6f0c0914709bb138dd14a33b6a5896d052420931b0a9314baea9e",
+        "data": {
+          "verdict": "PAYMENT_AUTHORIZED",
+          "reason": "MATCHING_SIGNED_AGREEMENT",
+          "checks": [
+            {
+              "name": "AUTHORITY_ACTIVE",
+              "pass": true,
+              "actual": {
+                "stopped": false,
+                "settled": false,
+                "now": 1790730459958
+              },
+              "expected": 1790731571134
+            },
+            {
+              "name": "BILATERAL_AGREEMENT",
+              "pass": true,
+              "actual": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+              "expected": "Both signatures on the same terms"
+            },
+            {
+              "name": "MANDATE_BINDING",
+              "pass": true,
+              "actual": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704",
+              "expected": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704"
+            },
+            {
+              "name": "SELLER_ALLOWLIST",
+              "pass": true,
+              "actual": "nexus",
+              "expected": [
+                "nexus"
+              ]
+            },
+            {
+              "name": "AGREEMENT_AUTHORITY",
+              "pass": true,
+              "actual": 7000,
+              "expected": 7000
+            },
+            {
+              "name": "INVOICE_SIGNATURE",
+              "pass": true,
+              "actual": true,
+              "expected": "Selected seller signature"
+            },
+            {
+              "name": "BUDGET",
+              "pass": true,
+              "actual": 7000,
+              "expected": 10000
+            },
+            {
+              "name": "AGREEMENT_PRICE_MISMATCH",
+              "pass": true,
+              "actual": 7000,
+              "expected": 7000
+            },
+            {
+              "name": "RECIPIENT",
+              "pass": true,
+              "actual": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+              "expected": "0xf631b0426462e376450532E765D0772aef0C1c9B"
+            },
+            {
+              "name": "CURRENCY",
+              "pass": true,
+              "actual": "USD",
+              "expected": "USD"
+            },
+            {
+              "name": "DEAL_HASH",
+              "pass": true,
+              "actual": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+              "expected": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4"
+            },
+            {
+              "name": "SIGNED_TERMS",
+              "pass": true,
+              "actual": {
+                "scope": "Buy a market research report on battery recycling opportunities",
+                "deliveryMinutes": 60
+              },
+              "expected": {
+                "scope": "Buy a market research report on battery recycling opportunities",
+                "deliveryMinutes": 60
+              }
+            }
+          ],
+          "at": 1790730459958,
+          "invoiceHash": "0xf9d22df8fdd3c14341193a996df8dda90984c2437a31123bcb074063d2589a14"
+        },
+        "hash": "0x96a2de9bb31e1affd0b6cc2a632fd322ae373fe9f2461d0d9e7659efe03031a3"
+      },
+      {
+        "sequence": 8,
+        "at": 1790730628182,
+        "type": "SETTLED",
+        "previousHash": "0x96a2de9bb31e1affd0b6cc2a632fd322ae373fe9f2461d0d9e7659efe03031a3",
+        "data": {
+          "id": "64d41733-257c-472d-94bc-8eb596cb946c",
+          "mode": "TEST_LEDGER",
+          "status": "SETTLED",
+          "amountMinor": 7000,
+          "currency": "USD",
+          "recipient": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+          "dealHash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+          "invoiceHash": "0xf9d22df8fdd3c14341193a996df8dda90984c2437a31123bcb074063d2589a14",
+          "buyerRemainingMinor": 3000,
+          "sellerReceivedMinor": 7000,
+          "at": 1790730628182
+        },
+        "hash": "0x7066e8e891c3bb3de559a2063177a7d7d88d717fba5ad0dbf63899a7f1d2172b"
+      }
+    ],
+    "calls": 4,
+    "agreement": {
+      "body": {
+        "schema": "ACCORD_PLAYGROUND_DEAL_V1",
+        "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+        "mandateHash": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704",
+        "seller": "nexus",
+        "amountMinor": 7000,
+        "currency": "USD",
+        "deliveryMinutes": 60,
+        "scope": "Buy a market research report on battery recycling opportunities",
+        "recipient": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+        "transcriptHash": "0xa199b733b4cdf6d9b8ff8839b610ba4906bcebbd564afe6f1ca01dabe9f250bc",
+        "expiresAt": 1790731571134
+      },
+      "hash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+      "buyerSignature": "0x305591dfd33e5612cddcd981f41daa1bee3d728440cc89f8f3ea8bf8b33bf751727f30862f64e5dfdb49fe9468aebeea2c4f256bf66869e5f417172ded4734d21b",
+      "sellerSignature": "0x7c8818538c539bc69b483e35a6bbfb2474efb6e45554585a991895953c976678340d351c3455e24c1e9f89ebc13405c06b522b91cad73774ca1bef9c4ef3c8ff1c"
+    },
+    "selectedSeller": "nexus",
+    "invoices": [
+      {
+        "body": {
+          "schema": "ACCORD_PLAYGROUND_INVOICE_V1",
+          "id": "ba5ec549-ee69-488e-8628-5766b1442a2d",
+          "dealHash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+          "recipient": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+          "amountMinor": 7000,
+          "currency": "USD",
+          "scope": "Buy a market research report on battery recycling opportunities",
+          "deliveryMinutes": 60,
+          "at": 1790730459890
+        },
+        "signature": "0x46811ccb6cfc6eac73eb4c6af9c764899b9dd74c76d59dbb6fd26a69219682056ba593b1f08fc16e25a1bb463ff0b3a28e42bd36d4bb3248bdd593add0838d1f1c"
+      }
+    ],
+    "decisions": [
+      {
+        "verdict": "PAYMENT_AUTHORIZED",
+        "reason": "MATCHING_SIGNED_AGREEMENT",
+        "checks": [
+          {
+            "name": "AUTHORITY_ACTIVE",
+            "pass": true,
+            "actual": {
+              "stopped": false,
+              "settled": false,
+              "now": 1790730459958
+            },
+            "expected": 1790731571134
+          },
+          {
+            "name": "BILATERAL_AGREEMENT",
+            "pass": true,
+            "actual": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+            "expected": "Both signatures on the same terms"
+          },
+          {
+            "name": "MANDATE_BINDING",
+            "pass": true,
+            "actual": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704",
+            "expected": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704"
+          },
+          {
+            "name": "SELLER_ALLOWLIST",
+            "pass": true,
+            "actual": "nexus",
+            "expected": [
+              "nexus"
+            ]
+          },
+          {
+            "name": "AGREEMENT_AUTHORITY",
+            "pass": true,
+            "actual": 7000,
+            "expected": 7000
+          },
+          {
+            "name": "INVOICE_SIGNATURE",
+            "pass": true,
+            "actual": true,
+            "expected": "Selected seller signature"
+          },
+          {
+            "name": "BUDGET",
+            "pass": true,
+            "actual": 7000,
+            "expected": 10000
+          },
+          {
+            "name": "AGREEMENT_PRICE_MISMATCH",
+            "pass": true,
+            "actual": 7000,
+            "expected": 7000
+          },
+          {
+            "name": "RECIPIENT",
+            "pass": true,
+            "actual": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+            "expected": "0xf631b0426462e376450532E765D0772aef0C1c9B"
+          },
+          {
+            "name": "CURRENCY",
+            "pass": true,
+            "actual": "USD",
+            "expected": "USD"
+          },
+          {
+            "name": "DEAL_HASH",
+            "pass": true,
+            "actual": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+            "expected": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4"
+          },
+          {
+            "name": "SIGNED_TERMS",
+            "pass": true,
+            "actual": {
+              "scope": "Buy a market research report on battery recycling opportunities",
+              "deliveryMinutes": 60
+            },
+            "expected": {
+              "scope": "Buy a market research report on battery recycling opportunities",
+              "deliveryMinutes": 60
+            }
+          }
+        ],
+        "at": 1790730459958,
+        "invoiceHash": "0xf9d22df8fdd3c14341193a996df8dda90984c2437a31123bcb074063d2589a14"
+      }
+    ],
+    "settlement": {
+      "id": "64d41733-257c-472d-94bc-8eb596cb946c",
+      "mode": "TEST_LEDGER",
+      "status": "SETTLED",
+      "amountMinor": 7000,
+      "currency": "USD",
+      "recipient": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+      "dealHash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+      "invoiceHash": "0xf9d22df8fdd3c14341193a996df8dda90984c2437a31123bcb074063d2589a14",
+      "buyerRemainingMinor": 3000,
+      "sellerReceivedMinor": 7000,
+      "at": 1790730628182
+    },
+    "stopped": false,
+    "receipt": {
+      "body": {
+        "schema": "ACCORD_PLAYGROUND_RECEIPT_V1",
+        "session": "b79e01f8-ddf9-4393-afd5-3e480a786238",
+        "mandateHash": "0xf6c291169b59e0eef8ad51457cbb3f64ed908bf8280c318877b12a441e463704",
+        "dealHash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+        "eventsHash": "0xefce35203f778e5695dcfd93d3ffd549c8f1f4916e927dc3b47c1ead72f23d44",
+        "settlement": {
+          "id": "64d41733-257c-472d-94bc-8eb596cb946c",
+          "mode": "TEST_LEDGER",
+          "status": "SETTLED",
+          "amountMinor": 7000,
+          "currency": "USD",
+          "recipient": "0xf631b0426462e376450532E765D0772aef0C1c9B",
+          "dealHash": "0xbb3068e27a5a0ffabbb4c33ac213e09bbf0b530089f504fdd23da973ab07d7e4",
+          "invoiceHash": "0xf9d22df8fdd3c14341193a996df8dda90984c2437a31123bcb074063d2589a14",
+          "buyerRemainingMinor": 3000,
+          "sellerReceivedMinor": 7000,
+          "at": 1790730628182
+        }
+      },
+      "signature": "0xf4868660ad74ca02769978855d26500be2991e5217dbc9ea85f38605a49a90917fcc1b3754cbd6a37aed9204af95783b525adeb9a99b575101a2eb02e89cec2e1b"
+    }
+  },
+  "attemptLog": [
+    {
+      "id": "e1cdc27a-283d-458e-ab85-f65feb938200",
+      "action": "offer",
+      "seller": "nexus",
+      "at": 1790730371171,
+      "result": "VALID_TOOL_PROPOSAL",
+      "completedAt": 1790730401147,
+      "usage": {
+        "model": "qwen3-32b",
+        "request_id": "chat-ae933548174f48358af3abb947642da4",
+        "prompt_tokens": 851,
+        "completion_tokens": 1651,
+        "total_tokens": 2502,
+        "latency_ms": 29944,
+        "prompt_hash": "face81e92a563f09ce56cf941680ade70383e2871a5a9ecf782b3f031cb26c2a"
+      }
+    },
+    {
+      "id": "44ab59ef-5573-4c03-a427-aa73b57ef91e",
+      "action": "counter",
+      "seller": "nexus",
+      "at": 1790730401184,
+      "result": "VALID_TOOL_PROPOSAL",
+      "completedAt": 1790730407674,
+      "usage": {
+        "model": "qwen3-32b",
+        "request_id": "chat-1ee64237b4c04a01aef5c03ea0365dc1",
+        "prompt_tokens": 895,
+        "completion_tokens": 394,
+        "total_tokens": 1289,
+        "latency_ms": 6472,
+        "prompt_hash": "6487d5a8ad1e99c00ff190a23a14e20a8cf41bdb92ea150827734c854691f594"
+      }
+    },
+    {
+      "id": "ecde150c-c899-46d7-b9d7-3779db668ffe",
+      "action": "select",
+      "at": 1790730407712,
+      "result": "VALID_TOOL_PROPOSAL",
+      "completedAt": 1790730412543,
+      "usage": {
+        "model": "qwen3-32b",
+        "request_id": "chat-a9773fde4b324a668cbe231ee7744a8c",
+        "prompt_tokens": 895,
+        "completion_tokens": 285,
+        "total_tokens": 1180,
+        "latency_ms": 4815,
+        "prompt_hash": "6585e6dafff6860d3ade14ba015fe553a8feedc3ddc0d119d6c8e7501f52ab3b"
+      }
+    },
+    {
+      "id": "81a44655-9ad9-4999-a3a8-df99242fde39",
+      "action": "invoice",
+      "at": 1790730423883,
+      "result": "VALID_TOOL_PROPOSAL",
+      "completedAt": 1790730459893,
+      "usage": {
+        "model": "qwen3-32b",
+        "request_id": "chat-871e92094a9344669b88a273f034f6b5",
+        "prompt_tokens": 1304,
+        "completion_tokens": 2302,
+        "total_tokens": 3606,
+        "latency_ms": 35991,
+        "prompt_hash": "061a73b7ffd56bbb00db919e70c9e332490931dc06149caa1560c820af88426d"
+      }
+    }
+  ],
+  "verification": {
+    "verdict": "VALID",
+    "scope": "Integrity against included operator-owned identities; not independent identity certification or public-chain settlement."
+  }
+}
