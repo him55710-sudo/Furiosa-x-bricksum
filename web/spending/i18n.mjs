@@ -8,7 +8,7 @@ const exact = new Map(messages.map(row => [normalize(row[0]), row]));
 const templates = messages.filter(row => /\{\d+\}/.test(row[0])).map(row => ({
   row, regex: new RegExp('^' + normalize(row[0]).split(/(\{\d+\})/).map(part => /^\{\d+\}$/.test(part) ? '(.+?)' : escapeRE(part)).join('') + '$'),
   keys: [...row[0].matchAll(/\{(\d+)\}/g)].map(match => match[1])
-}));
+})).sort((a,b)=>b.row[0].replace(/\{\d+\}/g,'').length-a.row[0].replace(/\{\d+\}/g,'').length);
 export function translate(value, language = 'en') {
   if (language === 'en' || !languages[language]) return String(value);
   const text = normalize(value), index = language === 'ko' ? 1 : 2;
@@ -31,6 +31,15 @@ export function translate(value, language = 'en') {
   return String(value);
 }
 
+// Names are display aliases only; protocol IDs and original evidence stay intact.
+export function displayAgentNames(value, language='en') {
+  const seller=language==='ko'?'판매 에이전트':language==='zh-CN'?'销售智能体':'Seller agent';
+  const buyer=language==='ko'?'구매 에이전트':language==='zh-CN'?'采购智能体':'Buyer agent';
+  return String(value).replace(/\b(Atlas|Nexus|Orbit)\b/gi, name=>seller+' '+({atlas:1,nexus:2,orbit:3}[name.toLowerCase()]))
+    .replace(/\bBuyer\b(?! agent)/g,buyer);
+}
+export const displayText=(value,language='en')=>displayAgentNames(translate(value,language),language);
+
 // Localize the presentation only. Never write translated text into application state,
 // form values, model requests, signed terms, downloaded receipts, or source records.
 export function installLanguageUI() {
@@ -38,7 +47,7 @@ export function installLanguageUI() {
   try { const saved = localStorage.getItem(storageKey); if (languages[saved]) language = saved; } catch {}
   const originals = new WeakMap();
   const attributes = new WeakMap();
-  const excluded = 'script,style,pre,code,textarea,input,option,[translate="no"],.hash,.original-content';
+  const excluded = 'script,style,pre,code,textarea,input,[translate="no"],.hash,.original-content';
   const labels = {en:'Language', ko:'언어', 'zh-CN':'语言'};
   const description=document.querySelector('meta[name="description"]');
   const originalDescription=description?.content;
@@ -66,7 +75,7 @@ export function installLanguageUI() {
       while (walker.nextNode()) {
         const node=walker.currentNode, parent=node.parentElement;
         if (!parent || parent.closest(excluded) || !normalize(node.nodeValue)) continue;
-        const original=remember(originals,node,node.nodeValue), rendered=translate(original,language);
+        const original=remember(originals,node,node.nodeValue), rendered=displayText(original,language);
         const output=rendered===original?original:original.match(/^\s*/)[0]+rendered+original.match(/\s*$/)[0];
         originals.set(node,{original,output}); if(node.nodeValue!==output)node.nodeValue=output;
       }
@@ -76,7 +85,7 @@ export function installLanguageUI() {
         for(const name of ['placeholder','aria-label','title']) {
           if(!element.hasAttribute(name))continue;
           const value=element.getAttribute(name), prior=saved[name], original=prior?.output===value?prior.original:value;
-          const output=translate(original,language);saved[name]={original,output};if(output!==value)element.setAttribute(name,output);
+          const output=displayText(original,language);saved[name]={original,output};if(output!==value)element.setAttribute(name,output);
         }
         attributes.set(element,saved);
       });

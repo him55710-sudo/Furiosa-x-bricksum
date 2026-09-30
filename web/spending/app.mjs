@@ -1,5 +1,5 @@
 import {installLanguageUI} from './i18n.mjs';
-import {renderHome,renderPurchase,policyForm,defaultPolicy} from './product-view.mjs';
+import {renderHome,renderPurchase,policyForm,defaultPolicy,preparedDemoPrompt} from './product-view.mjs';
 import {renderPresentation,presentationInspect} from './presentation-view.mjs';
 import {runGuidedStory,presentationModel} from './presentation-model.mjs';
 import {liveRequest} from './live-client.mjs';
@@ -85,7 +85,7 @@ async function storyReceipt(){
 async function storyAction(action){
  if(action==='new'){
   if(story.mode==='live')await liveAction('live-new');else localStorage.removeItem('accord-story-guided');
-  job=null;story.receipt=null;story.verification=null;story.messages=[];story.composer='';story.chosenSeller=null;return;
+  job=null;story.receipt=null;story.verification=null;story.messages=[];story.composer='';story.chosenSeller=null;story.demoStarted=false;story.view='chat';return;
  }
  const labels={delegate:'Creating your mandate and requesting offers…',negotiate:'Buyer and Atlas are exchanging terms…',approve:'Confirming signatures, escrow and delivery…',pay:'Checking the corrected invoice and confirming settlement…',receipt:'Verifying the actual receipt…','live-start':'Delegating your mandate…','live-offer':'Seller is preparing an offer…','live-counter':'Buyer is comparing the terms…','live-respond':'Seller is evaluating the counteroffer…','live-agree':'Verifying terms and creating both signatures…','live-execute':'Funding the approved agreement and executing the source-table worker…','live-pay':'Checking the actual invoice before settlement…'};
  story.pending={action,label:labels[action]??'Reading the current transaction…'};render();
@@ -113,7 +113,7 @@ document.addEventListener('submit',async ev=>{
   await operate('Saving your spending policy…',async()=>{
    if(job?.liveSessionId||job?.dealId||job?.authorityRevoked)await storyAction('new');
    if(job)await mutate('edit',{...p,demoMode:true,sourceText:JSON.stringify(job.source),sourceName:job.sourceName});
-   story.policy=p;localStorage.setItem('accord-purchase-policy',JSON.stringify(p));$('#detail').close();
+   story.policy=p;if(!job&&story.demoStarted)story.composer=preparedDemoPrompt(p,document.documentElement.lang);localStorage.setItem('accord-purchase-policy',JSON.stringify(p));$('#detail').close();
   });return;
  }
  if(ev.target.id==='purchase-message-form'){
@@ -170,9 +170,9 @@ function sellerNamesForStory(){return {atlas:'Atlas',nexus:'Nexus',orbit:'Orbit'
 document.addEventListener('click',async ev=>{
  if(isStory()&&busy&&ev.target.closest('a[href^="#"]')){ev.preventDefault();return;}
  const homeSection=ev.target.closest('[data-home-section]');if(homeSection){ev.preventDefault();document.getElementById(homeSection.dataset.homeSection)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});return;}
- const view=ev.target.closest('[data-purchase-view]');if(view){story.view=view.dataset.purchaseView;render();return;}
+ const view=ev.target.closest('[data-purchase-view]');if(view){story.view=view.dataset.purchaseView;render();document.querySelector('.purchase-inspection')?.focus({preventScroll:true});return;}
  const sellerChoice=ev.target.closest('[data-purchase-seller]');if(sellerChoice&&!busy){const id=sellerChoice.dataset.purchaseSeller;if(story.mode==='live'){live.seller=id;render();}else {story.chosenSeller=id;await operate('Selecting seller…',()=>mutate('select',{seller:id}));}return;}
- const inspection=ev.target.closest('[data-story-inspect]');if(inspection){modal(presentationInspect(inspection.dataset.storyInspect,storyState()),true);return;}
+ const inspection=ev.target.closest('[data-story-inspect]');if(inspection){if(isStory()){story.inspectSection=inspection.dataset.storyInspect;story.view='evidence';render();document.querySelector('.purchase-inspection')?.focus({preventScroll:true});}else modal(presentationInspect(inspection.dataset.storyInspect,storyState()),true);return;}
 
  if(ev.target.closest('[data-close]')){$('#detail').close();return;}
  if(ev.target.closest('[data-action="import-paste"]')){
@@ -186,6 +186,7 @@ document.addEventListener('click',async ev=>{
  const liveSeller=ev.target.closest('[data-live-seller]');if(liveSeller&&!busy){live.seller=liveSeller.dataset.liveSeller;render();return;}
  const liveMessage=ev.target.closest('[data-live-message]');if(liveMessage){const m=live.current.session.messages.find(m=>m.sequence===Number(liveMessage.dataset.liveMessage));modal(`<span class="eyebrow">ACTUAL MODEL RESPONSE</span><h2>${e(m.actor)} · ${e(m.model)}</h2><dl><dt>Request ID</dt><dd class="hash">${e(m.requestId)}</dd><dt>Input scope</dt><dd>${e(m.inputScope)}</dd></dl><h3>Public input</h3><pre>${e(JSON.stringify(m.input,null,2))}</pre><h3>Model output</h3><pre>${e(JSON.stringify(m.quote,null,2))}</pre><h3>Measured usage</h3><pre>${e(JSON.stringify(m.usage,null,2))}</pre>`,true);return;}
  let name=ev.target.closest('[data-action]')?.dataset.action;if(!name)return;
+ if(name==='purchase-start-demo'){story.demoStarted=true;story.composer=preparedDemoPrompt(story.policy??readPolicy(),document.documentElement.lang);render();document.querySelector('#purchase-message')?.focus();return;}
  if(name==='purchase-expand'){story.chatExpanded=!story.chatExpanded;render();document.querySelector('.chat-expand')?.focus({preventScroll:true});return;}
  if(name==='purchase-policy'){modal(policyForm(storyState()));return;}
  if(name==='purchase-new'){await operate('Opening a new purchase…',()=>storyAction('new'));return;}

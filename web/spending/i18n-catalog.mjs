@@ -1094,4 +1094,33 @@ No invalid proposal was accepted. Retry the current turn or choose another selle
 Thinking…|생각 중…|思考中…
 Waiting for the actual response.|실제 응답 대기 중.|正在等待真实回应。
 `;
-export const messages = [rows,detailRows,runtimeRows,validationRows].flatMap(block=>block.trim().split('\n').map(line => line.split('|')));
+const guidedRoomRows = `
+I need {0} source-linked records. My limit is {1} test USD per deal. Sellers, what can you offer?|출처가 연결된 데이터 {0}건이 필요합니다. 거래당 한도는 테스트 USD {1}입니다. 판매 에이전트 여러분, 조건을 제안해주세요.|我需要 {0} 条附带来源链接的记录。每笔上限为 {1} 测试美元。销售智能体们，请提出报价。
+Start demo|데모 시작|开始演示
+Your request is ready.|요청이 준비되었습니다.|您的请求已准备就绪。
+A buyer. Three sellers. Your rules.|구매 에이전트 1명, 판매 에이전트 3명. 기준은 내가 정합니다.|一个采购智能体，三个销售智能体。规则由您制定。
+Review the prepared prompt below, then send it to your buyer.|아래 준비된 요청을 확인하고 구매 에이전트에게 보내세요.|查看下方准备好的提示词，然后发送给采购智能体。
+Start the demo, send a prepared request, and follow the agents. You decide what happens when a gate blocks the transaction.|데모를 시작하고 준비된 요청을 보내세요. 에이전트들의 대화를 보다가 거래가 차단되면 직접 다음 행동을 결정합니다.|开始演示并发送准备好的请求，观察智能体对话。交易被拦截时，由您决定下一步。
+Buyer agent|구매 에이전트|采购智能体
+Seller agents 1 · 2 · 3|판매 에이전트 1 · 2 · 3|销售智能体 1 · 2 · 3
+Send to Buyer agent|구매 에이전트에게 보내기|发送给采购智能体
+Find four source-linked CAPEX records. My total budget is {0} test USD, with a maximum of {1} test USD per deal. Deliver within {2} minutes. Negotiate with the sellers and ask me before committing funds.|출처가 연결된 CAPEX 데이터 4건을 찾아주세요. 총예산은 테스트 USD {0}, 거래당 한도는 테스트 USD {1}입니다. {2}분 안에 납품해주세요. 판매 에이전트들과 협상하고 자금을 확정하기 전에 제 승인을 받아주세요.|请查找四条附带来源链接的 CAPEX 记录。总预算为 {0} 测试美元，每笔交易上限为 {1} 测试美元。请在 {2} 分钟内交付。与销售智能体协商，并在承诺资金前征求我的批准。
+I need {0} source-linked records. My budget is {1} test USD and my limit is {2} per deal. Sellers, what can you offer?|출처가 연결된 데이터 {0}건이 필요합니다. 총예산은 테스트 USD {1}, 거래당 한도는 {2}입니다. 판매 에이전트 여러분, 조건을 제안해주세요.|我需要 {0} 条附带来源链接的记录。预算为 {1} 测试美元，每笔上限为 {2}。销售智能体们，请提出报价。
+I prioritize source coverage and consistent data. My offer is {0} test USD for the complete task.|저는 출처를 빠짐없이 포함하고 데이터를 일관되게 정리하는 데 집중합니다. 전체 작업을 테스트 USD {0}에 제안합니다.|我注重完整的来源覆盖和一致的数据。整个任务报价为 {0} 测试美元。
+I prioritize fast delivery. My offer is {0} test USD for the complete task.|저는 빠른 납품에 집중합니다. 전체 작업을 테스트 USD {0}에 제안합니다.|我注重快速交付。整个任务报价为 {0} 测试美元。
+I prioritize research quality and source detail. My offer is {0} test USD for the complete task.|저는 조사 품질과 상세한 출처 정보에 집중합니다. 전체 작업을 테스트 USD {0}에 제안합니다.|我注重研究质量和详细的来源信息。整个任务报价为 {0} 测试美元。
+Can you do the same scope for {0} test USD? Keep all required sources.|작업 범위는 그대로 유지하고 테스트 USD {0}에 가능할까요? 필요한 출처도 모두 포함해주세요.|同样的工作范围可以按 {0} 测试美元成交吗？请保留所有必需来源。
+Guided narration · recorded event|데모 대화 · 실제 저장된 이벤트 기반|演示旁白 · 基于已记录事件
+Gate incident saved|차단 기록 저장됨|拦截记录已保存
+View original record|원본 기록 보기|查看原始记录
+Recorded at|기록 시각|记录时间
+Event ID|이벤트 ID|事件 ID
+Every card comes from a recorded event. Expand it to see the original evidence.|각 카드는 실제 저장된 이벤트입니다. 펼치면 원본 증거를 볼 수 있습니다.|每张卡片均来自已记录的事件。展开即可查看原始证据。
+Conversation and incident records are stored in this browser. They are not independently signed receipts. Technical proof separately verifies the agreement and settlement.|대화와 사건 기록은 이 브라우저에 저장됩니다. 자체적으로 서명된 영수증은 아닙니다. 기술 증거에서 합의와 정산을 별도로 검증합니다.|对话与事件记录保存在此浏览器中，不属于独立签名的收据。技术证据会单独验证协议和结算。
+Original model messages and request evidence are preserved as received.|모델 응답과 요청 증거는 수신한 원문 그대로 보존합니다.|模型消息和请求证据按收到的原文保留。
+Current execution: private EVM. Historical Sepolia evidence is separate.|현재 실행: 비공개 EVM. 과거 Sepolia 증거는 별도입니다.|当前执行：私有 EVM。历史 Sepolia 证据单独展示。
+Next: ask the buyer to negotiate within your limit.|다음: 구매 에이전트에게 한도 내에서 협상하도록 요청하세요.|下一步：让采购智能体在限额内协商。
+Next: correct the invoice to the signed amount before payment.|다음: 결제 전에 청구액을 서명한 합의 금액으로 수정하세요.|下一步：付款前将账单更正为已签署的金额。
+Why blocked & what was saved|차단 이유와 저장된 기록|拦截原因与保存的记录
+`;
+export const messages = [rows,detailRows,runtimeRows,validationRows,guidedRoomRows].flatMap(block=>block.trim().split('\n').map(line => line.split('|')));
